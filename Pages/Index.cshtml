@@ -6,49 +6,147 @@
 
 @if (!User.Identity.IsAuthenticated)
 {
-    <!-- Hero -->
-    <div class="p-5 text-center bg-image rounded-3" style="
-        background-image: url('https://localhost:7121/images/MULTICLIMACT-Powerpoint-Template.jpg');
-        height: 720px; width:1280px;
-            ">
-    </div>
+    Response.Redirect("Identity/Account/Login");
 }
 else
 {
-    <!-- Contenitore per la mappa -->
-    <div id="map" class="map" style="width: 100%; height: 400px;"></div>
 
-    <!-- Script per caricare OpenLayers e il file GeoJSON -->
-    <script src="https://cdn.jsdelivr.net/npm/ol@6.5.0/dist/ol.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@6.5.0/dist/ol.css" />
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>OpenLayers Map</title>
+        <link rel="stylesheet" href="~/lib/openlayers/ol.css" type="text/css">
+        <script src="~/lib/openlayers/ol.js"></script>
+    </head>
+    <body>
+        <div id="map" style="width: 100%; height: 400px;"></div>
 
-    <script>
-        // Carica il file GeoJSON quando l'utente è autenticato
-        const url = 'https://openlayers.org/data/vector/ecoregions.json';
-        fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                // Crea una mappa utilizzando OpenLayers
-                var map = new ol.Map({
-                    target: 'map',
-                    layers: [
-                        new ol.layer.Tile({
-                            source: new ol.source.OSM()
-                        }),
-                        new ol.layer.Vector({
-                            source: new ol.source.Vector({
-                                features: new ol.format.GeoJSON().readFeatures(data)
-                            })
-                        })
-                    ],
-                    view: new ol.View({
-                        center: ol.proj.fromLonLat([0, 0]),
-                        zoom: 2
-                    })
-                });
-            })
-            .catch(error => {
-                console.error('Error loading GeoJSON:', error);
+        <div>
+            <label for="fileInput">Seleziona un file GeoJSON:</label>
+            <input type="file" id="fileInput" name="fileInput" accept=".geojson">
+            <button onclick="loadGeoJSON()">Carica GeoJSON</button>
+        </div>
+
+        <script type="text/javascript">
+            var vectorSource = new ol.source.Vector();
+
+            var vectorLayer = new ol.layer.Vector({
+                source: vectorSource
             });
-    </script>
+
+            var map = new ol.Map({
+                target: 'map',
+                layers: [
+                    new ol.layer.Tile({
+                        source: new ol.source.OSM()
+                    }),
+                    vectorLayer
+                ],
+                view: new ol.View({
+                    center: ol.proj.fromLonLat([0, 0]),
+                    zoom: 2
+                })
+            });
+
+            var select = new ol.interaction.Select();
+            map.addInteraction(select);
+
+            var popup = new ol.Overlay.Popup();
+            map.addOverlay(popup);
+
+            function loadGeoJSON() {
+                var fileInput = document.getElementById('fileInput');
+                var file = fileInput.files[0];
+
+                if (file) {
+                    var reader = new FileReader();
+                    reader.onload = function (event) {
+                        var geojsonObject = JSON.parse(event.target.result);
+                        var features = new ol.format.GeoJSON().readFeatures(geojsonObject);
+                        vectorSource.clear();
+                        vectorSource.addFeatures(features);
+                    };
+                    reader.readAsText(file);
+                }
+            }
+
+            map.on('singleclick', function (event) {
+                var feature = map.forEachFeatureAtPixel(event.pixel, function (feature) {
+                    return feature;
+                });
+
+                if (feature) {
+                    var geometry = feature.getGeometry();
+                    var coord = geometry.getCoordinates();
+                    popup.show(coord, '<div><h2>' + feature.get('name') + '</h2><p>' + feature.get('description') + '</p></div>');
+                } else {
+                    popup.hide();
+                }
+            });
+        </script>
+    </body>
+    </html>
+
+
+    @* <!DOCTYPE html>
+    <html>
+    <head>
+        <title>OpenLayers Map</title>
+        <link rel="stylesheet" href="~/lib/openlayers/ol.css" type="text/css">
+        <script src="~/lib/openlayers/ol.js"></script>
+    </head>
+    <body>
+        <div id="map" style="width: 100%; height: 400px;"></div>
+
+        <script type="text/javascript">
+            var map = new ol.Map({
+                target: 'map',
+                layers: [
+                    new ol.layer.Tile({
+                        source: new ol.source.OSM()
+                    }),
+                    new ol.layer.Tile({
+                        source: new ol.source.TileWMS({
+                            url: 'https://ahocevar.com/geoserver/wms',
+                            params: { 'LAYERS': 'topp:states', 'TILED': true },
+                            serverType: 'geoserver' // Specifica il tipo di server WMS, ad esempio 'geoserver', 'mapserver', ecc.
+                        })
+                    })
+                ],
+                view: new ol.View({
+                    center: ol.proj.fromLonLat([0, 0]),
+                    zoom: 2
+                })
+            });
+        </script>
+    </body>
+    </html> *@
+
+
+    @* <!DOCTYPE html>
+    <html>
+    <head>
+        <title>OpenLayers Map</title>
+        <link rel="stylesheet" href="~/lib/openlayers/ol.css" type="text/css">
+        <script src="~/lib/openlayers/ol.js"></script>
+    </head>
+    <body>
+        <div id="map" style="width: 100%; height: 400px;"></div>
+
+        <script type="text/javascript">
+            var map = new ol.Map({
+                target: 'map',
+                layers: [
+                    new ol.layer.Tile({
+                        source: new ol.source.OSM()
+                    })
+                ],
+                view: new ol.View({
+                    center: ol.proj.fromLonLat([0, 0]),
+                    zoom: 2
+                })
+            });
+        </script>
+    </body>
+    </html> *@
 }

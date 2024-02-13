@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.JSInterop;
 using MultiClimact.Data;
 
 var builder = WebApplication.CreateBuilder(args);

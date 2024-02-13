@@ -1,0 +1,42 @@
+﻿@page
+@model MultiClimact.Pages.MappaModel
+
+@{
+    ViewData["Title"] = "OpenLayers Map";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@6.8.1/dist/ol.css" type="text/css">
+    <style>
+        #map {
+            width: 100%;
+            height: 400px;
+        }
+    </style>
+</head>
+<body>
+    <h1>@ViewData["Title"]</h1>
+    <div id="map"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/ol@6.8.1/dist/ol.js"></script>
+    <script>
+        var map = new ol.Map({
+            target: 'map',
+            layers: [
+                new ol.layer.Tile({
+                    source: new ol.source.OSM()
+                })
+            ],
+            view: new ol.View({
+                center: ol.proj.fromLonLat([0, 0]),
+                zoom: 2
+            })
+        });
+    </script>
+</body>
+</html>
+
