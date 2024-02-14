@@ -11,7 +11,7 @@
 else
 {
 
-    <!DOCTYPE html>
+    @*  <!DOCTYPE html>
     <html>
     <head>
         <title>OpenLayers Map</title>
@@ -85,7 +85,7 @@ else
             });
         </script>
     </body>
-    </html>
+    </html> *@
 
 
     @* <!DOCTYPE html>
@@ -122,16 +122,26 @@ else
     </body>
     </html> *@
 
-
-    @* <!DOCTYPE html>
+    <!DOCTYPE html>
     <html>
     <head>
         <title>OpenLayers Map</title>
-        <link rel="stylesheet" href="~/lib/openlayers/ol.css" type="text/css">
-        <script src="~/lib/openlayers/ol.js"></script>
+        <link rel="stylesheet" href="~/lib/openlayers/ol.css" type="text/css" />
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script src="~/lib/openlayers/dist/ol.js"></script>
     </head>
     <body>
-        <div id="map" style="width: 100%; height: 400px;"></div>
+        <!-- Mappa -->
+        <div id="map" style="width: 100%; height: 80vh;"></div>
+
+        <!-- Elemento di ricerca degli indirizzi -->
+        <div class="container position-absolute top-0 start-50 translate-middle" style="margin-top:150px; width: 25%;">
+            <div class="input-group">
+                <input id="addressInput" placeholder="Cerca un indirizzo" type="text" class="form-control" style="text-overflow: ellipsis;">
+            </div>
+            <div id="suggestions" class="list-group mt-1" style="display: none;"></div>
+        </div>
 
         <script type="text/javascript">
             var map = new ol.Map({
@@ -146,7 +156,50 @@ else
                     zoom: 2
                 })
             });
+
+            // Funzione per cercare gli indirizzi e visualizzare i suggerimenti
+            $('#addressInput').on('input', function () {
+                var address = $(this).val();
+                var url = 'https://nominatim.openstreetmap.org/search?q=' + address + '&format=json&addressdetails=1&limit=5';
+
+                $.getJSON(url, function (data) {
+                    $('#suggestions').empty();
+                    if (data && data.length > 0) {
+                        $('#suggestions').show();
+                        $.each(data, function (i, item) {
+                            $('#suggestions').append('<a href="#" class="list-group-item list-group-item-action">' + item.display_name + '</a>');
+                        });
+                    } else {
+                        $('#suggestions').hide();
+                    }
+                });
+            });
+
+            // Funzione per zoomare sulla posizione selezionata dall'utente
+            $('#suggestions').on('click', 'a', function (e) {
+                e.preventDefault();
+                var address = $(this).text();
+                var url = 'https://nominatim.openstreetmap.org/search?q=' + address + '&format=json&addressdetails=1&limit=1';
+
+                $.getJSON(url, function (data) {
+                    if (data && data.length > 0) {
+                        var lon = parseFloat(data[0].lon);
+                        var lat = parseFloat(data[0].lat);
+                        map.getView().setCenter(ol.proj.fromLonLat([lon, lat]));
+                        map.getView().setZoom(15);
+                        $('#suggestions').hide();
+                    }
+                });
+            });
+
+            // Funzione per pulire l'input di ricerca
+            $('#clearSearch').click(function () {
+                $('#addressInput').val('');
+                $('#suggestions').empty().hide();
+            });
         </script>
     </body>
-    </html> *@
+    </html>
+
+
 }

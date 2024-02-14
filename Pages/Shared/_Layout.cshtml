@@ -7,17 +7,30 @@
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/MultiClimact.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/MultiClimact.styles.css " asp-append-version="true" />
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    
+
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">MultiClimact</a>
+                <!-- Logo aziendale -->
+                <div class="d-flex align-items-center">
+                    <!-- Prima immagine di logo -->
+                    <img src="~/images/logo_enea_40px.png" alt="Logo 1" class="mr-3">
+                    <!-- Spazio tra i loghi -->
+                    <div style="width: 10px;"></div>
+                    <!-- Seconda immagine di logo -->
+                    <img src="~/images/logo_eu_40px.png" alt="Logo 2" class="mr-3">
+                    <!-- Spazio tra i loghi -->
+                    <div style="width: 10px;"></div>
+                    <!-- Terza immagine di logo -->
+                    <img src="~/images/logo_multiclimact_60px.png" alt="Logo 3">
+                </div>
+
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -58,8 +71,6 @@
             &copy; 2024 - MultiClimact
         </div>
     </footer>
-
-    
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>
