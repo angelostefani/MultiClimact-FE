@@ -15,30 +15,26 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
+        <nav class="navbar navbar-expand-sm navbar-light border-bottom fixed-top">
+            <div class="container-fluid">
                 <!-- Logo aziendale -->
                 <div class="d-flex align-items-center">
                     <!-- Prima immagine di logo -->
-                    <img src="~/images/logo_enea_40px.png" alt="Logo 1" class="mr-3">
+                    <img src="~/images/logo_enea_40px.png" alt="Logo 1">
                     <!-- Spazio tra i loghi -->
                     <div style="width: 10px;"></div>
                     <!-- Seconda immagine di logo -->
-                    <img src="~/images/logo_eu_40px.png" alt="Logo 2" class="mr-3">
+                    <img src="~/images/logo_eu_40px.png" alt="Logo 2">
                     <!-- Spazio tra i loghi -->
                     <div style="width: 10px;"></div>
                     <!-- Terza immagine di logo -->
                     <img src="~/images/logo_multiclimact_60px.png" alt="Logo 3">
                 </div>
 
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index"></a>
+
                         </li>
                     </ul>
 
@@ -60,16 +56,16 @@
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
+    <div class="container-fluid ">
+        <main role="main" >
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container text-center">
-            &copy; 2024 - MultiClimact
-        </div>
+    <footer>
+        <nav class="navbar navbar-expand-sm navbar-light fixed-bottom">
+        <div style="text-align: center; column-span"> &copy; 2024 - MultiClimact</div>
+        </nav>
     </footer>
 
     @await RenderSectionAsync("Scripts", required: false)

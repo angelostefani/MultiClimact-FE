@@ -2,15 +2,17 @@
 @model LoginModel
 
 @{
-    ViewData["Title"] = "Log in";
 }
 
 <h1>@ViewData["Title"]</h1>
-<div class="row">
-    <div class="col-md-4">
-        <section>
+<div class="row justify-content-center align-items-center" style="height: 80vh;">
+    <div class="col-sm-4">
+        <!-- Spazio vuoto a sinistra -->
+    </div>
+    <div class="col-sm-4">
+        <section class="bg-light p-4 rounded shadow">
+            <div><img src="~/images/MULTICLIMACT-Powerpoint-Template.jpg" class="img-fluid" alt="Responsive image"></div>
             <form id="account" method="post">
-                <h2>Sign in to your account</h2>
                 <hr />
                 <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
                 <div class="form-floating mb-3">
@@ -32,17 +34,14 @@
                 <div>
                     <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
                 </div>
-
             </form>
 
             <!-- Frase e link per la registrazione -->
             <p class="mt-3">Don't have an account? <a href="/Identity/Account/Register">Register here</a></p>
         </section>
     </div>
-    <div class="col-md-6 col-md-offset-2">
-        <section>
-            <img src="~/images/MULTICLIMACT-Powerpoint-Template.jpg" class="img-fluid" alt="Responsive image">
-        </section>
+    <div class="col-sm-4">
+        <!-- Spazio vuoto a destra -->
     </div>
 </div>
 
