@@ -8,6 +8,14 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/MultiClimact.styles.css " asp-append-version="true" />
+
+    <style>
+        /* Nascondi la barra di scorrimento verticale */
+        body {
+            overflow-y: hidden;
+        }
+    </style>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
@@ -15,7 +23,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-light border-bottom fixed-top">
+        <nav class="navbar navbar-expand-sm navbar-light bg-light border-bottom fixed-top shadow-sm">
             <div class="container-fluid">
                 <!-- Logo aziendale -->
                 <div class="d-flex align-items-center">
@@ -51,21 +59,23 @@
                             </ul>
                         </li>
                     </ul>
-
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container-fluid ">
+    <div class="container-fluid">
         <main role="main" >
             @RenderBody()
         </main>
     </div>
 
     <footer>
-        <nav class="navbar navbar-expand-sm navbar-light fixed-bottom">
-        <div style="text-align: center; column-span"> &copy; 2024 - MultiClimact</div>
-        </nav>
+        <nav class="navbar navbar-expand-sm navbar-light bg-light border-top fixed-bottom text-center justify-content-center shadow-sm">
+            <div class="container-fluid justify-content-center ">
+                &copy; 2024 - MultiClimact
+            </div>
+            
+       </nav>
     </footer>
 
     @await RenderSectionAsync("Scripts", required: false)
