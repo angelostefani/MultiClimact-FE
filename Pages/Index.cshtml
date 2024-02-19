@@ -25,9 +25,9 @@ else
             .search-bar {
                 position: absolute;
                 top: 0px;
-                margin-top: 105px;
+                margin-top: 100px;
                 right: 15px;
-                width: 20%;
+                width: 15%;
                 z-index: 1000;
                 box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5); /* Effetto ombra */
             }
@@ -35,11 +35,23 @@ else
             /* Stile per la dropdown della mappa */
             .map-dropdown {
                 position: absolute;
-                top: 50px;
-                right: 10px;
+                top: 0px;
+                margin-top: 100px;
+                left: 50px;
                 z-index: 1000;
                 box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5); /* Effetto ombra */
             }
+
+            /* Stile per le coordinate del mouse */
+            #mouseCoordinates {
+                position: absolute;
+                bottom: 140px;
+                right: 15px;
+                width: 12%;
+                z-index: 1000;
+                box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+            }
+
         </style>
 
         <script src="~/lib/jquery/dist/jquery.min.js"></script>
@@ -48,6 +60,19 @@ else
     <body>
         <!-- Mappa -->
         <div id="space" style="width: 100%; height: 10vh;"></div>
+
+        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" style="position: absolute; top: 0px; margin-top: 150px; right: 15px; width: 5%; z-index: 1000; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);">Layers</button>
+
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+            <div class="offcanvas-header">
+                <h5 id="offcanvasRightLabel">Layers</h5>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                ...
+            </div>
+        </div>
+
         <div id="map" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
 
         <div class="search-bar">
@@ -58,7 +83,7 @@ else
         </div>
 
         <!-- Dropdown per la selezione della mappa -->
-        <div class="dropdown position-absolute top-0" style="margin-top: 105px; margin-left: 50px;">
+        <div class="map-dropdown">
             <button class="btn btn-secondary dropdown-toggle" type="button" id="mapDropdownButton" aria-haspopup="true" aria-expanded="false">
                 Map
             </button>
@@ -69,6 +94,9 @@ else
                 }
             </div>
         </div>
+
+        <!-- Coordinate del mouse -->
+        <div id="mouseCoordinates"></div>
 
         <script type="text/javascript">
             // Funzione per gestire l'apertura/chiusura del menu a discesa quando si fa clic sul pulsante "Seleziona Mappa"
@@ -92,6 +120,13 @@ else
                     layers: [
                         new ol.layer.Tile({
                             source: new ol.source.OSM()
+                        }),
+                        new ol.layer.Tile({
+                            source: new ol.source.TileWMS({
+                                url: 'https://modelcity.casaccia.enea.it/geoserver/cite/wms?service=WMS&',
+                                params: { 'LAYERS': 'single_building1', 'TILED': true },
+                                serverType: 'geoserver' // Specifica il tipo di server WMS, ad esempio 'geoserver', 'mapserver', ecc.
+                            })
                         })
                     ],
                     view: new ol.View({
@@ -102,6 +137,14 @@ else
 
                 // Memorizza il layer corrente (OSM) in modo da poterlo rimuovere quando si cambia la mappa di base
                 currentBaseLayer = map.getLayers().getArray()[0];
+
+                // Aggiungi un listener per le coordinate del mouse
+                map.on('pointermove', function (event) {
+                    var coordinates = ol.proj.toLonLat(event.coordinate);
+                    var lon = coordinates[0];
+                    var lat = coordinates[1];
+                    $('#mouseCoordinates').text('Lon: ' + lon.toFixed(5) + ', Lat: ' + lat.toFixed(5));
+                });
             }
 
             // Cambia la mappa di base
