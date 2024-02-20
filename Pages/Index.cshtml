@@ -4,10 +4,9 @@
     // Layout = null;
     ViewData["Title"] = Localizer["title"];
     List<string> Maps = new List<string> { "OpenStreetMap - EPSG:3857", "Google Normal - EPSG:3857", "Google Satellite - EPSG:3857", "Google Hybrid - EPSG:3857", "OpenTopoMap", "Sentinel-2 cloudless", "Metacarta - EPSG:4326", "geoSdi - EPSG:4326", "geoSdi No Map - EPSG:4326" };
-
 }
 
-@if (!User.Identity.IsAuthenticated)
+@if (!(User.Identity is null) && !User.Identity.IsAuthenticated)
 {
     Response.Redirect("Identity/Account/Login");
 }
@@ -24,20 +23,9 @@ else
             /* Stile per la barra di ricerca */
             .search-bar {
                 position: absolute;
-                top: 0px;
-                margin-top: 100px;
+                top: 150px;
                 right: 15px;
                 width: 15%;
-                z-index: 1000;
-                box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5); /* Effetto ombra */
-            }
-
-            /* Stile per la dropdown della mappa */
-            .map-dropdown {
-                position: absolute;
-                top: 0px;
-                margin-top: 100px;
-                left: 50px;
                 z-index: 1000;
                 box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5); /* Effetto ombra */
             }
@@ -45,11 +33,11 @@ else
             /* Stile per le coordinate del mouse */
             #mouseCoordinates {
                 position: absolute;
-                bottom: 140px;
+                bottom: 200px;
                 right: 15px;
-                width: 12%;
+                width: 15%;
                 z-index: 1000;
-                box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+                box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5); /* Effetto ombra */
             }
 
         </style>
@@ -58,23 +46,53 @@ else
         <script src="~/lib/openlayers/dist/ol.js"></script>
     </head>
     <body>
-        <!-- Mappa -->
+
+        <!-- Spazio tra il menù del Layout e il menù della pagina-->
         <div id="space" style="width: 100%; height: 10vh;"></div>
 
-        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" style="position: absolute; top: 0px; margin-top: 150px; right: 15px; width: 5%; z-index: 1000; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);">Layers</button>
-
-        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
-            <div class="offcanvas-header">
-                <h5 id="offcanvasRightLabel">Layers</h5>
-                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        <!-- Mednù della pagina-->
+        <nav class="navbar navbar-expand-sm navbar-dark" style=" background-color: #185ba1;">
+            <div class="container-fluid">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Layers</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Options</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Maps</a>
+                        <ul class="dropdown-menu">
+                            @foreach (var mappa in Maps)
+                            {
+                                <li><a class="dropdown-item" href="#" onclick="changeMap('@mappa.Trim()')">@mappa.Trim()</a></li>
+                            }
+                        </ul>
+                    </li>
+                </ul>
             </div>
-            <div class="offcanvas-body">
-                ...
-            </div>
-        </div>
+        </nav>
 
+
+        @*   <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" style="position: absolute; top: 0px; margin-top: 150px; right: 15px; width: 5%; z-index: 1000; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);">Layers</button>
+
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+    <div class="offcanvas-header">
+    <h5 id="offcanvasRightLabel">Layers</h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+    ...
+    </div>
+    </div> *@
+
+        <!-- Mappa -->
         <div id="map" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
 
+        <!-- Barra di ricerca indirizzi -->
         <div class="search-bar">
             <div class="input-group">
                 <input id="addressInput" placeholder="Cerca un indirizzo" type="text" class="form-control" style="text-overflow: ellipsis;">
@@ -82,28 +100,10 @@ else
             <div id="suggestions" class="list-group mt-1" style="display: none;"></div>
         </div>
 
-        <!-- Dropdown per la selezione della mappa -->
-        <div class="map-dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="mapDropdownButton" aria-haspopup="true" aria-expanded="false">
-                Map
-            </button>
-            <div class="dropdown-menu" aria-labelledby="mapDropdownButton">
-                @foreach (var mappa in Maps)
-                {
-                    <a class="dropdown-item" href="#" onclick="changeMap('@mappa.Trim()')">@mappa.Trim()</a>
-                }
-            </div>
-        </div>
-
         <!-- Coordinate del mouse -->
         <div id="mouseCoordinates"></div>
 
         <script type="text/javascript">
-            // Funzione per gestire l'apertura/chiusura del menu a discesa quando si fa clic sul pulsante "Seleziona Mappa"
-            $('#mapDropdownButton').on('click', function () {
-                $(this).next('.dropdown-menu').toggleClass('show');
-            });
-
             // Funzione per gestire la selezione della mappa quando si fa clic su una delle voci del menu a discesa
             $('.dropdown-item').on('click', function () {
                 $('.dropdown-menu').removeClass('show');
@@ -113,6 +113,7 @@ else
         <script type="text/javascript">
             var map;
             var currentBaseLayer;
+            var currentWmsLayer;
 
             function initMap() {
                 map = new ol.Map({
@@ -123,8 +124,8 @@ else
                         }),
                         new ol.layer.Tile({
                             source: new ol.source.TileWMS({
-                                url: 'https://modelcity.casaccia.enea.it/geoserver/cite/wms?service=WMS&',
-                                params: { 'LAYERS': 'single_building1', 'TILED': true },
+                                url: '@ViewData["wmsurl"]&',
+                                params: { 'LAYERS': '@ViewData["wmslayer"]', 'TILED': true },
                                 serverType: 'geoserver' // Specifica il tipo di server WMS, ad esempio 'geoserver', 'mapserver', ecc.
                             })
                         })
@@ -138,6 +139,9 @@ else
                 // Memorizza il layer corrente (OSM) in modo da poterlo rimuovere quando si cambia la mappa di base
                 currentBaseLayer = map.getLayers().getArray()[0];
 
+                // Memorizza il WMS layer corrente (OSM) in modo da poterlo rimuovere quando si cambia la mappa di base
+                currentWmsLayer = map.getLayers().getArray()[1];
+
                 // Aggiungi un listener per le coordinate del mouse
                 map.on('pointermove', function (event) {
                     var coordinates = ol.proj.toLonLat(event.coordinate);
@@ -150,9 +154,13 @@ else
             // Cambia la mappa di base
             function changeMap(mapName) {
                 var newBaseLayer;
+                var newWmsLayer;
 
                 // Rimuove il layer corrente
                 map.removeLayer(currentBaseLayer);
+
+                // Rimuove il layer corrente
+                map.removeLayer(currentWmsLayer);
 
                 // Crea il nuovo layer in base alla mappa selezionata
                 switch (mapName) {
@@ -225,12 +233,25 @@ else
                         return; // Esce dalla funzione se la mappa non è supportata
                 }
 
+                newWmsLayer = new ol.layer.Tile({
+                    source: new ol.source.TileWMS({
+                        url: '@ViewData["wmsurl"]&',
+                        params: { 'LAYERS': '@ViewData["wmslayer"]', 'TILED': true },
+                        serverType: 'geoserver' // Specifica il tipo di server WMS, ad esempio 'geoserver', 'mapserver', ecc.
+                    })
+                })
 
                 // Aggiunge il nuovo layer alla mappa
                 map.addLayer(newBaseLayer);
 
+                // Aggiunge il nuovo WMS layer alla mappa
+                map.addLayer(newWmsLayer);
+
                 // Aggiorna il riferimento al layer corrente
                 currentBaseLayer = newBaseLayer;
+
+                // Aggiorna il riferimento al layer corrente
+                currentWmsLayer = newWmsLayer;
             }
 
             $(document).ready(function () {

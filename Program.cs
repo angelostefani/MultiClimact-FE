@@ -22,13 +22,14 @@ builder.Services.AddRazorPages()
 
 var app = builder.Build();
 
+//ConfigurationManager configuration = builder.Configuration;
+
 var supportedCultures = new[] { "en", "it" };
 var localizationOptions = new RequestLocalizationOptions().SetDefaultCulture(supportedCultures[0])
     .AddSupportedCultures(supportedCultures)
     .AddSupportedUICultures(supportedCultures);
 
 app.UseRequestLocalization(localizationOptions);
-
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
