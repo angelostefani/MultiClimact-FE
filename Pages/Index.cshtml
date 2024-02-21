@@ -39,7 +39,6 @@ else
                 z-index: 1000;
                 box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5); /* Effetto ombra */
             }
-
         </style>
 
         <script src="~/lib/jquery/dist/jquery.min.js"></script>
@@ -50,7 +49,7 @@ else
         <!-- Spazio tra il menù del Layout e il menù della pagina-->
         <div id="space" style="width: 100%; height: 10vh;"></div>
 
-        <!-- Mednù della pagina-->
+        <!-- Menù della pagina-->
         <nav class="navbar navbar-expand-sm navbar-dark" style=" background-color: #185ba1;">
             <div class="container-fluid">
                 <ul class="navbar-nav">
@@ -75,20 +74,7 @@ else
                 </ul>
             </div>
         </nav>
-
-
-        @*   <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" style="position: absolute; top: 0px; margin-top: 150px; right: 15px; width: 5%; z-index: 1000; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);">Layers</button>
-
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
-    <div class="offcanvas-header">
-    <h5 id="offcanvasRightLabel">Layers</h5>
-    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body">
-    ...
-    </div>
-    </div> *@
-
+        
         <!-- Mappa -->
         <div id="map" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
 
@@ -131,8 +117,8 @@ else
                         })
                     ],
                     view: new ol.View({
-                        center: ol.proj.fromLonLat([0, 0]),
-                        zoom: 2
+                        center: ol.proj.fromLonLat([13.3996, 43.6167]), // Longitudine e latitudine approssimative delle Marche
+                        zoom: 8 // Livello di zoom iniziale
                     })
                 });
 
