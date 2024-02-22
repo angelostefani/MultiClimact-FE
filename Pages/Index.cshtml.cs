@@ -16,8 +16,8 @@ namespace MultiClimact.Pages
 
         public void OnGet()
         {
-            ViewData["wmsurl"] = _configuration["wmsurl"];
-            ViewData["wmslayer"] = _configuration["wmslayer"];
+            ViewData["wmsurl1"] = _configuration["wms:wmsurl1"];
+            ViewData["wmslayer1"] = _configuration["wms:wmslayer1"];
         }
     }
 }
