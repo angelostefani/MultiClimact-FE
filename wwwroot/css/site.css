@@ -34,7 +34,7 @@ body {
 /* Stile per le coordinate del mouse */
 #mouseCoordinates {
     position: absolute;
-    bottom: 200px;
+    bottom: 250px;
     right: 15px;
     width: 15%;
     z-index: 1000;

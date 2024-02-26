@@ -28,35 +28,43 @@ function initMap() {
         var lonDMS = convertToDMS(lon, 'lon');
         var latDMS = convertToDMS(lat, 'lat');
         $('#mouseCoordinates').text('Lat: ' + latDMS + ' - Lon: ' + lonDMS);
-    });
+    });      
 
-    function convertToDMS(coord, coordType) {
-        var absCoord = Math.abs(coord);
-        var degrees = Math.floor(absCoord);
-        var minutes = Math.floor((absCoord - degrees) * 60);
-        var seconds = ((absCoord - degrees - minutes / 60) * 3600).toFixed(1);
-        var direction = '';
+    map.on('singleclick', function (event) {
+        var feature = map.forEachFeatureAtPixel(event.pixel, function (feature) {
+            return feature;
+        });
 
-        if (coordType == 'lon') {
-            direction = coord >= 0 ? 'N' : 'S';
+        if (feature) {
+            var geometry = feature.getGeometry();
+            var coord = geometry.getCoordinates();
+            popup.show(coord, '<div><h2>' + feature.get('name') + '</h2><p>' + feature.get('description') + '</p></div>');
         } else {
-            direction = coord >= 0 ? 'E' : 'W';
+            popup.hide();
         }
+    });
+}
 
-        return degrees + '° ' + minutes + '\' ' + seconds + '" ' + direction;
+function convertToDMS(coord, coordType) {
+    var absCoord = Math.abs(coord);
+    var degrees = Math.floor(absCoord);
+    var minutes = Math.floor((absCoord - degrees) * 60);
+    var seconds = ((absCoord - degrees - minutes / 60) * 3600).toFixed(1);
+    var direction = '';
+
+    if (coordType == 'lon') {
+        direction = coord >= 0 ? 'N' : 'S';
+    } else {
+        direction = coord >= 0 ? 'E' : 'W';
     }
 
-    // Funzione per gestire la selezione della mappa quando si fa clic su una delle voci del menu a discesa
-    $('.dropdown-item').on('click', function () {
-        $('.dropdown-menu').removeClass('show');
-    });
+    return degrees + '° ' + minutes + '\' ' + seconds + '" ' + direction;
 }
 
 // Cambia la mappa di base
 function changeMap(mapName) {
     var newBaseLayer;
-    var newWmsLayer;
-
+   
     // Rimuove il layer corrente
     map.removeLayer(currentBaseLayer);
 
@@ -136,5 +144,96 @@ function changeMap(mapName) {
 
     // Aggiorna il riferimento al layer corrente
     currentBaseLayer = newBaseLayer;
-
 }
+
+function showTab(tabId) {
+    $('#myTab a[href="#' + tabId + '"]').tab('show');
+}
+
+// Function to update breadcrumb and show corresponding tabs
+function updateBreadcrumb(section, subSection) {
+    $('#breadcrumb').html('<li class="breadcrumb-item"><a href="#">Home</a></li><li class="breadcrumb-item"><a href="#">' + section + '</a></li><li class="breadcrumb-item active" aria-current="page">' + subSection + '</li>');
+
+    // Show corresponding tabs based on the selected subsection
+    if (section === 'Risk Analysis') {
+        $('#myTab a[href="#' + subSection.toLowerCase() + '"]').tab('show');
+    }
+}
+
+function initTabs() {
+    $('#buildings-tab').removeClass('show active');
+    $('#infrastructures-tab').removeClass('show active');
+    $('#social-tab').removeClass('show active');
+    $('#economic-tab').removeClass('show active');
+    $('#operational-tab').removeClass('show active');
+
+    $('#buildings-tab').addClass('visually-hidden');
+    $('#infrastructures-tab').addClass('visually-hidden');
+    $('#social-tab').addClass('visually-hidden');
+    $('#economic-tab').addClass('visually-hidden');
+    $('#operational-tab').addClass('visually-hidden');
+}
+
+// Function to update tabs based on selected dropdown item
+function updateTabs(selectedItem) {
+    // Hide all tabs
+    $('#myTabContent').children('.tab-pane').removeClass('show active');
+    $('#myTabContent').children('.tab-pane').addClass('fade');
+
+    initTabs();
+    // Show corresponding tabs based on selected dropdown item
+    if (selectedItem === 'Damages') {
+        $('#buildings-tab').removeClass('visually-hidden');
+        $('#buildings-tab').addClass('show active');
+
+        $('#infrastructures-tab').removeClass('visually-hidden');
+
+    } else if (selectedItem === 'Resilience') {
+        $('#social-tab').removeClass('visually-hidden');
+        $('#social-tab').addClass('show active');
+
+        $('#economic-tab').removeClass('visually-hidden');
+        $('#operational-tab').removeClass('visually-hidden');
+    }
+}
+
+// Funzione per aggiungere un'icona puntatore sulla mappa
+function addPointer(lon, lat) {
+    var pointer = new ol.Feature({
+        geometry: new ol.geom.Point(ol.proj.fromLonLat([lon, lat]))
+    });
+
+    pointer.setStyle(new ol.style.Style({
+        image: new ol.style.Icon({
+            anchor: [0.5, 1],
+            src: 'https://openlayers.org/en/latest/examples/data/icon.png'
+        })
+    }));
+
+    var vectorSource = new ol.source.Vector({
+        features: [pointer]
+    });
+
+    var vectorLayer = new ol.layer.Vector({
+        source: vectorSource
+    });
+
+    map.addLayer(vectorLayer);
+}
+
+function loadGeoJSON() {
+    var fileInput = document.getElementById('fileInput');
+    var file = fileInput.files[0];
+
+    if (file) {
+        var reader = new FileReader();
+        reader.onload = function (event) {
+            var geojsonObject = JSON.parse(event.target.result);
+            var features = new ol.format.GeoJSON().readFeatures(geojsonObject);
+            vectorSource.clear();
+            vectorSource.addFeatures(features);
+        };
+        reader.readAsText(file);
+    }
+}
+

@@ -36,28 +36,28 @@ else
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Natural Events</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item">Earthquakes</a></li>
-                            <li><a class="dropdown-item">Heat Waves</a></li>
-                            <li><a class="dropdown-item">Precipitations</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="updateBreadcrumb('Natural Events', 'Earthquakes')">Earthquakes</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="updateBreadcrumb('Natural Events', 'Heat Waves')">Heat Waves</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="updateBreadcrumb('Natural Events', 'Precipitations')">Precipitations</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Risk Analysis</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item">Damages</a></li>
-                            <li><a class="dropdown-item">Resilience</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="updateTabs('Damages'); updateBreadcrumb('Risk Analysis', 'Damages')">Damages</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="updateTabs('Resilience'); updateBreadcrumb('Risk Analysis', 'Resilience')">Resilience</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Simulation</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item">Earthquake</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="updateTabs('Earthquake'); updateBreadcrumb('Simulation', 'Earthquake')">Earthquake</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">UAS</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item">Video from UAS</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="updateTabs('UAS'); updateBreadcrumb('UAS', 'Video from UAS')">Video from UAS</a></li>
                         </ul>
                     </li>
                     <li class="nav-item">
@@ -76,6 +76,64 @@ else
             </div>
         </nav>
 
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb" id="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+            </ol>
+        </nav>
+
+        <!-- Nav-tabs -->
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <!-- TAB Menù 1° Livello: Risk Analysis-->
+            <!-- TAB Menù 2° Livello: Damages -->
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="buildings-tab" data-bs-toggle="tab" data-bs-target="#buildings" type="button" role="tab" aria-controls="buildings" aria-selected="false">Buildings</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="infrastructures-tab" data-bs-toggle="tab" data-bs-target="#infrastructures" type="button" role="tab" aria-controls="infrastructures" aria-selected="false">Critical Infrastructures</button>
+            </li>
+
+            <!-- TAB Menù 2° Livello: Resilience -->
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="social-tab" data-bs-toggle="tab" data-bs-target="#social" type="button" role="tab" aria-controls="social" aria-selected="false">Social Resilience</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="economic-tab" data-bs-toggle="tab" data-bs-target="#economic" type="button" role="tab" aria-controls="economic" aria-selected="false">Economic Resilience</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="operational-tab" data-bs-toggle="tab" data-bs-target="#operational" type="button" role="tab" aria-controls="operational" aria-selected="false">Operational Resilience</button>
+            </li>
+        </ul>
+
+        <!-- Tab content -->
+        <div class="tab-content" id="myTabContent">
+            <!-- TAB content Menù 1° Livello: Risk Analysis-->
+            <!-- TAB content Menù 2° Livello: Damages -->
+            <div class="tab-pane fade" id="buildings" role="tabpanel" aria-labelledby="buildings-tab">
+                <!-- Content for Buildings tab -->
+                <p>Content related to Buildings</p>
+            </div>
+            <div class="tab-pane fade" id="infrastructures" role="tabpanel" aria-labelledby="infrastructures-tab">
+                <!-- Content for Critical Infrastructures tab -->
+                <p>Content related to Critical Infrastructures</p>
+            </div>
+
+            <!-- TAB content Menù 2° Livello: Resilience -->
+            <div class="tab-pane fade" id="social" role="tabpanel" aria-labelledby="social-tab">
+                <!-- Content for Social Resilience tab -->
+                <p>Content related to Social Resilience</p>
+            </div>
+            <div class="tab-pane fade" id="economic" role="tabpanel" aria-labelledby="economic-tab">
+                <!-- Content for Economic Resilience tab -->
+                <p>Content related to Economic Resilience</p>
+            </div>
+            <div class="tab-pane fade" id="operational" role="tabpanel" aria-labelledby="operational-tab">
+                <!-- Content for Operational Resilience tab -->
+                <p>Content related to Operational Resilience</p>
+            </div>
+        </div>
+
         <!-- Mappa -->
         <div id="map" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
 
@@ -93,43 +151,59 @@ else
         <script type="text/javascript">
             $(document).ready(function () {
                 initMap();
-            });
+                initTabs();
+               
+                var lastInputTime = 0;
+                var delay = 3000; // Delay di 3 secondi
 
-            // Funzione per cercare gli indirizzi e visualizzare i suggerimenti
-            $('#addressInput').on('input', function () {
-                var address = $(this).val();
-                setTimeout(function () {
-                    var url = 'https://nominatim.openstreetmap.org/search?q=' + address + '&format=json&addressdetails=1&limit=5';
+                // Funzione per cercare gli indirizzi e visualizzare i suggerimenti
+                $('#addressInput').on('input', function () {
+                    var currentTime = new Date().getTime();
+                    if (currentTime - lastInputTime > delay) {
+                        lastInputTime = currentTime;
+                        var address = $(this).val();
+
+                        var url = 'https://nominatim.openstreetmap.org/search?q=' + address + '&format=json&addressdetails=1&limit=5';
+
+                        $.getJSON(url, function (data) {
+                            $('#suggestions').empty();
+                            if (data && data.length > 0) {
+                                $('#suggestions').show();
+                                $.each(data, function (i, item) {
+                                    $('#suggestions').append('<a href="#" class="list-group-item list-group-item-action" data-type="' + item.type + '" data-lon="' + item.lon + '" data-lat="' + item.lat + '">' + item.display_name + '</a>');
+                                });
+                            } else {
+                                $('#suggestions').hide();
+                            }
+                        });
+                    }
+                });
+
+                // Funzione per zoomare sulla posizione selezionata dall'utente
+                $('#suggestions').on('click', 'a', function (e) {
+                    e.preventDefault();
+                    var address = $(this).text();
+                    var type = $(this).data('type');
+                    var url = 'https://nominatim.openstreetmap.org/search?q=' + address + '&format=json&addressdetails=1&limit=1';
 
                     $.getJSON(url, function (data) {
-                        $('#suggestions').empty();
                         if (data && data.length > 0) {
-                            $('#suggestions').show();
-                            $.each(data, function (i, item) {
-                                $('#suggestions').append('<a href="#" class="list-group-item list-group-item-action">' + item.display_name + '</a>');
-                            });
-                        } else {
+                            var lon = parseFloat(data[0].lon);
+                            var lat = parseFloat(data[0].lat);
+                            map.getView().setCenter(ol.proj.fromLonLat([lon, lat]));
+                            map.getView().setZoom(15);
+                            addPointer(lon, lat);
+                                                       
                             $('#suggestions').hide();
                         }
                     });
-                }, 2000); // 2000 milliseconds delay
-            });
-
-            // Funzione per zoomare sulla posizione selezionata dall'utente
-            $('#suggestions').on('click', 'a', function (e) {
-                e.preventDefault();
-                var address = $(this).text();
-                var url = 'https://nominatim.openstreetmap.org/search?q=' + address + '&format=json&addressdetails=1&limit=1';
-
-                $.getJSON(url, function (data) {
-                    if (data && data.length > 0) {
-                        var lon = parseFloat(data[0].lon);
-                        var lat = parseFloat(data[0].lat);
-                        map.getView().setCenter(ol.proj.fromLonLat([lon, lat]));
-                        map.getView().setZoom(15);
-                        $('#suggestions').hide();
-                    }
                 });
+
+                // Funzione per gestire la selezione della mappa quando si fa clic su una delle voci del menu a discesa
+                $('.dropdown-item').on('click', function () {
+                    $('.dropdown-menu').removeClass('show');
+                });
+
             });
         </script>
     </body>

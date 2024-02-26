@@ -51,13 +51,13 @@ else
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Simulation</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item">Earthquake</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="updateTabs('Earthquake'); updateBreadcrumb('Simulation', 'Earthquake')">Earthquake</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">UAS</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item">Video from UAS</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="updateTabs('UAS'); updateBreadcrumb('UAS', 'Video from UAS')">Video from UAS</a></li>
                         </ul>
                     </li>
                     <li class="nav-item">
@@ -79,19 +79,23 @@ else
         <!-- Breadcrumb -->
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb" id="breadcrumb">
-                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                @* <li class="breadcrumb-item active" aria-current="page">Natural Events</li> *@
+                <li class="breadcrumb-item"><a href="#">Home</a></li>              
             </ol>
         </nav>
 
         <!-- Nav-tabs -->
         <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <!-- TAB Menù 1° Livello: Risk Analysis-->
+
+            <!-- TAB Menù 2° Livello: Damages -->
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="buildings-tab" data-bs-toggle="tab" data-bs-target="#buildings" type="button" role="tab" aria-controls="buildings" aria-selected="false">Buildings</button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="infrastructures-tab" data-bs-toggle="tab" data-bs-target="#infrastructures" type="button" role="tab" aria-controls="infrastructures" aria-selected="false">Critical Infrastructures</button>
             </li>
+
+            <!-- TAB Menù 2° Livello: Resilience -->
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="social-tab" data-bs-toggle="tab" data-bs-target="#social" type="button" role="tab" aria-controls="social" aria-selected="false">Social Resilience</button>
             </li>
@@ -105,6 +109,9 @@ else
 
         <!-- Tab content -->
         <div class="tab-content" id="myTabContent">
+            <!-- TAB content Menù 1° Livello: Risk Analysis-->
+
+            <!-- TAB content Menù 2° Livello: Damages -->
             <div class="tab-pane fade" id="buildings" role="tabpanel" aria-labelledby="buildings-tab">
                 <!-- Content for Buildings tab -->
                 <p>Content related to Buildings</p>
@@ -113,6 +120,8 @@ else
                 <!-- Content for Critical Infrastructures tab -->
                 <p>Content related to Critical Infrastructures</p>
             </div>
+
+            <!-- TAB content Menù 2° Livello: Resilience -->
             <div class="tab-pane fade" id="social" role="tabpanel" aria-labelledby="social-tab">
                 <!-- Content for Social Resilience tab -->
                 <p>Content related to Social Resilience</p>
@@ -143,6 +152,7 @@ else
 
         <script type="text/javascript">
             $(document).ready(function () {
+                initTabs();
                 initMap();
             });
 
@@ -160,38 +170,40 @@ else
                 }
             }
 
+            function initTabs() {
+                $('#buildings-tab').removeClass('show active');
+                $('#infrastructures-tab').removeClass('show active');
+                $('#social-tab').removeClass('show active');
+                $('#economic-tab').removeClass('show active');
+                $('#operational-tab').removeClass('show active');
+
+                $('#buildings-tab').addClass('visually-hidden');
+                $('#infrastructures-tab').addClass('visually-hidden');
+                $('#social-tab').addClass('visually-hidden');               
+                $('#economic-tab').addClass('visually-hidden');
+                $('#operational-tab').addClass('visually-hidden');
+            }
+
             // Function to update tabs based on selected dropdown item
             function updateTabs(selectedItem) {
                 // Hide all tabs
                 $('#myTabContent').children('.tab-pane').removeClass('show active');
                 $('#myTabContent').children('.tab-pane').addClass('fade');
-               
+
+                initTabs();
                 // Show corresponding tabs based on selected dropdown item
                 if (selectedItem === 'Damages') {
                     $('#buildings-tab').removeClass('visually-hidden');
                     $('#buildings-tab').addClass('show active');
-                    $('#infrastructures-tab').removeClass('visually-hidden');
-                    // $('#infrastructures-tab').addClass('show active');
                     
-                    $('#social-tab').removeClass('show active');
-                    $('#social-tab').addClass('visually-hidden');
-                    $('#economic-tab').removeClass('show active');
-                    $('#economic-tab').addClass('visually-hidden');
-                    $('#operational-tab').removeClass('show active');
-                    $('#operational-tab').addClass('visually-hidden');
+                    $('#infrastructures-tab').removeClass('visually-hidden');
 
                 } else if (selectedItem === 'Resilience') {
-                    $('#buildings-tab').removeClass('show active');
-                    $('#buildings-tab').addClass('visually-hidden');
-                    $('#infrastructures-tab').removeClass('show active');
-                    $('#infrastructures-tab').addClass('visually-hidden');
-
                     $('#social-tab').removeClass('visually-hidden');
                     $('#social-tab').addClass('show active');
-                    $('#economic-tab').removeClass('visually-hidden');
-                    // $('#economic-tab').addClass('show active');
-                    $('#operational-tab').removeClass('visually-hidden');
-                    // $('#operational-tab').addClass('show active');
+                   
+                    $('#economic-tab').removeClass('visually-hidden');                  
+                    $('#operational-tab').removeClass('visually-hidden');                   
                 }
             }
         </script>
