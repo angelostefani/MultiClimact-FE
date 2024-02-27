@@ -3,12 +3,20 @@
 
 // Write your JavaScript code.
 
+//Variabile per puntare alla mappa correntemente visualizzata
 var map;
+
+var mapBuildings;
+var mapCriticalInfrastructures;
+var mapSocialResilience;
+var mapEconomicResilience;
+var mapOperationalResilience;
+
 var currentBaseLayer;
 
-function initMap() {
-    map = new ol.Map({
-        target: 'map',
+function initMap(targetMap) {
+    localMap = new ol.Map({
+        target: targetMap,
         layers: [
             new ol.layer.Tile({
                 source: new ol.source.OSM()
@@ -21,17 +29,63 @@ function initMap() {
     });
 
     // Aggiungi un listener per le coordinate del mouse
-    map.on('pointermove', function (event) {
+    localMap.on('pointermove', function (event) {
         var coordinates = ol.proj.toLonLat(event.coordinate);
         var lon = coordinates[0];
         var lat = coordinates[1];
         var lonDMS = convertToDMS(lon, 'lon');
         var latDMS = convertToDMS(lat, 'lat');
         $('#mouseCoordinates').text('Lat: ' + latDMS + ' - Lon: ' + lonDMS);
-    });      
+    });
+    
+    switch (targetMap) {
+        case 'mapBuildings':
+            mapBuildings = localMap;
+            break;
+        case 'mapCriticalInfrastructures':
+            mapBuildings = localMap;
+            break;
+        case 'mapSocialResilience':
+            mapSocialResilience = localMap;
+            break;
+        case 'mapEconomicResilience':
+            mapEconomicResilience = localMap;
+            break;
+        case 'mapOperationalResilience':
+            mapOperationalResilience = localMap;
+            break;
+        default:
+            mapBuildings = localMap;
+            break;
+    }
+}
 
-    map.on('singleclick', function (event) {
-        var feature = map.forEachFeatureAtPixel(event.pixel, function (feature) {
+function initGeoJsonMap(targetMap) {
+    localMap = new ol.Map({
+        target: targetMap,
+        layers: [
+            new ol.layer.Tile({
+                source: new ol.source.OSM()
+            }),
+        ],
+        view: new ol.View({
+            center: ol.proj.fromLonLat([13.1996, 43.1167]), // Longitudine e latitudine approssimative delle Marche
+            zoom: 9 // Livello di zoom iniziale
+        })
+    });
+
+    // Aggiungi un listener per le coordinate del mouse
+    localMap.on('pointermove', function (event) {
+        var coordinates = ol.proj.toLonLat(event.coordinate);
+        var lon = coordinates[0];
+        var lat = coordinates[1];
+        var lonDMS = convertToDMS(lon, 'lon');
+        var latDMS = convertToDMS(lat, 'lat');
+        $('#mouseCoordinates').text('Lat: ' + latDMS + ' - Lon: ' + lonDMS);
+    });
+
+    localMap.on('singleclick', function (event) {
+        var feature = localMap.forEachFeatureAtPixel(event.pixel, function (feature) {
             return feature;
         });
 
@@ -43,8 +97,82 @@ function initMap() {
             popup.hide();
         }
     });
+
+    switch (targetMap) {
+        case 'mapBuildings':
+            mapBuildings = localMap;
+            break;
+        case 'mapCriticalInfrastructures':
+            mapBuildings = localMap;
+            break;
+        case 'mapSocialResilience':
+            mapSocialResilience = localMap;
+            break;
+        case 'mapEconomicResilience':
+            mapEconomicResilience = localMap;
+            break;
+        case 'mapOperationalResilience':
+            mapOperationalResilience = localMap;
+            break;
+        default:
+            mapBuildings = localMap;
+            break;
+    }
+}
+function initWMSMap(targetMap, wmsUrl, wmsLayer) {
+   var localMap = new ol.Map({
+        target: targetMap,
+        layers: [
+            new ol.layer.Tile({
+                source: new ol.source.OSM()
+            }),
+            new ol.layer.Tile({
+                source: new ol.source.TileWMS({
+                    url: wmsUrl,
+                    params: { 'LAYERS': wmsLayer, 'TILED': true },
+                    serverType: 'geoserver' // Specifica il tipo di server WMS, ad esempio 'geoserver', 'mapserver', ecc.
+                })
+            })
+        ],
+        view: new ol.View({
+            center: ol.proj.fromLonLat([13.1996, 43.1167]), // Longitudine e latitudine approssimative delle Marche
+            zoom: 9 // Livello di zoom iniziale
+        })
+    });
+
+    // Aggiungi un listener per le coordinate del mouse
+    localMap.on('pointermove', function (event) {
+        var coordinates = ol.proj.toLonLat(event.coordinate);
+        var lon = coordinates[0];
+        var lat = coordinates[1];
+        var lonDMS = convertToDMS(lon, 'lon');
+        var latDMS = convertToDMS(lat, 'lat');
+        $('#mouseCoordinates').text('Lat: ' + latDMS + ' - Lon: ' + lonDMS);
+    });
+    
+    switch (targetMap) {
+        case 'mapBuildings':
+            mapBuildings = localMap;
+            break;
+        case 'mapCriticalInfrastructures':
+            mapCriticalInfrastructures = localMap;
+            break;
+        case 'mapSocialResilience':
+            mapSocialResilience = localMap;
+            break;
+        case 'mapEconomicResilience':
+            mapEconomicResilience = localMap;
+            break;
+        case 'mapOperationalResilience':
+            mapOperationalResilience = localMap;
+            break;
+        default:
+            mapBuildings = localMap;
+            break;
+    }
 }
 
+//Funzione per convertire le coordinate longitudine e latitudine
 function convertToDMS(coord, coordType) {
     var absCoord = Math.abs(coord);
     var degrees = Math.floor(absCoord);
@@ -64,9 +192,13 @@ function convertToDMS(coord, coordType) {
 // Cambia la mappa di base
 function changeMap(mapName) {
     var newBaseLayer;
-   
+
     // Rimuove il layer corrente
-    map.removeLayer(currentBaseLayer);
+    map.getLayers().forEach(function (layer) {
+        if (layer instanceof ol.layer.Tile) {
+            map.removeLayer(layer);
+        }
+    });
 
     // Crea il nuovo layer in base alla mappa selezionata
     switch (mapName) {
@@ -141,14 +273,11 @@ function changeMap(mapName) {
 
     // Aggiunge il nuovo layer alla mappa
     map.addLayer(newBaseLayer);
-
-    // Aggiorna il riferimento al layer corrente
-    currentBaseLayer = newBaseLayer;
 }
 
-function showTab(tabId) {
-    $('#myTab a[href="#' + tabId + '"]').tab('show');
-}
+//function showTab(tabId) {
+//    $('#myTab a[href="#' + tabId + '"]').tab('show');
+//}
 
 // Function to update breadcrumb and show corresponding tabs
 function updateBreadcrumb(section, subSection) {
@@ -185,12 +314,16 @@ function updateTabs(selectedItem) {
     if (selectedItem === 'Damages') {
         $('#buildings-tab').removeClass('visually-hidden');
         $('#buildings-tab').addClass('show active');
+        $('#buildings').addClass('show active');
+        map = mapBuildings;
 
-        $('#infrastructures-tab').removeClass('visually-hidden');
+        $('#infrastructures-tab').removeClass('visually-hidden');       
 
     } else if (selectedItem === 'Resilience') {
         $('#social-tab').removeClass('visually-hidden');
         $('#social-tab').addClass('show active');
+        $('#social').addClass('show active');
+        map = mapSocialResilience;
 
         $('#economic-tab').removeClass('visually-hidden');
         $('#operational-tab').removeClass('visually-hidden');
