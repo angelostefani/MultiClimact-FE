@@ -68,7 +68,7 @@ else
                         <ul class="dropdown-menu">
                             @foreach (var mappa in Maps)
                             {
-                                <li><a class="dropdown-item" href="#" onclick="changeMap('@mappa.Trim()')">@mappa.Trim()</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="changeMap('@mappa.Trim()','@ViewData["activeTab"]')">@mappa.Trim()</a></li>
                             }
                         </ul>
                     </li>
@@ -159,38 +159,33 @@ else
         <script type="text/javascript">
             $(document).ready(function () {
                 initMap('map');
-                initWMSMap('mapBuildings', '@ViewData["wmsurl1"]', '@ViewData["wmslayer1"]');
-                initWMSMap('mapCriticalInfrastructures', '@ViewData["wmsurl2"]', '@ViewData["wmslayer2"]');
-                initWMSMap('mapSocialResilience', '@ViewData["wmsurl3"]', '@ViewData["wmslayer3"]');
-                initWMSMap('mapEconomicResilience', '@ViewData["wmsurl4"]', '@ViewData["wmslayer4"]');
-                initWMSMap('mapOperationalResilience', 'https://ahocevar.com/geoserver/wms', 'topp:states');
+                initWMSMap('mapBuildings', '@ViewData["wmsurl1"]', '@ViewData["wmslayer1"]', 'OpenStreetMap - EPSG:3857');
+                initWMSMap('mapCriticalInfrastructures', '@ViewData["wmsurl2"]', '@ViewData["wmslayer2"]','Google Normal - EPSG:3857');
+                initWMSMap('mapSocialResilience', '@ViewData["wmsurl3"]', '@ViewData["wmslayer3"]', 'OpenStreetMap - EPSG:3857');
+                initWMSMap('mapEconomicResilience', '@ViewData["wmsurl4"]', '@ViewData["wmslayer4"]', 'OpenStreetMap - EPSG:3857');
+                initWMSMap('mapOperationalResilience', 'https://ahocevar.com/geoserver/wms', 'topp:states', 'OpenStreetMap - EPSG:3857');
 
                 initTabs();
                 updateTabs('Damages');
 
-                $('#buildings-tab').on('click', function () {
-                    map = mapBuildings;
-                    ViewData["map"] = "mapBuildings";
+                $('#buildings-tab').on('click', function () {                   
+                    ViewData["activeTab"] = "buildings";
                 });
 
-                $('#infrastructures').on('click', function () {
-                    map = mapCriticalInfrastructures;
-                    ViewData["map"] = "mapCriticalInfrastructures";
+                $('#infrastructures').on('click', function () {                   
+                    ViewData["activeTab"] = "infrastructures";
                 });
 
-                $('#social').on('click', function () {
-                    map = mapSocialResilience;
-                    ViewData["map"] = "mapSocialResilience";
+                $('#social').on('click', function () {                   
+                    ViewData["activeTab"] = "social";
                 });
 
-                $('#economic').on('click', function () {
-                    map = mapEconomicResilience;
-                    ViewData["map"] = "mapEconomicResilience";
+                $('#economic').on('click', function () {                   
+                    ViewData["activeTab"] = "economic";
                 });
 
-                $('#operational').on('click', function () {
-                    map = mapOperationalResilience;
-                    ViewData["map"] = "mapOperationalResilience";
+                $('#operational').on('click', function () {                   
+                    ViewData["activeTab"] = "operational";
                 });
 
                 var lastInputTime = 0;
