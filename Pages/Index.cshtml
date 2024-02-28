@@ -159,10 +159,10 @@ else
         <script type="text/javascript">
             $(document).ready(function () {
                 initMap('map');
-                initWMSMap('mapBuildings', 'https://ahocevar.com/geoserver/wms', 'topp:states');
-                initWMSMap('mapCriticalInfrastructures', 'https://ahocevar.com/geoserver/wms', 'topp:states');
-                initWMSMap('mapSocialResilience', 'https://ahocevar.com/geoserver/wms', 'topp:states');
-                initWMSMap('mapEconomicResilience', 'https://ahocevar.com/geoserver/wms', 'topp:states');
+                initWMSMap('mapBuildings', '@ViewData["wmsurl1"]', '@ViewData["wmslayer1"]');
+                initWMSMap('mapCriticalInfrastructures', '@ViewData["wmsurl2"]', '@ViewData["wmslayer2"]');
+                initWMSMap('mapSocialResilience', '@ViewData["wmsurl3"]', '@ViewData["wmslayer3"]');
+                initWMSMap('mapEconomicResilience', '@ViewData["wmsurl4"]', '@ViewData["wmslayer4"]');
                 initWMSMap('mapOperationalResilience', 'https://ahocevar.com/geoserver/wms', 'topp:states');
 
                 initTabs();
@@ -170,22 +170,27 @@ else
 
                 $('#buildings-tab').on('click', function () {
                     map = mapBuildings;
+                    ViewData["map"] = "mapBuildings";
                 });
 
                 $('#infrastructures').on('click', function () {
                     map = mapCriticalInfrastructures;
+                    ViewData["map"] = "mapCriticalInfrastructures";
                 });
 
                 $('#social').on('click', function () {
                     map = mapSocialResilience;
+                    ViewData["map"] = "mapSocialResilience";
                 });
 
                 $('#economic').on('click', function () {
                     map = mapEconomicResilience;
+                    ViewData["map"] = "mapEconomicResilience";
                 });
 
                 $('#operational').on('click', function () {
                     map = mapOperationalResilience;
+                    ViewData["map"] = "mapOperationalResilience";
                 });
 
                 var lastInputTime = 0;
