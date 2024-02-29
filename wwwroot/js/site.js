@@ -3,184 +3,119 @@
 
 // Write your JavaScript code.
 
-//Variabile per puntare alla mappa correntemente visualizzata
-var map;
+let activeTab = 'buildings';
 
-var mapBuildings;
-var mapCriticalInfrastructures;
-var mapSocialResilience;
-var mapEconomicResilience;
-var mapOperationalResilience;
+let mapBuildings;
+let mapCriticalInfrastructures;
+let mapSocialResilience;
+let mapEconomicResilience;
+let mapOperationalResilience;
 
-function initMap(targetMap) {
+function initMap(targetHtmlMapId) {
+    let centerLatitude = 13.1996
+    let centerLongitude = 43.1167
+    let zoomValue = 9
+
+    return initWMSMap(targetHtmlMapId, '', centerLatitude, centerLongitude, zoomValue, '', '');
+}
+
+/*
+Autore: Angelo Stefani [angelo.stefani@enea.it]
+Data: 29/02/2024
+
+Questa funzione JavaScript, denominata initWMSMap, è progettata per inizializzare una mappa utilizzando OpenLayers, una libreria JavaScript per la visualizzazione di mappe interattive.
+La funzione accetta quattro parametri:
+* @param {string} targetHtmlMapId - Il nome del div HTML in cui verrà renderizzata la mappa.
+* @param {string} baseMapName - Il nome della mappa di base da utilizzare come sfondo.
+* @param {string} wmsUrl - L'URL del servizio WMS (Web Map Service) per il layer WMS da visualizzare sulla mappa.
+* @param {string} wmsLayer - Il nome del layer WMS da visualizzare sulla mappa.
+ 
+La funzione crea un nuovo layer di mappa di base in base al baseMapName fornito utilizzando uno switch-case per determinare quale tipo di mappa di base deve essere utilizzato. Quindi crea una nuova istanza di ol.Map con il target specificato, i layer di mappa di base e il layer WMS specificato. Imposta anche una vista predefinita per la mappa.
+Inoltre, aggiunge un listener per seguire le coordinate del mouse sulla mappa e visualizzarle in un elemento HTML con id mouseCoordinates.
+Infine, utilizza un altro switch-case per assegnare la mappa appena creata a una variabile globale in base al nome del target della mappa specificato.
+Questa funzione è progettata per essere utilizzata all'interno di un'applicazione web che necessita di visualizzare mappe interattive con layer WMS sovrapposti.
+*/
+function initWMSMap(targetHtmlMapId, baseMapName, centerLatitude, centerLongitude, zoomValue, wmsUrl, wmsLayer) {
+    let baseMapLayer;
+    let localMap;
+    let layersArray;
+
+    // Crea il nuovo base map layer, con la mappa selezionata
+    baseMapLayer = getBaseMapLayer(baseMapName);
+
+    layersArray = [baseMapLayer]; // Array per i layer della mappa
+
+    // Verifica se le variabili wmsUrl e wmsLayer sono valorizzate
+    if (wmsUrl && wmsLayer) {
+        // Se entrambe le variabili sono valorizzate, crea il layer WMS Geoserver
+        layersArray.push(new ol.layer.Tile({
+            source: new ol.source.TileWMS({
+                url: wmsUrl,
+                params: { 'LAYERS': wmsLayer, 'TILED': true },
+                serverType: 'geoserver'
+            })
+        }));
+    }
+
+    // Crea la mappa OpenLayers con o senza il layer WMS Geoserver in base alle variabili
     localMap = new ol.Map({
-        target: targetMap,
-        layers: [
-            new ol.layer.Tile({
-                source: new ol.source.OSM()
-            }),
-        ],
-        view: new ol.View({
-            center: ol.proj.fromLonLat([13.1996, 43.1167]), // Longitudine e latitudine approssimative delle Marche
-            zoom: 9 // Livello di zoom iniziale
-        })
+        target: targetHtmlMapId,
+        layers: layersArray, // Utilizza l'array dei layer creati
+        view: new ol.View({ center: ol.proj.fromLonLat([centerLatitude, centerLongitude]), zoom: zoomValue })
     });
 
     // Aggiungi un listener per le coordinate del mouse
     localMap.on('pointermove', function (event) {
-        var coordinates = ol.proj.toLonLat(event.coordinate);
-        var lon = coordinates[0];
-        var lat = coordinates[1];
-        var lonDMS = convertToDMS(lon, 'lon');
-        var latDMS = convertToDMS(lat, 'lat');
+        let coordinates = ol.proj.toLonLat(event.coordinate);
+        let lon = coordinates[0];
+        let lat = coordinates[1];
+        let lonDMS = convertToDMS(lon, 'lon');
+        let latDMS = convertToDMS(lat, 'lat');
         $('#mouseCoordinates').text('Lat: ' + latDMS + ' - Lon: ' + lonDMS);
     });
-    
-    switch (targetMap) {
-        case 'mapBuildings':
-            mapBuildings = localMap;
-            break;
-        case 'mapCriticalInfrastructures':
-            mapBuildings = localMap;
-            break;
-        case 'mapSocialResilience':
-            mapSocialResilience = localMap;
-            break;
-        case 'mapEconomicResilience':
-            mapEconomicResilience = localMap;
-            break;
-        case 'mapOperationalResilience':
-            mapOperationalResilience = localMap;
-            break;
-        default:
-            mapBuildings = localMap;
-            break;
-    }
+
+    return localMap;
 }
 
-function initWMSMap(targetMap, wmsUrl, wmsLayer, mapName) {
-     var baseMapLayer;
-    
-     // Crea il nuovo layer in base alla mappa selezionata
-    switch (mapName) {
+function getBaseMapLayer(baseMapName) {
+    let baseMapLayer;
+
+    switch (baseMapName) {
         case 'OpenStreetMap - EPSG:3857':
-            baseMapLayer = new ol.layer.Tile({
-                source: new ol.source.OSM()
-            });
+            baseMapLayer = new ol.layer.Tile({ source: new ol.source.OSM() });
             break;
         case 'Google Normal - EPSG:3857':
-            baseMapLayer = new ol.layer.Tile({
-                source: new ol.source.XYZ({
-                    url: 'https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}'
-                })
-            });
+            baseMapLayer = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}' }) });
             break;
         case 'Google Satellite - EPSG:3857':
-            baseMapLayer = new ol.layer.Tile({
-                source: new ol.source.XYZ({
-                    url: 'https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}'
-                })
-            });
+            baseMapLayer = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}' }) });
             break;
         case 'Google Hybrid - EPSG:3857':
-            baseMapLayer = new ol.layer.Tile({
-                source: new ol.source.XYZ({
-                    url: 'https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}'
-                })
-            });
+            baseMapLayer = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}' }) });
             break;
         case 'OpenTopoMap':
-            baseMapLayer = new ol.layer.Tile({
-                source: new ol.source.XYZ({
-                    url: 'https://tile.opentopomap.org/{z}/{x}/{y}.png'
-                })
-            });
+            baseMapLayer = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://tile.opentopomap.org/{z}/{x}/{y}.png' }) });
             break;
         case 'Sentinel-2 cloudless':
-            baseMapLayer = new ol.layer.Tile({
-                source: new ol.source.XYZ({
-                    url: 'https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2018_3857/default/g/{z}/{y}/{x}.jpg'
-                })
-            });
+            baseMapLayer = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2018_3857/default/g/{z}/{y}/{x}.jpg' }) });
             break;
         case 'Metacarta - EPSG:4326':
-            baseMapLayer = new ol.layer.Tile({
-                source: new ol.source.XYZ({
-                    url: 'http://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryTopo/MapServer/tile/{z}/{y}/{x}'
-                })
-            });
+            baseMapLayer = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'http://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryTopo/MapServer/tile/{z}/{y}/{x}' }) });
             break;
         case 'geoSdi - EPSG:4326':
-            baseMapLayer = new ol.layer.Tile({
-                source: new ol.source.XYZ({
-                    url: 'http://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}'
-                })
-            });
+            baseMapLayer = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'http://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}' }) });
             break;
         case 'geoSdi No Map - EPSG:4326':
-            baseMapLayer = new ol.layer.Tile({
-                source: new ol.source.XYZ({
-                    url: 'http://services.arcgisonline.com/arcgis/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{z}/{y}/{x}'
-                })
-            });
+            baseMapLayer = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'http://services.arcgisonline.com/arcgis/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{z}/{y}/{x}' }) });
             break;
         case 'Empty layer - EPSG:3857':
             // Inserire qui la configurazione per un layer vuoto
             break;
         default:
-            baseMapLayer = new ol.layer.Tile({
-                source: new ol.source.OSM()
-            });
+            baseMapLayer = new ol.layer.Tile({ source: new ol.source.OSM() });
             break;
     }
-        
-    var localMap = new ol.Map({
-        target: targetMap,
-        layers: [baseMapLayer,
-            new ol.layer.Tile({
-                source: new ol.source.TileWMS({
-                    url: wmsUrl,
-                    params: { 'LAYERS': wmsLayer, 'TILED': true },
-                    serverType: 'geoserver' // Specifica il tipo di server WMS, ad esempio 'geoserver', 'mapserver', ecc.
-                })
-            })
-        ],
-        view: new ol.View({
-            center: ol.proj.fromLonLat([13.1996, 43.1167]), // Longitudine e latitudine approssimative delle Marche
-            zoom: 9 // Livello di zoom iniziale
-        })
-    });
-
-    // Aggiungi un listener per le coordinate del mouse
-    localMap.on('pointermove', function (event) {
-        var coordinates = ol.proj.toLonLat(event.coordinate);
-        var lon = coordinates[0];
-        var lat = coordinates[1];
-        var lonDMS = convertToDMS(lon, 'lon');
-        var latDMS = convertToDMS(lat, 'lat');
-        $('#mouseCoordinates').text('Lat: ' + latDMS + ' - Lon: ' + lonDMS);
-    });
-    
-    switch (targetMap) {
-        case 'mapBuildings':
-            mapBuildings = localMap;
-            break;
-        case 'mapCriticalInfrastructures':
-            mapCriticalInfrastructures = localMap;
-            break;
-        case 'mapSocialResilience':
-            mapSocialResilience = localMap;
-            break;
-        case 'mapEconomicResilience':
-            mapEconomicResilience = localMap;
-            break;
-        case 'mapOperationalResilience':
-            mapOperationalResilience = localMap;
-            break;
-        default:
-            mapBuildings = localMap;
-            break;
-    }
+    return baseMapLayer;
 }
 
 //Funzione per convertire le coordinate longitudine e latitudine
@@ -201,112 +136,93 @@ function convertToDMS(coord, coordType) {
 }
 
 // Cambia la mappa di base
-function changeMap(mapName, activeTab) {
-    var newBaseLayer;
+function changeMap(baseMapName, activeTab) {
+    let baseMapLayer;
+    let wmsLayer;
+    let localMap;
+    let layersArray;
+
+    // Crea il nuovo base map layer, con la mappa selezionata
+    baseMapLayer = getBaseMapLayer(baseMapName);
+    //layersArray = [baseMapLayer]; // Array per i layer della mappa
 
     switch (activeTab) {
-    case 'buildings':
-        map = mapBuildings;
-        break;
-    case 'infrastructures':      
-        map = mapCriticalInfrastructures;
-        break;
-    case 'social':       
-        map = mapSocialResilience;
-        break;
-    case 'economic':     
-        map = mapEconomicResilience;
-        break;
-    case 'operational':      
-        map = mapOperationalResilience;
-        break;
-    default:
-        map = mapBuildings;
-        break;
-}
+        case 'buildings':
+            wmsLayer = mapBuildings.getLayers().getArray()[1];
+            mapBuildings.getLayers().forEach(function (layer) {
+                if (layer instanceof ol.layer.Tile) {
+                    mapBuildings.removeLayer(layer);
+                }
+            });
 
-    // Rimuove il layer corrente
-    map.getLayers().forEach(function (layer) {
-        if (layer instanceof ol.layer.Tile) {
-            map.removeLayer(layer);
-        }
-    });
+            // Aggiunge i nuovi layer alla mappa
+            mapBuildings.addLayer(baseMapLayer);
+            mapBuildings.addLayer(wmsLayer);
+            break;
+        case 'infrastructures':
+            wmsLayer = mapCriticalInfrastructures.getLayers().getArray()[1];
+            mapCriticalInfrastructures.getLayers().forEach(function (layer) {
+                if (layer instanceof ol.layer.Tile) {
+                    mapCriticalInfrastructures.removeLayer(layer);
+                }
+            });
 
-    // Crea il nuovo layer in base alla mappa selezionata
-    switch (mapName) {
-        case 'OpenStreetMap - EPSG:3857':
-            newBaseLayer = new ol.layer.Tile({
-                source: new ol.source.OSM()
-            });
+            // Aggiunge i nuovi layer alla mappa
+            mapCriticalInfrastructures.addLayer(baseMapLayer);
+            mapCriticalInfrastructures.addLayer(wmsLayer);
             break;
-        case 'Google Normal - EPSG:3857':
-            newBaseLayer = new ol.layer.Tile({
-                source: new ol.source.XYZ({
-                    url: 'https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}'
-                })
+        case 'social':
+            wmsLayer = mapSocialResilience.getLayers().getArray()[1];
+            mapSocialResilience.getLayers().forEach(function (layer) {
+                if (layer instanceof ol.layer.Tile) {
+                    mapSocialResilience.removeLayer(layer);
+                }
             });
+
+            // Aggiunge i nuovi layer alla mappa
+            mapSocialResilience.addLayer(baseMapLayer);
+            mapSocialResilience.addLayer(wmsLayer);
             break;
-        case 'Google Satellite - EPSG:3857':
-            newBaseLayer = new ol.layer.Tile({
-                source: new ol.source.XYZ({
-                    url: 'https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}'
-                })
+        case 'economic':
+            wmsLayer = mapEconomicResilience.getLayers().getArray()[1];
+            mapEconomicResilience.getLayers().forEach(function (layer) {
+                if (layer instanceof ol.layer.Tile) {
+                    mapEconomicResilience.removeLayer(layer);
+                }
             });
+
+            // Aggiunge i nuovi layer alla mappa
+            mapEconomicResilience.addLayer(baseMapLayer);
+            mapEconomicResilience.addLayer(wmsLayer);
             break;
-        case 'Google Hybrid - EPSG:3857':
-            newBaseLayer = new ol.layer.Tile({
-                source: new ol.source.XYZ({
-                    url: 'https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}'
-                })
+        case 'operational':
+            wmsLayer = mapOperationalResilience.getLayers().getArray()[1];
+            mapOperationalResilience.getLayers().forEach(function (layer) {
+                if (layer instanceof ol.layer.Tile) {
+                    mapOperationalResilience.removeLayer(layer);
+                }
             });
-            break;
-        case 'OpenTopoMap':
-            newBaseLayer = new ol.layer.Tile({
-                source: new ol.source.XYZ({
-                    url: 'https://tile.opentopomap.org/{z}/{x}/{y}.png'
-                })
-            });
-            break;
-        case 'Sentinel-2 cloudless':
-            newBaseLayer = new ol.layer.Tile({
-                source: new ol.source.XYZ({
-                    url: 'https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2018_3857/default/g/{z}/{y}/{x}.jpg'
-                })
-            });
-            break;
-        case 'Metacarta - EPSG:4326':
-            newBaseLayer = new ol.layer.Tile({
-                source: new ol.source.XYZ({
-                    url: 'http://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryTopo/MapServer/tile/{z}/{y}/{x}'
-                })
-            });
-            break;
-        case 'geoSdi - EPSG:4326':
-            newBaseLayer = new ol.layer.Tile({
-                source: new ol.source.XYZ({
-                    url: 'http://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}'
-                })
-            });
-            break;
-        case 'geoSdi No Map - EPSG:4326':
-            newBaseLayer = new ol.layer.Tile({
-                source: new ol.source.XYZ({
-                    url: 'http://services.arcgisonline.com/arcgis/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{z}/{y}/{x}'
-                })
-            });
-            break;
-        case 'Empty layer - EPSG:3857':
-            // Inserire qui la configurazione per un layer vuoto
+
+            // Aggiunge i nuovi layer alla mappa
+            mapOperationalResilience.addLayer(baseMapLayer);
+            mapOperationalResilience.addLayer(wmsLayer);
             break;
         default:
-            console.error('Mappa non supportata:', mapName);
-            return; // Esce dalla funzione se la mappa non è supportata
+            wmsLayer = mapBuildings.getLayers().getArray()[1];
+            mapBuildings.getLayers().forEach(function (layer) {
+                if (layer instanceof ol.layer.Tile) {
+                    mapBuildings.removeLayer(layer);
+                }
+            });
+
+            // Aggiunge i nuovi layer alla mappa
+            mapBuildings.addLayer(baseMapLayer);
+            mapBuildings.addLayer(wmsLayer);
+            break;
     }
-
-    // Aggiunge il nuovo layer alla mappa
-    map.addLayer(newBaseLayer);
-
-
+    
+    
+    
 }
 
 // Function to update breadcrumb and show corresponding tabs
@@ -345,15 +261,13 @@ function updateTabs(selectedItem) {
         $('#buildings-tab').removeClass('visually-hidden');
         $('#buildings-tab').addClass('show active');
         $('#buildings').addClass('show active');
-        map = mapBuildings;
 
-        $('#infrastructures-tab').removeClass('visually-hidden');       
+        $('#infrastructures-tab').removeClass('visually-hidden');
 
     } else if (selectedItem === 'Resilience') {
         $('#social-tab').removeClass('visually-hidden');
         $('#social-tab').addClass('show active');
         $('#social').addClass('show active');
-        map = mapSocialResilience;
 
         $('#economic-tab').removeClass('visually-hidden');
         $('#operational-tab').removeClass('visually-hidden');
@@ -399,4 +313,3 @@ function loadGeoJSON() {
         reader.readAsText(file);
     }
 }
-

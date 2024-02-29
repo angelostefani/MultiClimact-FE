@@ -68,7 +68,7 @@ else
                         <ul class="dropdown-menu">
                             @foreach (var mappa in Maps)
                             {
-                                <li><a class="dropdown-item" href="#" onclick="changeMap('@mappa.Trim()','@ViewData["activeTab"]')">@mappa.Trim()</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="changeMap('@mappa.Trim()',activeTab)">@mappa.Trim()</a></li>
                             }
                         </ul>
                     </li>
@@ -158,38 +158,46 @@ else
 
         <script type="text/javascript">
             $(document).ready(function () {
-                initMap('map');
-                initWMSMap('mapBuildings', '@ViewData["wmsurl1"]', '@ViewData["wmslayer1"]', 'OpenStreetMap - EPSG:3857');
-                initWMSMap('mapCriticalInfrastructures', '@ViewData["wmsurl2"]', '@ViewData["wmslayer2"]','Google Normal - EPSG:3857');
-                initWMSMap('mapSocialResilience', '@ViewData["wmsurl3"]', '@ViewData["wmslayer3"]', 'OpenStreetMap - EPSG:3857');
-                initWMSMap('mapEconomicResilience', '@ViewData["wmsurl4"]', '@ViewData["wmslayer4"]', 'OpenStreetMap - EPSG:3857');
-                initWMSMap('mapOperationalResilience', 'https://ahocevar.com/geoserver/wms', 'topp:states', 'OpenStreetMap - EPSG:3857');
+                let centerLatitude = 13.1996
+                let centerLongitude = 43.1167
+                let zoomValue = 9
+
+                mapBuildings = initWMSMap('mapBuildings', 'OpenStreetMap - EPSG:3857', centerLatitude, centerLongitude, zoomValue, '@ViewData["wmsurl1"]', '@ViewData["wmslayer1"]');
+                mapCriticalInfrastructures = initWMSMap('mapCriticalInfrastructures', 'Google Normal - EPSG:3857', centerLatitude, centerLongitude, zoomValue, '@ViewData["wmsurl2"]', '@ViewData["wmslayer2"]');
+                mapSocialResilience = initWMSMap('mapSocialResilience', 'OpenStreetMap - EPSG:3857', centerLatitude, centerLongitude, zoomValue, '@ViewData["wmsurl3"]', '@ViewData["wmslayer3"]',);
+                mapEconomicResilience = initWMSMap('mapEconomicResilience', 'OpenStreetMap - EPSG:3857', centerLatitude, centerLongitude, zoomValue, '@ViewData["wmsurl4"]', '@ViewData["wmslayer4"]');
+                mapOperationalResilience = initWMSMap('mapOperationalResilience', 'OpenStreetMap - EPSG:3857', centerLatitude, centerLongitude, zoomValue, 'https://ahocevar.com/geoserver/wms', 'topp:states');
 
                 initTabs();
                 updateTabs('Damages');
-
+                
                 $('#buildings-tab').on('click', function () {                   
-                    ViewData["activeTab"] = "buildings";
+                    activeTab = 'buildings';
+                    console.log('activeTab =  buildings');
                 });
 
-                $('#infrastructures').on('click', function () {                   
-                    ViewData["activeTab"] = "infrastructures";
+                $('#infrastructures-tab').on('click', function () {
+                    activeTab = 'infrastructures';
+                    console.log('activeTab =  infrastructures');
                 });
 
-                $('#social').on('click', function () {                   
-                    ViewData["activeTab"] = "social";
+                $('#social-tab').on('click', function () {
+                    activeTab = 'social';
+                    console.log('activeTab =  social');
                 });
 
-                $('#economic').on('click', function () {                   
-                    ViewData["activeTab"] = "economic";
+                $('#economic-tab').on('click', function () {
+                    activeTab = 'economic';
+                    console.log('activeTab =  economic');
                 });
 
-                $('#operational').on('click', function () {                   
-                    ViewData["activeTab"] = "operational";
+                $('#operational-tab').on('click', function () {
+                    activeTab = 'operational';
+                    console.log('activeTab =  operational');
                 });
 
                 var lastInputTime = 0;
-                var delay = 2000; // Delay di 3 secondi
+                var delay = 2000; // Delay di 2 secondi
 
                 // Funzione per cercare gli indirizzi e visualizzare i suggerimenti
                 $('#addressInput').on('input', function () {

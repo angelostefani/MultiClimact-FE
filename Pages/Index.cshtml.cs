@@ -30,7 +30,7 @@ namespace MultiClimact.Pages
 
             ViewData["wmsurl5"] = _configuration["wms:wmsurl5"];
             ViewData["wmslayer5"] = _configuration["wms:wmslayer5"];
-
+            
         }
     }
 }
