@@ -233,9 +233,14 @@ else
                         if (data && data.length > 0) {
                             var lon = parseFloat(data[0].lon);
                             var lat = parseFloat(data[0].lat);
+
+                            let map;
+
+                            map = getMapFromActiveTab(activeTab, map);
                             map.getView().setCenter(ol.proj.fromLonLat([lon, lat]));
                             map.getView().setZoom(15);
-                            addPointer(lon, lat);
+
+                            addPointer(lon, lat, activeTab);
 
                             $('#suggestions').hide();
                         }

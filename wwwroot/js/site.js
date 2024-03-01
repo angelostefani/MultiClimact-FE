@@ -3,14 +3,35 @@
 
 // Write your JavaScript code.
 
+/*
+* Autore: Angelo Stefani [angelo.stefani@enea.it]
+* Data creazione: 01/02/2024
+* Data aggiornamento: 01/03/2024
+* 
+* Libreria Javascript per applicativi GIS ENEA.
+* Framework utilizzati:
+* - Bootstrap
+* - OpenLayer 
+*/
+
+//Variabile per tenere traccia della TAB attiva
 let activeTab = 'buildings';
 
+//Variabili per contenere le mappe OpenLayer di ciascuna TAB
 let mapBuildings;
 let mapCriticalInfrastructures;
 let mapSocialResilience;
 let mapEconomicResilience;
 let mapOperationalResilience;
 
+/*
+* Autore: Angelo Stefani [angelo.stefani@enea.it]
+* Data: 29/02/2024
+* Questa funzione JavaScript, denominata initWMSMap, è progettata per inizializzare una mappa utilizzando OpenLayers, una libreria JavaScript per la visualizzazione di mappe interattive.
+* La funzione accetta quattro parametri:
+* @param {string} targetHtmlMapId - Il nome del div HTML in cui verrà renderizzata la mappa.
+* 
+*/
 function initMap(targetHtmlMapId) {
     let centerLatitude = 13.1996
     let centerLongitude = 43.1167
@@ -20,28 +41,27 @@ function initMap(targetHtmlMapId) {
 }
 
 /*
-Autore: Angelo Stefani [angelo.stefani@enea.it]
-Data: 29/02/2024
-
-Questa funzione JavaScript, denominata initWMSMap, è progettata per inizializzare una mappa utilizzando OpenLayers, una libreria JavaScript per la visualizzazione di mappe interattive.
-La funzione accetta quattro parametri:
+* Autore: Angelo Stefani [angelo.stefani@enea.it]
+* Data: 29/02/2024
+* 
+* Questa funzione JavaScript, denominata initWMSMap, è progettata per inizializzare una mappa utilizzando OpenLayers, una libreria JavaScript per la visualizzazione di mappe interattive.
+* La funzione accetta quattro parametri:
 * @param {string} targetHtmlMapId - Il nome del div HTML in cui verrà renderizzata la mappa.
 * @param {string} baseMapName - Il nome della mappa di base da utilizzare come sfondo.
 * @param {string} wmsUrl - L'URL del servizio WMS (Web Map Service) per il layer WMS da visualizzare sulla mappa.
 * @param {string} wmsLayer - Il nome del layer WMS da visualizzare sulla mappa.
- 
-La funzione crea un nuovo layer di mappa di base in base al baseMapName fornito utilizzando uno switch-case per determinare quale tipo di mappa di base deve essere utilizzato. Quindi crea una nuova istanza di ol.Map con il target specificato, i layer di mappa di base e il layer WMS specificato. Imposta anche una vista predefinita per la mappa.
-Inoltre, aggiunge un listener per seguire le coordinate del mouse sulla mappa e visualizzarle in un elemento HTML con id mouseCoordinates.
-Infine, utilizza un altro switch-case per assegnare la mappa appena creata a una variabile globale in base al nome del target della mappa specificato.
-Questa funzione è progettata per essere utilizzata all'interno di un'applicazione web che necessita di visualizzare mappe interattive con layer WMS sovrapposti.
+*  
+* La funzione crea un nuovo layer di mappa di base in base al baseMapName fornito utilizzando uno switch-case per determinare quale tipo di mappa di base deve essere utilizzato. Quindi crea una nuova istanza di ol.Map con il target specificato, i layer di mappa di base e il layer WMS specificato. Imposta anche una vista predefinita per la mappa.
+* Inoltre, aggiunge un listener per seguire le coordinate del mouse sulla mappa e visualizzarle in un elemento HTML con id mouseCoordinates.
+* Infine, utilizza un altro switch-case per assegnare la mappa appena creata a una variabile globale in base al nome del target della mappa specificato.
+* Questa funzione è progettata per essere utilizzata all'interno di un'applicazione web che necessita di visualizzare mappe interattive con layer WMS sovrapposti.
 */
 function initWMSMap(targetHtmlMapId, baseMapName, centerLatitude, centerLongitude, zoomValue, wmsUrl, wmsLayer) {
-    let baseMapLayer;
-    let localMap;
-    let layersArray;
+    let baseMapLayer; //basemap layer, con la basemap selezionata.
+    let localMap; //variabile per creare e restituire in output la mappa OpenLayer creata.
+    let layersArray; //array per contenere i layer della mappa.
 
-    // Crea il nuovo base map layer, con la mappa selezionata
-    baseMapLayer = getBaseMapLayer(baseMapName);
+    baseMapLayer = getBaseMapLayer(baseMapName); // Crea il nuovo base map layer, con la mappa selezionata
     baseMapLayer.set('name', 'baseMap'); // Assegna un nome al nuovo layer di base
 
     layersArray = [baseMapLayer]; // Array per i layer della mappa
@@ -78,6 +98,11 @@ function initWMSMap(targetHtmlMapId, baseMapName, centerLatitude, centerLongitud
     return localMap;
 }
 
+/*
+* Autore: Angelo Stefani [angelo.stefani@enea.it]
+* Data: 29/02/2024
+* Funzione che restituisce il layer basemap in funzione del nome baseMapName desiderato.
+*/
 function getBaseMapLayer(baseMapName) {
     let baseMapLayer;
 
@@ -119,13 +144,17 @@ function getBaseMapLayer(baseMapName) {
     return baseMapLayer;
 }
 
-//Funzione per convertire le coordinate longitudine e latitudine
+/*
+* Autore: Angelo Stefani [angelo.stefani@enea.it]
+* Data: 29/02/2024
+* Funzione per convertire le coordinate longitudine e latitudine
+*/
 function convertToDMS(coord, coordType) {
-    var absCoord = Math.abs(coord);
-    var degrees = Math.floor(absCoord);
-    var minutes = Math.floor((absCoord - degrees) * 60);
-    var seconds = ((absCoord - degrees - minutes / 60) * 3600).toFixed(1);
-    var direction = '';
+    let absCoord = Math.abs(coord);
+    let degrees = Math.floor(absCoord);
+    let minutes = Math.floor((absCoord - degrees) * 60);
+    let seconds = ((absCoord - degrees - minutes / 60) * 3600).toFixed(1);
+    let direction = '';
 
     if (coordType == 'lon') {
         direction = coord >= 0 ? 'N' : 'S';
@@ -136,13 +165,36 @@ function convertToDMS(coord, coordType) {
     return degrees + '° ' + minutes + '\' ' + seconds + '" ' + direction;
 }
 
-// Cambia la mappa di base
+/*
+* Autore: Angelo Stefani [angelo.stefani@enea.it]
+* Data: 29/02/2024
+* Funzione cambiare la mappa di base
+*/
 function changeMap(baseMapName, activeTab) {
     let baseMapLayer = getBaseMapLayer(baseMapName);
     baseMapLayer.set('name', 'baseMap'); // Assegna un nome al nuovo layer di base
 
     let map;
 
+    map = getMapFromActiveTab(activeTab, map);
+
+    if (map) {
+        // Rimuovi il layer di base corrente dalla mappa
+        map.getLayers().forEach(function (layer, index) {
+            // Verifica se il layer è un layer di base e sostituiscilo con il nuovo layer di base
+            if (layer.get('name') === 'baseMap') {
+                map.getLayers().setAt(index, baseMapLayer);
+            }
+        });
+    }
+}
+
+/*
+* Autore: Angelo Stefani [angelo.stefani@enea.it]
+* Data: 29/02/2024
+* Funzione che restituisce la mappa OpenLayer associata alla TAB
+*/
+function getMapFromActiveTab(activeTab, map) {
     switch (activeTab) {
         case 'buildings':
             map = mapBuildings;
@@ -163,21 +215,14 @@ function changeMap(baseMapName, activeTab) {
             map = mapBuildings;
             break;
     }
-
-    if (map) {
-        // Rimuovi il layer di base corrente dalla mappa
-        map.getLayers().forEach(function (layer, index) {
-            // Verifica se il layer è un layer di base e sostituiscilo con il nuovo layer di base
-            if (layer.get('name') === 'baseMap') {
-                map.getLayers().setAt(index, baseMapLayer);
-            }
-        });
-    }
+    return map;
 }
 
-
-
-// Function to update breadcrumb and show corresponding tabs
+/*
+* Autore: Angelo Stefani [angelo.stefani@enea.it]
+* Data: 29/02/2024
+* Function to update breadcrumb and show corresponding tabs
+*/
 function updateBreadcrumb(section, subSection) {
     $('#breadcrumb').html('<li class="breadcrumb-item"><a href="#">Home</a></li><li class="breadcrumb-item"><a href="#">' + section + '</a></li><li class="breadcrumb-item active" aria-current="page">' + subSection + '</li>');
 
@@ -187,6 +232,11 @@ function updateBreadcrumb(section, subSection) {
     }
 }
 
+/*
+* Autore: Angelo Stefani [angelo.stefani@enea.it]
+* Data: 29/02/2024
+* Funzione per inizializzare i tabs
+*/
 function initTabs() {
     $('#buildings-tab').removeClass('show active');
     $('#infrastructures-tab').removeClass('show active');
@@ -203,13 +253,18 @@ function initTabs() {
     activeTab = 'buildings';
 }
 
-// Function to update tabs based on selected dropdown item
+/*
+* Autore: Angelo Stefani [angelo.stefani@enea.it]
+* Data: 29/02/2024
+* Function to update tabs based on selected dropdown item
+*/
 function updateTabs(selectedItem) {
     // Hide all tabs
     $('#myTabContent').children('.tab-pane').removeClass('show active');
     $('#myTabContent').children('.tab-pane').addClass('fade');
 
     initTabs();
+
     // Show corresponding tabs based on selected dropdown item
     if (selectedItem === 'Damages') {
         $('#buildings-tab').removeClass('visually-hidden');
@@ -232,9 +287,13 @@ function updateTabs(selectedItem) {
     }
 }
 
-// Funzione per aggiungere un'icona puntatore sulla mappa
-function addPointer(lon, lat) {
-    var pointer = new ol.Feature({
+/*
+* Autore: Angelo Stefani [angelo.stefani@enea.it]
+* Data: 29/02/2024
+* Funzione per aggiungere un'icona puntatore sulla mappa
+*/
+function addPointer(lon, lat, activeTab) {
+    let pointer = new ol.Feature({
         geometry: new ol.geom.Point(ol.proj.fromLonLat([lon, lat]))
     });
 
@@ -245,26 +304,28 @@ function addPointer(lon, lat) {
         })
     }));
 
-    var vectorSource = new ol.source.Vector({
+    let vectorSource = new ol.source.Vector({
         features: [pointer]
     });
 
-    var vectorLayer = new ol.layer.Vector({
+    let vectorLayer = new ol.layer.Vector({
         source: vectorSource
     });
 
+    let map ;
+    map = getMapFromActiveTab(activeTab, map);
     map.addLayer(vectorLayer);
 }
 
 function loadGeoJSON() {
-    var fileInput = document.getElementById('fileInput');
-    var file = fileInput.files[0];
+    let fileInput = document.getElementById('fileInput');
+    let file = fileInput.files[0];
 
     if (file) {
-        var reader = new FileReader();
+        let reader = new FileReader();
         reader.onload = function (event) {
-            var geojsonObject = JSON.parse(event.target.result);
-            var features = new ol.format.GeoJSON().readFeatures(geojsonObject);
+            let geojsonObject = JSON.parse(event.target.result);
+            let features = new ol.format.GeoJSON().readFeatures(geojsonObject);
             vectorSource.clear();
             vectorSource.addFeatures(features);
         };

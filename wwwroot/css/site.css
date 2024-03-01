@@ -24,7 +24,7 @@ body {
 /* Stile per la barra di ricerca */
 .search-bar {
     position: absolute;
-    top: 150px;
+    top: 280px;
     right: 15px;
     width: 15%;
     z-index: 1000;
@@ -34,7 +34,7 @@ body {
 /* Stile per le coordinate del mouse */
 #mouseCoordinates {
     position: absolute;
-    bottom: 250px;
+    bottom: 330px;
     right: 15px;
     width: 15%;
     z-index: 1000;
