@@ -42,6 +42,7 @@ function initWMSMap(targetHtmlMapId, baseMapName, centerLatitude, centerLongitud
 
     // Crea il nuovo base map layer, con la mappa selezionata
     baseMapLayer = getBaseMapLayer(baseMapName);
+    baseMapLayer.set('name', 'baseMap'); // Assegna un nome al nuovo layer di base
 
     layersArray = [baseMapLayer]; // Array per i layer della mappa
 
@@ -63,7 +64,7 @@ function initWMSMap(targetHtmlMapId, baseMapName, centerLatitude, centerLongitud
         layers: layersArray, // Utilizza l'array dei layer creati
         view: new ol.View({ center: ol.proj.fromLonLat([centerLatitude, centerLongitude]), zoom: zoomValue })
     });
-
+    
     // Aggiungi un listener per le coordinate del mouse
     localMap.on('pointermove', function (event) {
         let coordinates = ol.proj.toLonLat(event.coordinate);
@@ -137,93 +138,44 @@ function convertToDMS(coord, coordType) {
 
 // Cambia la mappa di base
 function changeMap(baseMapName, activeTab) {
-    let baseMapLayer;
-    let wmsLayer;
-    let localMap;
-    let layersArray;
+    let baseMapLayer = getBaseMapLayer(baseMapName);
+    baseMapLayer.set('name', 'baseMap'); // Assegna un nome al nuovo layer di base
 
-    // Crea il nuovo base map layer, con la mappa selezionata
-    baseMapLayer = getBaseMapLayer(baseMapName);
-    //layersArray = [baseMapLayer]; // Array per i layer della mappa
+    let map;
 
     switch (activeTab) {
         case 'buildings':
-            wmsLayer = mapBuildings.getLayers().getArray()[1];
-            mapBuildings.getLayers().forEach(function (layer) {
-                if (layer instanceof ol.layer.Tile) {
-                    mapBuildings.removeLayer(layer);
-                }
-            });
-
-            // Aggiunge i nuovi layer alla mappa
-            mapBuildings.addLayer(baseMapLayer);
-            mapBuildings.addLayer(wmsLayer);
+            map = mapBuildings;
             break;
         case 'infrastructures':
-            wmsLayer = mapCriticalInfrastructures.getLayers().getArray()[1];
-            mapCriticalInfrastructures.getLayers().forEach(function (layer) {
-                if (layer instanceof ol.layer.Tile) {
-                    mapCriticalInfrastructures.removeLayer(layer);
-                }
-            });
-
-            // Aggiunge i nuovi layer alla mappa
-            mapCriticalInfrastructures.addLayer(baseMapLayer);
-            mapCriticalInfrastructures.addLayer(wmsLayer);
+            map = mapCriticalInfrastructures;
             break;
         case 'social':
-            wmsLayer = mapSocialResilience.getLayers().getArray()[1];
-            mapSocialResilience.getLayers().forEach(function (layer) {
-                if (layer instanceof ol.layer.Tile) {
-                    mapSocialResilience.removeLayer(layer);
-                }
-            });
-
-            // Aggiunge i nuovi layer alla mappa
-            mapSocialResilience.addLayer(baseMapLayer);
-            mapSocialResilience.addLayer(wmsLayer);
+            map = mapSocialResilience;
             break;
         case 'economic':
-            wmsLayer = mapEconomicResilience.getLayers().getArray()[1];
-            mapEconomicResilience.getLayers().forEach(function (layer) {
-                if (layer instanceof ol.layer.Tile) {
-                    mapEconomicResilience.removeLayer(layer);
-                }
-            });
-
-            // Aggiunge i nuovi layer alla mappa
-            mapEconomicResilience.addLayer(baseMapLayer);
-            mapEconomicResilience.addLayer(wmsLayer);
+            map = mapEconomicResilience;
             break;
         case 'operational':
-            wmsLayer = mapOperationalResilience.getLayers().getArray()[1];
-            mapOperationalResilience.getLayers().forEach(function (layer) {
-                if (layer instanceof ol.layer.Tile) {
-                    mapOperationalResilience.removeLayer(layer);
-                }
-            });
-
-            // Aggiunge i nuovi layer alla mappa
-            mapOperationalResilience.addLayer(baseMapLayer);
-            mapOperationalResilience.addLayer(wmsLayer);
+            map = mapOperationalResilience;
             break;
         default:
-            wmsLayer = mapBuildings.getLayers().getArray()[1];
-            mapBuildings.getLayers().forEach(function (layer) {
-                if (layer instanceof ol.layer.Tile) {
-                    mapBuildings.removeLayer(layer);
-                }
-            });
-
-            // Aggiunge i nuovi layer alla mappa
-            mapBuildings.addLayer(baseMapLayer);
-            mapBuildings.addLayer(wmsLayer);
+            map = mapBuildings;
             break;
     }
-    
-    
-    
+
+    if (map) {
+        // Rimuovi il layer di base corrente dalla mappa
+        map.getLayers().forEach(function (layer, index) {
+            // Verifica se il layer è un layer di base e sostituiscilo con il nuovo layer di base
+            if (layer.get('name') === 'baseMap') {
+                map.getLayers().setAt(index, baseMapLayer);
+            }
+        });
+    }
 }
+
+
 
 // Function to update breadcrumb and show corresponding tabs
 function updateBreadcrumb(section, subSection) {
@@ -247,6 +199,8 @@ function initTabs() {
     $('#social-tab').addClass('visually-hidden');
     $('#economic-tab').addClass('visually-hidden');
     $('#operational-tab').addClass('visually-hidden');
+
+    activeTab = 'buildings';
 }
 
 // Function to update tabs based on selected dropdown item
@@ -264,6 +218,8 @@ function updateTabs(selectedItem) {
 
         $('#infrastructures-tab').removeClass('visually-hidden');
 
+        activeTab = 'buildings';
+
     } else if (selectedItem === 'Resilience') {
         $('#social-tab').removeClass('visually-hidden');
         $('#social-tab').addClass('show active');
@@ -271,6 +227,8 @@ function updateTabs(selectedItem) {
 
         $('#economic-tab').removeClass('visually-hidden');
         $('#operational-tab').removeClass('visually-hidden');
+
+        activeTab = 'social';
     }
 }
 
