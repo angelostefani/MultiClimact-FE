@@ -7,7 +7,7 @@ using MultiClimact.Data;
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
-//LOCALIZZAZIONE
+//LOCALIZZAZIONE: nella cartella "Resources" sono presenti i files "*.resx" di ciascuna pagina.
 builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 
 builder.Services.AddRazorPages()
@@ -21,7 +21,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 //AUTENTICAZIONE
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 var app = builder.Build();
