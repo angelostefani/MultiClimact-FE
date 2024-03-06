@@ -115,6 +115,8 @@ else
                 <p>Content related to Buildings</p>
                 <!-- Mappa Buildings -->
                 <div id="mapBuildings" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
+                <!-- Legenda della mappa-->
+               @*  <div id="legendBuildings"></div> *@
             </div>
             <div class="tab-pane fade" id="infrastructures" role="tabpanel" aria-labelledby="infrastructures-tab">
                 <!-- Content for Critical Infrastructures tab -->
@@ -148,7 +150,7 @@ else
         <!-- Barra di ricerca indirizzi -->
         <div class="search-bar">
             <div class="input-group">
-                <input id="addressInput" placeholder="Cerca un indirizzo" type="text" class="form-control" style="text-overflow: ellipsis;">
+                <input id="addressInput" placeholder="Search by location name" type="text" class="form-control" style="text-overflow: ellipsis;">
             </div>
             <div id="suggestions" class="list-group mt-1" style="display: none;"></div>
         </div>

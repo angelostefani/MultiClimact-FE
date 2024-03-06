@@ -35,8 +35,25 @@ body {
 #mouseCoordinates {
     position: absolute;
     bottom: 330px;
-    right: 15px;
+    left: 15px;
     width: 15%;
     z-index: 1000;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5); /* Effetto ombra */
+}
+
+/* Stile per le coordinate del mouse */
+#legendBuildings {
+    position: absolute;
+    bottom: 450px;
+    left: 15px;
+    width: 25%;
+    z-index: 1000;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5); /* Effetto ombra */
+}
+
+.ol-control.legend-control {
+    background-color: white;
+    padding: 5px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }

@@ -6,7 +6,7 @@
 /*
 * Autore: Angelo Stefani [angelo.stefani@enea.it]
 * Data creazione: 01/02/2024
-* Data aggiornamento: 01/03/2024
+* Data aggiornamento: 06/03/2024
 * 
 * Libreria Javascript per applicativi GIS ENEA.
 * Framework utilizzati:
@@ -57,9 +57,10 @@ function initMap(targetHtmlMapId) {
 * Questa funzione è progettata per essere utilizzata all'interno di un'applicazione web che necessita di visualizzare mappe interattive con layer WMS sovrapposti.
 */
 function initWMSMap(targetHtmlMapId, baseMapName, centerLatitude, centerLongitude, zoomValue, wmsUrl, wmsLayer) {
-    let baseMapLayer; //basemap layer, con la basemap selezionata.
-    let localMap; //variabile per creare e restituire in output la mappa OpenLayer creata.
-    let layersArray; //array per contenere i layer della mappa.
+    let baseMapLayer; // basemap layer, con la basemap selezionata.
+    let localMap; // variabile per creare e restituire in output la mappa OpenLayer creata.
+    let layersArray; // array per contenere i layer della mappa.
+    let wmsLayerObj;
 
     baseMapLayer = getBaseMapLayer(baseMapName); // Crea il nuovo base map layer, con la mappa selezionata
     baseMapLayer.set('name', 'baseMap'); // Assegna un nome al nuovo layer di base
@@ -69,13 +70,15 @@ function initWMSMap(targetHtmlMapId, baseMapName, centerLatitude, centerLongitud
     // Verifica se le variabili wmsUrl e wmsLayer sono valorizzate
     if (wmsUrl && wmsLayer) {
         // Se entrambe le variabili sono valorizzate, crea il layer WMS Geoserver
-        layersArray.push(new ol.layer.Tile({
+        wmsLayerObj = new ol.layer.Tile({
             source: new ol.source.TileWMS({
                 url: wmsUrl,
                 params: { 'LAYERS': wmsLayer, 'TILED': true },
                 serverType: 'geoserver'
             })
-        }));
+        });
+
+        layersArray.push(wmsLayerObj);        
     }
 
     // Crea la mappa OpenLayers con o senza il layer WMS Geoserver in base alle variabili
@@ -84,7 +87,10 @@ function initWMSMap(targetHtmlMapId, baseMapName, centerLatitude, centerLongitud
         layers: layersArray, // Utilizza l'array dei layer creati
         view: new ol.View({ center: ol.proj.fromLonLat([centerLatitude, centerLongitude]), zoom: zoomValue })
     });
-    
+
+    // Aggiungi la legenda come controllo alla mappa
+    addWMSLegendControl(localMap, wmsLayerObj, wmsUrl, wmsLayer);
+
     // Aggiungi un listener per le coordinate del mouse
     localMap.on('pointermove', function (event) {
         let coordinates = ol.proj.toLonLat(event.coordinate);
@@ -96,6 +102,50 @@ function initWMSMap(targetHtmlMapId, baseMapName, centerLatitude, centerLongitud
     });
 
     return localMap;
+}
+
+function addWMSLegendControl(map, layer, wmsUrl, wmsLayer) {
+    // Analizza l'URL del WMS per aggiungere i parametri corretti per la legenda
+    let url = new URL(wmsUrl);
+    url.searchParams.set('REQUEST', 'GetLegendGraphic');
+    url.searchParams.set('VERSION', '1.0.0');
+    url.searchParams.set('FORMAT', 'image/png');
+    url.searchParams.set('WIDTH', '20'); // Dimensioni ridotte della legenda
+    url.searchParams.set('HEIGHT', '20'); // Dimensioni ridotte della legenda
+    url.searchParams.set('LAYER', wmsLayer);
+
+    // Crea un elemento immagine per la legenda
+    let legendImg = document.createElement('img');
+    legendImg.src = url.href;
+    legendImg.alt = 'Legend';
+
+    // Crea un elemento div per contenere l'immagine della legenda
+    let legendDiv = document.createElement('div');
+    legendDiv.className = 'ol-control legend-control';
+
+    // Recupera il titolo del layer
+    let legendTitle = "Vulnerability Index";
+    // Aggiungi il titolo della legenda come testo
+    let titleDiv = document.createElement('div');
+    titleDiv.innerText = legendTitle;
+
+    //// Aggiungi il valore del parametro "NamedLayer" sotto al titolo
+    //let namedLayerDiv = document.createElement('div');
+    //namedLayerDiv.innerText = "NamedLayer: " + wmsLayer;
+
+    legendDiv.appendChild(titleDiv);
+    legendDiv.appendChild(legendImg);
+    //legendDiv.appendChild(namedLayerDiv);
+
+    // Aggiungi stile CSS per la legenda
+    legendDiv.style.position = 'absolute';
+    legendDiv.style.bottom = '340px'; // Posizionamento in basso
+    legendDiv.style.right = '15px'; // Posizionamento a destra
+    legendDiv.style.width = '8%'; // Posizionamento 
+    legendDiv.style.backgroundColor = 'rgba(255, 255, 255, 0.8)'; // Sfondo leggermente trasparente
+    
+    // Aggiungi il controllo alla mappa
+    map.addControl(new ol.control.Control({ element: legendDiv }));
 }
 
 /*
