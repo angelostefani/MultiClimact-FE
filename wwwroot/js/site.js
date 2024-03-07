@@ -33,11 +33,11 @@ let mapOperationalResilience;
 * 
 */
 function initMap(targetHtmlMapId) {
-    let centerLatitude = 13.1996
-    let centerLongitude = 43.1167
+    let centerLatitude = 43.1167
+    let centerLongitude = 13.1996
     let zoomValue = 9
 
-    return initWMSMap(targetHtmlMapId, '', centerLatitude, centerLongitude, zoomValue, '', '');
+    return initWMSMap(targetHtmlMapId, '', centerLongitude, centerLatitude, zoomValue, '', '');
 }
 
 /*
@@ -56,7 +56,7 @@ function initMap(targetHtmlMapId) {
 * Infine, utilizza un altro switch-case per assegnare la mappa appena creata a una variabile globale in base al nome del target della mappa specificato.
 * Questa funzione è progettata per essere utilizzata all'interno di un'applicazione web che necessita di visualizzare mappe interattive con layer WMS sovrapposti.
 */
-function initWMSMap(targetHtmlMapId, baseMapName, centerLatitude, centerLongitude, zoomValue, wmsUrl, wmsLayer) {
+function initWMSMap(targetHtmlMapId, baseMapName, centerLongitude, centerLatitude, zoomValue, wmsUrl, wmsLayer) {
     let baseMapLayer; // basemap layer, con la basemap selezionata.
     let localMap; // variabile per creare e restituire in output la mappa OpenLayer creata.
     let layersArray; // array per contenere i layer della mappa.
@@ -85,7 +85,7 @@ function initWMSMap(targetHtmlMapId, baseMapName, centerLatitude, centerLongitud
     localMap = new ol.Map({
         target: targetHtmlMapId,
         layers: layersArray, // Utilizza l'array dei layer creati
-        view: new ol.View({ center: ol.proj.fromLonLat([centerLatitude, centerLongitude]), zoom: zoomValue })
+        view: new ol.View({ center: ol.proj.fromLonLat([centerLongitude, centerLatitude]), zoom: zoomValue })
     });
 
     // Aggiungi la legenda come controllo alla mappa

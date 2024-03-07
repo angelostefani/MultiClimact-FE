@@ -160,15 +160,15 @@ else
 
         <script type="text/javascript">
             $(document).ready(function () {
-                let centerLatitude = 13.1996
-                let centerLongitude = 43.1167
+                let centerLatitude = 43.1167
+                let centerLongitude = 13.1996
                 let zoomValue = 9
 
-                mapBuildings = initWMSMap('mapBuildings', 'OpenStreetMap - EPSG:3857', centerLatitude, centerLongitude, zoomValue, '@ViewData["wmsurl1"]', '@ViewData["wmslayer1"]');
-                mapCriticalInfrastructures = initWMSMap('mapCriticalInfrastructures', 'Google Normal - EPSG:3857', centerLatitude, centerLongitude, zoomValue, '@ViewData["wmsurl2"]', '@ViewData["wmslayer2"]');
-                mapSocialResilience = initWMSMap('mapSocialResilience', 'OpenStreetMap - EPSG:3857', centerLatitude, centerLongitude, zoomValue, '@ViewData["wmsurl3"]', '@ViewData["wmslayer3"]',);
-                mapEconomicResilience = initWMSMap('mapEconomicResilience', 'OpenStreetMap - EPSG:3857', centerLatitude, centerLongitude, zoomValue, '@ViewData["wmsurl4"]', '@ViewData["wmslayer4"]');
-                mapOperationalResilience = initWMSMap('mapOperationalResilience', 'OpenStreetMap - EPSG:3857', centerLatitude, centerLongitude, zoomValue, 'https://ahocevar.com/geoserver/wms', 'topp:states');
+                mapBuildings = initWMSMap('mapBuildings', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl1"]', '@ViewData["wmslayer1"]');
+                mapCriticalInfrastructures = initWMSMap('mapCriticalInfrastructures', 'Google Normal - EPSG:3857', centerLongitude, centerLatitude, zoomValue, '@ViewData["wmsurl2"]', '@ViewData["wmslayer2"]');
+                mapSocialResilience = initWMSMap('mapSocialResilience', 'OpenStreetMap - EPSG:3857', centerLongitude, centerLatitude, zoomValue, '@ViewData["wmsurl3"]', '@ViewData["wmslayer3"]',);
+                mapEconomicResilience = initWMSMap('mapEconomicResilience', 'OpenStreetMap - EPSG:3857', centerLongitude, centerLatitude, zoomValue, '@ViewData["wmsurl4"]', '@ViewData["wmslayer4"]');
+                mapOperationalResilience = initWMSMap('mapOperationalResilience', 'OpenStreetMap - EPSG:3857', centerLongitude, centerLatitude, zoomValue, 'https://ahocevar.com/geoserver/wms', 'topp:states');
 
                 initTabs();
                 updateTabs('Damages');
