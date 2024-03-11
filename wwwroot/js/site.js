@@ -128,15 +128,10 @@ function addWMSLegendControl(map, layer, wmsUrl, wmsLayer) {
     // Aggiungi il titolo della legenda come testo
     let titleDiv = document.createElement('div');
     titleDiv.innerText = legendTitle;
-
-    //// Aggiungi il valore del parametro "NamedLayer" sotto al titolo
-    //let namedLayerDiv = document.createElement('div');
-    //namedLayerDiv.innerText = "NamedLayer: " + wmsLayer;
-
+    
     legendDiv.appendChild(titleDiv);
     legendDiv.appendChild(legendImg);
-    //legendDiv.appendChild(namedLayerDiv);
-
+   
     // Aggiungi stile CSS per la legenda
     legendDiv.style.position = 'absolute';
     legendDiv.style.bottom = '340px'; // Posizionamento in basso
@@ -193,6 +188,148 @@ function getBaseMapLayer(baseMapName) {
     }
     return baseMapLayer;
 }
+
+
+// Funzione per visualizzare eventi sismici sulla mappa
+function visualizeEarthquakes_v01(map, earthquakeData) {
+    // Assicurati che earthquakeData sia un array di oggetti JavaScript validi
+    if (typeof earthquakeData === 'string') {
+        console.log('Stringa JSON ricevuta:', earthquakeData);
+        try {
+            earthquakeData = JSON.parse(earthquakeData);
+        } catch (error) {
+            console.error('Errore durante il parsing della stringa JSON:', error);
+            return;
+        }
+    }
+
+    if (!Array.isArray(earthquakeData)) {
+        console.error('I dati degli eventi sismici non sono un array valido.');
+        return;
+    }
+
+    // Itera attraverso i dati degli eventi sismici
+    earthquakeData.forEach(function (earthquake) {
+        // Verifica se earthquake è valido e ha la proprietà "xlon"
+        if (earthquake && earthquake.xlon !== undefined) {
+            // Creare un punto sulla mappa per ogni evento sismico
+            var point = new ol.geom.Point(ol.proj.fromLonLat([earthquake.ylat, earthquake.xlon]));
+
+            // Creare un'icona per il punto
+            var iconStyle = new ol.style.Style({
+                image: new ol.style.Icon({
+                    src: 'https://openlayers.org/en/latest/examples/data/icon.png', // Sostituisci con il percorso del tuo icono
+                    scale: 0.1 // Imposta la scala dell'icona
+                })
+            });
+
+            // Aggiungere il punto alla mappa con lo stile dell'icona
+            var feature = new ol.Feature(point);
+            feature.setStyle(iconStyle);
+
+            // Aggiungere il feature al layer della mappa
+            var vectorSource = new ol.source.Vector({
+                features: [feature]
+            });
+
+            var vectorLayer = new ol.layer.Vector({
+                source: vectorSource
+            });
+
+            // Aggiungere il layer alla mappa
+            map.addLayer(vectorLayer);
+            
+        }
+    });
+}
+
+
+function visualizeEarthquakes_v02(map, earthquakeData) {
+    // Assicurati che earthquakeData sia un array
+    if (!Array.isArray(earthquakeData)) {
+        earthquakeData = [earthquakeData];
+    }
+
+    // Itera attraverso i dati degli eventi sismici
+    earthquakeData.forEach(function (earthquake) {
+        // Verifica se earthquake è valido
+        if (earthquake && earthquake.xlon !== undefined) {
+            // Creare un punto sulla mappa per ogni evento sismico
+            var point = new ol.geom.Point(ol.proj.fromLonLat([earthquake.xlon, earthquake.ylat]));
+
+            // Creare un'icona per il punto
+            var iconStyle = new ol.style.Style({
+                image: new ol.style.Icon({
+                    src: 'https://openlayers.org/en/latest/examples/data/icon.png', // Sostituisci con il percorso del tuo icono
+                    scale: 0.1 // Imposta la scala dell'icona
+                })
+            });
+
+            // Aggiungere il punto alla mappa con lo stile dell'icona
+            var feature = new ol.Feature(point);
+            feature.setStyle(iconStyle);
+
+            // Aggiungere il feature al layer della mappa
+            var vectorSource = new ol.source.Vector({
+                features: [feature]
+            });
+
+            var vectorLayer = new ol.layer.Vector({
+                source: vectorSource
+            });
+
+            // Aggiungere il layer alla mappa
+            map.addLayer(vectorLayer);
+
+            // Utilizzare un puntatore OpenLayers per il centro dell'evento sismico
+            /* map.getView().setCenter(point.getCoordinates());*/
+
+        }
+    });
+}
+
+//function visualizeEarthquakes(url, map) {
+//    // Effettua una richiesta HTTP GET per ottenere i dati degli eventi sismici
+//    fetch(url)
+//        .then(response => response.json())
+//        .then(data => {
+//            // Itera sui dati degli eventi sismici
+//            data.forEach(event => {
+//                // Recupera le coordinate dell'evento sismico
+//                let lon = event.xlon;
+//                let lat = event.ylat;
+
+//                // Crea un punto OpenLayers con le coordinate
+//                let point = new ol.geom.Point(ol.proj.fromLonLat([lon, lat]));
+
+//                // Crea un'icona per il punto
+//                let iconStyle = new ol.style.Style({
+//                    image: new ol.style.Icon({
+//                        src: 'https://openlayers.org/en/latest/examples/data/icon.png'
+//                    })
+//                });
+
+//                // Crea un feature con la geometria del punto e lo stile dell'icona
+//                let feature = new ol.Feature({
+//                    geometry: point
+//                });
+//                feature.setStyle(iconStyle);
+
+//                // Aggiungi la feature alla collezione di features della mappa
+//                let vectorSource = new ol.source.Vector({
+//                    features: [feature]
+//                });
+//                let vectorLayer = new ol.layer.Vector({
+//                    source: vectorSource
+//                });
+//                map.addLayer(vectorLayer);
+//            });
+//        })
+//        .catch(error => {
+//            console.error('Errore durante il recupero dei dati degli eventi sismici:', error);
+//        });
+//}
+
 
 /*
 * Autore: Angelo Stefani [angelo.stefani@enea.it]

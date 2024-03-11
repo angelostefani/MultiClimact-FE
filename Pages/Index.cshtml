@@ -3,6 +3,13 @@
 @{
     ViewData["Title"] = Localizer["title"];
     List<string> Maps = new List<string> { "OpenStreetMap - EPSG:3857", "Google Normal - EPSG:3857", "Google Satellite - EPSG:3857", "Google Hybrid - EPSG:3857", "OpenTopoMap", "Sentinel-2 cloudless", "Metacarta - EPSG:4326", "geoSdi - EPSG:4326", "geoSdi No Map - EPSG:4326" };
+    string? jsonContent = "";
+
+    if (ViewData["jsonContent"] is string)
+    {
+        jsonContent = jsonContent = (string?)ViewData["jsonContent"]; // Access jsonContent from ViewData
+    }
+   
 }
 
 @if (!(User.Identity is null) && !User.Identity.IsAuthenticated)
@@ -115,8 +122,6 @@ else
                 <p>Content related to Buildings</p>
                 <!-- Mappa Buildings -->
                 <div id="mapBuildings" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
-                <!-- Legenda della mappa-->
-               @*  <div id="legendBuildings"></div> *@
             </div>
             <div class="tab-pane fade" id="infrastructures" role="tabpanel" aria-labelledby="infrastructures-tab">
                 <!-- Content for Critical Infrastructures tab -->
@@ -170,11 +175,18 @@ else
                 mapEconomicResilience = initWMSMap('mapEconomicResilience', 'OpenStreetMap - EPSG:3857', centerLongitude, centerLatitude, zoomValue, '@ViewData["wmsurl4"]', '@ViewData["wmslayer4"]');
                 mapOperationalResilience = initWMSMap('mapOperationalResilience', 'OpenStreetMap - EPSG:3857', centerLongitude, centerLatitude, zoomValue, 'https://ahocevar.com/geoserver/wms', 'topp:states');
 
+                // Recupera i dati degli eventi sismici dal modello Razor
+
+
+                // Pass jsonContent to visualizeEarthquakes_v01 function
+                visualizeEarthquakes_v01(mapOperationalResilience, @Html.Raw(jsonContent));
+
+               
                 initTabs();
                 updateTabs('Damages');
                 updateBreadcrumb('Risk Analysis', 'Damages');
-                
-                $('#buildings-tab').on('click', function () {                   
+
+                $('#buildings-tab').on('click', function () {
                     activeTab = 'buildings';
                     console.log('activeTab =  buildings');
                 });
