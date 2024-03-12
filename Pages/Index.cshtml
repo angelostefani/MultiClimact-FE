@@ -175,13 +175,10 @@ else
                 mapEconomicResilience = initWMSMap('mapEconomicResilience', 'OpenStreetMap - EPSG:3857', centerLongitude, centerLatitude, zoomValue, '@ViewData["wmsurl4"]', '@ViewData["wmslayer4"]');
                 mapOperationalResilience = initWMSMap('mapOperationalResilience', 'OpenStreetMap - EPSG:3857', centerLongitude, centerLatitude, zoomValue, 'https://ahocevar.com/geoserver/wms', 'topp:states');
 
-                // Recupera i dati degli eventi sismici dal modello Razor
-
-
+                
                 // Pass jsonContent to visualizeEarthquakes_v01 function
                 visualizeEarthquakes_v01(mapOperationalResilience, @Html.Raw(jsonContent));
-
-               
+                               
                 initTabs();
                 updateTabs('Damages');
                 updateBreadcrumb('Risk Analysis', 'Damages');

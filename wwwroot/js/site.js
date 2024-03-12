@@ -190,9 +190,7 @@ function getBaseMapLayer(baseMapName) {
 }
 
 
-// Funzione per visualizzare eventi sismici sulla mappa
 function visualizeEarthquakes_v01(map, earthquakeData) {
-    // Assicurati che earthquakeData sia un array di oggetti JavaScript validi
     if (typeof earthquakeData === 'string') {
         console.log('Stringa JSON ricevuta:', earthquakeData);
         try {
@@ -208,128 +206,165 @@ function visualizeEarthquakes_v01(map, earthquakeData) {
         return;
     }
 
-    // Itera attraverso i dati degli eventi sismici
-    earthquakeData.forEach(function (earthquake) {
-        // Verifica se earthquake è valido e ha la proprietà "xlon"
-        if (earthquake && earthquake.xlon !== undefined) {
-            // Creare un punto sulla mappa per ogni evento sismico
-            var point = new ol.geom.Point(ol.proj.fromLonLat([earthquake.ylat, earthquake.xlon]));
+    // Creare un array per le feature della heatmap
+    var heatMapFeatures = [];
 
-            // Creare un'icona per il punto
-            var iconStyle = new ol.style.Style({
-                image: new ol.style.Icon({
-                    src: 'https://openlayers.org/en/latest/examples/data/icon.png', // Sostituisci con il percorso del tuo icono
-                    scale: 0.1 // Imposta la scala dell'icona
+    earthquakeData.forEach(function (earthquake) {
+        if (earthquake && earthquake.xlon !== undefined) {
+            var point = ol.proj.fromLonLat([earthquake.ylat, earthquake.xlon]);
+
+            // Aggiungi la feature del punto all'array della heatmap
+            heatMapFeatures.push(new ol.Feature(new ol.geom.Point(point)));
+
+            var circle = new ol.geom.Circle(point, earthquake.radius);
+            var circleFeature = new ol.Feature(circle);
+
+            // Stili per il punto e il cerchio
+            var pointStyle = new ol.style.Style({
+                image: new ol.style.Circle({
+                    radius: 5,
+                    fill: new ol.style.Fill({
+                        color: 'red'
+                    })
                 })
             });
 
-            // Aggiungere il punto alla mappa con lo stile dell'icona
-            var feature = new ol.Feature(point);
-            feature.setStyle(iconStyle);
-
-            // Aggiungere il feature al layer della mappa
-            var vectorSource = new ol.source.Vector({
-                features: [feature]
-            });
-
-            var vectorLayer = new ol.layer.Vector({
-                source: vectorSource
-            });
-
-            // Aggiungere il layer alla mappa
-            map.addLayer(vectorLayer);
-            
-        }
-    });
-}
-
-
-function visualizeEarthquakes_v02(map, earthquakeData) {
-    // Assicurati che earthquakeData sia un array
-    if (!Array.isArray(earthquakeData)) {
-        earthquakeData = [earthquakeData];
-    }
-
-    // Itera attraverso i dati degli eventi sismici
-    earthquakeData.forEach(function (earthquake) {
-        // Verifica se earthquake è valido
-        if (earthquake && earthquake.xlon !== undefined) {
-            // Creare un punto sulla mappa per ogni evento sismico
-            var point = new ol.geom.Point(ol.proj.fromLonLat([earthquake.xlon, earthquake.ylat]));
-
-            // Creare un'icona per il punto
-            var iconStyle = new ol.style.Style({
-                image: new ol.style.Icon({
-                    src: 'https://openlayers.org/en/latest/examples/data/icon.png', // Sostituisci con il percorso del tuo icono
-                    scale: 0.1 // Imposta la scala dell'icona
+            var circleStyle = new ol.style.Style({
+                fill: new ol.style.Fill({
+                    color: 'rgba(255, 0, 0, 0.2)'
+                }),
+                stroke: new ol.style.Stroke({
+                    color: 'red',
+                    width: 1
                 })
             });
 
-            // Aggiungere il punto alla mappa con lo stile dell'icona
-            var feature = new ol.Feature(point);
-            feature.setStyle(iconStyle);
+            var pointFeature = new ol.Feature(new ol.geom.Point(point));
+            pointFeature.setStyle(pointStyle);
 
-            // Aggiungere il feature al layer della mappa
-            var vectorSource = new ol.source.Vector({
-                features: [feature]
+            circleFeature.setStyle(circleStyle);
+
+            heatMapFeatures.push(pointFeature, circleFeature);
+
+            // Crea un tooltip con i dati dell'evento sismico
+            var tooltip = createTooltip(map, earthquake);
+
+            // Gestisce l'evento 'pointermove' per mostrare il tooltip
+            map.on('pointermove', function (evt) {
+                var feature = map.forEachFeatureAtPixel(evt.pixel, function (feature) {
+                    return feature;
+                });
+
+                if (feature === pointFeature) {
+                    tooltip.setPosition(evt.coordinate);
+                    $(tooltip.getElement()).show();
+                } else {
+                    $(tooltip.getElement()).hide();
+                }
             });
-
-            var vectorLayer = new ol.layer.Vector({
-                source: vectorSource
-            });
-
-            // Aggiungere il layer alla mappa
-            map.addLayer(vectorLayer);
-
-            // Utilizzare un puntatore OpenLayers per il centro dell'evento sismico
-            /* map.getView().setCenter(point.getCoordinates());*/
-
         }
     });
+
+    // Creare il layer di heatmap
+    var heatMapLayer = new ol.layer.Heatmap({
+        source: new ol.source.Vector({
+            features: heatMapFeatures
+        }),
+        blur: 15,
+        radius: 10,
+        opacity: 0.8
+    });
+
+    // Aggiungi il layer di heatmap alla mappa
+    map.addLayer(heatMapLayer);
 }
 
-//function visualizeEarthquakes(url, map) {
-//    // Effettua una richiesta HTTP GET per ottenere i dati degli eventi sismici
-//    fetch(url)
-//        .then(response => response.json())
-//        .then(data => {
-//            // Itera sui dati degli eventi sismici
-//            data.forEach(event => {
-//                // Recupera le coordinate dell'evento sismico
-//                let lon = event.xlon;
-//                let lat = event.ylat;
+function createTooltip(map, earthquake) {
+    var tooltip = new ol.Overlay({
+        element: document.createElement('div'),
+        positioning: 'bottom-center',
+        offset: [0, -10]
+    });
 
-//                // Crea un punto OpenLayers con le coordinate
-//                let point = new ol.geom.Point(ol.proj.fromLonLat([lon, lat]));
+    var content = '<div>ID: ' + earthquake.idEarthquake + '<br>Magnitude: ' + earthquake.magnitude + '<br>Depth: ' + earthquake.depth + '</div>';
+    tooltip.getElement().innerHTML = content;
 
-//                // Crea un'icona per il punto
-//                let iconStyle = new ol.style.Style({
-//                    image: new ol.style.Icon({
-//                        src: 'https://openlayers.org/en/latest/examples/data/icon.png'
+    map.addOverlay(tooltip);
+
+    return tooltip;
+}
+
+
+
+//function visualizeEarthquakes_v01(map, earthquakeData) {
+//    // Assicurarsi che earthquakeData sia un array di oggetti JavaScript validi
+//    if (typeof earthquakeData === 'string') {
+//        console.log('Stringa JSON ricevuta:', earthquakeData);
+//        try {
+//            earthquakeData = JSON.parse(earthquakeData);
+//        } catch (error) {
+//            console.error('Errore durante il parsing della stringa JSON:', error);
+//            return;
+//        }
+//    }
+
+//    if (!Array.isArray(earthquakeData)) {
+//        console.error('I dati degli eventi sismici non sono un array valido.');
+//        return;
+//    }
+
+//    // Itera attraverso i dati degli eventi sismici
+//    earthquakeData.forEach(function (earthquake) {
+//        // Verifica se earthquake è valido e ha la proprietà "xlon"
+//        if (earthquake && earthquake.xlon !== undefined) {
+//            // Crea un punto sulla mappa per ogni evento sismico
+//            var point = new ol.geom.Point(ol.proj.fromLonLat([earthquake.ylat, earthquake.xlon]));
+
+//            // Crea un cerchio per evidenziare la zona attorno all'evento sismico
+//            var circle = new ol.geom.Circle(point, earthquake.radius);
+
+//            // Stili per il punto e il cerchio
+//            var pointStyle = new ol.style.Style({
+//                image: new ol.style.Circle({
+//                    radius: 5,
+//                    fill: new ol.style.Fill({
+//                        color: 'red'
 //                    })
-//                });
-
-//                // Crea un feature con la geometria del punto e lo stile dell'icona
-//                let feature = new ol.Feature({
-//                    geometry: point
-//                });
-//                feature.setStyle(iconStyle);
-
-//                // Aggiungi la feature alla collezione di features della mappa
-//                let vectorSource = new ol.source.Vector({
-//                    features: [feature]
-//                });
-//                let vectorLayer = new ol.layer.Vector({
-//                    source: vectorSource
-//                });
-//                map.addLayer(vectorLayer);
+//                })
 //            });
-//        })
-//        .catch(error => {
-//            console.error('Errore durante il recupero dei dati degli eventi sismici:', error);
-//        });
-//}
 
+//            var circleStyle = new ol.style.Style({
+//                fill: new ol.style.Fill({
+//                    color: 'rgba(255, 0, 0, 0.2)'
+//                }),
+//                stroke: new ol.style.Stroke({
+//                    color: 'red',
+//                    width: 1
+//                })
+//            });
+
+//            // Crea le feature per il punto e il cerchio
+//            var pointFeature = new ol.Feature(point);
+//            pointFeature.setStyle(pointStyle);
+
+//            var circleFeature = new ol.Feature(circle);
+//            circleFeature.setStyle(circleStyle);
+
+//            // Aggiunge le feature al layer della mappa
+//            var vectorSource = new ol.source.Vector({
+//                features: [pointFeature, circleFeature]
+//            });
+
+//            var vectorLayer = new ol.layer.Vector({
+//                source: vectorSource
+//            });
+
+//            // Aggiunge il layer alla mappa
+//            map.addLayer(vectorLayer);
+                       
+//        }
+//    });
+//}
 
 /*
 * Autore: Angelo Stefani [angelo.stefani@enea.it]
