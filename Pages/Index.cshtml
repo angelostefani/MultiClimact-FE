@@ -58,7 +58,7 @@ else
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Simulation</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#" onclick="updateTabs('Earthquake'); updateBreadcrumb('Simulation', 'Earthquake')">Earthquake</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="updateTabs('Earthquake'); updateBreadcrumb('Simulation', 'Earthquake'); showEarthquakeModal()">Earthquake</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
@@ -163,7 +163,67 @@ else
         <!-- Coordinate del mouse -->
         <div id="mouseCoordinates"></div>
 
+        <!-- Form invio dati della SIMULAZIONE -->
+        <div class="modal fade" id="earthquakeModal" tabindex="-1" aria-labelledby="earthquakeModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="earthquakeModalLabel">Earthquake Data Input</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="earthquakeInputForm">
+                            <div class="mb-3">
+                                <label for="longitude" class="form-label">Longitude (DMS)</label>
+                                <input type="text" class="form-control" id="longitude" placeholder="Enter longitude">
+                            </div>
+                            <div class="mb-3">
+                                <label for="latitude" class="form-label">Latitude (DMS)</label>
+                                <input type="text" class="form-control" id="latitude" placeholder="Enter latitude">
+                            </div>
+                            <div class="mb-3">
+                                <label for="depth" class="form-label">Depth (Km)</label>
+                                <input type="number" class="form-control" id="depth" placeholder="Enter depth">
+                            </div>
+                            <div class="mb-3">
+                                <label for="magnitude" class="form-label">Magnitude</label>
+                                <input type="number" class="form-control" id="magnitude" placeholder="Enter magnitude">
+                            </div>
+                            <div class="mb-3">
+                                <label for="radius" class="form-label">Radius (Km)</label>
+                                <input type="number" class="form-control" id="radius" placeholder="Enter radius">
+                            </div>
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Description</label>
+                                <textarea class="form-control" id="description" rows="3" placeholder="Enter description"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="ingv_eventid" class="form-label">Ingv event Id</label>
+                                <input type="text" class="form-control" id="ingv_eventid" rows="3" placeholder="Enter Ingv event id">
+                            </div>
+                            <div class="mb-3">
+                                <label for="ingv_link" class="form-label">Ingv link</label>
+                                <input type="text" class="form-control" id="ingv_link" rows="3" placeholder="Enter Ingv link ">
+                            </div>
+                            <div class="mb-3">
+                                <label for="dateTime" class="form-label">dateTime</label>
+                                <input type="datetime" class="form-control" id="dateTime" rows="3" placeholder="Enter Date and Time">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         <script type="text/javascript">
+
+            // Funzione per mostrare il popup della form quando l'utente clicca sulla voce di menu "Earthquakes"
+            function showEarthquakeModal() {
+                $('#earthquakeModal').modal('show');
+            }
+
             $(document).ready(function () {
                 let centerLatitude = 43.1167
                 let centerLongitude = 13.1996
@@ -177,7 +237,7 @@ else
 
                 
                 // Pass jsonContent to visualizeEarthquakes_v01 function
-                visualizeEarthquakes_v01(mapOperationalResilience, @Html.Raw(jsonContent));
+                //visualizeEarthquakes_v01(mapOperationalResilience, @Html.Raw(jsonContent));
                                
                 initTabs();
                 updateTabs('Damages');
@@ -265,6 +325,42 @@ else
                 });
 
             });
+
+
+            // Associa la funzione showEarthquakeModal al click sulla voce di menu "Earthquakes"
+            $('#earthquakes-tab').on('click', function () {
+                showEarthquakeModal();
+            });
+
+            // Gestisci l'invio del modulo
+            $('#earthquakeInputForm').on('submit', function (e) {
+                e.preventDefault();
+                // Esegui qui la logica per inviare i dati del terremoto
+                // Ottieni i valori dai campi della form
+                var longitude = $('#longitude').val();
+                var latitude = $('#latitude').val();
+                var depth = $('#depth').val();
+                var magnitude = $('#magnitude').val();
+                var radius = $('#radius').val();
+                var description = $('#description').val();
+
+                // Esegui qui la logica per inviare i dati del terremoto al server o ad un'altra funzione JavaScript
+                console.log('Longitude:', longitude);
+                console.log('Latitude:', latitude);
+                console.log('Depth:', depth);
+                console.log('Magnitude:', magnitude);
+                console.log('Radius:', radius);
+                console.log('Description:', description);
+
+                // Chiudi il modal dopo l'invio dei dati
+                $('#earthquakeModal').modal('hide');
+
+                // Aggiungi qui la logica per resettare i campi della form dopo l'invio dei dati
+                $('#earthquakeInputForm')[0].reset();
+            });
+                
+
+
         </script>
     </body>
     </html>

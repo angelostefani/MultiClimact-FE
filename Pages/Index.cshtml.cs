@@ -27,7 +27,6 @@ namespace MultiClimact.Pages
             _httpClient.BaseAddress = new Uri("http://marte.dhcpnet.casaccia:8080");
             _httpClient.DefaultRequestHeaders.Accept.Clear();
             _httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
-
         }
 
         public async Task OnGetAsync()
@@ -50,7 +49,6 @@ namespace MultiClimact.Pages
                     string jsonContent = await response.Content.ReadAsStringAsync();
                     // Pass jsonContent to the view model
                     ViewData["jsonContent"] = jsonContent;
-
                 }
                 else
                 {
