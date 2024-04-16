@@ -1,3 +1,8 @@
+/*
+This code sets up services related to localization, database, authentication, and HTTP requests in an ASP.NET Core application.
+It configures localization for different cultures, connects to a PostgreSQL database, sets up identity management with Entity Framework, adds HTTP client services, and configures the HTTP request pipeline for routing, authentication, and authorization.
+*/
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Razor;
