@@ -172,49 +172,52 @@ else
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form id="earthquakeInputForm">
-                            <div class="mb-3">
+                        <form id="earthquakeInputForm" class="row g-3">
+                            <div class="col-md-6">
                                 <label for="longitude" class="form-label">Longitude (DMS)</label>
                                 <input type="text" class="form-control" id="longitude" placeholder="Enter longitude">
                             </div>
-                            <div class="mb-3">
+                            <div class="col-md-6">
                                 <label for="latitude" class="form-label">Latitude (DMS)</label>
                                 <input type="text" class="form-control" id="latitude" placeholder="Enter latitude">
                             </div>
-                            <div class="mb-3">
+                            <div class="col-md-6">
                                 <label for="depth" class="form-label">Depth (Km)</label>
                                 <input type="number" class="form-control" id="depth" placeholder="Enter depth">
                             </div>
-                            <div class="mb-3">
+                            <div class="col-md-6">
                                 <label for="magnitude" class="form-label">Magnitude</label>
                                 <input type="number" class="form-control" id="magnitude" placeholder="Enter magnitude">
                             </div>
-                            <div class="mb-3">
+                            <div class="col-md-6">
                                 <label for="radius" class="form-label">Radius (Km)</label>
                                 <input type="number" class="form-control" id="radius" placeholder="Enter radius">
                             </div>
-                            <div class="mb-3">
+                            <div class="col-md-6">
                                 <label for="description" class="form-label">Description</label>
                                 <textarea class="form-control" id="description" rows="3" placeholder="Enter description"></textarea>
                             </div>
-                            <div class="mb-3">
+                            <div class="col-md-6">
                                 <label for="ingv_eventid" class="form-label">Ingv event Id</label>
-                                <input type="text" class="form-control" id="ingv_eventid" rows="3" placeholder="Enter Ingv event id">
+                                <input type="text" class="form-control" id="ingv_eventid" placeholder="Enter Ingv event id">
                             </div>
-                            <div class="mb-3">
+                            <div class="col-md-6">
                                 <label for="ingv_link" class="form-label">Ingv link</label>
-                                <input type="text" class="form-control" id="ingv_link" rows="3" placeholder="Enter Ingv link ">
+                                <input type="text" class="form-control" id="ingv_link" placeholder="Enter Ingv link">
                             </div>
-                            <div class="mb-3">
+                            <div class="col-md-6">
                                 <label for="dateTime" class="form-label">dateTime</label>
-                                <input type="datetime" class="form-control" id="dateTime" rows="3" placeholder="Enter Date and Time">
+                                <input type="datetime" class="form-control" id="dateTime" placeholder="Enter Date and Time">
                             </div>
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
+
 
 
         <script type="text/javascript">
@@ -351,6 +354,12 @@ else
                 console.log('Magnitude:', magnitude);
                 console.log('Radius:', radius);
                 console.log('Description:', description);
+                console.log('Longitude:', longitude);
+                console.log('Longitude:', longitude);
+                console.log('Longitude:', longitude);
+                ingv_eventid 
+                ingv_link 
+                dateTime 
 
                 // Chiudi il modal dopo l'invio dei dati
                 $('#earthquakeModal').modal('hide');
