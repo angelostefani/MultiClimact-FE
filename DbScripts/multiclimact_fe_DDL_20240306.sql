@@ -12,6 +12,7 @@ CREATE DATABASE multiclimact_fe
     TABLESPACE = pg_default
     CONNECTION LIMIT = -1
     IS_TEMPLATE = False;
+
 -- Table: public.AspNetUsers
 
 -- DROP TABLE IF EXISTS public."AspNetUsers";
