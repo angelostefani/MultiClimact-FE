@@ -1,3 +1,17 @@
+-- Database: multiclimact_fe
+
+-- DROP DATABASE IF EXISTS multiclimact_fe;
+
+CREATE DATABASE multiclimact_fe
+    WITH
+    OWNER = postgres
+    ENCODING = 'UTF8'
+    LC_COLLATE = 'Italian_Italy.1252'
+    LC_CTYPE = 'Italian_Italy.1252'
+    LOCALE_PROVIDER = 'libc'
+    TABLESPACE = pg_default
+    CONNECTION LIMIT = -1
+    IS_TEMPLATE = False;
 -- Table: public.AspNetUsers
 
 -- DROP TABLE IF EXISTS public."AspNetUsers";
