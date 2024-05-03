@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -16,11 +17,40 @@ namespace MultiClimact.Pages
         private readonly ILogger<IndexModel> _logger;
         private readonly IConfiguration _configuration;
         private readonly HttpClient _httpClient;
-        
+        private readonly IHttpClientFactory _httpClientFactory;
+
+        // Proprietà per i parametri della form
+        [BindProperty]
+        public string Lon { get; set; }
+
+        [BindProperty]
+        public string Lat { get; set; }
+
+        [BindProperty]
+        public string Depth { get; set; }
+
+        [BindProperty]
+        public string Magnitude { get; set; }
+
+        [BindProperty]
+        public string Radius { get; set; }
+
+        [BindProperty]
+        public string Description { get; set; }
+        [BindProperty]
+        public long damageLaw { get; set; }
+        [BindProperty]
+        public long pgaLaw { get; set; }
+        [BindProperty]
+        public string Options { get; set; }
+        [BindProperty]
+        public long Fault { get; set; }
+
         public IndexModel(ILogger<IndexModel> logger, IConfiguration configuration, IHttpClientFactory httpClientFactory)
         {
             _logger = logger;
             _configuration = configuration;
+            _httpClientFactory = httpClientFactory;
 
             // Configura l'oggetto HttpClient per accettare connessioni HTTPS
             _httpClient = httpClientFactory.CreateClient();
@@ -80,5 +110,62 @@ namespace MultiClimact.Pages
 
             // ... (Altri dati)
         }
+
+        public async Task<IActionResult> OnPostAsync()
+        {
+
+            try
+            {
+                var apiUrl = _configuration["servizioWeb"]; // Get the API URL from configuration
+                var earthquake = new
+                {
+                    lon = Request.Form["lon"],
+                    lat = Request.Form["lat"],
+                    description = Request.Form["description"],
+                    damageLaw = Request.Form["damageLaw"],
+                    pgaLaw = Request.Form["pgaLaw"],
+                    depth = Request.Form["depth"],
+                    magnitude = Request.Form["magnitude"],
+                    fault = Request.Form["fault"],
+                    options = Request.Form["options"],
+                    radius = Request.Form["radius"]
+                };
+
+                var userPlatform = new
+                {
+                    idUser = "az123" // Hardcoded user ID for now
+                };
+
+                var requestData = new
+                {
+                    earthquake,
+                    userPlatform
+                };
+
+                var httpClient = _httpClientFactory.CreateClient();
+                var content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(requestData), Encoding.UTF8, "application/json");
+                
+                var response = await httpClient.PostAsync(apiUrl, content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    // Handle success
+                    return RedirectToPage("/SuccessPage"); // Redirect to a success page
+                }
+                else
+                {
+                    // Handle failure
+                    _logger.LogError($"Error submitting earthquake data. Status code: {response.StatusCode}");
+                    return Page(); // Stay on the same page
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions
+                _logger.LogError($"Error submitting earthquake data: {ex.Message}");
+                return Page(); // Stay on the same page
+            }
+        }
+
     }
 }

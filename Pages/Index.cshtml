@@ -172,47 +172,53 @@ else
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form id="earthquakeInputForm" class="row g-3">
+                        <form id="earthquakeInputForm" class="row g-3" method="post" action="">
                             <div class="col-md-6">
-                                <label for="longitude" class="form-label">Longitude (DMS)</label>
-                                <input type="text" class="form-control" id="longitude" placeholder="Enter longitude">
+                                <label for="lon" class="form-label">Longitude (DMS)</label>
+                                <input type="text" class="form-control" id="lon" name="lon" placeholder="Enter longitude (Es: 42.9087)" value="42.9087">
                             </div>
                             <div class="col-md-6">
-                                <label for="latitude" class="form-label">Latitude (DMS)</label>
-                                <input type="text" class="form-control" id="latitude" placeholder="Enter latitude">
+                                <label for="lat" class="form-label">Latitude (DMS)</label>
+                                <input type="text" class="form-control" id="lat" name="lat" placeholder="Enter latitude (Es: 13.1288)" value="13.1288">
                             </div>
                             <div class="col-md-6">
                                 <label for="depth" class="form-label">Depth (Km)</label>
-                                <input type="number" class="form-control" id="depth" placeholder="Enter depth">
+                                <input type="text" class="form-control" id="depth" name="depth" placeholder="Enter depth (Es: 6.0)" value="6.0">
                             </div>
                             <div class="col-md-6">
                                 <label for="magnitude" class="form-label">Magnitude</label>
-                                <input type="number" class="form-control" id="magnitude" placeholder="Enter magnitude">
+                                <input type="text" class="form-control" id="magnitude" name="magnitude" placeholder="Enter magnitude (Es: 5.0)" value="5.0">
                             </div>
                             <div class="col-md-6">
                                 <label for="radius" class="form-label">Radius (Km)</label>
-                                <input type="number" class="form-control" id="radius" placeholder="Enter radius">
+                                <input type="text" class="form-control" id="radius" name="radius" placeholder="Enter radius (Es: 30)" value="30">
                             </div>
                             <div class="col-md-6">
                                 <label for="description" class="form-label">Description</label>
-                                <textarea class="form-control" id="description" rows="3" placeholder="Enter description"></textarea>
+                                <input type="text" class="form-control" id="description" name="description" placeholder="Enter description (Es: visso test)" value="visso test">
                             </div>
                             <div class="col-md-6">
-                                <label for="ingv_eventid" class="form-label">Ingv event Id</label>
-                                <input type="text" class="form-control" id="ingv_eventid" placeholder="Enter Ingv event id">
+                                <label for="damageLaw" class="form-label">Damage Law</label>
+                                <input type="number" class="form-control" id="damageLaw" name="damageLaw" placeholder="Enter damage law" value="4">
                             </div>
                             <div class="col-md-6">
-                                <label for="ingv_link" class="form-label">Ingv link</label>
-                                <input type="text" class="form-control" id="ingv_link" placeholder="Enter Ingv link">
+                                <label for="pgaLaw" class="form-label">Pga Law</label>
+                                <input type="number" class="form-control" id="pgaLaw" name="pgaLaw" placeholder="Enter pga law" value="5">
                             </div>
                             <div class="col-md-6">
-                                <label for="dateTime" class="form-label">dateTime</label>
-                                <input type="datetime" class="form-control" id="dateTime" placeholder="Enter Date and Time">
+                                <label for="fault" class="form-label">Fault</label>
+                                <input type="number" class="form-control" id="fault" name="fault" placeholder="Fault" value="0">
                             </div>
+                            <div class="col-md-6">
+                                <label for="options" class="form-label">Options</label>
+                                <input type="text" class="form-control" id="options" name="options" placeholder="Options" value="100000111">
+                            </div>
+
                             <div class="col-12">
-                                <button type="submit" class="btn btn-primary">Submit</button>
+                                <button type="submit" class="btn btn-primary" id="submitBtn">Submit</button>
                             </div>
                         </form>
+
                     </div>
                 </div>
             </div>
@@ -334,40 +340,7 @@ else
             $('#earthquakes-tab').on('click', function () {
                 showEarthquakeModal();
             });
-
-            // Gestisci l'invio del modulo
-            $('#earthquakeInputForm').on('submit', function (e) {
-                e.preventDefault();
-                // Esegui qui la logica per inviare i dati del terremoto
-                // Ottieni i valori dai campi della form
-                var longitude = $('#longitude').val();
-                var latitude = $('#latitude').val();
-                var depth = $('#depth').val();
-                var magnitude = $('#magnitude').val();
-                var radius = $('#radius').val();
-                var description = $('#description').val();
-
-                // Esegui qui la logica per inviare i dati del terremoto al server o ad un'altra funzione JavaScript
-                console.log('Longitude:', longitude);
-                console.log('Latitude:', latitude);
-                console.log('Depth:', depth);
-                console.log('Magnitude:', magnitude);
-                console.log('Radius:', radius);
-                console.log('Description:', description);
-                console.log('Longitude:', longitude);
-                console.log('Longitude:', longitude);
-                console.log('Longitude:', longitude);
-                ingv_eventid 
-                ingv_link 
-                dateTime 
-
-                // Chiudi il modal dopo l'invio dei dati
-                $('#earthquakeModal').modal('hide');
-
-                // Aggiungi qui la logica per resettare i campi della form dopo l'invio dei dati
-                $('#earthquakeInputForm')[0].reset();
-            });
-                
+                           
 
 
         </script>
