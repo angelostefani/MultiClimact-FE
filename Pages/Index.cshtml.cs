@@ -18,34 +18,7 @@ namespace MultiClimact.Pages
         private readonly IConfiguration _configuration;
         private readonly HttpClient _httpClient;
         private readonly IHttpClientFactory _httpClientFactory;
-
-        // Proprietà per i parametri della form
-        [BindProperty]
-        public string Lon { get; set; }
-
-        [BindProperty]
-        public string Lat { get; set; }
-
-        [BindProperty]
-        public string Depth { get; set; }
-
-        [BindProperty]
-        public string Magnitude { get; set; }
-
-        [BindProperty]
-        public string Radius { get; set; }
-
-        [BindProperty]
-        public string Description { get; set; }
-        [BindProperty]
-        public long damageLaw { get; set; }
-        [BindProperty]
-        public long pgaLaw { get; set; }
-        [BindProperty]
-        public string Options { get; set; }
-        [BindProperty]
-        public long Fault { get; set; }
-
+            
         public IndexModel(ILogger<IndexModel> logger, IConfiguration configuration, IHttpClientFactory httpClientFactory)
         {
             _logger = logger;

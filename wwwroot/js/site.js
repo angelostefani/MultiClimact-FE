@@ -465,13 +465,18 @@ function initTabs() {
     $('#social-tab').removeClass('show active');
     $('#economic-tab').removeClass('show active');
     $('#operational-tab').removeClass('show active');
-
+    $('#hqsimulation-tab').removeClass('show active');
+    $('#hqsimulationresults-tab').removeClass('show active');
+   
     $('#buildings-tab').addClass('visually-hidden');
     $('#infrastructures-tab').addClass('visually-hidden');
     $('#social-tab').addClass('visually-hidden');
     $('#economic-tab').addClass('visually-hidden');
     $('#operational-tab').addClass('visually-hidden');
+    $('#hqSimulation-tab').addClass('visually-hidden');
+    $('#hqSimulationresults-tab').addClass('visually-hidden');
 
+    /*default setting*/
     activeTab = 'buildings';
 }
 
@@ -489,22 +494,26 @@ function updateTabs(selectedItem) {
 
     // Show corresponding tabs based on selected dropdown item
     if (selectedItem === 'Damages') {
+       /* display of the tabs relating to the selected menu*/
         $('#buildings-tab').removeClass('visually-hidden');
-        $('#buildings-tab').addClass('show active');
-        $('#buildings').addClass('show active');
-
         $('#infrastructures-tab').removeClass('visually-hidden');
+
+        /* activation of the tab and panel*/
+        $('#buildings-tab').addClass('show active');
+        $('#buildings').addClass('show active');        
 
         activeTab = 'buildings';
 
     } else if (selectedItem === 'Resilience') {
+        /* display of the tabs relating to the selected menu*/
         $('#social-tab').removeClass('visually-hidden');
-        $('#social-tab').addClass('show active');
-        $('#social').addClass('show active');
-
         $('#economic-tab').removeClass('visually-hidden');
         $('#operational-tab').removeClass('visually-hidden');
 
+       /* activation of the tab and panel*/
+        $('#social-tab').addClass('show active');
+        $('#social').addClass('show active');
+        
         activeTab = 'social';
     }
 }
