@@ -28,7 +28,7 @@ else
         <title>MULTICLIMACT</title>
         <link rel="stylesheet" href="~/lib/openlayers/ol.css" type="text/css" />
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-
+ 
         <script src="~/lib/jquery/dist/jquery.min.js"></script>
         <script src="~/lib/openlayers/dist/ol.js"></script>
     </head>
@@ -97,17 +97,18 @@ else
 
         <!-- NAVIGATION TABS: BEGIN -->
         <ul class="nav nav-tabs" id="myTab" role="tablist">
-            <!-- TAB MENU 1° Level: Risk Analysis : BEGIN -->
+            <!-- TAB MENU 1° Level: [RISK ANALYSIS] : BEGIN -->
 
-            <!-- TAB MENU 2° Level: Damages : BEGIN -->
+            <!-- TAB MENU 2° Level: [DAMAGES] : BEGIN -->
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="buildings-tab" data-bs-toggle="tab" data-bs-target="#buildings" type="button" role="tab" aria-controls="buildings" aria-selected="false">Buildings</button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="infrastructures-tab" data-bs-toggle="tab" data-bs-target="#infrastructures" type="button" role="tab" aria-controls="infrastructures" aria-selected="false">Critical Infrastructures</button>
             </li>
-            <!-- TAB MENU 2° Level: Damages : END -->
-            <!-- TAB MENU 2° Level: Resilience : BEGIN -->
+            <!-- TAB MENU 2° Level: [DAMAGES] : END -->
+
+            <!-- TAB MENU 2° Level: [RESILIENCE] : BEGIN -->
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="social-tab" data-bs-toggle="tab" data-bs-target="#social" type="button" role="tab" aria-controls="social" aria-selected="false">Social Resilience</button>
             </li>
@@ -117,31 +118,33 @@ else
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="operational-tab" data-bs-toggle="tab" data-bs-target="#operational" type="button" role="tab" aria-controls="operational" aria-selected="false">Operational Resilience</button>
             </li>
-            <!-- TAB MENU 2° Level: Resilience : END -->
+            <!-- TAB MENU 2° Level: [RESILIENCE] : END -->
 
-            <!-- TAB MENU 1° Level: Risk Analysis : END -->
-
-            <!-- TAB MENU 1° Level: Simulation : BEGIN -->
-            <!-- TAB MENU 2° Level: HearthQuake : BEGIN -->
+            <!-- TAB MENU 1° Level: [RISK ANALYSIS] : END -->
+            
+            <!-- ########################################## -->
+            
+            <!-- TAB MENU 1° Level: [SIMULATION] : BEGIN -->
+            <!-- TAB MENU 2° Level: [EARTHQUAKE] : BEGIN -->
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="hqSimulation-tab" data-bs-toggle="tab" data-bs-target="#hqSimulation" type="button" role="tab" aria-controls="hqSimulation" aria-selected="false">HearthQuake Simulation</button>
+                <button class="nav-link" id="earthquakeSimulation-tab" data-bs-toggle="tab" data-bs-target="#earthquakeSimulation" type="button" role="tab" aria-controls="earthquakeSimulation" aria-selected="false">EarthQuake Simulation</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="hqSimulationresults-tab" data-bs-toggle="tab" data-bs-target="#hqSimulationresults" type="button" role="tab" aria-controls="hqSimulationresults" aria-selected="false">HearthQuake Simulation results</button>
+                <button class="nav-link" id="earthquakeSimulationResults-tab" data-bs-toggle="tab" data-bs-target="#earthquakeSimulationResults" type="button" role="tab" aria-controls="earthquakeSimulationResults" aria-selected="false">EarthQuake Simulation Results</button>
             </li>
-            <!-- TAB MENU 2° Level: HearthQuakes : END -->
-            <!-- TAB MENU 1° Level: Simulation : END -->
+            <!-- TAB MENU 2° Level: [EARTHQUAKE] : END -->
+            <!-- TAB MENU 1° Level: [SIMULATION] : END -->
 
 
         </ul>
         <!-- NAVIGATION TABS: END -->
 
-        <!-- TAB CONTENTS (PANELS contained in the TABs): BEGIN -->
+        <!-- TAB PANELS: BEGIN -->
 
         <div class="tab-content" id="myTabContent">
-            <!-- TAB CONTENTS 1° Level MENU Risk Analysis: BEGIN -->
+            <!-- TAB PANELS 1° Level MENU [RISK ANALYSIS]: BEGIN -->
 
-            <!-- TAB CONTENTS 2° Level MENU Damages: BEGIN -->
+            <!-- TAB PANELS 2° Level MENU [DAMAGES]: BEGIN -->
             <div class="tab-pane fade" id="buildings" role="tabpanel" aria-labelledby="buildings-tab">
                 <!-- Content for Buildings tab -->
                 <p>Content related to Buildings</p>
@@ -154,9 +157,9 @@ else
                 <!-- Map of Critical Infrastructures-->
                 <div id="mapCriticalInfrastructures" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
             </div>
-            <!-- TAB CONTENTS 2° Level MENU Damages: END -->
+            <!-- TAB PANELS 2° Level MENU [DAMAGES]: END -->
 
-            <!-- TAB CONTENTS 2° Level MENU Resilience: BEGIN -->
+            <!-- TAB PANELS 2° Level MENU [RESILIENCE]: BEGIN -->
             <div class="tab-pane fade" id="social" role="tabpanel" aria-labelledby="social-tab">
                 <!-- Content for Social Resilience tab -->
                 <p>Content related to Social Resilience</p>
@@ -175,11 +178,75 @@ else
                 <!-- Map of Operational Resilience -->
                 <div id="mapOperationalResilience" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
             </div>
-            <!-- TAB CONTENTS 2° Level MENU Resilience: END -->
+            <!-- TAB PANELS 2° Level MENU [RESILIENCE]: END -->
+            <!-- ########################################## -->
+            <!-- TAB PANELS 1° Level MENU [SIMULATION]: BEGIN -->
+			<div class="tab-pane fade" id="earthquakeSimulation" role="tabpanel" aria-labelledby="earthquakeSimulation-tab">
+                <!-- Content for earthquakeSimulation tab -->
+                <p>Content related to EarthQuake Simulation </p>
+                <!-- FORM of earthquakeSimulation  -->
+                <div id="formEarthquakeSimulation" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;">
+						<form id="earthquakeInputForm" class="row g-3" method="post" action="">
+                            <div class="col-md-6">
+                                <label for="lon" class="form-label">Longitude (DMS)</label>
+                                <input type="text" class="form-control" id="lon" name="lon" placeholder="Enter longitude (Es: 42.9087)" value="42.9087">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="lat" class="form-label">Latitude (DMS)</label>
+                                <input type="text" class="form-control" id="lat" name="lat" placeholder="Enter latitude (Es: 13.1288)" value="13.1288">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="depth" class="form-label">Depth (Km)</label>
+                                <input type="text" class="form-control" id="depth" name="depth" placeholder="Enter depth (Es: 6.0)" value="6.0">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="magnitude" class="form-label">Magnitude</label>
+                                <input type="text" class="form-control" id="magnitude" name="magnitude" placeholder="Enter magnitude (Es: 5.0)" value="5.0">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="radius" class="form-label">Radius (Km)</label>
+                                <input type="text" class="form-control" id="radius" name="radius" placeholder="Enter radius (Es: 30)" value="30">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="description" class="form-label">Description</label>
+                                <input type="text" class="form-control" id="description" name="description" placeholder="Enter description (Es: visso test)" value="visso test">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="damageLaw" class="form-label">Damage Law</label>
+                                <input type="number" class="form-control" id="damageLaw" name="damageLaw" placeholder="Enter damage law" value="4">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="pgaLaw" class="form-label">Pga Law</label>
+                                <input type="number" class="form-control" id="pgaLaw" name="pgaLaw" placeholder="Enter pga law" value="5">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="fault" class="form-label">Fault</label>
+                                <input type="number" class="form-control" id="fault" name="fault" placeholder="Fault" value="0">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="options" class="form-label">Options</label>
+                                <input type="text" class="form-control" id="options" name="options" placeholder="Options" value="100000111">
+                            </div>
+
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary" id="submitBtn">Submit</button>
+                            </div>
+                        </form>
+
+                </div>
+            </div>
+            <div class="tab-pane fade" id="earthquakeSimulationResults" role="tabpanel" aria-labelledby="earthquakeSimulationResults-tab">
+                <!-- Content for earthquakeSimulationResults tab -->
+                <p>Content related to EarthQuake Simulation Results </p>
+                <!-- Grid of earthquakeSimulationResults  -->
+                <div id="gridEarthquakeSimulationResults" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;">
 
 
-
+                </div>
+            </div>
+             <!-- TAB PANELS 1° Level MENU [SIMULATION]: END -->
         </div>
+        <!-- TAB PANELS: END -->
 
         <!-- Address search bar -->
         <div class="search-bar">
@@ -192,7 +259,8 @@ else
         <!-- Mouse coordinates -->
         <div id="mouseCoordinates"></div>
 
-        <!-- Form input data of HEARTHQUAKE SIMULATION -->
+        <!-- Form input data of EARTHQUAKE SIMULATION -->
+       <!--
         <div class="modal fade" id="earthquakeModal" tabindex="-1" aria-labelledby="earthquakeModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -252,7 +320,7 @@ else
                 </div>
             </div>
         </div>
-
+        -->
 
 
         <script type="text/javascript">
@@ -285,23 +353,23 @@ else
                     activeTab = 'buildings';
                     console.log('activeTab =  buildings');
                 });
-
                 $('#infrastructures-tab').on('click', function () {
                     activeTab = 'infrastructures';
                     console.log('activeTab =  infrastructures');
                 });
-
                 $('#social-tab').on('click', function () {
                     activeTab = 'social';
                     console.log('activeTab =  social');
                 });
-
                 $('#economic-tab').on('click', function () {
                     activeTab = 'economic';
                     console.log('activeTab =  economic');
                 });
-
                 $('#operational-tab').on('click', function () {
+                    activeTab = 'operational';
+                    console.log('activeTab =  operational');
+                });
+                 $('#eqSimulation-tab').on('click', function () {
                     activeTab = 'operational';
                     console.log('activeTab =  operational');
                 });
@@ -364,13 +432,10 @@ else
 
             });
 
-
             // Associa la funzione showEarthquakeModal al click sulla voce di menu "Earthquakes"
-            $('#earthquakes-tab').on('click', function () {
-                showEarthquakeModal();
-            });
-                           
-
+           // $('#earthquakes-tab').on('click', function () {
+           //     showEarthquakeModal();
+           // });
 
         </script>
     </body>

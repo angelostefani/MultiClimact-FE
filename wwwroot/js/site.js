@@ -210,8 +210,8 @@ function visualizeEarthquakes_v01(map, earthquakeData) {
     var heatMapFeatures = [];
 
     earthquakeData.forEach(function (earthquake) {
-        if (earthquake && earthquake.xlon !== undefined) {
-            var point = ol.proj.fromLonLat([earthquake.ylat, earthquake.xlon]);
+        if (earthquake && earthquake.lon !== undefined) {
+            var point = ol.proj.fromLonLat([earthquake.lat, earthquake.lon]);
 
             // Aggiungi la feature del punto all'array della heatmap
             heatMapFeatures.push(new ol.Feature(new ol.geom.Point(point)));
@@ -433,6 +433,10 @@ function getMapFromActiveTab(activeTab, map) {
         case 'operational':
             map = mapOperationalResilience;
             break;
+        case 'earthquakeSimulation':
+            map = formearthquakeSimulation;
+        case 'earthquakeSimulationResults':
+            map = gridearthquakeSimulationResults;
         default:
             map = mapBuildings;
             break;
@@ -460,23 +464,24 @@ function updateBreadcrumb(section, subSection) {
 * Funzione per inizializzare i tabs
 */
 function initTabs() {
+    // Hide all tabs
     $('#buildings-tab').removeClass('show active');
     $('#infrastructures-tab').removeClass('show active');
     $('#social-tab').removeClass('show active');
     $('#economic-tab').removeClass('show active');
     $('#operational-tab').removeClass('show active');
-    $('#hqsimulation-tab').removeClass('show active');
-    $('#hqsimulationresults-tab').removeClass('show active');
-   
+    $('#earthquakeSimulation-tab').removeClass('show active');
+    $('#earthquakeSimulationResults-tab').removeClass('show active');
+       
     $('#buildings-tab').addClass('visually-hidden');
     $('#infrastructures-tab').addClass('visually-hidden');
     $('#social-tab').addClass('visually-hidden');
     $('#economic-tab').addClass('visually-hidden');
     $('#operational-tab').addClass('visually-hidden');
-    $('#hqSimulation-tab').addClass('visually-hidden');
-    $('#hqSimulationresults-tab').addClass('visually-hidden');
+    $('#earthquakeSimulation-tab').addClass('visually-hidden');
+    $('#earthquakeSimulationResults-tab').addClass('visually-hidden');
 
-    /*default setting*/
+    /*default setting for the tabs*/
     activeTab = 'buildings';
 }
 
@@ -489,7 +494,7 @@ function updateTabs(selectedItem) {
     // Hide all tabs
     $('#myTabContent').children('.tab-pane').removeClass('show active');
     $('#myTabContent').children('.tab-pane').addClass('fade');
-
+    
     initTabs();
 
     // Show corresponding tabs based on selected dropdown item
@@ -515,7 +520,18 @@ function updateTabs(selectedItem) {
         $('#social').addClass('show active');
         
         activeTab = 'social';
+    } else if (selectedItem === 'Earthquake') {
+        /* display of the tabs relating to the selected menu*/
+        $('#earthquakeSimulation-tab').removeClass('visually-hidden');
+        $('#earthquakeSimulationResults-tab').removeClass('visually-hidden');
+        
+        /* activation of the tab and panel*/
+        $('#earthquakeSimulation-tab').addClass('show active');
+        $('#earthquakeSimulation').addClass('show active');
+        
+        activeTab = 'earthquakeSimulation';
     }
+
 }
 
 /*
