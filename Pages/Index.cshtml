@@ -62,7 +62,7 @@ else
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Simulation</a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="#" onclick="updateTabs('Earthquake'); updateBreadcrumb('Simulation', 'Earthquake')">Earthquake</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="updateTabs('Results'); updateBreadcrumb('Simulation', 'Results')">Results</a></li>
+                            
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
@@ -127,10 +127,10 @@ else
             <!-- TAB MENU 1° Level: [SIMULATION] : BEGIN -->
             <!-- TAB MENU 2° Level: [EARTHQUAKE] : BEGIN -->
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="earthquakeSimulation-tab" data-bs-toggle="tab" data-bs-target="#earthquakeSimulation" type="button" role="tab" aria-controls="earthquakeSimulation" aria-selected="false">EarthQuake Simulation</button>
+                <button class="nav-link" id="earthquakeSimulation-tab" data-bs-toggle="tab" data-bs-target="#earthquakeSimulation" type="button" role="tab" aria-controls="earthquakeSimulation" aria-selected="false">Simulation</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="earthquakeSimulationResults-tab" data-bs-toggle="tab" data-bs-target="#earthquakeSimulationResults" type="button" role="tab" aria-controls="earthquakeSimulationResults" aria-selected="false">EarthQuake Simulation Results</button>
+                <button class="nav-link" id="earthquakeSimulationResults-tab" data-bs-toggle="tab" data-bs-target="#earthquakeSimulationResults" type="button" role="tab" aria-controls="earthquakeSimulationResults" aria-selected="false">Results</button>
             </li>
             <!-- TAB MENU 2° Level: [EARTHQUAKE] : END -->
             <!-- TAB MENU 1° Level: [SIMULATION] : END -->
@@ -185,7 +185,8 @@ else
                 <!-- Content for earthquakeSimulation tab -->
                 <p>Content related to EarthQuake Simulation </p>
                 <!-- FORM of earthquakeSimulation  -->
-                <div id="formEarthquakeSimulation" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;">
+                <div id="formEarthquakeSimulation" style="width: 80%; cursor: pointer; overflow: hidden; display: block;">
+                    <h2 class="text-center">Earthquake Simulation Form</h2>
 						<form id="earthquakeInputForm" class="row g-3" method="post" action="">
                             <div class="col-md-6">
                                 <label for="lon" class="form-label">Longitude (DMS)</label>
@@ -258,70 +259,6 @@ else
 
         <!-- Mouse coordinates -->
         <div id="mouseCoordinates"></div>
-
-        <!-- Form input data of EARTHQUAKE SIMULATION -->
-       <!--
-        <div class="modal fade" id="earthquakeModal" tabindex="-1" aria-labelledby="earthquakeModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="earthquakeModalLabel">Earthquake Data Input</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="earthquakeInputForm" class="row g-3" method="post" action="">
-                            <div class="col-md-6">
-                                <label for="lon" class="form-label">Longitude (DMS)</label>
-                                <input type="text" class="form-control" id="lon" name="lon" placeholder="Enter longitude (Es: 42.9087)" value="42.9087">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="lat" class="form-label">Latitude (DMS)</label>
-                                <input type="text" class="form-control" id="lat" name="lat" placeholder="Enter latitude (Es: 13.1288)" value="13.1288">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="depth" class="form-label">Depth (Km)</label>
-                                <input type="text" class="form-control" id="depth" name="depth" placeholder="Enter depth (Es: 6.0)" value="6.0">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="magnitude" class="form-label">Magnitude</label>
-                                <input type="text" class="form-control" id="magnitude" name="magnitude" placeholder="Enter magnitude (Es: 5.0)" value="5.0">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="radius" class="form-label">Radius (Km)</label>
-                                <input type="text" class="form-control" id="radius" name="radius" placeholder="Enter radius (Es: 30)" value="30">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="description" class="form-label">Description</label>
-                                <input type="text" class="form-control" id="description" name="description" placeholder="Enter description (Es: visso test)" value="visso test">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="damageLaw" class="form-label">Damage Law</label>
-                                <input type="number" class="form-control" id="damageLaw" name="damageLaw" placeholder="Enter damage law" value="4">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="pgaLaw" class="form-label">Pga Law</label>
-                                <input type="number" class="form-control" id="pgaLaw" name="pgaLaw" placeholder="Enter pga law" value="5">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="fault" class="form-label">Fault</label>
-                                <input type="number" class="form-control" id="fault" name="fault" placeholder="Fault" value="0">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="options" class="form-label">Options</label>
-                                <input type="text" class="form-control" id="options" name="options" placeholder="Options" value="100000111">
-                            </div>
-
-                            <div class="col-12">
-                                <button type="submit" class="btn btn-primary" id="submitBtn">Submit</button>
-                            </div>
-                        </form>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-        -->
-
 
         <script type="text/javascript">
 

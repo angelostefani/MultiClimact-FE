@@ -19,11 +19,22 @@ namespace MultiClimact.Pages
 {
     public class IndexModel : PageModel
     {
+        double Lon;
+        double Lat;
+        string? Description;
+        int DamageLaw;
+        int PgaLaw;
+        double Depth;
+        double Magnitude;
+        int Fault;
+        string? Options;
+        int Radius;
+
         private readonly ILogger<IndexModel> _logger;
         private readonly IConfiguration _configuration;
         private readonly HttpClient _httpClient;
         private readonly IHttpClientFactory _httpClientFactory;
-            
+
         public IndexModel(ILogger<IndexModel> logger, IConfiguration configuration, IHttpClientFactory httpClientFactory)
         {
             _logger = logger;
@@ -91,22 +102,46 @@ namespace MultiClimact.Pages
 
         public async Task<IActionResult> OnPostAsync()
         {
-
             try
             {
                 var apiUrl = _configuration["servizioWeb"]; // Get the API URL from configuration
+
+                Lon = double.Parse(Request.Form["lon"], System.Globalization.CultureInfo.InvariantCulture);
+                Lat = double.Parse(Request.Form["lat"], System.Globalization.CultureInfo.InvariantCulture);
+                Description = Request.Form["description"];
+                DamageLaw = int.Parse(Request.Form["damageLaw"]);
+                PgaLaw = int.Parse(Request.Form["pgaLaw"]);
+                Depth = double.Parse(Request.Form["depth"], System.Globalization.CultureInfo.InvariantCulture);
+                Magnitude = double.Parse(Request.Form["magnitude"], System.Globalization.CultureInfo.InvariantCulture);
+                Fault = int.Parse(Request.Form["fault"]);
+                Options = Request.Form["options"];
+                Radius = int.Parse(Request.Form["radius"]);
+
                 var earthquake = new
                 {
-                    lon = Request.Form["lon"],
-                    lat = Request.Form["lat"],
-                    description = Request.Form["description"],
-                    damageLaw = Request.Form["damageLaw"],
-                    pgaLaw = Request.Form["pgaLaw"],
-                    depth = Request.Form["depth"],
-                    magnitude = Request.Form["magnitude"],
-                    fault = Request.Form["fault"],
-                    options = Request.Form["options"],
-                    radius = Request.Form["radius"]
+                     
+                    /*lon = 42.9087,
+                    lat = 13.1288,
+                    description = "visso test",
+                    damageLaw = 4,
+                    pgaLaw = 5,
+                    depth = 6.0,
+                    magnitude = 5.0,
+                    fault = 0,
+                    options = "100000111",
+                    radius = 30*/
+
+                    lon = Lon,
+                    lat = Lat,
+                    description = Description,
+                    damageLaw = DamageLaw,
+                    pgaLaw = PgaLaw,
+                    depth = Depth,
+                    magnitude = Magnitude,
+                    fault = Fault,
+                    options = Options,
+                    radius = Radius
+
                 };
 
                 var userPlatform = new
@@ -120,15 +155,35 @@ namespace MultiClimact.Pages
                     userPlatform
                 };
 
-                var httpClient = _httpClientFactory.CreateClient();
-                var content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(requestData), Encoding.UTF8, "application/json");
-                
-                var response = await httpClient.PostAsync(apiUrl, content);
+                // Esempio di stampa dei dati sulla console
+                System.Console.WriteLine("Lon: " + Lon);
+                System.Console.WriteLine("Lat: " + Lat);
+                System.Console.WriteLine("Description: " + Description);
+                System.Console.WriteLine("DamageLaw: " + DamageLaw);
+                System.Console.WriteLine("PgaLaw: " + PgaLaw);
+                System.Console.WriteLine("Depth: " + Depth);
+                System.Console.WriteLine("Magnitude: " + Magnitude);
+                System.Console.WriteLine("Fault: " + Fault);
+                System.Console.WriteLine("Options: " + Options);
+                System.Console.WriteLine("Radius: " + Radius);
+
+                var client = new HttpClient();
+                var request = new HttpRequestMessage(HttpMethod.Post, apiUrl);
+
+                // String s2 = "{\"earthquake\":{\"lon\":42.9087,\"lat\": 13.1288,\"description\":\"visso test\",\"damageLaw\":4,\"pgaLaw\":5,\"depth\":6.0,\"magnitude\":5.0,\"fault\":0,\"options\":\"100000111\",\"radius\":30},\"userPlatform\":{\"idUser\":\"az123\"}}";
+                String s3 = Newtonsoft.Json.JsonConvert.SerializeObject(requestData);
+
+                var content = new StringContent(s3, null, "application/json");
+
+                request.Content = content;
+                var response = await client.SendAsync(request);
+                response.EnsureSuccessStatusCode();
+                Console.WriteLine(await response.Content.ReadAsStringAsync());
 
                 if (response.IsSuccessStatusCode)
                 {
                     // Handle success
-                    return RedirectToPage("/SuccessPage"); // Redirect to a success page
+                    return RedirectToPage("/index"); // Redirect to a success page
                 }
                 else
                 {

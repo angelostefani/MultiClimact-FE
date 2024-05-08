@@ -485,6 +485,12 @@ function initTabs() {
     activeTab = 'buildings';
 }
 
+function initLayoutElements() {
+    document.getElementById("mouseCoordinates").style.display = "block";
+    document.getElementById("addressInput").style.display = "block";    
+}
+
+
 /*
 * Autore: Angelo Stefani [angelo.stefani@enea.it]
 * Data: 29/02/2024
@@ -496,6 +502,7 @@ function updateTabs(selectedItem) {
     $('#myTabContent').children('.tab-pane').addClass('fade');
     
     initTabs();
+    initLayoutElements();
 
     // Show corresponding tabs based on selected dropdown item
     if (selectedItem === 'Damages') {
@@ -520,6 +527,7 @@ function updateTabs(selectedItem) {
         $('#social').addClass('show active');
         
         activeTab = 'social';
+
     } else if (selectedItem === 'Earthquake') {
         /* display of the tabs relating to the selected menu*/
         $('#earthquakeSimulation-tab').removeClass('visually-hidden');
@@ -529,6 +537,9 @@ function updateTabs(selectedItem) {
         $('#earthquakeSimulation-tab').addClass('show active');
         $('#earthquakeSimulation').addClass('show active');
         
+        document.getElementById("mouseCoordinates").style.display = "none";
+        document.getElementById("addressInput").style.display = "none";
+
         activeTab = 'earthquakeSimulation';
     }
 
