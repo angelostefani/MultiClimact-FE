@@ -43,7 +43,7 @@ namespace MultiClimact.Pages
 
             // Configura l'oggetto HttpClient per accettare connessioni HTTPS
             _httpClient = httpClientFactory.CreateClient();
-            _httpClient.BaseAddress = new Uri("http://marte.dhcpnet.casaccia:8080");
+            _httpClient.BaseAddress = new Uri("http://venere.dhcpnet.casaccia:8080");
             _httpClient.DefaultRequestHeaders.Accept.Clear();
             _httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
         }
@@ -51,7 +51,7 @@ namespace MultiClimact.Pages
         public async Task OnGetAsync()
         {
             // URL del servizio che restituisce il JSON
-            string apiUrl = "/multic-cipcast-earthquake-ws/today";
+            string apiUrl = "multic-cipcast-earthquake-ws-8.1/today";
 
             try
             {
