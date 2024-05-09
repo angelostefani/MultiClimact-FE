@@ -514,6 +514,7 @@ function updateTabs(selectedItem) {
         $('#buildings-tab').addClass('show active');
         $('#buildings').addClass('show active');        
 
+        disableVerticalScrollBar();
         activeTab = 'buildings';
 
     } else if (selectedItem === 'Resilience') {
@@ -526,6 +527,7 @@ function updateTabs(selectedItem) {
         $('#social-tab').addClass('show active');
         $('#social').addClass('show active');
         
+        disableVerticalScrollBar();
         activeTab = 'social';
 
     } else if (selectedItem === 'Earthquake') {
@@ -540,6 +542,7 @@ function updateTabs(selectedItem) {
         document.getElementById("mouseCoordinates").style.display = "none";
         document.getElementById("addressInput").style.display = "none";
 
+        enableVerticalScrollBar();
         activeTab = 'earthquakeSimulation';
     }
 
@@ -589,4 +592,20 @@ function loadGeoJSON() {
         };
         reader.readAsText(file);
     }
+}
+
+// Function to enable vertical scroll bar when a specific tab is selected
+function enableVerticalScrollBar() {
+    // Select the HTML body element
+    var bodyElement = document.body;
+    // Remove the overflow-y property to enable the vertical scroll bar
+    bodyElement.style.overflowY = 'scroll';
+}
+
+// Function to disable vertical scroll bar
+function disableVerticalScrollBar() {
+    // Select the HTML body element
+    var bodyElement = document.body;
+    // Set the overflow-y property to 'hidden' to disable the vertical scroll bar
+    bodyElement.style.overflowY = 'hidden';
 }
