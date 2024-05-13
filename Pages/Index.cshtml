@@ -13,6 +13,12 @@
     {
         jsonContent = (string?)ViewData["jsonContent"]; // Access jsonContent from ViewData
     }   
+
+    string? activeMenu = "";
+    if (ViewData["activeMenu"] is string)
+    {
+        activeMenu = (string?)ViewData["activeMenu"]; 
+    }  
 }
 
 @* Autentication *@
@@ -185,7 +191,7 @@ else
                 <!-- Content for earthquakeSimulation tab -->
                 <p>Content related to EarthQuake Simulation </p>
                 <!-- FORM of earthquakeSimulation  -->
-                <div id="formEarthquakeSimulation" style="width: 80%; cursor: pointer; overflow: hidden; display: block;">
+                <div id="formEarthquakeSimulation" style="width: 80%; height:80%; cursor: pointer; overflow: hidden; display: block;">
                     <h2 class="text-center">Earthquake Simulation Form</h2>
 						<form id="earthquakeInputForm" class="row g-3" method="post" action="">
                             <div class="col-md-6">
@@ -285,6 +291,15 @@ else
                 initTabs();
                 updateTabs('Damages');
                 updateBreadcrumb('Risk Analysis', 'Damages');
+
+                if (activeMenu === "Earthquake"){
+                    updateTabs('Earthquake');
+                    updateBreadcrumb('Simulation', 'Earthquake');
+                }else{
+                    updateTabs('Damages');
+                    updateBreadcrumb('Risk Analysis', 'Damages');
+                }
+                
 
                 $('#buildings-tab').on('click', function () {
                     activeTab = 'buildings';

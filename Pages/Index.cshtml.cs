@@ -154,7 +154,11 @@ namespace MultiClimact.Pages
                 System.Console.WriteLine("Options: " + Options);
                 System.Console.WriteLine("Radius: " + Radius);
 
-                var client = new HttpClient();
+                // Handle success
+                    ViewData["activeMenu"] = "Earthquake";
+                    return RedirectToPage("/index"); // Redirect to a success page
+
+                /*var client = new HttpClient();
                 var request = new HttpRequestMessage(HttpMethod.Post, apiUrl);
 
                 String s3 = Newtonsoft.Json.JsonConvert.SerializeObject(requestData);
@@ -169,6 +173,7 @@ namespace MultiClimact.Pages
                 if (response.IsSuccessStatusCode)
                 {
                     // Handle success
+                    ViewData["activeMenu"] = "Earthquake";
                     return RedirectToPage("/index"); // Redirect to a success page
                 }
                 else
@@ -176,7 +181,7 @@ namespace MultiClimact.Pages
                     // Handle failure
                     _logger.LogError($"Error submitting earthquake data. Status code: {response.StatusCode}");
                     return Page(); // Stay on the same page
-                }
+                }*/
             }
             catch (Exception ex)
             {
