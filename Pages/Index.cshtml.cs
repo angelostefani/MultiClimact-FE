@@ -119,18 +119,6 @@ namespace MultiClimact.Pages
 
                 var earthquake = new
                 {
-                     
-                    /*lon = 42.9087,
-                    lat = 13.1288,
-                    description = "visso test",
-                    damageLaw = 4,
-                    pgaLaw = 5,
-                    depth = 6.0,
-                    magnitude = 5.0,
-                    fault = 0,
-                    options = "100000111",
-                    radius = 30*/
-
                     lon = Lon,
                     lat = Lat,
                     description = Description,
@@ -141,7 +129,6 @@ namespace MultiClimact.Pages
                     fault = Fault,
                     options = Options,
                     radius = Radius
-
                 };
 
                 var userPlatform = new
@@ -170,7 +157,6 @@ namespace MultiClimact.Pages
                 var client = new HttpClient();
                 var request = new HttpRequestMessage(HttpMethod.Post, apiUrl);
 
-                // String s2 = "{\"earthquake\":{\"lon\":42.9087,\"lat\": 13.1288,\"description\":\"visso test\",\"damageLaw\":4,\"pgaLaw\":5,\"depth\":6.0,\"magnitude\":5.0,\"fault\":0,\"options\":\"100000111\",\"radius\":30},\"userPlatform\":{\"idUser\":\"az123\"}}";
                 String s3 = Newtonsoft.Json.JsonConvert.SerializeObject(requestData);
 
                 var content = new StringContent(s3, null, "application/json");
@@ -199,6 +185,5 @@ namespace MultiClimact.Pages
                 return Page(); // Stay on the same page
             }
         }
-
     }
 }
