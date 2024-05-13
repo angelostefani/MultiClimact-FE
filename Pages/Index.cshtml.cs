@@ -35,11 +35,14 @@ namespace MultiClimact.Pages
         private readonly HttpClient _httpClient;
         private readonly IHttpClientFactory _httpClientFactory;
 
-        public IndexModel(ILogger<IndexModel> logger, IConfiguration configuration, IHttpClientFactory httpClientFactory)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public IndexModel(ILogger<IndexModel> logger, IConfiguration configuration, IHttpClientFactory httpClientFactory, IHttpContextAccessor httpContextAccessor)
         {
             _logger = logger;
             _configuration = configuration;
             _httpClientFactory = httpClientFactory;
+            _httpContextAccessor = httpContextAccessor;
 
             // Configura l'oggetto HttpClient per accettare connessioni HTTPS
             _httpClient = httpClientFactory.CreateClient();
@@ -167,10 +170,10 @@ namespace MultiClimact.Pages
                 System.Console.WriteLine("Options: " + Options);
                 System.Console.WriteLine("Radius: " + Radius);
 
+               
                 var client = new HttpClient();
                 var request = new HttpRequestMessage(HttpMethod.Post, apiUrl);
 
-                // String s2 = "{\"earthquake\":{\"lon\":42.9087,\"lat\": 13.1288,\"description\":\"visso test\",\"damageLaw\":4,\"pgaLaw\":5,\"depth\":6.0,\"magnitude\":5.0,\"fault\":0,\"options\":\"100000111\",\"radius\":30},\"userPlatform\":{\"idUser\":\"az123\"}}";
                 String s3 = Newtonsoft.Json.JsonConvert.SerializeObject(requestData);
 
                 var content = new StringContent(s3, null, "application/json");
@@ -182,6 +185,8 @@ namespace MultiClimact.Pages
 
                 if (response.IsSuccessStatusCode)
                 {
+                    // Salva un valore nella sessione
+                    HttpContext.Session.SetString("activeMenu", "Earthquake");
                     // Handle success
                     return RedirectToPage("/index"); // Redirect to a success page
                 }

@@ -1,4 +1,6 @@
 ﻿@page
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
 @model IndexModel
 @{
    //Localization of contents
@@ -35,7 +37,7 @@ else
     <body>
         <!-- Space between the Layout menu and the page menu -->
         <div id="space" style="width: 100%; height: 10vh;"></div>
-
+      
         <!-- PAGE MENU: BEGIN -->
         <nav class="navbar navbar-expand-sm navbar-dark" style=" background-color: #185ba1;">
             <div class="container-fluid">
@@ -87,7 +89,7 @@ else
             </div>
         </nav>
         <!-- PAGE MENU: END -->
-
+       <p>activeMenu: @HttpContextAccessor.HttpContext.Session.GetString("activeMenu")</p>
         <!-- BREADCRUMB -->
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb" id="breadcrumb">
@@ -283,8 +285,15 @@ else
                 visualizeEarthquakes_v01(mapOperationalResilience, @Html.Raw(jsonContent));
                                
                 initTabs();
-                updateTabs('Damages');
-                updateBreadcrumb('Risk Analysis', 'Damages');
+
+                if (@HttpContextAccessor.HttpContext.Session.GetString("activeMenu") === 'Earthquake'){
+                    updateTabs('Earthquake'); 
+                    updateBreadcrumb('Simulation', 'Earthquake');
+                }
+                else{
+                    updateTabs('Damages');
+                    updateBreadcrumb('Risk Analysis', 'Damages');
+                }               
 
                 $('#buildings-tab').on('click', function () {
                     activeTab = 'buildings';
