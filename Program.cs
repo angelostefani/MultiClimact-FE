@@ -84,6 +84,7 @@ app.UseRouting();
 
 // Enable authentication
 app.UseAuthentication();
+
 // Enable authorization
 app.UseAuthorization();
 
