@@ -48,33 +48,49 @@ else
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Natural Events</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#" onclick="updateTabs('Earthquakes'); updateBreadcrumb('Natural Events', 'Earthquakes')">Earthquakes</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="updateTabs('Heat Waves'); updateBreadcrumb('Natural Events', 'Heat Waves')">Heat Waves</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="updateTabs('Precipitations'); updateBreadcrumb('Natural Events', 'Precipitations')">Precipitations</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('Earthquakes'); updateBreadcrumb('Natural Events', 'Earthquakes')">Earthquakes</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('Floods'); updateBreadcrumb('Natural Events', 'Floods')">Floods</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('Heat Waves'); updateBreadcrumb('Natural Events', 'Heat waves')">Heat waves</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">National data</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('Territorial'); updateBreadcrumb('National data', 'Territorial')">Territorial</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('Socio-economic'); updateBreadcrumb('National data', 'Socio-economic')">Socio-economic</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('Infrastructures'); updateBreadcrumb('National data', 'Infrastructures')">Infrastructures</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Risk Analysis</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#" onclick="updateTabs('Damages'); updateBreadcrumb('Risk Analysis', 'Damages')">Damages</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="updateTabs('Resilience'); updateBreadcrumb('Risk Analysis', 'Resilience')">Resilience</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('Earthquakes'); updateBreadcrumb('Risk Analysis', 'Earthquakes')">Earthquakes</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('Floods'); updateBreadcrumb('Risk Analysis', 'Floods')">Floods</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('Heat waves'); updateBreadcrumb('Risk Analysis', 'Heat waves')">Heat waves</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Simulation</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#" onclick="updateTabs('Earthquake'); updateBreadcrumb('Simulation', 'Earthquake')">Earthquake</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('Earthquakes'); updateBreadcrumb('Simulation', 'Earthquakes')">Earthquakes</a></li>
                             
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">UAS</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#" onclick="updateTabs('UAS'); updateBreadcrumb('UAS', 'Video from UAS')">Video from UAS</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('UAS'); updateBreadcrumb('UAS', 'UAS video')">UAS video</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Help</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('Help'); updateBreadcrumb('Help', 'Help')">Help</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('Settings'); updateBreadcrumb('Help', 'Settings')">Settings</a></li>
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Settings</a>
+                        <a class="nav-link" href="#"></a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Maps</a>
@@ -89,7 +105,7 @@ else
             </div>
         </nav>
         <!-- PAGE MENU: END -->
-       <p>activeMenu: @HttpContextAccessor.HttpContext.Session.GetString("activeMenu")</p>
+      
         <!-- BREADCRUMB -->
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb" id="breadcrumb">
@@ -99,42 +115,63 @@ else
 
         <!-- NAVIGATION TABS: BEGIN -->
         <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <!-- TAB MENU 1° Level: [NATURAL EVENTS] : BEGIN -->
+                <!-- TAB MENU 2° Level: [EARTHQUAKES] : BEGIN -->
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="naturalEventsEarthquakes-tab" data-bs-toggle="tab" data-bs-target="#naturalEventsEarthquakes" type="button" role="tab" aria-controls="naturalEventsEarthquakes" aria-selected="false">Earthquakes</button>
+                </li>               
+                <!-- TAB MENU 2° Level: [EARTHQUAKES] : END -->
+                 <!-- TAB MENU 2° Level: [FLOODS] : BEGIN -->
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="naturalEventsWeatherForecasts-tab" data-bs-toggle="tab" data-bs-target="#naturalEventsWeatherForecasts" type="button" role="tab" aria-controls="naturalEventsWeatherForecasts" aria-selected="false">Weather forecasts</button>
+                </li>               
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="naturalEventsPrecipitationHeight-tab" data-bs-toggle="tab" data-bs-target="#naturalEventsPrecipitationHeight" type="button" role="tab" aria-controls="naturalEventsPrecipitationHeight" aria-selected="false">Precipitation Height</button>
+                </li>  
+                <!-- TAB MENU 2° Level: [FLOODS] : END -->
+                <!-- TAB MENU 2° Level: [HEAT WAVEW] : BEGIN -->
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="heatWavesTemperatures-tab" data-bs-toggle="tab" data-bs-target="#heatWavesTemperatures" type="button" role="tab" aria-controls="heatWavesTemperatures" aria-selected="false">Temperatures</button>
+                </li>          
+                <!-- TAB MENU 2° Level: [HEAT WAVES] : END -->
+            <!-- TAB MENU 1° Level: [NATURAL EVENTS] : END -->
+            
+            
             <!-- TAB MENU 1° Level: [RISK ANALYSIS] : BEGIN -->
+                <!-- TAB MENU 2° Level: [DAMAGES] : BEGIN -->
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="buildings-tab" data-bs-toggle="tab" data-bs-target="#buildings" type="button" role="tab" aria-controls="buildings" aria-selected="false">Buildings</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="infrastructures-tab" data-bs-toggle="tab" data-bs-target="#infrastructures" type="button" role="tab" aria-controls="infrastructures" aria-selected="false">Critical Infrastructures</button>
+                </li>
+                <!-- TAB MENU 2° Level: [DAMAGES] : END -->
 
-            <!-- TAB MENU 2° Level: [DAMAGES] : BEGIN -->
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="buildings-tab" data-bs-toggle="tab" data-bs-target="#buildings" type="button" role="tab" aria-controls="buildings" aria-selected="false">Buildings</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="infrastructures-tab" data-bs-toggle="tab" data-bs-target="#infrastructures" type="button" role="tab" aria-controls="infrastructures" aria-selected="false">Critical Infrastructures</button>
-            </li>
-            <!-- TAB MENU 2° Level: [DAMAGES] : END -->
-
-            <!-- TAB MENU 2° Level: [RESILIENCE] : BEGIN -->
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="social-tab" data-bs-toggle="tab" data-bs-target="#social" type="button" role="tab" aria-controls="social" aria-selected="false">Social Resilience</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="economic-tab" data-bs-toggle="tab" data-bs-target="#economic" type="button" role="tab" aria-controls="economic" aria-selected="false">Economic Resilience</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="operational-tab" data-bs-toggle="tab" data-bs-target="#operational" type="button" role="tab" aria-controls="operational" aria-selected="false">Operational Resilience</button>
-            </li>
-            <!-- TAB MENU 2° Level: [RESILIENCE] : END -->
+                <!-- TAB MENU 2° Level: [RESILIENCE] : BEGIN -->
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="social-tab" data-bs-toggle="tab" data-bs-target="#social" type="button" role="tab" aria-controls="social" aria-selected="false">Social Resilience</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="economic-tab" data-bs-toggle="tab" data-bs-target="#economic" type="button" role="tab" aria-controls="economic" aria-selected="false">Economic Resilience</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="operational-tab" data-bs-toggle="tab" data-bs-target="#operational" type="button" role="tab" aria-controls="operational" aria-selected="false">Operational Resilience</button>
+                </li>
+                <!-- TAB MENU 2° Level: [RESILIENCE] : END -->
 
             <!-- TAB MENU 1° Level: [RISK ANALYSIS] : END -->
             
             <!-- ########################################## -->
             
             <!-- TAB MENU 1° Level: [SIMULATION] : BEGIN -->
-            <!-- TAB MENU 2° Level: [EARTHQUAKE] : BEGIN -->
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="earthquakeSimulation-tab" data-bs-toggle="tab" data-bs-target="#earthquakeSimulation" type="button" role="tab" aria-controls="earthquakeSimulation" aria-selected="false">Simulation</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="earthquakeSimulationResults-tab" data-bs-toggle="tab" data-bs-target="#earthquakeSimulationResults" type="button" role="tab" aria-controls="earthquakeSimulationResults" aria-selected="false">Results</button>
-            </li>
-            <!-- TAB MENU 2° Level: [EARTHQUAKE] : END -->
+                <!-- TAB MENU 2° Level: [EARTHQUAKE] : BEGIN -->
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="earthquakeSimulation-tab" data-bs-toggle="tab" data-bs-target="#earthquakeSimulation" type="button" role="tab" aria-controls="earthquakeSimulation" aria-selected="false">Simulation</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="earthquakeSimulationResults-tab" data-bs-toggle="tab" data-bs-target="#earthquakeSimulationResults" type="button" role="tab" aria-controls="earthquakeSimulationResults" aria-selected="false">Results</button>
+                </li>
+                <!-- TAB MENU 2° Level: [EARTHQUAKE] : END -->
             <!-- TAB MENU 1° Level: [SIMULATION] : END -->
 
 
@@ -263,12 +300,6 @@ else
         <div id="mouseCoordinates"></div>
 
         <script type="text/javascript">
-
-            // Funzione per mostrare il popup della form quando l'utente clicca sulla voce di menu "Earthquakes"
-            function showEarthquakeModal() {
-                $('#earthquakeModal').modal('show');
-            }
-
             $(document).ready(function () {
                 let centerLatitude = 43.1167
                 let centerLongitude = 13.1996
@@ -279,72 +310,32 @@ else
                 mapSocialResilience = initWMSMap('mapSocialResilience', 'OpenStreetMap - EPSG:3857', centerLongitude, centerLatitude, zoomValue, '@ViewData["wmsurl3"]', '@ViewData["wmslayer3"]',);
                 mapEconomicResilience = initWMSMap('mapEconomicResilience', 'OpenStreetMap - EPSG:3857', centerLongitude, centerLatitude, zoomValue, '@ViewData["wmsurl4"]', '@ViewData["wmslayer4"]');
                 mapOperationalResilience = initWMSMap('mapOperationalResilience', 'OpenStreetMap - EPSG:3857', centerLongitude, centerLatitude, zoomValue, 'https://ahocevar.com/geoserver/wms', 'topp:states');
-
                 
                 // Pass jsonContent to visualizeEarthquakes_v01 function
                 visualizeEarthquakes_v01(mapOperationalResilience, @Html.Raw(jsonContent));
                                
                 initTabs();
 
-                if (@HttpContextAccessor.HttpContext.Session.GetString("activeMenu") === 'Earthquake'){
-                    updateTabs('Earthquake'); 
-                    updateBreadcrumb('Simulation', 'Earthquake');
-                }
-                else{
-                    updateTabs('Damages');
-                    updateBreadcrumb('Risk Analysis', 'Damages');
-                }               
-
-                $('#buildings-tab').on('click', function () {
-                    activeTab = 'buildings';
-                    console.log('activeTab =  buildings');
-                });
-                $('#infrastructures-tab').on('click', function () {
-                    activeTab = 'infrastructures';
-                    console.log('activeTab =  infrastructures');
-                });
-                $('#social-tab').on('click', function () {
-                    activeTab = 'social';
-                    console.log('activeTab =  social');
-                });
-                $('#economic-tab').on('click', function () {
-                    activeTab = 'economic';
-                    console.log('activeTab =  economic');
-                });
-                $('#operational-tab').on('click', function () {
-                    activeTab = 'operational';
-                    console.log('activeTab =  operational');
-                });
-                 $('#eqSimulation-tab').on('click', function () {
-                    activeTab = 'operational';
-                    console.log('activeTab =  operational');
-                });
-
-                var lastInputTime = 0;
-                var delay = 2000; // Delay di 2 secondi
-
-                // Funzione per cercare gli indirizzi e visualizzare i suggerimenti
-                $('#addressInput').on('input', function () {
-                    var currentTime = new Date().getTime();
-                    if (currentTime - lastInputTime > delay) {
-                        lastInputTime = currentTime;
-                        var address = $(this).val();
-
-                        var url = 'https://nominatim.openstreetmap.org/search?q=' + address + '&format=json&addressdetails=1&limit=5';
-
-                        $.getJSON(url, function (data) {
-                            $('#suggestions').empty();
-                            if (data && data.length > 0) {
-                                $('#suggestions').show();
-                                $.each(data, function (i, item) {
-                                    $('#suggestions').append('<a href="#" class="list-group-item list-group-item-action" data-type="' + item.type + '" data-lon="' + item.lon + '" data-lat="' + item.lat + '">' + item.display_name + '</a>');
-                                });
-                            } else {
-                                $('#suggestions').hide();
-                            }
-                        });
+               // Controlla se la variabile di sessione è definita e non nulla
+                var activeMenu = "@HttpContextAccessor.HttpContext.Session.GetString("activeMenu")";
+                if (activeMenu) {
+                    if (activeMenu === 'Earthquake') {
+                        selectTab('Earthquake');
+                        updateBreadcrumb('Simulation', 'Earthquake');
+                    } else {
+                        selectTab('Damages');
+                        updateBreadcrumb('Risk Analysis', 'Damages');
                     }
-                });
+                } else {
+                    // Gestisci il caso in cui la variabile di sessione non è definita o è nulla
+                    // Qui puoi decidere cosa fare in questo caso, ad esempio impostare un valore predefinito
+                    selectTab('Damages');
+                    updateBreadcrumb('Risk Analysis', 'Damages');
+                }       
+
+                tabManager();
+
+                searchAddress();
 
                 // Funzione per zoomare sulla posizione selezionata dall'utente
                 $('#suggestions').on('click', 'a', function (e) {
@@ -378,10 +369,7 @@ else
 
             });
 
-            // Associa la funzione showEarthquakeModal al click sulla voce di menu "Earthquakes"
-           // $('#earthquakes-tab').on('click', function () {
-           //     showEarthquakeModal();
-           // });
+           
 
         </script>
     </body>

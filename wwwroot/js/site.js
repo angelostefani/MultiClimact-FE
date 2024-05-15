@@ -1,17 +1,13 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
-
-// Write your JavaScript code.
-
-/*
+﻿/*
 * Autore: Angelo Stefani [angelo.stefani@enea.it]
 * Data creazione: 01/02/2024
-* Data aggiornamento: 06/03/2024
+* Data aggiornamento: 15/05/2024
 * 
 * Libreria Javascript per applicativi GIS ENEA.
 * Framework utilizzati:
 * - Bootstrap
 * - OpenLayer 
+@ - JQuery
 */
 
 //Variabile per tenere traccia della TAB attiva
@@ -28,7 +24,7 @@ let mapOperationalResilience;
 * Autore: Angelo Stefani [angelo.stefani@enea.it]
 * Data: 29/02/2024
 * Questa funzione JavaScript, denominata initWMSMap, è progettata per inizializzare una mappa utilizzando OpenLayers, una libreria JavaScript per la visualizzazione di mappe interattive.
-* La funzione accetta quattro parametri:
+* La funzione accetta i seguenti parametri:
 * @param {string} targetHtmlMapId - Il nome del div HTML in cui verrà renderizzata la mappa.
 * 
 */
@@ -37,7 +33,7 @@ function initMap(targetHtmlMapId) {
     let centerLongitude = 13.1996
     let zoomValue = 9
 
-    return initWMSMap(targetHtmlMapId, '', centerLongitude, centerLatitude, zoomValue, '', '');
+    return initWMSMap(targetHtmlMapId, '', centerLongitude, centerLatitude, zoomValue, '', '', '');
 }
 
 /*
@@ -45,18 +41,19 @@ function initMap(targetHtmlMapId) {
 * Data: 29/02/2024
 * 
 * Questa funzione JavaScript, denominata initWMSMap, è progettata per inizializzare una mappa utilizzando OpenLayers, una libreria JavaScript per la visualizzazione di mappe interattive.
-* La funzione accetta quattro parametri:
+* La funzione accetta i seguenti parametri:
 * @param {string} targetHtmlMapId - Il nome del div HTML in cui verrà renderizzata la mappa.
 * @param {string} baseMapName - Il nome della mappa di base da utilizzare come sfondo.
 * @param {string} wmsUrl - L'URL del servizio WMS (Web Map Service) per il layer WMS da visualizzare sulla mappa.
 * @param {string} wmsLayer - Il nome del layer WMS da visualizzare sulla mappa.
 *  
-* La funzione crea un nuovo layer di mappa di base in base al baseMapName fornito utilizzando uno switch-case per determinare quale tipo di mappa di base deve essere utilizzato. Quindi crea una nuova istanza di ol.Map con il target specificato, i layer di mappa di base e il layer WMS specificato. Imposta anche una vista predefinita per la mappa.
+* La funzione crea un nuovo layer di mappa di base in funzione del baseMapName fornito utilizzando uno switch-case per determinare quale tipo di mappa utilizzare.
+* Quindi crea una nuova istanza di ol.Map con il target specificato, i layer di mappa di base e il layer WMS specificato. Imposta anche una vista predefinita per la mappa.
 * Inoltre, aggiunge un listener per seguire le coordinate del mouse sulla mappa e visualizzarle in un elemento HTML con id mouseCoordinates.
 * Infine, utilizza un altro switch-case per assegnare la mappa appena creata a una variabile globale in base al nome del target della mappa specificato.
 * Questa funzione è progettata per essere utilizzata all'interno di un'applicazione web che necessita di visualizzare mappe interattive con layer WMS sovrapposti.
 */
-function initWMSMap(targetHtmlMapId, baseMapName, centerLongitude, centerLatitude, zoomValue, wmsUrl, wmsLayer) {
+function initWMSMap(targetHtmlMapId, baseMapName, centerLongitude, centerLatitude, zoomValue, wmsUrl, wmsLayer, legendTitle) {
     let baseMapLayer; // basemap layer, con la basemap selezionata.
     let localMap; // variabile per creare e restituire in output la mappa OpenLayer creata.
     let layersArray; // array per contenere i layer della mappa.
@@ -89,7 +86,7 @@ function initWMSMap(targetHtmlMapId, baseMapName, centerLongitude, centerLatitud
     });
 
     // Aggiungi la legenda come controllo alla mappa
-    addWMSLegendControl(localMap, wmsLayerObj, wmsUrl, wmsLayer);
+    addWMSLegendControl(localMap, wmsLayerObj, wmsUrl, wmsLayer, legendTitle);
 
     // Aggiungi un listener per le coordinate del mouse
     localMap.on('pointermove', function (event) {
@@ -104,7 +101,7 @@ function initWMSMap(targetHtmlMapId, baseMapName, centerLongitude, centerLatitud
     return localMap;
 }
 
-function addWMSLegendControl(map, layer, wmsUrl, wmsLayer) {
+function addWMSLegendControl(map, layer, wmsUrl, wmsLayer, legendTitle) {
     // Analizza l'URL del WMS per aggiungere i parametri corretti per la legenda
     let url = new URL(wmsUrl);
     url.searchParams.set('REQUEST', 'GetLegendGraphic');
@@ -122,9 +119,7 @@ function addWMSLegendControl(map, layer, wmsUrl, wmsLayer) {
     // Crea un elemento div per contenere l'immagine della legenda
     let legendDiv = document.createElement('div');
     legendDiv.className = 'ol-control legend-control';
-
-    // Recupera il titolo del layer
-    let legendTitle = "Vulnerability Index";
+    
     // Aggiungi il titolo della legenda come testo
     let titleDiv = document.createElement('div');
     titleDiv.innerText = legendTitle;
@@ -190,6 +185,13 @@ function getBaseMapLayer(baseMapName) {
 }
 
 
+/**
+ * Visualizza i dati degli eventi sismici in una heatmap.
+ * @param {ol.Map} map - La mappa su cui visualizzare la heatmap.
+ * @param {Array<object>} earthquakeData - Array di oggetti contenenti i dati degli eventi sismici.
+ *     Ogni oggetto deve contenere le propriet  'lon', 'lat' e 'radius'.
+ *     La propriet 'radius'  utilizzata per determinare l'ampiezza del cerchio centrale.
+ */
 function visualizeEarthquakes_v01(map, earthquakeData) {
     if (typeof earthquakeData === 'string') {
         console.log('Stringa JSON ricevuta:', earthquakeData);
@@ -279,92 +281,35 @@ function visualizeEarthquakes_v01(map, earthquakeData) {
     map.addLayer(heatMapLayer);
 }
 
+
+/**
+ * Crea un oggetto ol.Overlay per visualizzare un tooltip con i dati
+ * di un evento sismico.
+ *
+ * @param {ol.Map} map - La mappa in cui il tooltip deve essere visualizzato.
+ * @param {object} earthquake - L'oggetto contenente i dati dell'evento sismico.
+ * @returns {ol.Overlay} L'oggetto ol.Overlay con il tooltip.
+ */
 function createTooltip(map, earthquake) {
+    // Crea il nuovo oggetto ol.Overlay e setta il suo elemento HTML
     var tooltip = new ol.Overlay({
         element: document.createElement('div'),
+        // Posizione del tooltip sulla mappa
         positioning: 'bottom-center',
+        // Offset per spostare il tooltip rispetto della sua posizione sulla mappa
         offset: [0, -10]
     });
 
+    // Imposta il contenuto del tooltip
     var content = '<div>ID: ' + earthquake.idEarthquake + '<br>Magnitude: ' + earthquake.magnitude + '<br>Depth: ' + earthquake.depth + '</div>';
     tooltip.getElement().innerHTML = content;
 
+    // Aggiungi il tooltip alla mappa
     map.addOverlay(tooltip);
 
+    // Restituisce l'oggetto ol.Overlay con il tooltip
     return tooltip;
 }
-
-
-
-//function visualizeEarthquakes_v01(map, earthquakeData) {
-//    // Assicurarsi che earthquakeData sia un array di oggetti JavaScript validi
-//    if (typeof earthquakeData === 'string') {
-//        console.log('Stringa JSON ricevuta:', earthquakeData);
-//        try {
-//            earthquakeData = JSON.parse(earthquakeData);
-//        } catch (error) {
-//            console.error('Errore durante il parsing della stringa JSON:', error);
-//            return;
-//        }
-//    }
-
-//    if (!Array.isArray(earthquakeData)) {
-//        console.error('I dati degli eventi sismici non sono un array valido.');
-//        return;
-//    }
-
-//    // Itera attraverso i dati degli eventi sismici
-//    earthquakeData.forEach(function (earthquake) {
-//        // Verifica se earthquake è valido e ha la proprietà "xlon"
-//        if (earthquake && earthquake.xlon !== undefined) {
-//            // Crea un punto sulla mappa per ogni evento sismico
-//            var point = new ol.geom.Point(ol.proj.fromLonLat([earthquake.ylat, earthquake.xlon]));
-
-//            // Crea un cerchio per evidenziare la zona attorno all'evento sismico
-//            var circle = new ol.geom.Circle(point, earthquake.radius);
-
-//            // Stili per il punto e il cerchio
-//            var pointStyle = new ol.style.Style({
-//                image: new ol.style.Circle({
-//                    radius: 5,
-//                    fill: new ol.style.Fill({
-//                        color: 'red'
-//                    })
-//                })
-//            });
-
-//            var circleStyle = new ol.style.Style({
-//                fill: new ol.style.Fill({
-//                    color: 'rgba(255, 0, 0, 0.2)'
-//                }),
-//                stroke: new ol.style.Stroke({
-//                    color: 'red',
-//                    width: 1
-//                })
-//            });
-
-//            // Crea le feature per il punto e il cerchio
-//            var pointFeature = new ol.Feature(point);
-//            pointFeature.setStyle(pointStyle);
-
-//            var circleFeature = new ol.Feature(circle);
-//            circleFeature.setStyle(circleStyle);
-
-//            // Aggiunge le feature al layer della mappa
-//            var vectorSource = new ol.source.Vector({
-//                features: [pointFeature, circleFeature]
-//            });
-
-//            var vectorLayer = new ol.layer.Vector({
-//                source: vectorSource
-//            });
-
-//            // Aggiunge il layer alla mappa
-//            map.addLayer(vectorLayer);
-                       
-//        }
-//    });
-//}
 
 /*
 * Autore: Angelo Stefani [angelo.stefani@enea.it]
@@ -458,11 +403,15 @@ function updateBreadcrumb(section, subSection) {
     }
 }
 
-/*
-* Autore: Angelo Stefani [angelo.stefani@enea.it]
-* Data: 29/02/2024
-* Funzione per inizializzare i tabs
-*/
+/**
+ * Autore: Angelo Stefani [angelo.stefani@enea.it]
+ * Data: 29/02/2024
+ * Funzione per inizializzare i tabs
+ */
+/**
+ * This function is used to initialize the tabs of the application. It hides all the tabs
+ * and sets the default active tab to "buildings"
+ */
 function initTabs() {
     // Hide all tabs
     $('#buildings-tab').removeClass('show active');
@@ -472,7 +421,8 @@ function initTabs() {
     $('#operational-tab').removeClass('show active');
     $('#earthquakeSimulation-tab').removeClass('show active');
     $('#earthquakeSimulationResults-tab').removeClass('show active');
-       
+
+    // Hide all tabs with the visually-hidden class
     $('#buildings-tab').addClass('visually-hidden');
     $('#infrastructures-tab').addClass('visually-hidden');
     $('#social-tab').addClass('visually-hidden');
@@ -481,13 +431,94 @@ function initTabs() {
     $('#earthquakeSimulation-tab').addClass('visually-hidden');
     $('#earthquakeSimulationResults-tab').addClass('visually-hidden');
 
-    /*default setting for the tabs*/
+    // Set the default active tab
     activeTab = 'buildings';
 }
 
+/**
+ * Autore: Angelo Stefani [angelo.stefani@enea.it]
+ * Data: 29/02/2024
+ * Funzione per inizializzare gli elementi dell'interfaccia utente
+ */
+/**
+ * This function is used to initialize the layout elements of the application. It sets the display
+ * property of the "mouseCoordinates" and "addressInput" elements to "block". This means that
+ * these elements will be visible in the application.
+ */
 function initLayoutElements() {
+    // Sets the display property of the "mouseCoordinates" element to "block"
+    // This means that the element will be visible in the application
     document.getElementById("mouseCoordinates").style.display = "block";
+    // Sets the display property of the "addressInput" element to "block"
+    // This means that the element will be visible in the application
     document.getElementById("addressInput").style.display = "block";    
+}
+
+
+
+/**
+ * Autore: Angelo Stefani [angelo.stefani@enea.it]
+ * Data: 29/02/2024
+ * Funzione per gestire l'interazione con i tabs dell'interfaccia utente
+ */
+/**
+ * This function is used to manage the interaction with the tabs of the user interface.
+ * It sets the activeTab variable based on the clicked tab.
+ */
+function tabManager() {
+    /**
+     * Event handler for the click event of the "buildings" tab.
+     * It sets activeTab to "buildings".
+     */
+    $('#buildings-tab').on('click', function () {
+        activeTab = 'buildings';
+        console.log('activeTab =  buildings');
+    });
+
+    /**
+     * Event handler for the click event of the "infrastructures" tab.
+     * It sets activeTab to "infrastructures".
+     */
+    $('#infrastructures-tab').on('click', function () {
+        activeTab = 'infrastructures';
+        console.log('activeTab =  infrastructures');
+    });
+
+    /**
+     * Event handler for the click event of the "social" tab.
+     * It sets activeTab to "social".
+     */
+    $('#social-tab').on('click', function () {
+        activeTab = 'social';
+        console.log('activeTab =  social');
+    });
+
+    /**
+     * Event handler for the click event of the "economic" tab.
+     * It sets activeTab to "economic".
+     */
+    $('#economic-tab').on('click', function () {
+        activeTab = 'economic';
+        console.log('activeTab =  economic');
+    });
+
+    /**
+     * Event handler for the click event of the "operational" tab.
+     * It sets activeTab to "operational".
+     */
+    $('#operational-tab').on('click', function () {
+        activeTab = 'operational';
+        console.log('activeTab =  operational');
+    });
+
+    /**
+     * Event handler for the click event of the "earthquakeSimulation" tab.
+     * It sets activeTab to "operational".
+     */
+    $('#eqSimulation-tab').on('click', function () {
+        activeTab = 'operational';
+        console.log('activeTab =  operational');
+    });
 }
 
 
@@ -496,7 +527,7 @@ function initLayoutElements() {
 * Data: 29/02/2024
 * Function to update tabs based on selected dropdown item
 */
-function updateTabs(selectedItem) {
+function selectTab(selectedItem) {
     // Hide all tabs
     $('#myTabContent').children('.tab-pane').removeClass('show active');
     $('#myTabContent').children('.tab-pane').addClass('fade');
@@ -609,3 +640,39 @@ function disableVerticalScrollBar() {
     // Set the overflow-y property to 'hidden' to disable the vertical scroll bar
     bodyElement.style.overflowY = 'hidden';
 }
+
+/**
+ * Funzione per cercare gli indirizzi e visualizzare i suggerimenti
+  */
+function searchAddress() {
+    var lastInputTime = 0;
+    var delay = 2000; // Delay di 2 secondi
+
+    // Funzione per cercare gli indirizzi e visualizzare i suggerimenti
+    $('#addressInput').on('input', function () {
+        var currentTime = new Date().getTime();
+        if (currentTime - lastInputTime > delay) {
+            lastInputTime = currentTime;
+            var address = $(this).val();
+
+            // Richiesta AJAX per cercare gli indirizzi
+            var url = 'https://nominatim.openstreetmap.org/search?q=' + address + '&format=json&addressdetails=1&limit=5';
+
+            $.getJSON(url, function (data) {
+                // Visualizzo dei suggerimenti
+                $('#suggestions').empty();
+                if (data && data.length > 0) {
+                    $('#suggestions').show();
+                    // Creazione dei suggerimenti
+                    $.each(data, function (i, item) {
+                        $('#suggestions').append('<a href="#" class="list-group-item list-group-item-action" data-type="' + item.type + '" data-lon="' + item.lon + '" data-lat="' + item.lat + '">' + item.display_name + '</a>');
+                    });
+                } else {
+                    $('#suggestions').hide();
+                }
+            });
+        }        
+    });
+  
+  
+}  
