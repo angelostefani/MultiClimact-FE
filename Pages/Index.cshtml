@@ -43,7 +43,7 @@ else
             <div class="container-fluid">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Home</a>
+                        <a class="nav-link" href="#"  role="button">Home</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Natural Events</a>
@@ -393,18 +393,11 @@ else
                                
                 initTabs();
                 tabManager();
-
-                setupAddressSearch('#addressInput', '#suggestions');
-               
+                setupAddressSearch('#addressInput', '#suggestions');               
                 setupAddressZoom('#suggestions', getMapFromActiveTab, addPointer, activeTab);
+                setupDropdownMenuHandler('.dropdown-item', '.dropdown-menu');
 
-                // Funzione per gestire la selezione della mappa quando si fa clic su una delle voci del menu a discesa
-                $('.dropdown-item').on('click', function () {
-                    $('.dropdown-menu').removeClass('show');
-                });
-
-            });
-     
+            });     
 
         </script>
     </body>

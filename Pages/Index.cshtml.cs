@@ -114,8 +114,7 @@ namespace MultiClimact.Pages
 
             ViewData["wmsurl_mapB6"] = _configuration["wms:wmsurl_mapB6"];
             ViewData["wmslayer_mapB6"] = _configuration["wms:wmslayer_mapB6"];
-
-           
+          
 
             ViewData["wmsurl_mapC1"] = _configuration["wms:wmsurl_mapC1"];
             ViewData["wmslayer_mapC1"] = _configuration["wms:wmslayer_mapC1"];

@@ -984,3 +984,9 @@ function setupAddressZoom(suggestionsSelector, getMapFromActiveTab, addPointer, 
     });
 }
 
+function setupDropdownMenuHandler(dropdownItemSelector, dropdownMenuSelector) {
+    // Funzione per gestire la selezione della mappa quando si fa clic su una delle voci del menu a discesa
+    $(dropdownItemSelector).on('click', function () {
+        $(dropdownMenuSelector).removeClass('show');
+    });
+}
