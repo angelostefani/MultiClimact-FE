@@ -48,45 +48,45 @@ else
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Natural Events</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#" onclick="selectTab('Earthquakes'); updateBreadcrumb('Natural Events', 'Earthquakes')">Earthquakes</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="selectTab('Floods'); updateBreadcrumb('Natural Events', 'Floods')">Floods</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="selectTab('Heat Waves'); updateBreadcrumb('Natural Events', 'Heat waves')">Heat waves</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabA1-tab'); updateBreadcrumb('Natural Events', 'Earthquakes')">Earthquakes</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabA2-tab'); updateBreadcrumb('Natural Events', 'Floods')">Floods</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabA4-tab'); updateBreadcrumb('Natural Events', 'Heat waves')">Heat waves</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">National data</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#" onclick="selectTab('Territorial'); updateBreadcrumb('National data', 'Territorial')">Territorial</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="selectTab('Socio-economic'); updateBreadcrumb('National data', 'Socio-economic')">Socio-economic</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="selectTab('Infrastructures'); updateBreadcrumb('National data', 'Infrastructures')">Infrastructures</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabB1-tab'); updateBreadcrumb('National data', 'Territorial')">Territorial</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabB4-tab'); updateBreadcrumb('National data', 'Socio-economic')">Socio-economic</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabB5-tab'); updateBreadcrumb('National data', 'Infrastructures')">Infrastructures</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Risk Analysis</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#" onclick="selectTab('Earthquakes'); updateBreadcrumb('Risk Analysis', 'Earthquakes')">Earthquakes</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="selectTab('Floods'); updateBreadcrumb('Risk Analysis', 'Floods')">Floods</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="selectTab('Heat waves'); updateBreadcrumb('Risk Analysis', 'Heat waves')">Heat waves</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabC1-tab'); updateBreadcrumb('Risk Analysis', 'Earthquakes')">Earthquakes</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabC6-tab'); updateBreadcrumb('Risk Analysis', 'Floods')">Floods</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabC10-tab'); updateBreadcrumb('Risk Analysis', 'Heat waves')">Heat waves</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Simulation</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#" onclick="selectTab('Earthquakes'); updateBreadcrumb('Simulation', 'Earthquakes')">Earthquakes</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabD1-tab'); updateBreadcrumb('Simulation', 'Earthquakes')">Earthquakes</a></li>
                             
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">UAS</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#" onclick="selectTab('UAS'); updateBreadcrumb('UAS', 'UAS video')">UAS video</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabE1-tab'); updateBreadcrumb('UAS', 'UAS video')">UAS video</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Help</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#" onclick="selectTab('Help'); updateBreadcrumb('Help', 'Help')">Help</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="selectTab('Settings'); updateBreadcrumb('Help', 'Settings')">Settings</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabF1-tab'); updateBreadcrumb('Help', 'Help')">Help</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabF2-tab'); updateBreadcrumb('Help', 'Settings')">Settings</a></li>
                         </ul>
                     </li>
                     <li class="nav-item">
@@ -115,176 +115,226 @@ else
 
         <!-- NAVIGATION TABS: BEGIN -->
         <ul class="nav nav-tabs" id="myTab" role="tablist">
-            <!-- TAB MENU 1° Level: [NATURAL EVENTS] : BEGIN -->
-                <!-- TAB MENU 2° Level: [EARTHQUAKES] : BEGIN -->
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="naturalEventsEarthquakes-tab" data-bs-toggle="tab" data-bs-target="#naturalEventsEarthquakes" type="button" role="tab" aria-controls="naturalEventsEarthquakes" aria-selected="false">Earthquakes</button>
-                </li>               
-                <!-- TAB MENU 2° Level: [EARTHQUAKES] : END -->
-                 <!-- TAB MENU 2° Level: [FLOODS] : BEGIN -->
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="naturalEventsWeatherForecasts-tab" data-bs-toggle="tab" data-bs-target="#naturalEventsWeatherForecasts" type="button" role="tab" aria-controls="naturalEventsWeatherForecasts" aria-selected="false">Weather forecasts</button>
-                </li>               
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="naturalEventsPrecipitationHeight-tab" data-bs-toggle="tab" data-bs-target="#naturalEventsPrecipitationHeight" type="button" role="tab" aria-controls="naturalEventsPrecipitationHeight" aria-selected="false">Precipitation Height</button>
-                </li>  
-                <!-- TAB MENU 2° Level: [FLOODS] : END -->
-                <!-- TAB MENU 2° Level: [HEAT WAVEW] : BEGIN -->
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="heatWavesTemperatures-tab" data-bs-toggle="tab" data-bs-target="#heatWavesTemperatures" type="button" role="tab" aria-controls="heatWavesTemperatures" aria-selected="false">Temperatures</button>
-                </li>          
-                <!-- TAB MENU 2° Level: [HEAT WAVES] : END -->
-            <!-- TAB MENU 1° Level: [NATURAL EVENTS] : END -->
-            
-            
-            <!-- TAB MENU 1° Level: [RISK ANALYSIS] : BEGIN -->
-                <!-- TAB MENU 2° Level: [DAMAGES] : BEGIN -->
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="buildings-tab" data-bs-toggle="tab" data-bs-target="#buildings" type="button" role="tab" aria-controls="buildings" aria-selected="false">Buildings</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="infrastructures-tab" data-bs-toggle="tab" data-bs-target="#infrastructures" type="button" role="tab" aria-controls="infrastructures" aria-selected="false">Critical Infrastructures</button>
-                </li>
-                <!-- TAB MENU 2° Level: [DAMAGES] : END -->
 
-                <!-- TAB MENU 2° Level: [RESILIENCE] : BEGIN -->
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="social-tab" data-bs-toggle="tab" data-bs-target="#social" type="button" role="tab" aria-controls="social" aria-selected="false">Social Resilience</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="economic-tab" data-bs-toggle="tab" data-bs-target="#economic" type="button" role="tab" aria-controls="economic" aria-selected="false">Economic Resilience</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="operational-tab" data-bs-toggle="tab" data-bs-target="#operational" type="button" role="tab" aria-controls="operational" aria-selected="false">Operational Resilience</button>
-                </li>
-                <!-- TAB MENU 2° Level: [RESILIENCE] : END -->
+            <!-- TAB MENU A -->
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tabA1-tab" data-bs-toggle="tab" data-bs-target="#tabA1" type="button" role="tab" aria-controls="tabA1" aria-selected="false">Earthquakes</button>
+            </li>               
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tabA2-tab" data-bs-toggle="tab" data-bs-target="#tabA2" type="button" role="tab" aria-controls="tabA2" aria-selected="false">Weather forecasts</button>
+            </li>               
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tabA3-tab" data-bs-toggle="tab" data-bs-target="#tabA3" type="button" role="tab" aria-controls="tabA3" aria-selected="false">Precipitation height</button>
+            </li>  
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tabA4-tab" data-bs-toggle="tab" data-bs-target="#tabA4" type="button" role="tab" aria-controls="tabA4" aria-selected="false">Temperatures</button>
+            </li>          
 
-            <!-- TAB MENU 1° Level: [RISK ANALYSIS] : END -->
-            
-            <!-- ########################################## -->
-            
-            <!-- TAB MENU 1° Level: [SIMULATION] : BEGIN -->
-                <!-- TAB MENU 2° Level: [EARTHQUAKE] : BEGIN -->
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="earthquakeSimulation-tab" data-bs-toggle="tab" data-bs-target="#earthquakeSimulation" type="button" role="tab" aria-controls="earthquakeSimulation" aria-selected="false">Simulation</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="earthquakeSimulationResults-tab" data-bs-toggle="tab" data-bs-target="#earthquakeSimulationResults" type="button" role="tab" aria-controls="earthquakeSimulationResults" aria-selected="false">Results</button>
-                </li>
-                <!-- TAB MENU 2° Level: [EARTHQUAKE] : END -->
-            <!-- TAB MENU 1° Level: [SIMULATION] : END -->
+            <!-- TAB MENU B -->
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tabB1-tab" data-bs-toggle="tab" data-bs-target="#tabB1" type="button" role="tab" aria-controls="tabB1" aria-selected="false">Hydrogeological</button>
+            </li> 
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tabB2-tab" data-bs-toggle="tab" data-bs-target="#tabB2" type="button" role="tab" aria-controls="tabB2" aria-selected="false">Landslide</button>
+            </li> 
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tabB3-tab" data-bs-toggle="tab" data-bs-target="#tabB3" type="button" role="tab" aria-controls="tabB3" aria-selected="false">Seismic building vulnerability</button>
+            </li> 
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tabB4-tab" data-bs-toggle="tab" data-bs-target="#tabB4" type="button" role="tab" aria-controls="tabB4" aria-selected="false">Population</button>
+            </li> 
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tabB5-tab" data-bs-toggle="tab" data-bs-target="#tabB5" type="button" role="tab" aria-controls="tabB5" aria-selected="false">DBSN</button>
+            </li> 
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tabB6-tab" data-bs-toggle="tab" data-bs-target="#tabB6" type="button" role="tab" aria-controls="tabB6" aria-selected="false">OpenStreetMap</button>
+            </li> 
 
+            <!-- TAB MENU C -->
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tabC1-tab" data-bs-toggle="tab" data-bs-target="#tabC1" type="button" role="tab" aria-controls="tabC1" aria-selected="false">Earthquake manager</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tabC2-tab" data-bs-toggle="tab" data-bs-target="#tabC2" type="button" role="tab" aria-controls="tabC2" aria-selected="false">Shakemap</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tabC3-tab" data-bs-toggle="tab" data-bs-target="#tabC3" type="button" role="tab" aria-controls="tabC3" aria-selected="false">Buildings</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tabC4-tab" data-bs-toggle="tab" data-bs-target="#tabC4" type="button" role="tab" aria-controls="tabC4" aria-selected="false">Infrastructures</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tabC5-tab" data-bs-toggle="tab" data-bs-target="#tabC5" type="button" role="tab" aria-controls="tabC5" aria-selected="false">Urban risk</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tabC6-tab" data-bs-toggle="tab" data-bs-target="#tabC6" type="button" role="tab" aria-controls="tabC6" aria-selected="false">Flood manager</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tabC7-tab" data-bs-toggle="tab" data-bs-target="#tabC7" type="button" role="tab" aria-controls="tabC7" aria-selected="false">Buildings</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tabC8-tab" data-bs-toggle="tab" data-bs-target="#tabC8" type="button" role="tab" aria-controls="tabC8" aria-selected="false">Infrastructures</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tabC9-tab" data-bs-toggle="tab" data-bs-target="#tabC9" type="button" role="tab" aria-controls="tabC9" aria-selected="false">Urban risk</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tabC10-tab" data-bs-toggle="tab" data-bs-target="#tabC10" type="button" role="tab" aria-controls="tabC10" aria-selected="false">Heat wave manager</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tabC11-tab" data-bs-toggle="tab" data-bs-target="#tabC11" type="button" role="tab" aria-controls="tabC11" aria-selected="false">Buildings</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tabC12-tab" data-bs-toggle="tab" data-bs-target="#tabC12" type="button" role="tab" aria-controls="tabC12" aria-selected="false">Infrastructures</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tabC13-tab" data-bs-toggle="tab" data-bs-target="#tabC13" type="button" role="tab" aria-controls="tabC13" aria-selected="false">Urban risk</button>
+            </li>
 
+            <!-- TAB MENU D -->
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tabD1-tab" data-bs-toggle="tab" data-bs-target="#tabD1" type="button" role="tab" aria-controls="tabD1" aria-selected="false">Earthquake manager</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tabD2-tab" data-bs-toggle="tab" data-bs-target="#tabD2" type="button" role="tab" aria-controls="tabD2" aria-selected="false">Shakemap</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tabD3-tab" data-bs-toggle="tab" data-bs-target="#tabD3" type="button" role="tab" aria-controls="tabD3" aria-selected="false">Buildings</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tabD4-tab" data-bs-toggle="tab" data-bs-target="#tabD4" type="button" role="tab" aria-controls="tabD4" aria-selected="false">Infrastructures</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tabD5-tab" data-bs-toggle="tab" data-bs-target="#tabD5" type="button" role="tab" aria-controls="tabD5" aria-selected="false">Urban risk</button>
+            </li>
         </ul>
         <!-- NAVIGATION TABS: END -->
 
         <!-- TAB PANELS: BEGIN -->
-
         <div class="tab-content" id="myTabContent">
-            <!-- TAB PANELS 1° Level MENU [RISK ANALYSIS]: BEGIN -->
+           <!-- TAB PANELS GROUP MENU A -->
+            <div class="tab-pane fade" id="panelA1" role="tabpanel" aria-labelledby="tabA1-tab">               
+                <p>Content related to panelA1</p>               
+                <div id="mapA1" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
+            </div>
+            <div class="tab-pane fade" id="panelA2" role="tabpanel" aria-labelledby="tabA2-tab">
+                <p>Content related to panelA2</p>
+                <div id="mapA2" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
+            </div>           
+            <div class="tab-pane fade" id="panelA3" role="tabpanel" aria-labelledby="tabA3-tab">
+                <p>Content related to panelA3</p>
+                <div id="mapA3" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
+            </div> 
+           <div class="tab-pane fade" id="panelA4" role="tabpanel" aria-labelledby="tabA4-tab">
+                <p>Content related to panelA4</p>
+                <div id="mapA4" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
+            </div> 
+            <!-- TAB PANELS GROUP MENU B -->
+            <div class="tab-pane fade" id="panelB1" role="tabpanel" aria-labelledby="tabB1-tab">
+                <p>Content related to panelB1</p>
+                <div id="mapB1" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
+            </div> 
+            <div class="tab-pane fade" id="panelB2" role="tabpanel" aria-labelledby="tabB2-tab">
+                <p>Content related to panelB2</p>
+                <div id="mapB2" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
+            </div> 
+            <div class="tab-pane fade" id="panelB3" role="tabpanel" aria-labelledby="tabB3-tab">
+                <p>Content related to panelB3</p>
+                <div id="mapB3" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
+            </div> 
+            <div class="tab-pane fade" id="panelB4" role="tabpanel" aria-labelledby="tabB4-tab">
+                <p>Content related to panelB4</p>
+                <div id="mapB4" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
+            </div> 
+            <div class="tab-pane fade" id="panelB5" role="tabpanel" aria-labelledby="tabB5-tab">
+                <p>Content related to panelB5</p>
+                <div id="mapB5" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
+            </div> 
+            <div class="tab-pane fade" id="panelB6" role="tabpanel" aria-labelledby="tabB6-tab">
+                <p>Content related to panelB6</p>
+                <div id="mapB6" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
+            </div> 
 
-            <!-- TAB PANELS 2° Level MENU [DAMAGES]: BEGIN -->
-            <div class="tab-pane fade" id="buildings" role="tabpanel" aria-labelledby="buildings-tab">
-                <!-- Content for Buildings tab -->
-                <p>Content related to Buildings</p>
-                <!-- Map of Buildings -->
-                <div id="mapBuildings" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
-            </div>
-            <div class="tab-pane fade" id="infrastructures" role="tabpanel" aria-labelledby="infrastructures-tab">
-                <!-- Content for Critical Infrastructures tab -->
-                <p>Content related to Critical Infrastructures</p>
-                <!-- Map of Critical Infrastructures-->
-                <div id="mapCriticalInfrastructures" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
-            </div>
-            <!-- TAB PANELS 2° Level MENU [DAMAGES]: END -->
-
-            <!-- TAB PANELS 2° Level MENU [RESILIENCE]: BEGIN -->
-            <div class="tab-pane fade" id="social" role="tabpanel" aria-labelledby="social-tab">
-                <!-- Content for Social Resilience tab -->
-                <p>Content related to Social Resilience</p>
-                <!-- Map of Social Resilience -->
-                <div id="mapSocialResilience" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
-            </div>
-            <div class="tab-pane fade" id="economic" role="tabpanel" aria-labelledby="economic-tab">
-                <!-- Content for Economic Resilience tab -->
-                <p>Content related to Economic Resilience</p>
-                <!-- Map of Economic Resilience -->
-                <div id="mapEconomicResilience" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
-            </div>
-            <div class="tab-pane fade" id="operational" role="tabpanel" aria-labelledby="operational-tab">
-                <!-- Content for Operational Resilience tab -->
-                <p>Content related to Operational Resilience</p>
-                <!-- Map of Operational Resilience -->
-                <div id="mapOperationalResilience" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
-            </div>
-            <!-- TAB PANELS 2° Level MENU [RESILIENCE]: END -->
-            <!-- ########################################## -->
-            <!-- TAB PANELS 1° Level MENU [SIMULATION]: BEGIN -->
-			<div class="tab-pane fade" id="earthquakeSimulation" role="tabpanel" aria-labelledby="earthquakeSimulation-tab">
-                <!-- Content for earthquakeSimulation tab -->
-                <p>Content related to EarthQuake Simulation </p>
-                <!-- FORM of earthquakeSimulation  -->
-                <div id="formEarthquakeSimulation" style="width: 80%; cursor: pointer; overflow: hidden; display: block;">
-                    <h2 class="text-center">Earthquake Simulation Form</h2>
-						<form id="earthquakeInputForm" class="row g-3" method="post" action="">
-                            <div class="col-md-6">
-                                <label for="lon" class="form-label">Longitude (DMS)</label>
-                                <input type="text" class="form-control" id="lon" name="lon" placeholder="Enter longitude (Es: 42.9087)" value="42.9087">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="lat" class="form-label">Latitude (DMS)</label>
-                                <input type="text" class="form-control" id="lat" name="lat" placeholder="Enter latitude (Es: 13.1288)" value="13.1288">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="depth" class="form-label">Depth (Km)</label>
-                                <input type="text" class="form-control" id="depth" name="depth" placeholder="Enter depth (Es: 6.0)" value="6.0">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="magnitude" class="form-label">Magnitude</label>
-                                <input type="text" class="form-control" id="magnitude" name="magnitude" placeholder="Enter magnitude (Es: 5.0)" value="5.0">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="radius" class="form-label">Radius (Km)</label>
-                                <input type="text" class="form-control" id="radius" name="radius" placeholder="Enter radius (Es: 30)" value="30">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="description" class="form-label">Description</label>
-                                <input type="text" class="form-control" id="description" name="description" placeholder="Enter description (Es: visso test)" value="visso test">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="damageLaw" class="form-label">Damage Law</label>
-                                <input type="number" class="form-control" id="damageLaw" name="damageLaw" placeholder="Enter damage law" value="4">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="pgaLaw" class="form-label">Pga Law</label>
-                                <input type="number" class="form-control" id="pgaLaw" name="pgaLaw" placeholder="Enter pga law" value="5">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="fault" class="form-label">Fault</label>
-                                <input type="number" class="form-control" id="fault" name="fault" placeholder="Fault" value="0">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="options" class="form-label">Options</label>
-                                <input type="text" class="form-control" id="options" name="options" placeholder="Options" value="100000111">
-                            </div>
-
-                            <div class="col-12">
-                                <button type="submit" class="btn btn-primary" id="submitBtn">Submit</button>
-                            </div>
-                        </form>
-
-                </div>
-            </div>
-            <div class="tab-pane fade" id="earthquakeSimulationResults" role="tabpanel" aria-labelledby="earthquakeSimulationResults-tab">
-                <!-- Content for earthquakeSimulationResults tab -->
-                <p>Content related to EarthQuake Simulation Results </p>
-                <!-- Grid of earthquakeSimulationResults  -->
-                <div id="gridEarthquakeSimulationResults" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;">
-
-
-                </div>
-            </div>
-             <!-- TAB PANELS 1° Level MENU [SIMULATION]: END -->
+            <!-- TAB PANELS GROUP MENU C -->
+            <div class="tab-pane fade" id="panelC1" role="tabpanel" aria-labelledby="tabC1-tab">
+                <p>Content related to panelC1</p>
+                <div id="mapC1" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
+            </div> 
+            <div class="tab-pane fade" id="panelC2" role="tabpanel" aria-labelledby="tabC2-tab">
+                <p>Content related to panelC2</p>
+                <div id="mapC2" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
+            </div> 
+            <div class="tab-pane fade" id="panelC3" role="tabpanel" aria-labelledby="tabC3-tab">
+                <p>Content related to panelC3</p>
+                <div id="mapC3" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
+            </div> 
+            <div class="tab-pane fade" id="panelC3" role="tabpanel" aria-labelledby="tabC3-tab">
+                <p>Content related to panelC3</p>
+                <div id="mapC3" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
+            </div> 
+            <div class="tab-pane fade" id="panelC4" role="tabpanel" aria-labelledby="tabC4-tab">
+                <p>Content related to panelC4</p>
+                <div id="mapC4" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
+            </div> 
+            <div class="tab-pane fade" id="panelC5" role="tabpanel" aria-labelledby="tabC5-tab">
+                <p>Content related to panelC5</p>
+                <div id="mapC5" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
+            </div> 
+            <div class="tab-pane fade" id="panelC6" role="tabpanel" aria-labelledby="tabC6-tab">
+                <p>Content related to panelC6</p>
+                <div id="mapC6" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
+            </div> 
+            <div class="tab-pane fade" id="panelC7" role="tabpanel" aria-labelledby="tabC7-tab">
+                <p>Content related to panelC7</p>
+                <div id="mapC7" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
+            </div> 
+            <div class="tab-pane fade" id="panelC8" role="tabpanel" aria-labelledby="tabC8-tab">
+                <p>Content related to panelC8</p>
+                <div id="mapC8" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
+            </div> 
+            <div class="tab-pane fade" id="panelC8" role="tabpanel" aria-labelledby="tabC9-tab">
+                <p>Content related to panelC9</p>
+                <div id="mapC9" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
+            </div> 
+            <div class="tab-pane fade" id="panelC10" role="tabpanel" aria-labelledby="tabC10-tab">
+                <p>Content related to panelC10</p>
+                <div id="mapC10" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
+            </div> 
+            <div class="tab-pane fade" id="panelC11" role="tabpanel" aria-labelledby="tabC11-tab">
+                <p>Content related to panelC11</p>
+                <div id="mapC11" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
+            </div> 
+            <div class="tab-pane fade" id="panelC12" role="tabpanel" aria-labelledby="tabC12-tab">
+                <p>Content related to panelC12</p>
+                <div id="mapC12" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
+            </div> 
+            <div class="tab-pane fade" id="panelC13" role="tabpanel" aria-labelledby="tabC13-tab">
+                <p>Content related to panelC13</p>
+                <div id="mapC13" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
+            </div> 
+                        
+            <!-- TAB PANELS GROUP MENU D -->
+            <div class="tab-pane fade" id="panelD1" role="tabpanel" aria-labelledby="tabD1-tab">
+                <p>Content related to panelD1</p>
+                <div id="mapD1" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
+            </div> 
+            <div class="tab-pane fade" id="panelD2" role="tabpanel" aria-labelledby="tabD2-tab">
+                <p>Content related to panelD2</p>
+                <div id="mapD2" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
+            </div> 
+            <div class="tab-pane fade" id="panelD3" role="tabpanel" aria-labelledby="tabD3-tab">
+                <p>Content related to panelD3</p>
+                <div id="mapD3" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
+            </div> 
+            <div class="tab-pane fade" id="panelD4" role="tabpanel" aria-labelledby="tabD4-tab">
+                <p>Content related to panelD4</p>
+                <div id="mapD4" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
+            </div> 
+            <div class="tab-pane fade" id="panelD5" role="tabpanel" aria-labelledby="tabD5-tab">
+                <p>Content related to panelD5</p>
+                <div id="mapD5" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
+            </div> 
+              
         </div>
         <!-- TAB PANELS: END -->
 
@@ -301,66 +351,52 @@ else
 
         <script type="text/javascript">
             $(document).ready(function () {
+    
                 let centerLatitude = 43.1167
                 let centerLongitude = 13.1996
                 let zoomValue = 9
 
-                mapBuildings = initWMSMap('mapBuildings', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl1"]', '@ViewData["wmslayer1"]');
-                mapCriticalInfrastructures = initWMSMap('mapCriticalInfrastructures', 'Google Normal - EPSG:3857', centerLongitude, centerLatitude, zoomValue, '@ViewData["wmsurl2"]', '@ViewData["wmslayer2"]');
-                mapSocialResilience = initWMSMap('mapSocialResilience', 'OpenStreetMap - EPSG:3857', centerLongitude, centerLatitude, zoomValue, '@ViewData["wmsurl3"]', '@ViewData["wmslayer3"]',);
-                mapEconomicResilience = initWMSMap('mapEconomicResilience', 'OpenStreetMap - EPSG:3857', centerLongitude, centerLatitude, zoomValue, '@ViewData["wmsurl4"]', '@ViewData["wmslayer4"]');
-                mapOperationalResilience = initWMSMap('mapOperationalResilience', 'OpenStreetMap - EPSG:3857', centerLongitude, centerLatitude, zoomValue, 'https://ahocevar.com/geoserver/wms', 'topp:states');
+                mapA1 = initWMSMap('mapA1', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapA1"]', '@ViewData["wmslayer_mapA1"]');
+                mapA2 = initWMSMap('mapA2', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapA2"]', '@ViewData["wmslayer_mapA2"]');
+                mapA3 = initWMSMap('mapA3', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapA3"]', '@ViewData["wmslayer_mapA3"]');
+                mapA4 = initWMSMap('mapA4', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapA4"]', '@ViewData["wmslayer_mapA4"]');
                 
+                mapB1 = initWMSMap('mapB1', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapB1"]', '@ViewData["wmslayer_mapB1"]');
+                mapB2 = initWMSMap('mapB2', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapB2"]', '@ViewData["wmslayer_mapB2"]');
+                mapB3 = initWMSMap('mapB3', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapB3"]', '@ViewData["wmslayer_mapB3"]');
+                mapB4 = initWMSMap('mapB4', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapB4"]', '@ViewData["wmslayer_mapB4"]');
+                mapB5 = initWMSMap('mapB5', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapB5"]', '@ViewData["wmslayer_mapB5"]');
+                mapB6 = initWMSMap('mapB6', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapB6"]', '@ViewData["wmslayer_mapB6"]');
+                
+                mapC1 = initWMSMap('mapC1', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapC1"]', '@ViewData["wmslayer_mapC1"]');
+                mapC2 = initWMSMap('mapC2', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapC2"]', '@ViewData["wmslayer_mapC2"]');
+                mapC3 = initWMSMap('mapC3', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapC3"]', '@ViewData["wmslayer_mapC3"]');
+                mapC4 = initWMSMap('mapC4', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapC4"]', '@ViewData["wmslayer_mapC4"]');
+                mapC5 = initWMSMap('mapC5', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapC5"]', '@ViewData["wmslayer_mapC5"]');
+                mapC6 = initWMSMap('mapC6', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapC6"]', '@ViewData["wmslayer_mapC6"]');
+                mapC7 = initWMSMap('mapC7', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapC7"]', '@ViewData["wmslayer_mapC7"]');
+                mapC8 = initWMSMap('mapC8', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapC8"]', '@ViewData["wmslayer_mapC8"]');
+                mapC9 = initWMSMap('mapC9', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapC9"]', '@ViewData["wmslayer_mapC9"]');
+                mapC10 = initWMSMap('mapC10', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapC10"]', '@ViewData["wmslayer_mapC10"]');
+                mapC11 = initWMSMap('mapC11', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapC11"]', '@ViewData["wmslayer_mapC11"]');
+                mapC12 = initWMSMap('mapC12', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapC12"]', '@ViewData["wmslayer_mapC12"]');
+                mapC13 = initWMSMap('mapC13', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapC13"]', '@ViewData["wmslayer_mapC13"]');
+                                 
+                mapD1 = initWMSMap('mapD1', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapD1"]', '@ViewData["wmslayer_mapD1"]');
+                mapD2 = initWMSMap('mapD2', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapD2"]', '@ViewData["wmslayer_mapD2"]');
+                mapD3 = initWMSMap('mapD3', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapD3"]', '@ViewData["wmslayer_mapD3"]');
+                mapD4 = initWMSMap('mapD4', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapD4"]', '@ViewData["wmslayer_mapD4"]');
+                mapD5 = initWMSMap('mapD5', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapD5"]', '@ViewData["wmslayer_mapD5"]');
+               
                 // Pass jsonContent to visualizeEarthquakes_v01 function
-                visualizeEarthquakes_v01(mapOperationalResilience, @Html.Raw(jsonContent));
+                //visualizeEarthquakes_v01(mapOperationalResilience, @Html.Raw(jsonContent));
                                
                 initTabs();
-
-               // Controlla se la variabile di sessione è definita e non nulla
-                var activeMenu = "@HttpContextAccessor.HttpContext.Session.GetString("activeMenu")";
-                if (activeMenu) {
-                    if (activeMenu === 'Earthquake') {
-                        selectTab('Earthquake');
-                        updateBreadcrumb('Simulation', 'Earthquake');
-                    } else {
-                        selectTab('Damages');
-                        updateBreadcrumb('Risk Analysis', 'Damages');
-                    }
-                } else {
-                    // Gestisci il caso in cui la variabile di sessione non è definita o è nulla
-                    // Qui puoi decidere cosa fare in questo caso, ad esempio impostare un valore predefinito
-                    selectTab('Damages');
-                    updateBreadcrumb('Risk Analysis', 'Damages');
-                }       
-
                 tabManager();
 
-                searchAddress();
-
-                // Funzione per zoomare sulla posizione selezionata dall'utente
-                $('#suggestions').on('click', 'a', function (e) {
-                    e.preventDefault();
-                    var address = $(this).text();
-                    var type = $(this).data('type');
-                    var url = 'https://nominatim.openstreetmap.org/search?q=' + address + '&format=json&addressdetails=1&limit=1';
-
-                    $.getJSON(url, function (data) {
-                        if (data && data.length > 0) {
-                            var lon = parseFloat(data[0].lon);
-                            var lat = parseFloat(data[0].lat);
-
-                            let map;
-
-                            map = getMapFromActiveTab(activeTab, map);
-                            map.getView().setCenter(ol.proj.fromLonLat([lon, lat]));
-                            map.getView().setZoom(15);
-
-                            addPointer(lon, lat, activeTab);
-
-                            $('#suggestions').hide();
-                        }
-                    });
-                });
+                setupAddressSearch('#addressInput', '#suggestions');
+               
+                setupAddressZoom('#suggestions', getMapFromActiveTab, addPointer, activeTab);
 
                 // Funzione per gestire la selezione della mappa quando si fa clic su una delle voci del menu a discesa
                 $('.dropdown-item').on('click', function () {
@@ -368,8 +404,7 @@ else
                 });
 
             });
-
-           
+     
 
         </script>
     </body>
