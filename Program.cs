@@ -1,4 +1,7 @@
 /*
+* Author: Angelo Stefani [angelo.stefani@enea.it]
+* Creation date: 02/01/2024
+* Update date: 05/15/2024
 This code sets up services related to localization, database, authentication, and HTTP requests in an ASP.NET Core application.
 It configures localization for different cultures, connects to a PostgreSQL database, sets up identity management with Entity Framework, adds HTTP client services, and configures the HTTP request pipeline for routing, authentication, and authorization.
 */
@@ -39,6 +42,15 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 // Add HttpClient services
 builder.Services.AddHttpClient();
 
+builder.Services.AddDistributedMemoryCache();
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromSeconds(10);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
 // Build the application
 var app = builder.Build();
 
@@ -75,8 +87,11 @@ app.UseRouting();
 
 // Enable authentication
 app.UseAuthentication();
+
 // Enable authorization
 app.UseAuthorization();
+
+app.UseSession();
 
 // Map Razor Pages routes
 app.MapRazorPages();

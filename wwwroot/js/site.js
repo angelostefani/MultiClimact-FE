@@ -1,23 +1,19 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
-
-// Write your JavaScript code.
-
-/*
-* Autore: Angelo Stefani [angelo.stefani@enea.it]
-* Data creazione: 01/02/2024
-* Data aggiornamento: 06/03/2024
+﻿/*
+* Author: Angelo Stefani [angelo.stefani@enea.it]
+* Creation date: 02/01/2024
+* Update date: 05/15/2024
 * 
-* Libreria Javascript per applicativi GIS ENEA.
-* Framework utilizzati:
+* JavaScript library for ENEA GIS applications.
+* Frameworks used:
 * - Bootstrap
-* - OpenLayer 
+* - OpenLayer
+* - JQuery
 */
 
-//Variabile per tenere traccia della TAB attiva
-let activeTab = 'buildings';
+// Variable to track the active TAB
+let activeTab = 'tabA1-tab';
 
-//Variabili per contenere le mappe OpenLayer di ciascuna TAB
+// Variables to hold the OpenLayer maps for each TAB
 let mapBuildings;
 let mapCriticalInfrastructures;
 let mapSocialResilience;
@@ -25,51 +21,59 @@ let mapEconomicResilience;
 let mapOperationalResilience;
 
 /*
-* Autore: Angelo Stefani [angelo.stefani@enea.it]
-* Data: 29/02/2024
-* Questa funzione JavaScript, denominata initWMSMap, è progettata per inizializzare una mappa utilizzando OpenLayers, una libreria JavaScript per la visualizzazione di mappe interattive.
-* La funzione accetta quattro parametri:
-* @param {string} targetHtmlMapId - Il nome del div HTML in cui verrà renderizzata la mappa.
-* 
+* Author: Angelo Stefani [angelo.stefani@enea.it]
+* Date: 02/29/2024
+* This JavaScript function, named initWMSMap, is designed to initialize a map using OpenLayers, a JavaScript library for displaying interactive maps.
+* The function accepts the following parameters:
+* @param {string} targetHtmlMapId - The name of the HTML div where the map will be rendered.
 */
 function initMap(targetHtmlMapId) {
-    let centerLatitude = 43.1167
-    let centerLongitude = 13.1996
-    let zoomValue = 9
+    let centerLatitude = 43.1167;
+    let centerLongitude = 13.1996;
+    let zoomValue = 9;
 
-    return initWMSMap(targetHtmlMapId, '', centerLongitude, centerLatitude, zoomValue, '', '');
+    return initWMSMap(targetHtmlMapId, '', centerLongitude, centerLatitude, zoomValue, '', '', '');
 }
-
-/*
-* Autore: Angelo Stefani [angelo.stefani@enea.it]
-* Data: 29/02/2024
-* 
-* Questa funzione JavaScript, denominata initWMSMap, è progettata per inizializzare una mappa utilizzando OpenLayers, una libreria JavaScript per la visualizzazione di mappe interattive.
-* La funzione accetta quattro parametri:
-* @param {string} targetHtmlMapId - Il nome del div HTML in cui verrà renderizzata la mappa.
-* @param {string} baseMapName - Il nome della mappa di base da utilizzare come sfondo.
-* @param {string} wmsUrl - L'URL del servizio WMS (Web Map Service) per il layer WMS da visualizzare sulla mappa.
-* @param {string} wmsLayer - Il nome del layer WMS da visualizzare sulla mappa.
-*  
-* La funzione crea un nuovo layer di mappa di base in base al baseMapName fornito utilizzando uno switch-case per determinare quale tipo di mappa di base deve essere utilizzato. Quindi crea una nuova istanza di ol.Map con il target specificato, i layer di mappa di base e il layer WMS specificato. Imposta anche una vista predefinita per la mappa.
-* Inoltre, aggiunge un listener per seguire le coordinate del mouse sulla mappa e visualizzarle in un elemento HTML con id mouseCoordinates.
-* Infine, utilizza un altro switch-case per assegnare la mappa appena creata a una variabile globale in base al nome del target della mappa specificato.
-* Questa funzione è progettata per essere utilizzata all'interno di un'applicazione web che necessita di visualizzare mappe interattive con layer WMS sovrapposti.
-*/
-function initWMSMap(targetHtmlMapId, baseMapName, centerLongitude, centerLatitude, zoomValue, wmsUrl, wmsLayer) {
-    let baseMapLayer; // basemap layer, con la basemap selezionata.
-    let localMap; // variabile per creare e restituire in output la mappa OpenLayer creata.
-    let layersArray; // array per contenere i layer della mappa.
+/**
+ * Author: Angelo Stefani [angelo.stefani@enea.it]
+ * Date: 29/02/2024
+ * 
+ * This JavaScript function, named initWMSMap, is designed to initialize a map using OpenLayers,
+ * a JavaScript library for displaying interactive maps.
+ * The function accepts the following parameters:
+ * @param {string} targetHtmlMapId - The name of the HTML div where the map will be rendered.
+ * @param {string} baseMapName - The name of the base map to use as the background.
+ * @param {number} centerLongitude - The longitude for the map center.
+ * @param {number} centerLatitude - The latitude for the map center.
+ * @param {number} zoomValue - The initial zoom level of the map.
+ * @param {string} wmsUrl - The URL of the WMS (Web Map Service) for the WMS layer to be displayed on the map.
+ * @param {string} wmsLayer - The name of the WMS layer to be displayed on the map.
+ * @param {string} legendTitle - The title for the WMS layer legend.
+ * 
+ * The function creates a new base map layer based on the provided baseMapName using a switch-case
+ * to determine which type of map to use. It then creates a new instance of ol.Map with the specified
+ * target, base map layer, and WMS layer. It also sets a default view for the map.
+ * Additionally, it adds a listener to track the mouse coordinates on the map and display them
+ * in an HTML element with id mouseCoordinates. Finally, it uses another switch-case to assign
+ * the newly created map to a global variable based on the specified map target name.
+ * This function is designed to be used within a web application that needs to display interactive
+ * maps with overlaid WMS layers.
+ */
+function initWMSMap(targetHtmlMapId, baseMapName, centerLongitude, centerLatitude, zoomValue, wmsUrl, wmsLayer, legendTitle) {
+    let baseMapLayer; // Base map layer, with the selected base map.
+    let localMap; // Variable to create and return the created OpenLayers map.
+    let layersArray; // Array to hold the map layers.
     let wmsLayerObj;
 
-    baseMapLayer = getBaseMapLayer(baseMapName); // Crea il nuovo base map layer, con la mappa selezionata
-    baseMapLayer.set('name', 'baseMap'); // Assegna un nome al nuovo layer di base
+    // Create the new base map layer, with the selected map
+    baseMapLayer = getBaseMapLayer(baseMapName);
+    baseMapLayer.set('name', 'baseMap'); // Assign a name to the new base layer
 
-    layersArray = [baseMapLayer]; // Array per i layer della mappa
+    layersArray = [baseMapLayer]; // Array for map layers
 
-    // Verifica se le variabili wmsUrl e wmsLayer sono valorizzate
+    // Check if wmsUrl and wmsLayer variables are set
     if (wmsUrl && wmsLayer) {
-        // Se entrambe le variabili sono valorizzate, crea il layer WMS Geoserver
+        // If both variables are set, create the Geoserver WMS layer
         wmsLayerObj = new ol.layer.Tile({
             source: new ol.source.TileWMS({
                 url: wmsUrl,
@@ -78,20 +82,20 @@ function initWMSMap(targetHtmlMapId, baseMapName, centerLongitude, centerLatitud
             })
         });
 
-        layersArray.push(wmsLayerObj);        
+        layersArray.push(wmsLayerObj);
     }
 
-    // Crea la mappa OpenLayers con o senza il layer WMS Geoserver in base alle variabili
+    // Create the OpenLayers map with or without the Geoserver WMS layer based on the variables
     localMap = new ol.Map({
         target: targetHtmlMapId,
-        layers: layersArray, // Utilizza l'array dei layer creati
+        layers: layersArray, // Use the created layers array
         view: new ol.View({ center: ol.proj.fromLonLat([centerLongitude, centerLatitude]), zoom: zoomValue })
     });
 
-    // Aggiungi la legenda come controllo alla mappa
-    addWMSLegendControl(localMap, wmsLayerObj, wmsUrl, wmsLayer);
+    // Add the legend as a control to the map
+    addWMSLegendControl(localMap, wmsLayerObj, wmsUrl, wmsLayer, legendTitle);
 
-    // Aggiungi un listener per le coordinate del mouse
+    // Add a listener for mouse coordinates
     localMap.on('pointermove', function (event) {
         let coordinates = ol.proj.toLonLat(event.coordinate);
         let lon = coordinates[0];
@@ -104,157 +108,124 @@ function initWMSMap(targetHtmlMapId, baseMapName, centerLongitude, centerLatitud
     return localMap;
 }
 
-function addWMSLegendControl(map, layer, wmsUrl, wmsLayer) {
-    // Analizza l'URL del WMS per aggiungere i parametri corretti per la legenda
+/**
+ * Adds a WMS legend control to the map.
+ * 
+ * @param {ol.Map} map - The OpenLayers map to which the legend control will be added.
+ * @param {ol.layer.Tile} layer - The WMS layer for which the legend is created.
+ * @param {string} wmsUrl - The URL of the WMS service.
+ * @param {string} wmsLayer - The name of the WMS layer.
+ * @param {string} legendTitle - The title for the legend.
+ */
+function addWMSLegendControl(map, layer, wmsUrl, wmsLayer, legendTitle) {
+    // Parse the WMS URL to add the correct parameters for the legend
     let url = new URL(wmsUrl);
     url.searchParams.set('REQUEST', 'GetLegendGraphic');
     url.searchParams.set('VERSION', '1.0.0');
     url.searchParams.set('FORMAT', 'image/png');
-    url.searchParams.set('WIDTH', '20'); // Dimensioni ridotte della legenda
-    url.searchParams.set('HEIGHT', '20'); // Dimensioni ridotte della legenda
+    url.searchParams.set('WIDTH', '20'); // Reduced legend size
+    url.searchParams.set('HEIGHT', '20'); // Reduced legend size
     url.searchParams.set('LAYER', wmsLayer);
 
-    // Crea un elemento immagine per la legenda
+    // Create an image element for the legend
     let legendImg = document.createElement('img');
     legendImg.src = url.href;
     legendImg.alt = 'Legend';
 
-    // Crea un elemento div per contenere l'immagine della legenda
+    // Create a div element to contain the legend image
     let legendDiv = document.createElement('div');
     legendDiv.className = 'ol-control legend-control';
-
-    // Recupera il titolo del layer
-    let legendTitle = "Vulnerability Index";
-    // Aggiungi il titolo della legenda come testo
+    
+    // Add the legend title as text
     let titleDiv = document.createElement('div');
     titleDiv.innerText = legendTitle;
     
     legendDiv.appendChild(titleDiv);
     legendDiv.appendChild(legendImg);
    
-    // Aggiungi stile CSS per la legenda
+    // Add CSS styling for the legend
     legendDiv.style.position = 'absolute';
-    legendDiv.style.bottom = '340px'; // Posizionamento in basso
-    legendDiv.style.right = '15px'; // Posizionamento a destra
-    legendDiv.style.width = '8%'; // Posizionamento 
-    legendDiv.style.backgroundColor = 'rgba(255, 255, 255, 0.8)'; // Sfondo leggermente trasparente
+    legendDiv.style.bottom = '340px'; // Position at the bottom
+    legendDiv.style.right = '15px'; // Position at the right
+    legendDiv.style.width = '8%'; // Set width
+    legendDiv.style.backgroundColor = 'rgba(255, 255, 255, 0.8)'; // Slightly transparent background
     
-    // Aggiungi il controllo alla mappa
+    // Add the control to the map
     map.addControl(new ol.control.Control({ element: legendDiv }));
 }
 
-/*
-* Autore: Angelo Stefani [angelo.stefani@enea.it]
-* Data: 29/02/2024
-* Funzione che restituisce il layer basemap in funzione del nome baseMapName desiderato.
-*/
+/**
+ * Author: Angelo Stefani [angelo.stefani@enea.it]
+ * Date: 29/02/2024
+ * 
+ * Function that returns the basemap layer based on the desired baseMapName.
+ */
 function getBaseMapLayer(baseMapName) {
-    let baseMapLayer;
+    const baseMapLayers = {
+        'OpenStreetMap - EPSG:3857': new ol.layer.Tile({ source: new ol.source.OSM() }),
+        'Google Normal - EPSG:3857': new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}' }) }),
+        'Google Satellite - EPSG:3857': new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}' }) }),
+        'Google Hybrid - EPSG:3857': new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}' }) }),
+        'OpenTopoMap': new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://tile.opentopomap.org/{z}/{x}/{y}.png' }) }),
+        'Sentinel-2 cloudless': new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2018_3857/default/g/{z}/{y}/{x}.jpg' }) }),
+        'Metacarta - EPSG:4326': new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'http://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryTopo/MapServer/tile/{z}/{y}/{x}' }) }),
+        'geoSdi - EPSG:4326': new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'http://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}' }) }),
+        'geoSdi No Map - EPSG:4326': new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'http://services.arcgisonline.com/arcgis/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{z}/{y}/{x}' }) }),
+        'Empty layer - EPSG:3857': new ol.layer.Tile({}),
+        'default': new ol.layer.Tile({ source: new ol.source.OSM() })
+    };
 
-    switch (baseMapName) {
-        case 'OpenStreetMap - EPSG:3857':
-            baseMapLayer = new ol.layer.Tile({ source: new ol.source.OSM() });
-            break;
-        case 'Google Normal - EPSG:3857':
-            baseMapLayer = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}' }) });
-            break;
-        case 'Google Satellite - EPSG:3857':
-            baseMapLayer = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}' }) });
-            break;
-        case 'Google Hybrid - EPSG:3857':
-            baseMapLayer = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}' }) });
-            break;
-        case 'OpenTopoMap':
-            baseMapLayer = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://tile.opentopomap.org/{z}/{x}/{y}.png' }) });
-            break;
-        case 'Sentinel-2 cloudless':
-            baseMapLayer = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2018_3857/default/g/{z}/{y}/{x}.jpg' }) });
-            break;
-        case 'Metacarta - EPSG:4326':
-            baseMapLayer = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'http://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryTopo/MapServer/tile/{z}/{y}/{x}' }) });
-            break;
-        case 'geoSdi - EPSG:4326':
-            baseMapLayer = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'http://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}' }) });
-            break;
-        case 'geoSdi No Map - EPSG:4326':
-            baseMapLayer = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'http://services.arcgisonline.com/arcgis/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{z}/{y}/{x}' }) });
-            break;
-        case 'Empty layer - EPSG:3857':
-            // Inserire qui la configurazione per un layer vuoto
-            break;
-        default:
-            baseMapLayer = new ol.layer.Tile({ source: new ol.source.OSM() });
-            break;
-    }
-    return baseMapLayer;
+    return baseMapLayers[baseMapName] || baseMapLayers['default'];
 }
 
-
+/**
+ * Displays earthquake event data on a heatmap.
+ * @param {ol.Map} map - The map on which to display the heatmap.
+ * @param {Array<object>|string} earthquakeData - Array of objects containing earthquake event data.
+ *     Each object should contain the properties 'lon', 'lat', and 'radius'.
+ *     The 'radius' property is used to determine the size of the central circle.
+ */
 function visualizeEarthquakes_v01(map, earthquakeData) {
     if (typeof earthquakeData === 'string') {
-        console.log('Stringa JSON ricevuta:', earthquakeData);
+        console.log('Received JSON string:', earthquakeData);
         try {
             earthquakeData = JSON.parse(earthquakeData);
         } catch (error) {
-            console.error('Errore durante il parsing della stringa JSON:', error);
+            console.error('Error parsing JSON string:', error);
             return;
         }
     }
 
     if (!Array.isArray(earthquakeData)) {
-        console.error('I dati degli eventi sismici non sono un array valido.');
+        console.error('Earthquake data is not a valid array.');
         return;
     }
 
-    // Creare un array per le feature della heatmap
-    var heatMapFeatures = [];
-
-    earthquakeData.forEach(function (earthquake) {
+    const heatMapFeatures = earthquakeData.map(earthquake => {
         if (earthquake && earthquake.lon !== undefined) {
-            var point = ol.proj.fromLonLat([earthquake.lat, earthquake.lon]);
+            const point = ol.proj.fromLonLat([earthquake.lon, earthquake.lat]);
+            const pointFeature = new ol.Feature(new ol.geom.Point(point));
+            const circleFeature = new ol.Feature(new ol.geom.Circle(point, earthquake.radius));
 
-            // Aggiungi la feature del punto all'array della heatmap
-            heatMapFeatures.push(new ol.Feature(new ol.geom.Point(point)));
-
-            var circle = new ol.geom.Circle(point, earthquake.radius);
-            var circleFeature = new ol.Feature(circle);
-
-            // Stili per il punto e il cerchio
-            var pointStyle = new ol.style.Style({
+            const pointStyle = new ol.style.Style({
                 image: new ol.style.Circle({
                     radius: 5,
-                    fill: new ol.style.Fill({
-                        color: 'red'
-                    })
+                    fill: new ol.style.Fill({ color: 'red' })
                 })
             });
 
-            var circleStyle = new ol.style.Style({
-                fill: new ol.style.Fill({
-                    color: 'rgba(255, 0, 0, 0.2)'
-                }),
-                stroke: new ol.style.Stroke({
-                    color: 'red',
-                    width: 1
-                })
+            const circleStyle = new ol.style.Style({
+                fill: new ol.style.Fill({ color: 'rgba(255, 0, 0, 0.2)' }),
+                stroke: new ol.style.Stroke({ color: 'red', width: 1 })
             });
 
-            var pointFeature = new ol.Feature(new ol.geom.Point(point));
             pointFeature.setStyle(pointStyle);
-
             circleFeature.setStyle(circleStyle);
 
-            heatMapFeatures.push(pointFeature, circleFeature);
+            const tooltip = createTooltip(map, earthquake);
 
-            // Crea un tooltip con i dati dell'evento sismico
-            var tooltip = createTooltip(map, earthquake);
-
-            // Gestisce l'evento 'pointermove' per mostrare il tooltip
             map.on('pointermove', function (evt) {
-                var feature = map.forEachFeatureAtPixel(evt.pixel, function (feature) {
-                    return feature;
-                });
-
+                const feature = map.forEachFeatureAtPixel(evt.pixel, feature => feature);
                 if (feature === pointFeature) {
                     tooltip.setPosition(evt.coordinate);
                     $(tooltip.getElement()).show();
@@ -262,31 +233,36 @@ function visualizeEarthquakes_v01(map, earthquakeData) {
                     $(tooltip.getElement()).hide();
                 }
             });
-        }
-    });
 
-    // Creare il layer di heatmap
-    var heatMapLayer = new ol.layer.Heatmap({
-        source: new ol.source.Vector({
-            features: heatMapFeatures
-        }),
+            return [pointFeature, circleFeature];
+        }
+        return [];
+    }).flat();
+
+    const heatMapLayer = new ol.layer.Heatmap({
+        source: new ol.source.Vector({ features: heatMapFeatures }),
         blur: 15,
         radius: 10,
         opacity: 0.8
     });
 
-    // Aggiungi il layer di heatmap alla mappa
     map.addLayer(heatMapLayer);
 }
 
+/**
+ * Creates an ol.Overlay object to display a tooltip with earthquake event data.
+ * @param {ol.Map} map - The map in which the tooltip should be displayed.
+ * @param {object} earthquake - The object containing earthquake event data.
+ * @returns {ol.Overlay} The ol.Overlay object with the tooltip.
+ */
 function createTooltip(map, earthquake) {
-    var tooltip = new ol.Overlay({
+    const tooltip = new ol.Overlay({
         element: document.createElement('div'),
         positioning: 'bottom-center',
         offset: [0, -10]
     });
 
-    var content = '<div>ID: ' + earthquake.idEarthquake + '<br>Magnitude: ' + earthquake.magnitude + '<br>Depth: ' + earthquake.depth + '</div>';
+    const content = `<div>ID: ${earthquake.idEarthquake}<br>Magnitude: ${earthquake.magnitude}<br>Depth: ${earthquake.depth}</div>`;
     tooltip.getElement().innerHTML = content;
 
     map.addOverlay(tooltip);
@@ -294,116 +270,40 @@ function createTooltip(map, earthquake) {
     return tooltip;
 }
 
-
-
-//function visualizeEarthquakes_v01(map, earthquakeData) {
-//    // Assicurarsi che earthquakeData sia un array di oggetti JavaScript validi
-//    if (typeof earthquakeData === 'string') {
-//        console.log('Stringa JSON ricevuta:', earthquakeData);
-//        try {
-//            earthquakeData = JSON.parse(earthquakeData);
-//        } catch (error) {
-//            console.error('Errore durante il parsing della stringa JSON:', error);
-//            return;
-//        }
-//    }
-
-//    if (!Array.isArray(earthquakeData)) {
-//        console.error('I dati degli eventi sismici non sono un array valido.');
-//        return;
-//    }
-
-//    // Itera attraverso i dati degli eventi sismici
-//    earthquakeData.forEach(function (earthquake) {
-//        // Verifica se earthquake è valido e ha la proprietà "xlon"
-//        if (earthquake && earthquake.xlon !== undefined) {
-//            // Crea un punto sulla mappa per ogni evento sismico
-//            var point = new ol.geom.Point(ol.proj.fromLonLat([earthquake.ylat, earthquake.xlon]));
-
-//            // Crea un cerchio per evidenziare la zona attorno all'evento sismico
-//            var circle = new ol.geom.Circle(point, earthquake.radius);
-
-//            // Stili per il punto e il cerchio
-//            var pointStyle = new ol.style.Style({
-//                image: new ol.style.Circle({
-//                    radius: 5,
-//                    fill: new ol.style.Fill({
-//                        color: 'red'
-//                    })
-//                })
-//            });
-
-//            var circleStyle = new ol.style.Style({
-//                fill: new ol.style.Fill({
-//                    color: 'rgba(255, 0, 0, 0.2)'
-//                }),
-//                stroke: new ol.style.Stroke({
-//                    color: 'red',
-//                    width: 1
-//                })
-//            });
-
-//            // Crea le feature per il punto e il cerchio
-//            var pointFeature = new ol.Feature(point);
-//            pointFeature.setStyle(pointStyle);
-
-//            var circleFeature = new ol.Feature(circle);
-//            circleFeature.setStyle(circleStyle);
-
-//            // Aggiunge le feature al layer della mappa
-//            var vectorSource = new ol.source.Vector({
-//                features: [pointFeature, circleFeature]
-//            });
-
-//            var vectorLayer = new ol.layer.Vector({
-//                source: vectorSource
-//            });
-
-//            // Aggiunge il layer alla mappa
-//            map.addLayer(vectorLayer);
-                       
-//        }
-//    });
-//}
-
-/*
-* Autore: Angelo Stefani [angelo.stefani@enea.it]
-* Data: 29/02/2024
-* Funzione per convertire le coordinate longitudine e latitudine
-*/
+/**
+ * Author: Angelo Stefani [angelo.stefani@enea.it]
+ * Date: 29/02/2024
+ * 
+ * Function to convert longitude and latitude coordinates to DMS (degrees, minutes, seconds) format.
+ * @param {number} coord - The coordinate to be converted.
+ * @param {string} coordType - The type of coordinate ('lon' for longitude, 'lat' for latitude).
+ * @returns {string} The coordinate in DMS format.
+ */
 function convertToDMS(coord, coordType) {
-    let absCoord = Math.abs(coord);
-    let degrees = Math.floor(absCoord);
-    let minutes = Math.floor((absCoord - degrees) * 60);
-    let seconds = ((absCoord - degrees - minutes / 60) * 3600).toFixed(1);
-    let direction = '';
+    const absCoord = Math.abs(coord);
+    const degrees = Math.floor(absCoord);
+    const minutes = Math.floor((absCoord - degrees) * 60);
+    const seconds = ((absCoord - degrees - minutes / 60) * 3600).toFixed(1);
+    const direction = coordType === 'lon' ? (coord >= 0 ? 'N' : 'S') : (coord >= 0 ? 'E' : 'W');
 
-    if (coordType == 'lon') {
-        direction = coord >= 0 ? 'N' : 'S';
-    } else {
-        direction = coord >= 0 ? 'E' : 'W';
-    }
-
-    return degrees + '° ' + minutes + '\' ' + seconds + '" ' + direction;
+    return `${degrees}° ${minutes}' ${seconds}" ${direction}`;
 }
 
-/*
-* Autore: Angelo Stefani [angelo.stefani@enea.it]
-* Data: 29/02/2024
-* Funzione cambiare la mappa di base
-*/
+/**
+ * Author: Angelo Stefani [angelo.stefani@enea.it]
+ * Date: 29/02/2024
+ * 
+ * Function to change the basemap layer.
+ */
 function changeMap(baseMapName, activeTab) {
-    let baseMapLayer = getBaseMapLayer(baseMapName);
-    baseMapLayer.set('name', 'baseMap'); // Assegna un nome al nuovo layer di base
+    const baseMapLayer = getBaseMapLayer(baseMapName);
+    baseMapLayer.set('name', 'baseMap'); // Assign a name to the new basemap layer
 
-    let map;
-
-    map = getMapFromActiveTab(activeTab, map);
+    const map = getMapFromActiveTab(activeTab);
 
     if (map) {
-        // Rimuovi il layer di base corrente dalla mappa
-        map.getLayers().forEach(function (layer, index) {
-            // Verifica se il layer è un layer di base e sostituiscilo con il nuovo layer di base
+        // Remove the current basemap layer and replace it with the new one
+        map.getLayers().forEach((layer, index) => {
             if (layer.get('name') === 'baseMap') {
                 map.getLayers().setAt(index, baseMapLayer);
             }
@@ -411,83 +311,149 @@ function changeMap(baseMapName, activeTab) {
     }
 }
 
-/*
-* Autore: Angelo Stefani [angelo.stefani@enea.it]
-* Data: 29/02/2024
-* Funzione che restituisce la mappa OpenLayer associata alla TAB
-*/
-function getMapFromActiveTab(activeTab, map) {
-    switch (activeTab) {
-        case 'buildings':
-            map = mapBuildings;
-            break;
-        case 'infrastructures':
-            map = mapCriticalInfrastructures;
-            break;
-        case 'social':
-            map = mapSocialResilience;
-            break;
-        case 'economic':
-            map = mapEconomicResilience;
-            break;
-        case 'operational':
-            map = mapOperationalResilience;
-            break;
-        case 'earthquakeSimulation':
-            map = formearthquakeSimulation;
-        case 'earthquakeSimulationResults':
-            map = gridearthquakeSimulationResults;
-        default:
-            map = mapBuildings;
-            break;
-    }
-    return map;
+/**
+ * Author: Angelo Stefani [angelo.stefani@enea.it]
+ * Date: 29/02/2024
+ * 
+ * Function that returns the OpenLayers map associated with the active tab.
+ */
+function getMapFromActiveTab(activeTab) {
+    const mapTabs = {
+        'tabA1-tab': mapA1,
+        'tabA2-tab': mapA2,
+        'tabA3-tab': mapA3,
+        'tabA4-tab': mapA4,
+        'tabB1-tab': mapB1,
+        'tabB2-tab': mapB2,
+        'tabB3-tab': mapB3,
+        'tabB4-tab': mapB4,
+        'tabB5-tab': mapB5,
+        'tabB6-tab': mapB6,
+        'tabC1-tab': mapC1,
+        'tabC2-tab': mapC2,
+        'tabC3-tab': mapC3,
+        'tabC4-tab': mapC4,
+        'tabC5-tab': mapC5,
+        'tabC6-tab': mapC6,
+        'tabC7-tab': mapC7,
+        'tabC8-tab': mapC8,
+        'tabC9-tab': mapC9,
+        'tabC10-tab': mapC10,
+        'tabC11-tab': mapC11,
+        'tabC12-tab': mapC12,
+        'tabC13-tab': mapC13,
+        'tabD1-tab': mapD1,
+        'tabD2-tab': mapD2,
+        'tabD3-tab': mapD3,
+        'tabD4-tab': mapD4,
+        'tabD5-tab': mapD5
+    };
+
+    return mapTabs[activeTab] || mapA1;
 }
 
-/*
-* Autore: Angelo Stefani [angelo.stefani@enea.it]
-* Data: 29/02/2024
-* Function to update breadcrumb and show corresponding tabs
-*/
+/**
+ * Author: Angelo Stefani [angelo.stefani@enea.it]
+ * Date: 29/02/2024
+ * Function to update breadcrumb and show corresponding tabs
+ */
 function updateBreadcrumb(section, subSection) {
-    $('#breadcrumb').html('<li class="breadcrumb-item"><a href="#">Home</a></li><li class="breadcrumb-item"><a href="#">' + section + '</a></li><li class="breadcrumb-item active" aria-current="page">' + subSection + '</li>');
+    // Update the breadcrumb with the given section and subSection
+    const breadcrumbHtml = `
+        <li class="breadcrumb-item"><a href="#">Home</a></li>
+        <li class="breadcrumb-item"><a href="#">${section}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">${subSection}</li>
+    `;
+    $('#breadcrumb').html(breadcrumbHtml);
 
-    // Show corresponding tabs based on the selected subsection
+    // Show corresponding tabs based on the selected subsection if the section is "Risk Analysis"
     if (section === 'Risk Analysis') {
-        $('#myTab a[href="#' + subSection.toLowerCase() + '"]').tab('show');
+        const tabSelector = `#myTab a[href="#${subSection.toLowerCase()}"]`;
+        $(tabSelector).tab('show');
     }
 }
 
-/*
-* Autore: Angelo Stefani [angelo.stefani@enea.it]
-* Data: 29/02/2024
-* Funzione per inizializzare i tabs
-*/
-function initTabs() {
-    // Hide all tabs
-    $('#buildings-tab').removeClass('show active');
-    $('#infrastructures-tab').removeClass('show active');
-    $('#social-tab').removeClass('show active');
-    $('#economic-tab').removeClass('show active');
-    $('#operational-tab').removeClass('show active');
-    $('#earthquakeSimulation-tab').removeClass('show active');
-    $('#earthquakeSimulationResults-tab').removeClass('show active');
-       
-    $('#buildings-tab').addClass('visually-hidden');
-    $('#infrastructures-tab').addClass('visually-hidden');
-    $('#social-tab').addClass('visually-hidden');
-    $('#economic-tab').addClass('visually-hidden');
-    $('#operational-tab').addClass('visually-hidden');
-    $('#earthquakeSimulation-tab').addClass('visually-hidden');
-    $('#earthquakeSimulationResults-tab').addClass('visually-hidden');
+/**
+ * Author: Angelo Stefani [angelo.stefani@enea.it]
+ * Date: 29/02/2024
+ * Function to initialize the tabs
+ */
 
-    /*default setting for the tabs*/
-    activeTab = 'buildings';
+/**
+ * This function is used to initialize the tabs of the application. It hides all the tabs
+ * and sets the default active tab to "buildings"
+ */
+function initTabs() {
+    // Array of all tab IDs
+    const tabIds = [
+        '#tabA1-tab', '#tabA2-tab', '#tabA3-tab', '#tabA4-tab',
+        '#tabB1-tab', '#tabB2-tab', '#tabB3-tab', '#tabB4-tab', '#tabB5-tab', '#tabB6-tab',
+        '#tabC1-tab', '#tabC2-tab', '#tabC3-tab', '#tabC4-tab', '#tabC5-tab', '#tabC6-tab',
+        '#tabC7-tab', '#tabC8-tab', '#tabC9-tab', '#tabC10-tab', '#tabC11-tab', '#tabC12-tab',
+        '#tabC13-tab', '#tabD1-tab', '#tabD2-tab', '#tabD3-tab', '#tabD4-tab', '#tabD5-tab'
+    ];
+
+    // Hide all tabs and remove 'show active' classes
+    tabIds.forEach(id => {
+        $(id).removeClass('show active').addClass('visually-hidden');
+    });
+
+    // Set the default active tab
+    activeTab = 'tabA1-tab';
 }
 
+
+/**
+ * Autore: Angelo Stefani [angelo.stefani@enea.it]
+ * Data: 29/02/2024
+ * Funzione per inizializzare gli elementi dell'interfaccia utente
+ */
+/**
+ * This function is used to initialize the layout elements of the application. It sets the display
+ * property of the "mouseCoordinates" and "addressInput" elements to "block". This means that
+ * these elements will be visible in the application.
+ */
 function initLayoutElements() {
+    // Sets the display property of the "mouseCoordinates" element to "block"
+    // This means that the element will be visible in the application
     document.getElementById("mouseCoordinates").style.display = "block";
+    // Sets the display property of the "addressInput" element to "block"
+    // This means that the element will be visible in the application
     document.getElementById("addressInput").style.display = "block";    
+}
+
+
+
+/**
+ * Author: Angelo Stefani [angelo.stefani@enea.it]
+ * Date: 29/02/2024
+ * Function to manage interaction with UI tabs
+ */
+
+/**
+ * This function is used to manage the interaction with the tabs of the user interface.
+ * It sets the activeTab variable based on the clicked tab.
+ */
+function tabManager() {
+    // Define an array of tab IDs for iteration
+    const tabIds = [
+        'tabA1-tab', 'tabA2-tab', 'tabA3-tab', 'tabA4-tab',
+        'tabB1-tab', 'tabB2-tab', 'tabB3-tab', 'tabB4-tab', 'tabB5-tab', 'tabB6-tab',
+        'tabC1-tab', 'tabC2-tab', 'tabC3-tab', 'tabC4-tab', 'tabC5-tab', 'tabC6-tab',
+        'tabC7-tab', 'tabC8-tab', 'tabC9-tab', 'tabC10-tab', 'tabC11-tab', 'tabC12-tab',
+        'tabC13-tab', 'tabD1-tab', 'tabD2-tab', 'tabD3-tab', 'tabD4-tab', 'tabD5-tab'
+    ];
+
+    // Loop through each tab ID
+    tabIds.forEach(tabId => {
+        // Add click event listener to each tab
+        $(`#${tabId}`).on('click', function () {
+            // Set activeTab variable to the clicked tab ID
+            activeTab = tabId;
+            // Call selectTab function to update UI based on the selected tab
+            selectTab(activeTab);
+        });
+    });
 }
 
 
@@ -496,68 +462,409 @@ function initLayoutElements() {
 * Data: 29/02/2024
 * Function to update tabs based on selected dropdown item
 */
-function updateTabs(selectedItem) {
-    // Hide all tabs
+function selectTab(selectedItem) {
+    // Nascondi tutte le schede
     $('#myTabContent').children('.tab-pane').removeClass('show active');
     $('#myTabContent').children('.tab-pane').addClass('fade');
     
     initTabs();
     initLayoutElements();
 
-    // Show corresponding tabs based on selected dropdown item
-    if (selectedItem === 'Damages') {
-       /* display of the tabs relating to the selected menu*/
-        $('#buildings-tab').removeClass('visually-hidden');
-        $('#infrastructures-tab').removeClass('visually-hidden');
-
-        /* activation of the tab and panel*/
-        $('#buildings-tab').addClass('show active');
-        $('#buildings').addClass('show active');        
+    // Mostra le schede corrispondenti in base all'elemento selezionato nel menu a tendina
+    if (selectedItem === 'tabA1-tab') {
+        // visualizza le schede relative al menu selezionato
+        $('#tabA1-tab').removeClass('visually-hidden');
+               
+        // attiva la scheda e il pannello
+        $('#tabA1-tab').addClass('show active');
+        $('#panelA1').addClass('show active');
 
         disableVerticalScrollBar();
-        activeTab = 'buildings';
-
-    } else if (selectedItem === 'Resilience') {
-        /* display of the tabs relating to the selected menu*/
-        $('#social-tab').removeClass('visually-hidden');
-        $('#economic-tab').removeClass('visually-hidden');
-        $('#operational-tab').removeClass('visually-hidden');
-
-       /* activation of the tab and panel*/
-        $('#social-tab').addClass('show active');
-        $('#social').addClass('show active');
-        
+        activeTab = 'tabA1-tab';    
+    } else if (selectedItem === 'tabA2-tab') {
+        // visualizza le schede relative al menu selezionato
+        $('#tabA2-tab').removeClass('visually-hidden');
+        $('#tabA3-tab').removeClass('visually-hidden');
+               
+        // attiva la scheda e il pannello
+        $('#tabA2-tab').addClass('show active');
+        $('#panelA2').addClass('show active');        
+                
         disableVerticalScrollBar();
-        activeTab = 'social';
-
-    } else if (selectedItem === 'Earthquake') {
-        /* display of the tabs relating to the selected menu*/
-        $('#earthquakeSimulation-tab').removeClass('visually-hidden');
-        $('#earthquakeSimulationResults-tab').removeClass('visually-hidden');
+        activeTab = 'tabA2-tab';    
+    } else if (selectedItem === 'tabA3-tab') {
+        // visualizza le schede relative al menu selezionato
+        $('#tabA2-tab').removeClass('visually-hidden');
+        $('#tabA3-tab').removeClass('visually-hidden');
+               
+        // attiva la scheda e il pannello
+        $('#tabA3-tab').addClass('show active');
+        $('#panelA3').addClass('show active');        
+                
+        disableVerticalScrollBar();
+        activeTab = 'tabA3-tab';    
+    } else if (selectedItem === 'tabA4-tab') {
+        // visualizza le schede relative al menu selezionato
+        $('#tabA4-tab').removeClass('visually-hidden');
+             
+        // attiva la scheda e il pannello
+        $('#tabA4-tab').addClass('show active');
+        $('#panelA4').addClass('show active');
         
-        /* activation of the tab and panel*/
-        $('#earthquakeSimulation-tab').addClass('show active');
-        $('#earthquakeSimulation').addClass('show active');
+        disableVerticalScrollBar();      
+        activeTab = 'tabA4-tab';    
+    }else if (selectedItem === 'tabB1-tab') {
+        // visualizza le schede relative al menu selezionato
+        $('#tabB1-tab').removeClass('visually-hidden');
+        $('#tabB2-tab').removeClass('visually-hidden');
+        $('#tabB3-tab').removeClass('visually-hidden');
+             
+        // attiva la scheda e il pannello
+        $('#tabB1-tab').addClass('show active');
+        $('#panelB1').addClass('show active');
         
-        document.getElementById("mouseCoordinates").style.display = "none";
-        document.getElementById("addressInput").style.display = "none";
-
-        enableVerticalScrollBar();
-        activeTab = 'earthquakeSimulation';
+        disableVerticalScrollBar();      
+        activeTab = 'tabB1-tab';    
+         
     }
+    else if (selectedItem === 'tabB2-tab') {
+        // visualizza le schede relative al menu selezionato
+        $('#tabB1-tab').removeClass('visually-hidden');
+        $('#tabB2-tab').removeClass('visually-hidden');
+        $('#tabB3-tab').removeClass('visually-hidden');
+             
+        // attiva la scheda e il pannello
+        $('#tabB2-tab').addClass('show active');
+        $('#panelB2').addClass('show active');
+        
+        disableVerticalScrollBar();      
+        activeTab = 'tabB2-tab';       
+       
+    }else if (selectedItem === 'tabB3-tab') {
+        // visualizza le schede relative al menu selezionato
+        $('#tabB1-tab').removeClass('visually-hidden');
+        $('#tabB2-tab').removeClass('visually-hidden');
+        $('#tabB3-tab').removeClass('visually-hidden');
+             
+        // attiva la scheda e il pannello
+        $('#tabB3-tab').addClass('show active');
+        $('#panelB3').addClass('show active');
+        
+        disableVerticalScrollBar();      
+        activeTab = 'tabB3-tab';       
+        
+    }else if (selectedItem === 'tabB4-tab') {
+        // visualizza le schede relative al menu selezionato
+        $('#tabB4-tab').removeClass('visually-hidden');
+                    
+        // attiva la scheda e il pannello
+        $('#tabB4-tab').addClass('show active');
+        $('#panelB4').addClass('show active');
+        
+        disableVerticalScrollBar();      
+        activeTab = 'tabB4-tab';       
+       
+    }else if (selectedItem === 'tabB5-tab') {
+        // visualizza le schede relative al menu selezionato
+        $('#tabB5-tab').removeClass('visually-hidden');
+        $('#tabB6-tab').removeClass('visually-hidden');
 
+        // attiva la scheda e il pannello
+        $('#tabB5-tab').addClass('show active');
+        $('#panelB5').addClass('show active');
+        
+        disableVerticalScrollBar();      
+        activeTab = 'tabB5-tab';       
+        
+    }else if (selectedItem === 'tabB6-tab') {
+        // visualizza le schede relative al menu selezionato
+        $('#tabB5-tab').removeClass('visually-hidden');
+        $('#tabB6-tab').removeClass('visually-hidden');
+
+        // attiva la scheda e il pannello
+        $('#tabB6-tab').addClass('show active');
+        $('#panelB6').addClass('show active');
+        
+        disableVerticalScrollBar();      
+        activeTab = 'tabB6-tab';       
+       
+    }else if (selectedItem === 'tabC1-tab') {
+        // visualizza le schede relative al menu selezionato
+        $('#tabC1-tab').removeClass('visually-hidden');
+        $('#tabC2-tab').removeClass('visually-hidden');
+        $('#tabC3-tab').removeClass('visually-hidden');
+        $('#tabC4-tab').removeClass('visually-hidden');
+        $('#tabC5-tab').removeClass('visually-hidden');
+             
+        // attiva la scheda e il pannello
+        $('#tabC1-tab').addClass('show active');
+        $('#panelC1').addClass('show active');
+        
+        disableVerticalScrollBar();      
+        activeTab = 'tabC1-tab';       
+        
+    }else if (selectedItem === 'tabC2-tab') {
+        // visualizza le schede relative al menu selezionato
+        $('#tabC1-tab').removeClass('visually-hidden');
+        $('#tabC2-tab').removeClass('visually-hidden');
+        $('#tabC3-tab').removeClass('visually-hidden');
+        $('#tabC4-tab').removeClass('visually-hidden');
+        $('#tabC5-tab').removeClass('visually-hidden');
+             
+        // attiva la scheda e il pannello
+        $('#tabC2-tab').addClass('show active');
+        $('#panelC2').addClass('show active');
+        
+        disableVerticalScrollBar();      
+        activeTab = 'tabC2-tab';       
+       
+    }else if (selectedItem === 'tabC3-tab') {
+        // visualizza le schede relative al menu selezionato
+        $('#tabC1-tab').removeClass('visually-hidden');
+        $('#tabC2-tab').removeClass('visually-hidden');
+        $('#tabC3-tab').removeClass('visually-hidden');
+        $('#tabC4-tab').removeClass('visually-hidden');
+        $('#tabC5-tab').removeClass('visually-hidden');
+             
+        // attiva la scheda e il pannello
+        $('#tabC3-tab').addClass('show active');
+        $('#panelC3').addClass('show active');
+        
+        disableVerticalScrollBar();      
+        activeTab = 'tabC3-tab';       
+        
+    }else if (selectedItem === 'tabC4-tab') {
+        // visualizza le schede relative al menu selezionato
+        $('#tabC1-tab').removeClass('visually-hidden');
+        $('#tabC2-tab').removeClass('visually-hidden');
+        $('#tabC3-tab').removeClass('visually-hidden');
+        $('#tabC4-tab').removeClass('visually-hidden');
+        $('#tabC5-tab').removeClass('visually-hidden');
+             
+        // attiva la scheda e il pannello
+        $('#tabC4-tab').addClass('show active');
+        $('#panelC4').addClass('show active');
+        
+        disableVerticalScrollBar();      
+        activeTab = 'tabC4-tab';       
+       
+    }else if (selectedItem === 'tabC5-tab') {
+        // visualizza le schede relative al menu selezionato
+        $('#tabC1-tab').removeClass('visually-hidden');
+        $('#tabC2-tab').removeClass('visually-hidden');
+        $('#tabC3-tab').removeClass('visually-hidden');
+        $('#tabC4-tab').removeClass('visually-hidden');
+        $('#tabC5-tab').removeClass('visually-hidden');
+            
+        // attiva la scheda e il pannello
+        $('#tabC5-tab').addClass('show active');
+        $('#panelC5').addClass('show active');
+        
+        disableVerticalScrollBar();      
+        activeTab = 'tabC5-tab';       
+        
+    }else if (selectedItem === 'tabC6-tab') {
+        // visualizza le schede relative al menu selezionato
+        $('#tabC6-tab').removeClass('visually-hidden');
+        $('#tabC7-tab').removeClass('visually-hidden');
+        $('#tabC8-tab').removeClass('visually-hidden');
+        $('#tabC9-tab').removeClass('visually-hidden');
+       
+        // attiva la scheda e il pannello
+        $('#tabC6-tab').addClass('show active');
+        $('#panelC6').addClass('show active');
+        
+        disableVerticalScrollBar();      
+        activeTab = 'tabC6-tab';       
+       
+    }else if (selectedItem === 'tabC7-tab') {
+        // visualizza le schede relative al menu selezionato
+        $('#tabC6-tab').removeClass('visually-hidden');
+        $('#tabC7-tab').removeClass('visually-hidden');
+        $('#tabC8-tab').removeClass('visually-hidden');
+        $('#tabC9-tab').removeClass('visually-hidden');
+       
+        // attiva la scheda e il pannello
+        $('#tabC7-tab').addClass('show active');
+        $('#panelC7').addClass('show active');
+        
+        disableVerticalScrollBar();      
+        activeTab = 'tabC7-tab';       
+       
+    }else if (selectedItem === 'tabC8-tab') {
+        // visualizza le schede relative al menu selezionato
+        $('#tabC6-tab').removeClass('visually-hidden');
+        $('#tabC7-tab').removeClass('visually-hidden');
+        $('#tabC8-tab').removeClass('visually-hidden');
+        $('#tabC9-tab').removeClass('visually-hidden');
+       
+        // attiva la scheda e il pannello
+        $('#tabC8-tab').addClass('show active');
+        $('#panelC8').addClass('show active');
+        
+        disableVerticalScrollBar();      
+        activeTab = 'tabC8-tab';       
+        
+    }else if (selectedItem === 'tabC9-tab') {
+        // visualizza le schede relative al menu selezionato
+        $('#tabC6-tab').removeClass('visually-hidden');
+        $('#tabC7-tab').removeClass('visually-hidden');
+        $('#tabC8-tab').removeClass('visually-hidden');
+        $('#tabC9-tab').removeClass('visually-hidden');
+       
+        // attiva la scheda e il pannello
+        $('#tabC9-tab').addClass('show active');
+        $('#panelC9').addClass('show active');
+        
+        disableVerticalScrollBar();      
+        activeTab = 'tabC9-tab';       
+       
+    }else if (selectedItem === 'tabC10-tab') {
+        // visualizza le schede relative al menu selezionato
+        $('#tabC10-tab').removeClass('visually-hidden');
+        $('#tabC11-tab').removeClass('visually-hidden');
+        $('#tabC12-tab').removeClass('visually-hidden');
+        $('#tabC13-tab').removeClass('visually-hidden');
+       
+        // attiva la scheda e il pannello
+        $('#tabC10-tab').addClass('show active');
+        $('#panelC10').addClass('show active');
+        
+        disableVerticalScrollBar();      
+        activeTab = 'tabC10-tab';       
+       
+    }else if (selectedItem === 'tabC11-tab') {
+        // visualizza le schede relative al menu selezionato
+        $('#tabC10-tab').removeClass('visually-hidden');
+        $('#tabC11-tab').removeClass('visually-hidden');
+        $('#tabC12-tab').removeClass('visually-hidden');
+        $('#tabC13-tab').removeClass('visually-hidden');
+       
+        // attiva la scheda e il pannello
+        $('#tabC11-tab').addClass('show active');
+        $('#panelC11').addClass('show active');
+        
+        disableVerticalScrollBar();      
+        activeTab = 'tabC11-tab';       
+       
+    }else if (selectedItem === 'tabC12-tab') {
+        // visualizza le schede relative al menu selezionato
+        $('#tabC10-tab').removeClass('visually-hidden');
+        $('#tabC11-tab').removeClass('visually-hidden');
+        $('#tabC12-tab').removeClass('visually-hidden');
+        $('#tabC13-tab').removeClass('visually-hidden');
+       
+        // attiva la scheda e il pannello
+        $('#tabC12-tab').addClass('show active');
+        $('#panelC12').addClass('show active');
+        
+        disableVerticalScrollBar();      
+        activeTab = 'tabC12-tab';       
+       
+    }else if (selectedItem === 'tabC13-tab') {
+        // visualizza le schede relative al menu selezionato
+        $('#tabC10-tab').removeClass('visually-hidden');
+        $('#tabC11-tab').removeClass('visually-hidden');
+        $('#tabC12-tab').removeClass('visually-hidden');
+        $('#tabC13-tab').removeClass('visually-hidden');
+       
+        // attiva la scheda e il pannello
+        $('#tabC13-tab').addClass('show active');
+        $('#panelC13').addClass('show active');
+        
+        disableVerticalScrollBar();      
+        activeTab = 'tabC13-tab';       
+        
+    }else if (selectedItem === 'tabD1-tab') {
+        // visualizza le schede relative al menu selezionato
+        $('#tabD1-tab').removeClass('visually-hidden');
+        $('#tabD2-tab').removeClass('visually-hidden');
+        $('#tabD3-tab').removeClass('visually-hidden');
+        $('#tabD4-tab').removeClass('visually-hidden');
+        $('#tabD5-tab').removeClass('visually-hidden');
+
+        // attiva la scheda e il pannello
+        $('#tabD1-tab').addClass('show active');
+        $('#panelD1').addClass('show active');
+        
+        disableVerticalScrollBar();      
+        activeTab = 'tabD1-tab';       
+      
+    }else if (selectedItem === 'tabD2-tab') {
+        // visualizza le schede relative al menu selezionato
+        $('#tabD1-tab').removeClass('visually-hidden');
+        $('#tabD2-tab').removeClass('visually-hidden');
+        $('#tabD3-tab').removeClass('visually-hidden');
+        $('#tabD4-tab').removeClass('visually-hidden');
+        $('#tabD5-tab').removeClass('visually-hidden');
+
+        // attiva la scheda e il pannello
+        $('#tabD2-tab').addClass('show active');
+        $('#panelD2').addClass('show active');
+        
+        disableVerticalScrollBar();      
+        activeTab = 'tabD2-tab';       
+      
+    }else if (selectedItem === 'tabD3-tab') {
+        // visualizza le schede relative al menu selezionato
+        $('#tabD1-tab').removeClass('visually-hidden');
+        $('#tabD2-tab').removeClass('visually-hidden');
+        $('#tabD3-tab').removeClass('visually-hidden');
+        $('#tabD4-tab').removeClass('visually-hidden');
+        $('#tabD5-tab').removeClass('visually-hidden');
+
+        // attiva la scheda e il pannello
+        $('#tabD3-tab').addClass('show active');
+        $('#panelD3').addClass('show active');
+        
+        disableVerticalScrollBar();      
+        activeTab = 'tabD3-tab';       
+      
+    }else if (selectedItem === 'tabD4-tab') {
+        // visualizza le schede relative al menu selezionato
+        $('#tabD1-tab').removeClass('visually-hidden');
+        $('#tabD2-tab').removeClass('visually-hidden');
+        $('#tabD3-tab').removeClass('visually-hidden');
+        $('#tabD4-tab').removeClass('visually-hidden');
+        $('#tabD5-tab').removeClass('visually-hidden');
+
+        // attiva la scheda e il pannello
+        $('#tabD4-tab').addClass('show active');
+        $('#panelD4').addClass('show active');
+        
+        disableVerticalScrollBar();      
+        activeTab = 'tabD4-tab';       
+       
+    }else if (selectedItem === 'tabD5-tab') {
+        // visualizza le schede relative al menu selezionato
+        $('#tabD1-tab').removeClass('visually-hidden');
+        $('#tabD2-tab').removeClass('visually-hidden');
+        $('#tabD3-tab').removeClass('visually-hidden');
+        $('#tabD4-tab').removeClass('visually-hidden');
+        $('#tabD5-tab').removeClass('visually-hidden');
+
+        // attiva la scheda e il pannello
+        $('#tabD5-tab').addClass('show active');
+        $('#panelD5').addClass('show active');
+        
+        disableVerticalScrollBar();      
+        activeTab = 'tabD5-tab';       
+    }    
 }
 
+
 /*
-* Autore: Angelo Stefani [angelo.stefani@enea.it]
-* Data: 29/02/2024
-* Funzione per aggiungere un'icona puntatore sulla mappa
+* Author: Angelo Stefani [angelo.stefani@enea.it]
+* Date: 29/02/2024
+* Function to add a pointer icon on the map
 */
 function addPointer(lon, lat, activeTab) {
+    // Create a new feature for the pointer with the given coordinates
     let pointer = new ol.Feature({
         geometry: new ol.geom.Point(ol.proj.fromLonLat([lon, lat]))
     });
 
+    // Set the style for the pointer icon
     pointer.setStyle(new ol.style.Style({
         image: new ol.style.Icon({
             anchor: [0.5, 1],
@@ -565,19 +872,24 @@ function addPointer(lon, lat, activeTab) {
         })
     }));
 
+    // Create a vector source and add the pointer feature
     let vectorSource = new ol.source.Vector({
         features: [pointer]
     });
 
+    // Create a vector layer using the vector source
     let vectorLayer = new ol.layer.Vector({
         source: vectorSource
     });
 
-    let map ;
-    map = getMapFromActiveTab(activeTab, map);
+    // Get the map associated with the active tab and add the vector layer
+    let map = getMapFromActiveTab(activeTab);
     map.addLayer(vectorLayer);
 }
 
+/*
+* Function to load GeoJSON data from an input file
+*/
 function loadGeoJSON() {
     let fileInput = document.getElementById('fileInput');
     let file = fileInput.files[0];
@@ -594,18 +906,81 @@ function loadGeoJSON() {
     }
 }
 
-// Function to enable vertical scroll bar when a specific tab is selected
+/*
+* Function to enable the vertical scroll bar
+*/
 function enableVerticalScrollBar() {
-    // Select the HTML body element
-    var bodyElement = document.body;
-    // Remove the overflow-y property to enable the vertical scroll bar
-    bodyElement.style.overflowY = 'scroll';
+    // Enable vertical scroll bar by setting overflow-y to 'scroll'
+    document.body.style.overflowY = 'scroll';
+
+    // Hide specific elements when the vertical scroll bar is enabled
+    document.getElementById("mouseCoordinates").style.display = "none";
+    document.getElementById("addressInput").style.display = "none";
 }
 
-// Function to disable vertical scroll bar
+/*
+* Function to disable the vertical scroll bar
+*/
 function disableVerticalScrollBar() {
-    // Select the HTML body element
-    var bodyElement = document.body;
-    // Set the overflow-y property to 'hidden' to disable the vertical scroll bar
-    bodyElement.style.overflowY = 'hidden';
+    // Disable vertical scroll bar by setting overflow-y to 'hidden'
+    document.body.style.overflowY = 'hidden';
 }
+
+function setupAddressSearch(inputSelector, suggestionsSelector) {
+    var lastInputTime = 0;
+    var delay = 2000; // Delay di 2 secondi
+
+    // Funzione per cercare gli indirizzi e visualizzare i suggerimenti
+    $(inputSelector).on('input', function () {
+        var currentTime = new Date().getTime();
+        if (currentTime - lastInputTime > delay) {
+            lastInputTime = currentTime;
+            var address = $(this).val();
+
+            // Richiesta AJAX per cercare gli indirizzi
+            var url = 'https://nominatim.openstreetmap.org/search?q=' + address + '&format=json&addressdetails=1&limit=5';
+
+            $.getJSON(url, function (data) {
+                // Visualizzo dei suggerimenti
+                $(suggestionsSelector).empty();
+                if (data && data.length > 0) {
+                    $(suggestionsSelector).show();
+                    // Creazione dei suggerimenti
+                    $.each(data, function (i, item) {
+                        $(suggestionsSelector).append('<a href="#" class="list-group-item list-group-item-action" data-type="' + item.type + '" data-lon="' + item.lon + '" data-lat="' + item.lat + '">' + item.display_name + '</a>');
+                    });
+                } else {
+                    $(suggestionsSelector).hide();
+                }
+            });
+        }        
+    });
+}
+
+function setupAddressZoom(suggestionsSelector, getMapFromActiveTab, addPointer, activeTab) {
+    // Funzione per zoomare sulla posizione selezionata dall'utente
+    $(suggestionsSelector).on('click', 'a', function (e) {
+        e.preventDefault();
+        var address = $(this).text();
+        var type = $(this).data('type');
+        var url = 'https://nominatim.openstreetmap.org/search?q=' + address + '&format=json&addressdetails=1&limit=1';
+
+        $.getJSON(url, function (data) {
+            if (data && data.length > 0) {
+                var lon = parseFloat(data[0].lon);
+                var lat = parseFloat(data[0].lat);
+
+                let map;
+
+                map = getMapFromActiveTab(activeTab, map);
+                map.getView().setCenter(ol.proj.fromLonLat([lon, lat]));
+                map.getView().setZoom(15);
+
+                addPointer(lon, lat, activeTab);
+
+                $(suggestionsSelector).hide();
+            }
+        });
+    });
+}
+
