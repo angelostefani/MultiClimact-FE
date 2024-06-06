@@ -45,55 +45,64 @@ else
                     <li class="nav-item">
                         <a class="nav-link" href="#"  role="button">Home</a>
                     </li>
-                    <li class="nav-item dropdown">
+                    <!--<li class="nav-item dropdown"> 
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Natural Events</a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="#" onclick="selectTab('tabA1-tab'); updateBreadcrumb('Natural Events', 'Earthquakes')">Earthquakes</a></li>
                             <li><a class="dropdown-item" href="#" onclick="selectTab('tabA2-tab'); updateBreadcrumb('Natural Events', 'Floods')">Floods</a></li>
                             <li><a class="dropdown-item" href="#" onclick="selectTab('tabA4-tab'); updateBreadcrumb('Natural Events', 'Heat waves')">Heat waves</a></li>
                         </ul>
-                    </li>
+                    </li>-->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">National data</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabB1-tab'); updateBreadcrumb('National data', 'Territorial')">Territorial</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabB4-tab'); updateBreadcrumb('National data', 'Socio-economic')">Socio-economic</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabB5-tab'); updateBreadcrumb('National data', 'Infrastructures')">Infrastructures</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabB1-tab'); updateBreadcrumb('National data', 'Forecasts')">Forecasts</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabB4-tab'); updateBreadcrumb('National data', 'Territorial')">Territorial</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabB8-tab'); updateBreadcrumb('National data', 'Socio-economic')">Socio-economic</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabB10-tab'); updateBreadcrumb('National data', 'Infrastructures')">Infrastructures</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Risk Analysis</a>
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Real-time Risk Analysis</a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="#" onclick="selectTab('tabC1-tab'); updateBreadcrumb('Risk Analysis', 'Earthquakes')">Earthquakes</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabC6-tab'); updateBreadcrumb('Risk Analysis', 'Floods')">Floods</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabC10-tab'); updateBreadcrumb('Risk Analysis', 'Heat waves')">Heat waves</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabC6-tab'); updateBreadcrumb('Risk Analysis', 'River floods')">River floods</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabC11-tab'); updateBreadcrumb('Risk Analysis', 'Heat waves')">Heat waves</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Simulation</a>
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Simulation and Climate scenarios</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabD1-tab'); updateBreadcrumb('Simulation', 'Earthquakes')">Earthquakes</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabD1-tab'); updateBreadcrumb('Simulation', 'Earthquake Simulation')">Earthquake Simulation</a></li>
+                            
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Scenario configuration</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabE1-tab'); updateBreadcrumb('Scenario configuration', 'Scenario configuration')">Scenario configuration</a></li>
                             
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">UAS</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabE1-tab'); updateBreadcrumb('UAS', 'UAS video')">UAS video</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabF1-tab'); updateBreadcrumb('UAS', 'UAS video')">UAS video</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabF1-tab'); updateBreadcrumb('UAS', 'UAS configuration')">UAS configuration</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Help</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabF1-tab'); updateBreadcrumb('Help', 'Help')">Help</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabF2-tab'); updateBreadcrumb('Help', 'Settings')">Settings</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabG1-tab'); updateBreadcrumb('Help', 'Help')">Help</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabG2-tab'); updateBreadcrumb('Help', 'User info')">User info</a></li>
                         </ul>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#"></a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Maps</a>
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Base Map</a>
                         <ul class="dropdown-menu">
                             @foreach (var mappa in Maps)
                             {
@@ -117,7 +126,7 @@ else
         <ul class="nav nav-tabs" id="myTab" role="tablist">
 
             <!-- TAB MENU A -->
-            <li class="nav-item" role="presentation">
+            <!--<li class="nav-item" role="presentation">
                 <button class="nav-link" id="tabA1-tab" data-bs-toggle="tab" data-bs-target="#tabA1" type="button" role="tab" aria-controls="tabA1" aria-selected="false">Earthquakes</button>
             </li>               
             <li class="nav-item" role="presentation">
@@ -128,40 +137,46 @@ else
             </li>  
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="tabA4-tab" data-bs-toggle="tab" data-bs-target="#tabA4" type="button" role="tab" aria-controls="tabA4" aria-selected="false">Temperatures</button>
-            </li>          
+            </li>-->     
 
             <!-- TAB MENU B -->
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tabB1-tab" data-bs-toggle="tab" data-bs-target="#tabB1" type="button" role="tab" aria-controls="tabB1" aria-selected="false">Hydrogeological</button>
+             <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tabB1-tab" data-bs-toggle="tab" data-bs-target="#tabB1" type="button" role="tab" aria-controls="tabB1" aria-selected="false">Wather forecasts</button>
             </li> 
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tabB2-tab" data-bs-toggle="tab" data-bs-target="#tabB2" type="button" role="tab" aria-controls="tabB2" aria-selected="false">Landslide</button>
+                <button class="nav-link" id="tabB2-tab" data-bs-toggle="tab" data-bs-target="#tabB2" type="button" role="tab" aria-controls="tabB2" aria-selected="false">Nowcasting</button>
             </li> 
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tabB3-tab" data-bs-toggle="tab" data-bs-target="#tabB3" type="button" role="tab" aria-controls="tabB3" aria-selected="false">Seismic building vulnerability</button>
+                <button class="nav-link" id="tabB3-tab" data-bs-toggle="tab" data-bs-target="#tabB1" type="button" role="tab" aria-controls="tabB3" aria-selected="false">Hydrogeological</button>
             </li> 
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tabB4-tab" data-bs-toggle="tab" data-bs-target="#tabB4" type="button" role="tab" aria-controls="tabB4" aria-selected="false">Population</button>
+                <button class="nav-link" id="tabB4-tab" data-bs-toggle="tab" data-bs-target="#tabB2" type="button" role="tab" aria-controls="tabB4" aria-selected="false">Landslide</button>
             </li> 
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tabB5-tab" data-bs-toggle="tab" data-bs-target="#tabB5" type="button" role="tab" aria-controls="tabB5" aria-selected="false">DBSN</button>
+                <button class="nav-link" id="tabB5-tab" data-bs-toggle="tab" data-bs-target="#tabB3" type="button" role="tab" aria-controls="tabB5" aria-selected="false">Seismic building vulnerability</button>
             </li> 
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tabB6-tab" data-bs-toggle="tab" data-bs-target="#tabB6" type="button" role="tab" aria-controls="tabB6" aria-selected="false">OpenStreetMap</button>
+                <button class="nav-link" id="tabB6-tab" data-bs-toggle="tab" data-bs-target="#tabB4" type="button" role="tab" aria-controls="tabB6" aria-selected="false">Population</button>
+            </li> 
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tabB7-tab" data-bs-toggle="tab" data-bs-target="#tabB5" type="button" role="tab" aria-controls="tabB7" aria-selected="false">DBSN</button>
+            </li> 
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tabB8-tab" data-bs-toggle="tab" data-bs-target="#tabB6" type="button" role="tab" aria-controls="tabB8" aria-selected="false">OpenStreetMap</button>
             </li> 
 
             <!-- TAB MENU C -->
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tabC1-tab" data-bs-toggle="tab" data-bs-target="#tabC1" type="button" role="tab" aria-controls="tabC1" aria-selected="false">Earthquake manager</button>
+                <button class="nav-link" id="tabC1-tab" data-bs-toggle="tab" data-bs-target="#tabC1" type="button" role="tab" aria-controls="tabC1" aria-selected="false">Last events</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tabC2-tab" data-bs-toggle="tab" data-bs-target="#tabC2" type="button" role="tab" aria-controls="tabC2" aria-selected="false">Shakemap</button>
+                <button class="nav-link" id="tabC2-tab" data-bs-toggle="tab" data-bs-target="#tabC2" type="button" role="tab" aria-controls="tabC2" aria-selected="false">Buildings</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tabC3-tab" data-bs-toggle="tab" data-bs-target="#tabC3" type="button" role="tab" aria-controls="tabC3" aria-selected="false">Buildings</button>
+                <button class="nav-link" id="tabC3-tab" data-bs-toggle="tab" data-bs-target="#tabC3" type="button" role="tab" aria-controls="tabC3" aria-selected="false">Point of Interests & Infrastructures</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tabC4-tab" data-bs-toggle="tab" data-bs-target="#tabC4" type="button" role="tab" aria-controls="tabC4" aria-selected="false">Infrastructures</button>
+                <button class="nav-link" id="tabC4-tab" data-bs-toggle="tab" data-bs-target="#tabC4" type="button" role="tab" aria-controls="tabC4" aria-selected="false">Urban resilience</button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="tabC5-tab" data-bs-toggle="tab" data-bs-target="#tabC5" type="button" role="tab" aria-controls="tabC5" aria-selected="false">Urban risk</button>
