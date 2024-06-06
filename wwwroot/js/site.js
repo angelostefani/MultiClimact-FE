@@ -381,16 +381,18 @@ function updateBreadcrumb(section, subSection) {
 
 /**
  * This function is used to initialize the tabs of the application. It hides all the tabs
- * and sets the default active tab to "buildings"
+ * and sets the default active tab.
  */
 function initTabs() {
     // Array of all tab IDs
     const tabIds = [
         '#tabA1-tab', '#tabA2-tab', '#tabA3-tab', '#tabA4-tab',
-        '#tabB1-tab', '#tabB2-tab', '#tabB3-tab', '#tabB4-tab', '#tabB5-tab', '#tabB6-tab',
+        '#tabB1-tab', '#tabB2-tab', '#tabB3-tab', '#tabB4-tab', '#tabB5-tab', '#tabB6-tab','#tabB7-tab', '#tabB8-tab',
         '#tabC1-tab', '#tabC2-tab', '#tabC3-tab', '#tabC4-tab', '#tabC5-tab', '#tabC6-tab',
         '#tabC7-tab', '#tabC8-tab', '#tabC9-tab', '#tabC10-tab', '#tabC11-tab', '#tabC12-tab',
-        '#tabC13-tab', '#tabD1-tab', '#tabD2-tab', '#tabD3-tab', '#tabD4-tab', '#tabD5-tab'
+        '#tabD1-tab', '#tabD2-tab', '#tabD3-tab', '#tabD4-tab', '#tabD5-tab', '#tabD6-tab', '#tabD7-tab', '#tabD8-tab', 
+        '#tabD9-tab', '#tabD10-tab', '#tabD11-tab', '#tabD12-tab', '#tabD13-tab', '#tabD14-tab', '#tabD15-tab', '#tabD16-tab',
+        '#tabD17-tab' 
     ];
 
     // Hide all tabs and remove 'show active' classes
@@ -399,7 +401,7 @@ function initTabs() {
     });
 
     // Set the default active tab
-    activeTab = 'tabA1-tab';
+    activeTab = 'tabB1-tab';
 }
 
 
@@ -437,11 +439,13 @@ function initLayoutElements() {
 function tabManager() {
     // Define an array of tab IDs for iteration
     const tabIds = [
-        'tabA1-tab', 'tabA2-tab', 'tabA3-tab', 'tabA4-tab',
-        'tabB1-tab', 'tabB2-tab', 'tabB3-tab', 'tabB4-tab', 'tabB5-tab', 'tabB6-tab',
-        'tabC1-tab', 'tabC2-tab', 'tabC3-tab', 'tabC4-tab', 'tabC5-tab', 'tabC6-tab',
-        'tabC7-tab', 'tabC8-tab', 'tabC9-tab', 'tabC10-tab', 'tabC11-tab', 'tabC12-tab',
-        'tabC13-tab', 'tabD1-tab', 'tabD2-tab', 'tabD3-tab', 'tabD4-tab', 'tabD5-tab'
+        '#tabA1-tab', '#tabA2-tab', '#tabA3-tab', '#tabA4-tab',
+        '#tabB1-tab', '#tabB2-tab', '#tabB3-tab', '#tabB4-tab', '#tabB5-tab', '#tabB6-tab','#tabB7-tab', '#tabB8-tab',
+        '#tabC1-tab', '#tabC2-tab', '#tabC3-tab', '#tabC4-tab', '#tabC5-tab', '#tabC6-tab',
+        '#tabC7-tab', '#tabC8-tab', '#tabC9-tab', '#tabC10-tab', '#tabC11-tab', '#tabC12-tab',
+        '#tabD1-tab', '#tabD2-tab', '#tabD3-tab', '#tabD4-tab', '#tabD5-tab', '#tabD6-tab', '#tabD7-tab', '#tabD8-tab', 
+        '#tabD9-tab', '#tabD10-tab', '#tabD11-tab', '#tabD12-tab', '#tabD13-tab', '#tabD14-tab', '#tabD15-tab', '#tabD16-tab',
+        '#tabD17-tab' 
     ];
 
     // Loop through each tab ID
@@ -518,7 +522,7 @@ function selectTab(selectedItem) {
         $('#tabB1-tab').removeClass('visually-hidden');
         $('#tabB2-tab').removeClass('visually-hidden');
         $('#tabB3-tab').removeClass('visually-hidden');
-             
+                    
         // attiva la scheda e il pannello
         $('#tabB1-tab').addClass('show active');
         $('#panelB1').addClass('show active');

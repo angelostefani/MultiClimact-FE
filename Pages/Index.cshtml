@@ -74,7 +74,9 @@ else
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Simulation and Climate scenarios</a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="#" onclick="selectTab('tabD1-tab'); updateBreadcrumb('Simulation', 'Earthquake Simulation')">Earthquake Simulation</a></li>
-                            
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabD6-tab'); updateBreadcrumb('Simulation', 'Extreme precipitation long-term scenarios')">Extreme precipitation long-term scenarios</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabD11-tab'); updateBreadcrumb('Simulation', 'Heat waves long-term scenarios')">Heat waves long-term scenarios</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabD16-tab'); updateBreadcrumb('Simulation', 'Urban resilience')">Urban resilience</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
@@ -147,22 +149,22 @@ else
                 <button class="nav-link" id="tabB2-tab" data-bs-toggle="tab" data-bs-target="#tabB2" type="button" role="tab" aria-controls="tabB2" aria-selected="false">Nowcasting</button>
             </li> 
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tabB3-tab" data-bs-toggle="tab" data-bs-target="#tabB1" type="button" role="tab" aria-controls="tabB3" aria-selected="false">Hydrogeological</button>
+                <button class="nav-link" id="tabB3-tab" data-bs-toggle="tab" data-bs-target="#tabB3" type="button" role="tab" aria-controls="tabB3" aria-selected="false">Hydrogeological</button>
             </li> 
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tabB4-tab" data-bs-toggle="tab" data-bs-target="#tabB2" type="button" role="tab" aria-controls="tabB4" aria-selected="false">Landslide</button>
+                <button class="nav-link" id="tabB4-tab" data-bs-toggle="tab" data-bs-target="#tabB4" type="button" role="tab" aria-controls="tabB4" aria-selected="false">Landslide</button>
             </li> 
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tabB5-tab" data-bs-toggle="tab" data-bs-target="#tabB3" type="button" role="tab" aria-controls="tabB5" aria-selected="false">Seismic building vulnerability</button>
+                <button class="nav-link" id="tabB5-tab" data-bs-toggle="tab" data-bs-target="#tabB5" type="button" role="tab" aria-controls="tabB5" aria-selected="false">Seismic building vulnerability</button>
             </li> 
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tabB6-tab" data-bs-toggle="tab" data-bs-target="#tabB4" type="button" role="tab" aria-controls="tabB6" aria-selected="false">Population</button>
+                <button class="nav-link" id="tabB6-tab" data-bs-toggle="tab" data-bs-target="#tabB6" type="button" role="tab" aria-controls="tabB6" aria-selected="false">Population</button>
             </li> 
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tabB7-tab" data-bs-toggle="tab" data-bs-target="#tabB5" type="button" role="tab" aria-controls="tabB7" aria-selected="false">DBSN</button>
+                <button class="nav-link" id="tabB7-tab" data-bs-toggle="tab" data-bs-target="#tabB7" type="button" role="tab" aria-controls="tabB7" aria-selected="false">DBSN</button>
             </li> 
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tabB8-tab" data-bs-toggle="tab" data-bs-target="#tabB6" type="button" role="tab" aria-controls="tabB8" aria-selected="false">OpenStreetMap</button>
+                <button class="nav-link" id="tabB8-tab" data-bs-toggle="tab" data-bs-target="#tabB8" type="button" role="tab" aria-controls="tabB8" aria-selected="false">OpenStreetMap</button>
             </li> 
 
             <!-- TAB MENU C -->
@@ -179,48 +181,81 @@ else
                 <button class="nav-link" id="tabC4-tab" data-bs-toggle="tab" data-bs-target="#tabC4" type="button" role="tab" aria-controls="tabC4" aria-selected="false">Urban resilience</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tabC5-tab" data-bs-toggle="tab" data-bs-target="#tabC5" type="button" role="tab" aria-controls="tabC5" aria-selected="false">Urban risk</button>
+                <button class="nav-link" id="tabC5-tab" data-bs-toggle="tab" data-bs-target="#tabC5" type="button" role="tab" aria-controls="tabC5" aria-selected="false">Last events</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tabC6-tab" data-bs-toggle="tab" data-bs-target="#tabC6" type="button" role="tab" aria-controls="tabC6" aria-selected="false">Flood manager</button>
+                <button class="nav-link" id="tabC6-tab" data-bs-toggle="tab" data-bs-target="#tabC6" type="button" role="tab" aria-controls="tabC6" aria-selected="false">Buildings</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tabC7-tab" data-bs-toggle="tab" data-bs-target="#tabC7" type="button" role="tab" aria-controls="tabC7" aria-selected="false">Buildings</button>
+                <button class="nav-link" id="tabC7-tab" data-bs-toggle="tab" data-bs-target="#tabC7" type="button" role="tab" aria-controls="tabC7" aria-selected="false">Point of Interests & Infrastructures</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tabC8-tab" data-bs-toggle="tab" data-bs-target="#tabC8" type="button" role="tab" aria-controls="tabC8" aria-selected="false">Infrastructures</button>
+                <button class="nav-link" id="tabC8-tab" data-bs-toggle="tab" data-bs-target="#tabC8" type="button" role="tab" aria-controls="tabC8" aria-selected="false">Urban resilience</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tabC9-tab" data-bs-toggle="tab" data-bs-target="#tabC9" type="button" role="tab" aria-controls="tabC9" aria-selected="false">Urban risk</button>
+                <button class="nav-link" id="tabC9-tab" data-bs-toggle="tab" data-bs-target="#tabC9" type="button" role="tab" aria-controls="tabC9" aria-selected="false">Last events</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tabC10-tab" data-bs-toggle="tab" data-bs-target="#tabC10" type="button" role="tab" aria-controls="tabC10" aria-selected="false">Heat wave manager</button>
+                <button class="nav-link" id="tabC10-tab" data-bs-toggle="tab" data-bs-target="#tabC10" type="button" role="tab" aria-controls="tabC10" aria-selected="false">Buildings</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tabC11-tab" data-bs-toggle="tab" data-bs-target="#tabC11" type="button" role="tab" aria-controls="tabC11" aria-selected="false">Buildings</button>
+                <button class="nav-link" id="tabC11-tab" data-bs-toggle="tab" data-bs-target="#tabC11" type="button" role="tab" aria-controls="tabC11" aria-selected="false">Point of Interests & Infrastructures</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tabC12-tab" data-bs-toggle="tab" data-bs-target="#tabC12" type="button" role="tab" aria-controls="tabC12" aria-selected="false">Infrastructures</button>
+                <button class="nav-link" id="tabC12-tab" data-bs-toggle="tab" data-bs-target="#tabC12" type="button" role="tab" aria-controls="tabC12" aria-selected="false">Urban resilience</button>
             </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tabC13-tab" data-bs-toggle="tab" data-bs-target="#tabC13" type="button" role="tab" aria-controls="tabC13" aria-selected="false">Urban risk</button>
-            </li>
-
+           
             <!-- TAB MENU D -->
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tabD1-tab" data-bs-toggle="tab" data-bs-target="#tabD1" type="button" role="tab" aria-controls="tabD1" aria-selected="false">Earthquake manager</button>
+                <button class="nav-link" id="tabD1-tab" data-bs-toggle="tab" data-bs-target="#tabD1" type="button" role="tab" aria-controls="tabD1" aria-selected="false">Earthquakes</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tabD2-tab" data-bs-toggle="tab" data-bs-target="#tabD2" type="button" role="tab" aria-controls="tabD2" aria-selected="false">Shakemap</button>
+                <button class="nav-link" id="tabD2-tab" data-bs-toggle="tab" data-bs-target="#tabD2" type="button" role="tab" aria-controls="tabD2" aria-selected="false">Buildings</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tabD3-tab" data-bs-toggle="tab" data-bs-target="#tabD3" type="button" role="tab" aria-controls="tabD3" aria-selected="false">Buildings</button>
+                <button class="nav-link" id="tabD3-tab" data-bs-toggle="tab" data-bs-target="#tabD3" type="button" role="tab" aria-controls="tabD3" aria-selected="false">Point of Interests & Infrastructures</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tabD4-tab" data-bs-toggle="tab" data-bs-target="#tabD4" type="button" role="tab" aria-controls="tabD4" aria-selected="false">Infrastructures</button>
+                <button class="nav-link" id="tabD4-tab" data-bs-toggle="tab" data-bs-target="#tabD4" type="button" role="tab" aria-controls="tabD4" aria-selected="false">Urban resilience</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tabD5-tab" data-bs-toggle="tab" data-bs-target="#tabD5" type="button" role="tab" aria-controls="tabD5" aria-selected="false">Urban risk</button>
+                <button class="nav-link" id="tabD5-tab" data-bs-toggle="tab" data-bs-target="#tabD5" type="button" role="tab" aria-controls="tabD5" aria-selected="false">Extreme precipitation</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tabD6-tab" data-bs-toggle="tab" data-bs-target="#tabD6" type="button" role="tab" aria-controls="tabD6" aria-selected="false">Buildings</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tabD7-tab" data-bs-toggle="tab" data-bs-target="#tabD7" type="button" role="tab" aria-controls="tabD7" aria-selected="false">Point of Interests & Infrastructures</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tabD8-tab" data-bs-toggle="tab" data-bs-target="#tabD8" type="button" role="tab" aria-controls="tabD8" aria-selected="false">Urban resilience</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tabD9-tab" data-bs-toggle="tab" data-bs-target="#tabD9" type="button" role="tab" aria-controls="tabD9" aria-selected="false">Heat waves</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tabD10-tab" data-bs-toggle="tab" data-bs-target="#tabD10" type="button" role="tab" aria-controls="tabD10" aria-selected="false">Buildings</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tabD11-tab" data-bs-toggle="tab" data-bs-target="#tabD11" type="button" role="tab" aria-controls="tabD11" aria-selected="false">Point of Interests & Infrastructures</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tabD12-tab" data-bs-toggle="tab" data-bs-target="#tabD12" type="button" role="tab" aria-controls="tabD12" aria-selected="false">Urban resilience</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tabD13-tab" data-bs-toggle="tab" data-bs-target="#tabD13" type="button" role="tab" aria-controls="tabD13" aria-selected="false">Urban resilience scenario</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tabD14-tab" data-bs-toggle="tab" data-bs-target="#tabD14" type="button" role="tab" aria-controls="tabD14" aria-selected="false">Urban resilience results</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tabD15-tab" data-bs-toggle="tab" data-bs-target="#tabD15" type="button" role="tab" aria-controls="tabD15" aria-selected="false">Real-time Risk Analysis configuration</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tabD16-tab" data-bs-toggle="tab" data-bs-target="#tabD16" type="button" role="tab" aria-controls="tabD16" aria-selected="false">Damage configuration</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tabD17-tab" data-bs-toggle="tab" data-bs-target="#tabD17" type="button" role="tab" aria-controls="tabD17" aria-selected="false">Urban Resilience configuration</button>
             </li>
         </ul>
         <!-- NAVIGATION TABS: END -->
@@ -267,6 +302,14 @@ else
             </div> 
             <div class="tab-pane fade" id="panelB6" role="tabpanel" aria-labelledby="tabB6-tab">
                 <p>Content related to panelB6</p>
+                <div id="mapB6" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
+            </div> 
+            <div class="tab-pane fade" id="panelB7" role="tabpanel" aria-labelledby="tabB7-tab">
+                <p>Content related to panelB7</p>
+                <div id="mapB5" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
+            </div> 
+            <div class="tab-pane fade" id="panelB8" role="tabpanel" aria-labelledby="tabB8-tab">
+                <p>Content related to panelB8</p>
                 <div id="mapB6" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
             </div> 
 
@@ -323,11 +366,7 @@ else
                 <p>Content related to panelC12</p>
                 <div id="mapC12" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
             </div> 
-            <div class="tab-pane fade" id="panelC13" role="tabpanel" aria-labelledby="tabC13-tab">
-                <p>Content related to panelC13</p>
-                <div id="mapC13" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
-            </div> 
-                        
+                                   
             <!-- TAB PANELS GROUP MENU D -->
             <div class="tab-pane fade" id="panelD1" role="tabpanel" aria-labelledby="tabD1-tab">
                 <p>Content related to panelD1</p>
@@ -349,7 +388,55 @@ else
                 <p>Content related to panelD5</p>
                 <div id="mapD5" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
             </div> 
-              
+            <div class="tab-pane fade" id="panelD6" role="tabpanel" aria-labelledby="tabD6-tab">
+                <p>Content related to panelD6</p>
+                <div id="mapD6" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
+            </div> 
+            <div class="tab-pane fade" id="panelD7" role="tabpanel" aria-labelledby="tabD7-tab">
+                <p>Content related to panelD7</p>
+                <div id="mapD7" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
+            </div> 
+            <div class="tab-pane fade" id="panelD8" role="tabpanel" aria-labelledby="tabD8-tab">
+                <p>Content related to panelD8</p>
+                <div id="mapD8" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
+            </div> 
+            <div class="tab-pane fade" id="panelD9" role="tabpanel" aria-labelledby="tabD9-tab">
+                <p>Content related to panelD9</p>
+                <div id="mapD9" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
+            </div> 
+            <div class="tab-pane fade" id="panelD10" role="tabpanel" aria-labelledby="tabD10-tab">
+                <p>Content related to panelD10</p>
+                <div id="mapD10" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
+            </div> 
+            <div class="tab-pane fade" id="panelD11" role="tabpanel" aria-labelledby="tabD11-tab">
+                <p>Content related to panelD11</p>
+                <div id="mapD1" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
+            </div> 
+            <div class="tab-pane fade" id="panelD12" role="tabpanel" aria-labelledby="tabD12-tab">
+                <p>Content related to panelD12</p>
+                <div id="mapD2" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
+            </div> 
+            <div class="tab-pane fade" id="panelD13" role="tabpanel" aria-labelledby="tabD13-tab">
+                <p>Content related to panelD13</p>
+                <div id="mapD3" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
+            </div> 
+            <div class="tab-pane fade" id="panelD14" role="tabpanel" aria-labelledby="tabD14-tab">
+                <p>Content related to panelD14</p>
+                <div id="mapD4" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
+            </div> 
+            <!-- TAB PANELS GROUP MENU E -->
+            <div class="tab-pane fade" id="panelE1" role="tabpanel" aria-labelledby="tabE1-tab">
+                <p>Content related to panelE1</p>
+                <div id="mapE1" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
+            </div> 
+            <div class="tab-pane fade" id="panelE2" role="tabpanel" aria-labelledby="tabE2-tab">
+                <p>Content related to panelE2</p>
+                <div id="mapE2" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
+            </div> 
+            <div class="tab-pane fade" id="panelE3" role="tabpanel" aria-labelledby="tabE3-tab">
+                <p>Content related to panelE3</p>
+                <div id="mapE3" style="width: 100%; height: 100vh; cursor: pointer; overflow: hidden; display: block;"></div>
+            </div> 
         </div>
         <!-- TAB PANELS: END -->
 
@@ -371,37 +458,38 @@ else
                 let centerLongitude = 13.1996
                 let zoomValue = 9
 
-                mapA1 = initWMSMap('mapA1', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapA1"]', '@ViewData["wmslayer_mapA1"]');
-                mapA2 = initWMSMap('mapA2', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapA2"]', '@ViewData["wmslayer_mapA2"]');
-                mapA3 = initWMSMap('mapA3', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapA3"]', '@ViewData["wmslayer_mapA3"]');
-                mapA4 = initWMSMap('mapA4', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapA4"]', '@ViewData["wmslayer_mapA4"]');
+                //mapA1 = initWMSMap('mapA1', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapA1"]', '@ViewData["wmslayer_mapA1"]');
+                //mapA2 = initWMSMap('mapA2', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapA2"]', '@ViewData["wmslayer_mapA2"]');
+                //mapA2 = initWMSMap('mapA2', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapA2"]', '@ViewData["wmslayer_mapA2"]');
+                //mapA3 = initWMSMap('mapA3', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapA3"]', '@ViewData["wmslayer_mapA3"]');
+                //mapA4 = initWMSMap('mapA4', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapA4"]', '@ViewData["wmslayer_mapA4"]');
                 
-                mapB1 = initWMSMap('mapB1', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapB1"]', '@ViewData["wmslayer_mapB1"]');
-                mapB2 = initWMSMap('mapB2', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapB2"]', '@ViewData["wmslayer_mapB2"]');
-                mapB3 = initWMSMap('mapB3', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapB3"]', '@ViewData["wmslayer_mapB3"]');
-                mapB4 = initWMSMap('mapB4', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapB4"]', '@ViewData["wmslayer_mapB4"]');
-                mapB5 = initWMSMap('mapB5', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapB5"]', '@ViewData["wmslayer_mapB5"]');
-                mapB6 = initWMSMap('mapB6', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapB6"]', '@ViewData["wmslayer_mapB6"]');
+                //mapB1 = initWMSMap('mapB1', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapB1"]', '@ViewData["wmslayer_mapB1"]');
+                //mapB2 = initWMSMap('mapB2', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapB2"]', '@ViewData["wmslayer_mapB2"]');
+                //mapB3 = initWMSMap('mapB3', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapB3"]', '@ViewData["wmslayer_mapB3"]');
+                //mapB4 = initWMSMap('mapB4', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapB4"]', '@ViewData["wmslayer_mapB4"]');
+                //mapB5 = initWMSMap('mapB5', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapB5"]', '@ViewData["wmslayer_mapB5"]');
+                //mapB6 = initWMSMap('mapB6', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapB6"]', '@ViewData["wmslayer_mapB6"]');
                 
-                mapC1 = initWMSMap('mapC1', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapC1"]', '@ViewData["wmslayer_mapC1"]');
-                mapC2 = initWMSMap('mapC2', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapC2"]', '@ViewData["wmslayer_mapC2"]');
-                mapC3 = initWMSMap('mapC3', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapC3"]', '@ViewData["wmslayer_mapC3"]');
-                mapC4 = initWMSMap('mapC4', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapC4"]', '@ViewData["wmslayer_mapC4"]');
-                mapC5 = initWMSMap('mapC5', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapC5"]', '@ViewData["wmslayer_mapC5"]');
-                mapC6 = initWMSMap('mapC6', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapC6"]', '@ViewData["wmslayer_mapC6"]');
-                mapC7 = initWMSMap('mapC7', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapC7"]', '@ViewData["wmslayer_mapC7"]');
-                mapC8 = initWMSMap('mapC8', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapC8"]', '@ViewData["wmslayer_mapC8"]');
-                mapC9 = initWMSMap('mapC9', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapC9"]', '@ViewData["wmslayer_mapC9"]');
-                mapC10 = initWMSMap('mapC10', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapC10"]', '@ViewData["wmslayer_mapC10"]');
-                mapC11 = initWMSMap('mapC11', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapC11"]', '@ViewData["wmslayer_mapC11"]');
-                mapC12 = initWMSMap('mapC12', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapC12"]', '@ViewData["wmslayer_mapC12"]');
-                mapC13 = initWMSMap('mapC13', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapC13"]', '@ViewData["wmslayer_mapC13"]');
+                //mapC1 = initWMSMap('mapC1', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapC1"]', '@ViewData["wmslayer_mapC1"]');
+                //mapC2 = initWMSMap('mapC2', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapC2"]', '@ViewData["wmslayer_mapC2"]');
+                //mapC3 = initWMSMap('mapC3', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapC3"]', '@ViewData["wmslayer_mapC3"]');
+                //mapC4 = initWMSMap('mapC4', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapC4"]', '@ViewData["wmslayer_mapC4"]');
+                //mapC5 = initWMSMap('mapC5', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapC5"]', '@ViewData["wmslayer_mapC5"]');
+                //mapC6 = initWMSMap('mapC6', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapC6"]', '@ViewData["wmslayer_mapC6"]');
+                //mapC7 = initWMSMap('mapC7', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapC7"]', '@ViewData["wmslayer_mapC7"]');
+                //mapC8 = initWMSMap('mapC8', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapC8"]', '@ViewData["wmslayer_mapC8"]');
+                //mapC9 = initWMSMap('mapC9', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapC9"]', '@ViewData["wmslayer_mapC9"]');
+                //mapC10 = initWMSMap('mapC10', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapC10"]', '@ViewData["wmslayer_mapC10"]');
+                //mapC11 = initWMSMap('mapC11', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapC11"]', '@ViewData["wmslayer_mapC11"]');
+                //mapC12 = initWMSMap('mapC12', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapC12"]', '@ViewData["wmslayer_mapC12"]');
+                //mapC13 = initWMSMap('mapC13', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapC13"]', '@ViewData["wmslayer_mapC13"]');
                                  
-                mapD1 = initWMSMap('mapD1', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapD1"]', '@ViewData["wmslayer_mapD1"]');
-                mapD2 = initWMSMap('mapD2', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapD2"]', '@ViewData["wmslayer_mapD2"]');
-                mapD3 = initWMSMap('mapD3', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapD3"]', '@ViewData["wmslayer_mapD3"]');
-                mapD4 = initWMSMap('mapD4', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapD4"]', '@ViewData["wmslayer_mapD4"]');
-                mapD5 = initWMSMap('mapD5', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapD5"]', '@ViewData["wmslayer_mapD5"]');
+                //mapD1 = initWMSMap('mapD1', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapD1"]', '@ViewData["wmslayer_mapD1"]');
+                //mapD2 = initWMSMap('mapD2', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapD2"]', '@ViewData["wmslayer_mapD2"]');
+                //mapD3 = initWMSMap('mapD3', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapD3"]', '@ViewData["wmslayer_mapD3"]');
+                //mapD4 = initWMSMap('mapD4', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapD4"]', '@ViewData["wmslayer_mapD4"]');
+                //mapD5 = initWMSMap('mapD5', 'OpenStreetMap - EPSG:3857', 13.0683, 43.1357, 14, '@ViewData["wmsurl_mapD5"]', '@ViewData["wmslayer_mapD5"]');
                
                 // Pass jsonContent to visualizeEarthquakes_v01 function
                 //visualizeEarthquakes_v01(mapOperationalResilience, @Html.Raw(jsonContent));
