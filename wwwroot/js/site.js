@@ -11,7 +11,7 @@
 */
 
 // Variable to track the active TAB
-let activeTab = 'tabA1-tab';
+let activeTab = 'tabB1-tab';
 
 // Variables to hold the OpenLayer maps for each TAB
 let mapBuildings;
@@ -323,12 +323,22 @@ function getMapFromActiveTab(activeTab) {
         'tabA2-tab': mapA2,
         'tabA3-tab': mapA3,
         'tabA4-tab': mapA4,
+        'tabA5-tab': mapA5,
+        'tabA6-tab': mapA6,
+        'tabA7-tab': mapA7,
+        'tabA8-tab': mapA8,
+        'tabA9-tab': mapA9,
+        'tabA10-tab': mapA10,
         'tabB1-tab': mapB1,
         'tabB2-tab': mapB2,
         'tabB3-tab': mapB3,
         'tabB4-tab': mapB4,
         'tabB5-tab': mapB5,
         'tabB6-tab': mapB6,
+        'tabB7-tab': mapB7,
+        'tabB8-tab': mapB8,
+        'tabB9-tab': mapB9,
+        'tabB10-tab': mapB10,
         'tabC1-tab': mapC1,
         'tabC2-tab': mapC2,
         'tabC3-tab': mapC3,
@@ -341,12 +351,55 @@ function getMapFromActiveTab(activeTab) {
         'tabC10-tab': mapC10,
         'tabC11-tab': mapC11,
         'tabC12-tab': mapC12,
-        'tabC13-tab': mapC13,
         'tabD1-tab': mapD1,
         'tabD2-tab': mapD2,
         'tabD3-tab': mapD3,
         'tabD4-tab': mapD4,
-        'tabD5-tab': mapD5
+        'tabD5-tab': mapD5,
+        'tabD6-tab': mapD6,
+        'tabD7-tab': mapD7,
+        'tabD8-tab': mapD8,
+        'tabD9-tab': mapD9,
+        'tabD10-tab': mapD10,
+        'tabD11-tab': mapD11,
+        'tabD12-tab': mapD12,
+        'tabD13-tab': mapD13,
+        'tabD14-tab': mapD14,
+        'tabD15-tab': mapD15,
+        'tabD16-tab': mapD16,
+        'tabD17-tab': mapD17,
+        'tabE1-tab': mapE1,
+        'tabE2-tab': mapE2,
+        'tabE3-tab': mapE3,
+        'tabE4-tab': mapE4,
+        'tabE5-tab': mapE5,
+        'tabE6-tab': mapE6,
+        'tabE7-tab': mapE7,
+        'tabE8-tab': mapE8,
+        'tabE9-tab': mapE9,
+        'tabE10-tab': mapE10,
+        'tabE11-tab': mapE11,
+        'tabE12-tab': mapE12,
+        'tabF1-tab': mapF1,
+        'tabF2-tab': mapF2,
+        'tabF3-tab': mapF3,
+        'tabF4-tab': mapF4,
+        'tabF5-tab': mapF5,
+        'tabF6-tab': mapF6,
+        'tabF7-tab': mapF7,
+        'tabF8-tab': mapF8,
+        'tabF9-tab': mapF9,
+        'tabF10-tab': mapF10,
+        'tabG1-tab': mapG1,
+        'tabG2-tab': mapG2,
+        'tabG3-tab': mapG3,
+        'tabG4-tab': mapG4,
+        'tabG5-tab': mapG5,
+        'tabG6-tab': mapG6,
+        'tabG7-tab': mapG7,
+        'tabG8-tab': mapG8,
+        'tabG9-tab': mapG9,
+        'tabG10-tab': mapG10,
     };
 
     return mapTabs[activeTab] || mapA1;
@@ -386,13 +439,16 @@ function updateBreadcrumb(section, subSection) {
 function initTabs() {
     // Array of all tab IDs
     const tabIds = [
-        '#tabA1-tab', '#tabA2-tab', '#tabA3-tab', '#tabA4-tab',
+        '#tabA1-tab', '#tabA2-tab', '#tabA3-tab', '#tabA4-tab', '#tabA5-tab', '#tabA6-tab', '#tabA7-tab', '#tabA8-tab', 
         '#tabB1-tab', '#tabB2-tab', '#tabB3-tab', '#tabB4-tab', '#tabB5-tab', '#tabB6-tab','#tabB7-tab', '#tabB8-tab',
-        '#tabC1-tab', '#tabC2-tab', '#tabC3-tab', '#tabC4-tab', '#tabC5-tab', '#tabC6-tab',
-        '#tabC7-tab', '#tabC8-tab', '#tabC9-tab', '#tabC10-tab', '#tabC11-tab', '#tabC12-tab',
-        '#tabD1-tab', '#tabD2-tab', '#tabD3-tab', '#tabD4-tab', '#tabD5-tab', '#tabD6-tab', '#tabD7-tab', '#tabD8-tab', 
-        '#tabD9-tab', '#tabD10-tab', '#tabD11-tab', '#tabD12-tab', '#tabD13-tab', '#tabD14-tab', '#tabD15-tab', '#tabD16-tab',
-        '#tabD17-tab' 
+        '#tabC1-tab', '#tabC2-tab', '#tabC3-tab', '#tabC4-tab', '#tabC5-tab', '#tabC6-tab','#tabC7-tab', '#tabC8-tab', '#tabC9-tab', '#tabC10-tab',
+        '#tabC11-tab', '#tabC12-tab',
+        '#tabD1-tab', '#tabD2-tab', '#tabD3-tab', '#tabD4-tab', '#tabD5-tab', '#tabD6-tab', '#tabD7-tab', '#tabD8-tab','#tabD9-tab', '#tabD10-tab',
+        '#tabD11-tab', '#tabD12-tab', '#tabD13-tab', '#tabD14-tab', '#tabD15-tab', '#tabD16-tab', '#tabD17-tab',
+        '#tabE1-tab', '#tabE2-tab', '#tabE3-tab', '#tabE4-tab', '#tabE5-tab', '#tabE6-tab', '#tabE7-tab', '#tabE8-tab', '#tabE9-tab', '#tabE10-tab',
+        '#tabE11-tab', '#tabE12-tab',
+        '#tabF1-tab', '#tabF2-tab', '#tabF3-tab', '#tabF4-tab', '#tabF5-tab', '#tabF6-tab', '#tabF7-tab', '#tabF8-tab', '#tabF9-tab', '#tabF10-tab',
+        '#tabG1-tab', '#tabG2-tab', '#tabG3-tab', '#tabG4-tab', '#tabG5-tab', '#tabG6-tab', '#tabG7-tab', '#tabG8-tab', '#tabG9-tab', '#tabG10-tab'         
     ];
 
     // Hide all tabs and remove 'show active' classes
@@ -439,13 +495,16 @@ function initLayoutElements() {
 function tabManager() {
     // Define an array of tab IDs for iteration
     const tabIds = [
-        '#tabA1-tab', '#tabA2-tab', '#tabA3-tab', '#tabA4-tab',
+        '#tabA1-tab', '#tabA2-tab', '#tabA3-tab', '#tabA4-tab', '#tabA5-tab', '#tabA6-tab', '#tabA7-tab', '#tabA8-tab', 
         '#tabB1-tab', '#tabB2-tab', '#tabB3-tab', '#tabB4-tab', '#tabB5-tab', '#tabB6-tab','#tabB7-tab', '#tabB8-tab',
-        '#tabC1-tab', '#tabC2-tab', '#tabC3-tab', '#tabC4-tab', '#tabC5-tab', '#tabC6-tab',
-        '#tabC7-tab', '#tabC8-tab', '#tabC9-tab', '#tabC10-tab', '#tabC11-tab', '#tabC12-tab',
-        '#tabD1-tab', '#tabD2-tab', '#tabD3-tab', '#tabD4-tab', '#tabD5-tab', '#tabD6-tab', '#tabD7-tab', '#tabD8-tab', 
-        '#tabD9-tab', '#tabD10-tab', '#tabD11-tab', '#tabD12-tab', '#tabD13-tab', '#tabD14-tab', '#tabD15-tab', '#tabD16-tab',
-        '#tabD17-tab' 
+        '#tabC1-tab', '#tabC2-tab', '#tabC3-tab', '#tabC4-tab', '#tabC5-tab', '#tabC6-tab','#tabC7-tab', '#tabC8-tab', '#tabC9-tab', '#tabC10-tab',
+        '#tabC11-tab', '#tabC12-tab',
+        '#tabD1-tab', '#tabD2-tab', '#tabD3-tab', '#tabD4-tab', '#tabD5-tab', '#tabD6-tab', '#tabD7-tab', '#tabD8-tab','#tabD9-tab', '#tabD10-tab',
+        '#tabD11-tab', '#tabD12-tab', '#tabD13-tab', '#tabD14-tab', '#tabD15-tab', '#tabD16-tab', '#tabD17-tab',
+        '#tabE1-tab', '#tabE2-tab', '#tabE3-tab', '#tabE4-tab', '#tabE5-tab', '#tabE6-tab', '#tabE7-tab', '#tabE8-tab', '#tabE9-tab', '#tabE10-tab',
+        '#tabE11-tab', '#tabE12-tab',
+        '#tabF1-tab', '#tabF2-tab', '#tabF3-tab', '#tabF4-tab', '#tabF5-tab', '#tabF6-tab', '#tabF7-tab', '#tabF8-tab', '#tabF9-tab', '#tabF10-tab',
+        '#tabG1-tab', '#tabG2-tab', '#tabG3-tab', '#tabG4-tab', '#tabG5-tab', '#tabG6-tab', '#tabG7-tab', '#tabG8-tab', '#tabG9-tab', '#tabG10-tab'         
     ];
 
     // Loop through each tab ID
@@ -521,8 +580,7 @@ function selectTab(selectedItem) {
         // visualizza le schede relative al menu selezionato
         $('#tabB1-tab').removeClass('visually-hidden');
         $('#tabB2-tab').removeClass('visually-hidden');
-        $('#tabB3-tab').removeClass('visually-hidden');
-                    
+                            
         // attiva la scheda e il pannello
         $('#tabB1-tab').addClass('show active');
         $('#panelB1').addClass('show active');
@@ -535,8 +593,7 @@ function selectTab(selectedItem) {
         // visualizza le schede relative al menu selezionato
         $('#tabB1-tab').removeClass('visually-hidden');
         $('#tabB2-tab').removeClass('visually-hidden');
-        $('#tabB3-tab').removeClass('visually-hidden');
-             
+                    
         // attiva la scheda e il pannello
         $('#tabB2-tab').addClass('show active');
         $('#panelB2').addClass('show active');
@@ -546,10 +603,10 @@ function selectTab(selectedItem) {
        
     }else if (selectedItem === 'tabB3-tab') {
         // visualizza le schede relative al menu selezionato
-        $('#tabB1-tab').removeClass('visually-hidden');
-        $('#tabB2-tab').removeClass('visually-hidden');
         $('#tabB3-tab').removeClass('visually-hidden');
-             
+        $('#tabB4-tab').removeClass('visually-hidden');
+        $('#tabB5-tab').removeClass('visually-hidden');
+                    
         // attiva la scheda e il pannello
         $('#tabB3-tab').addClass('show active');
         $('#panelB3').addClass('show active');
@@ -559,7 +616,9 @@ function selectTab(selectedItem) {
         
     }else if (selectedItem === 'tabB4-tab') {
         // visualizza le schede relative al menu selezionato
+        $('#tabB3-tab').removeClass('visually-hidden');
         $('#tabB4-tab').removeClass('visually-hidden');
+        $('#tabB5-tab').removeClass('visually-hidden');
                     
         // attiva la scheda e il pannello
         $('#tabB4-tab').addClass('show active');
@@ -570,8 +629,9 @@ function selectTab(selectedItem) {
        
     }else if (selectedItem === 'tabB5-tab') {
         // visualizza le schede relative al menu selezionato
+        $('#tabB3-tab').removeClass('visually-hidden');
+        $('#tabB4-tab').removeClass('visually-hidden');
         $('#tabB5-tab').removeClass('visually-hidden');
-        $('#tabB6-tab').removeClass('visually-hidden');
 
         // attiva la scheda e il pannello
         $('#tabB5-tab').addClass('show active');
@@ -582,16 +642,40 @@ function selectTab(selectedItem) {
         
     }else if (selectedItem === 'tabB6-tab') {
         // visualizza le schede relative al menu selezionato
-        $('#tabB5-tab').removeClass('visually-hidden');
         $('#tabB6-tab').removeClass('visually-hidden');
+       
 
         // attiva la scheda e il pannello
         $('#tabB6-tab').addClass('show active');
         $('#panelB6').addClass('show active');
         
         disableVerticalScrollBar();      
-        activeTab = 'tabB6-tab';       
-       
+        activeTab = 'tabB6-tab';    
+
+    }else if (selectedItem === 'tabB7-tab') {
+        // visualizza le schede relative al menu selezionato
+        $('#tabB7-tab').removeClass('visually-hidden');
+        $('#tabB8-tab').removeClass('visually-hidden');
+
+        // attiva la scheda e il pannello
+        $('#tabB7-tab').addClass('show active');
+        $('#panelB7').addClass('show active');
+        
+        disableVerticalScrollBar();      
+        activeTab = 'tabB7-tab';   
+    
+    }else if (selectedItem === 'tabB8-tab') {
+        // visualizza le schede relative al menu selezionato
+        $('#tabB7-tab').removeClass('visually-hidden');
+        $('#tabB8-tab').removeClass('visually-hidden');
+                           
+        // attiva la scheda e il pannello
+        $('#tabB8-tab').addClass('show active');
+        $('#panelB8').addClass('show active');
+        
+        disableVerticalScrollBar();
+        activeTab = 'tabB8-tab';
+    
     }else if (selectedItem === 'tabC1-tab') {
         // visualizza le schede relative al menu selezionato
         $('#tabC1-tab').removeClass('visually-hidden');

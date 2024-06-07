@@ -35,6 +35,7 @@ else
         <script src="~/lib/openlayers/dist/ol.js"></script>
     </head>
     <body>
+        <!-- HEADER: BEGIN -->
         <!-- Space between the Layout menu and the page menu -->
         <div id="space" style="width: 100%; height: 10vh;"></div>
       
@@ -57,9 +58,9 @@ else
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">National data</a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="#" onclick="selectTab('tabB1-tab'); updateBreadcrumb('National data', 'Forecasts')">Forecasts</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabB4-tab'); updateBreadcrumb('National data', 'Territorial')">Territorial</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabB8-tab'); updateBreadcrumb('National data', 'Socio-economic')">Socio-economic</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabB10-tab'); updateBreadcrumb('National data', 'Infrastructures')">Infrastructures</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabB3-tab'); updateBreadcrumb('National data', 'Territorial')">Territorial</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabB6-tab'); updateBreadcrumb('National data', 'Socio-economic')">Socio-economic</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabB7-tab'); updateBreadcrumb('National data', 'Infrastructures')">Infrastructures</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
@@ -499,6 +500,10 @@ else
                 setupAddressSearch('#addressInput', '#suggestions');               
                 setupAddressZoom('#suggestions', getMapFromActiveTab, addPointer, activeTab);
                 setupDropdownMenuHandler('.dropdown-item', '.dropdown-menu');
+
+                // Hide specific elements when the vertical scroll bar is enabled
+                document.getElementById("mouseCoordinates").style.display = "none";
+                document.getElementById("addressInput").style.display = "none";
 
             });     
 
