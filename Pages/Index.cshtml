@@ -46,25 +46,19 @@ else
                     <li class="nav-item">
                         <a class="nav-link" href="#"  role="button">Home</a>
                     </li>
-                    <!--<li class="nav-item dropdown"> 
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Natural Events</a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabA1-tab'); updateBreadcrumb('Natural Events', 'Earthquakes')">Earthquakes</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabA2-tab'); updateBreadcrumb('Natural Events', 'Floods')">Floods</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabA4-tab'); updateBreadcrumb('Natural Events', 'Heat waves')">Heat waves</a></li>
-                        </ul>
-                    </li>-->
+                   
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">National data</a>
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Overview data</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabB1-tab'); updateBreadcrumb('National data', 'Forecasts')">Forecasts</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabB3-tab'); updateBreadcrumb('National data', 'Territorial')">Territorial</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabB6-tab'); updateBreadcrumb('National data', 'Socio-economic')">Socio-economic</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabB7-tab'); updateBreadcrumb('National data', 'Infrastructures')">Infrastructures</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabB1-tab'); updateBreadcrumb('Overview data', 'Forecasts')">Forecasts</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabB3-tab'); updateBreadcrumb('Overview data', 'Territorial')">Territorial data</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabB6-tab'); updateBreadcrumb('Overview data', 'Socio-economic')">Socio-economic data</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabB7-tab'); updateBreadcrumb('Overview data', 'Infrastructures')">Infrastructures</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabB7-tab'); updateBreadcrumb('Overview data', 'UAS video')">UAS video</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Real-time Risk Analysis</a>
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Risk Analysis</a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="#" onclick="selectTab('tabC1-tab'); updateBreadcrumb('Risk Analysis', 'Earthquakes')">Earthquakes</a></li>
                             <li><a class="dropdown-item" href="#" onclick="selectTab('tabC6-tab'); updateBreadcrumb('Risk Analysis', 'River floods')">River floods</a></li>
@@ -72,28 +66,24 @@ else
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Simulation and Climate scenarios</a>
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Scenario simulations</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabD1-tab'); updateBreadcrumb('Simulation', 'Earthquake Simulation')">Earthquake Simulation</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabD6-tab'); updateBreadcrumb('Simulation', 'Extreme precipitation long-term scenarios')">Extreme precipitation long-term scenarios</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabD11-tab'); updateBreadcrumb('Simulation', 'Heat waves long-term scenarios')">Heat waves long-term scenarios</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabD16-tab'); updateBreadcrumb('Simulation', 'Urban resilience')">Urban resilience</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabD1-tab'); updateBreadcrumb('Scenario simulations', 'Earthquake Simulation')">Earthquake Simulation</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabD6-tab'); updateBreadcrumb('Scenario simulations', 'Extreme precipitation long-term scenarios')">Flood and Precipitation Scenarios</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabD11-tab'); updateBreadcrumb('Scenario simulations', 'Heat waves long-term scenarios')">Heat wave Scenarios</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabD16-tab'); updateBreadcrumb('Scenario simulations', 'Urban resilience')">Impact Scenarios</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Scenario configuration</a>
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Configuration settings</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabE1-tab'); updateBreadcrumb('Scenario configuration', 'Scenario configuration')">Scenario configuration</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabE1-tab'); updateBreadcrumb('Configuration settings', 'Risk Analysis configuration')">Risk Analysis configuration</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabE1-tab'); updateBreadcrumb('Configuration settings', 'Damage Risk configuration')">Damage Risk configuration</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabE1-tab'); updateBreadcrumb('Configuration settings', 'Impact Risk configuration')">Impact Risk configuration</a></li>
                             
                         </ul>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">UAS</a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabF1-tab'); updateBreadcrumb('UAS', 'UAS video')">UAS video</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="selectTab('tabF1-tab'); updateBreadcrumb('UAS', 'UAS configuration')">UAS configuration</a></li>
-                        </ul>
-                    </li>
+                    
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Help</a>
                         <ul class="dropdown-menu">
@@ -128,20 +118,7 @@ else
         <!-- NAVIGATION TABS: BEGIN -->
         <ul class="nav nav-tabs" id="myTab" role="tablist">
 
-            <!-- TAB MENU A -->
-            <!--<li class="nav-item" role="presentation">
-                <button class="nav-link" id="tabA1-tab" data-bs-toggle="tab" data-bs-target="#tabA1" type="button" role="tab" aria-controls="tabA1" aria-selected="false">Earthquakes</button>
-            </li>               
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tabA2-tab" data-bs-toggle="tab" data-bs-target="#tabA2" type="button" role="tab" aria-controls="tabA2" aria-selected="false">Weather forecasts</button>
-            </li>               
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tabA3-tab" data-bs-toggle="tab" data-bs-target="#tabA3" type="button" role="tab" aria-controls="tabA3" aria-selected="false">Precipitation height</button>
-            </li>  
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tabA4-tab" data-bs-toggle="tab" data-bs-target="#tabA4" type="button" role="tab" aria-controls="tabA4" aria-selected="false">Temperatures</button>
-            </li>-->     
-
+           
             <!-- TAB MENU B -->
              <li class="nav-item" role="presentation">
                 <button class="nav-link" id="tabB1-tab" data-bs-toggle="tab" data-bs-target="#tabB1" type="button" role="tab" aria-controls="tabB1" aria-selected="false">Wather forecasts</button>
@@ -442,15 +419,17 @@ else
         <!-- TAB PANELS: END -->
 
         <!-- Address search bar -->
-        <div class="search-bar">
+        <!--<div class="search-bar">
             <div class="input-group">
                 <input id="addressInput" placeholder="Search by location name" type="text" class="form-control" style="text-overflow: ellipsis;">
             </div>
             <div id="suggestions" class="list-group mt-1" style="display: none;"></div>
-        </div>
+        </div>-->
 
         <!-- Mouse coordinates -->
         <div id="mouseCoordinates"></div>
+    </body>
+    </html>
 
         <script type="text/javascript">
             $(document).ready(function () {
@@ -508,6 +487,5 @@ else
             });     
 
         </script>
-    </body>
-    </html>
+    
 }
