@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Author: Angelo Stefani [angelo.stefani@enea.it]
 * Creation date: 02/01/2024
 * Last update: 05/15/2024
