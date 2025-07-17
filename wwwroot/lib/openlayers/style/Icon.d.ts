@@ -2,11 +2,11 @@ export default Icon;
 /**
  * Anchor unit can be either a fraction of the icon size or in pixels.
  */
-export type IconAnchorUnits = 'fraction' | 'pixels';
+export type IconAnchorUnits = "fraction" | "pixels";
 /**
  * Icon origin. One of 'bottom-left', 'bottom-right', 'top-left', 'top-right'.
  */
-export type IconOrigin = 'bottom-left' | 'bottom-right' | 'top-left' | 'top-right';
+export type IconOrigin = "bottom-left" | "bottom-right" | "top-left" | "top-right";
 export type Options = {
     /**
      * Anchor. Default value is the icon center.
@@ -95,7 +95,7 @@ export type Options = {
     /**
      * Declutter mode.
      */
-    declutterMode?: "declutter" | "obstacle" | "none" | undefined;
+    declutterMode?: import("./Style.js").DeclutterMode | undefined;
 };
 /**
  * @classdesc
@@ -172,8 +172,9 @@ declare class Icon extends ImageStyle {
      * Clones the style. The underlying Image/HTMLCanvasElement is not cloned.
      * @return {Icon} The cloned style.
      * @api
+     * @override
      */
-    clone(): Icon;
+    override clone(): Icon;
     /**
      * Set the anchor point. The anchor determines the center point for the
      * symbolizer.
@@ -194,12 +195,14 @@ declare class Icon extends ImageStyle {
      * @return {HTMLImageElement|HTMLCanvasElement|ImageBitmap} Image or Canvas element. If the Icon
      * style was configured with `src` or with a not let loaded `img`, an `ImageBitmap` will be returned.
      * @api
+     * @override
      */
-    getImage(pixelRatio: number): HTMLImageElement | HTMLCanvasElement | ImageBitmap;
+    override getImage(pixelRatio: number): HTMLImageElement | HTMLCanvasElement | ImageBitmap;
     /**
      * @return {HTMLImageElement|HTMLCanvasElement|ImageBitmap} Image element.
+     * @override
      */
-    getHitDetectionImage(): HTMLImageElement | HTMLCanvasElement | ImageBitmap;
+    override getHitDetectionImage(): HTMLImageElement | HTMLCanvasElement | ImageBitmap;
     /**
      * Get the image URL.
      * @return {string|undefined} Image src.

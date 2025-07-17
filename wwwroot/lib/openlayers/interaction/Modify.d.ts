@@ -10,17 +10,17 @@
 /**
  * @typedef {Object} Options
  * @property {import("../events/condition.js").Condition} [condition] A function that
- * takes an {@link module:ol/MapBrowserEvent~MapBrowserEvent} and returns a
+ * takes a {@link module:ol/MapBrowserEvent~MapBrowserEvent} and returns a
  * boolean to indicate whether that event will be considered to add or move a
  * vertex to the sketch. Default is
  * {@link module:ol/events/condition.primaryAction}.
  * @property {import("../events/condition.js").Condition} [deleteCondition] A function
- * that takes an {@link module:ol/MapBrowserEvent~MapBrowserEvent} and returns a
+ * that takes a {@link module:ol/MapBrowserEvent~MapBrowserEvent} and returns a
  * boolean to indicate whether that event should be handled. By default,
  * {@link module:ol/events/condition.singleClick} with
  * {@link module:ol/events/condition.altKeyOnly} results in a vertex deletion.
  * @property {import("../events/condition.js").Condition} [insertVertexCondition] A
- * function that takes an {@link module:ol/MapBrowserEvent~MapBrowserEvent} and
+ * function that takes a {@link module:ol/MapBrowserEvent~MapBrowserEvent} and
  * returns a boolean to indicate whether a new vertex should be added to the sketch
  * features. Default is {@link module:ol/events/condition.always}.
  * @property {number} [pixelTolerance=10] Pixel tolerance for considering the
@@ -106,7 +106,7 @@ export type SegmentData = {
 export type Options = {
     /**
      * A function that
-     * takes an {@link module :ol/MapBrowserEvent~MapBrowserEvent} and returns a
+     * takes a {@link module :ol/MapBrowserEvent~MapBrowserEvent} and returns a
      * boolean to indicate whether that event will be considered to add or move a
      * vertex to the sketch. Default is
      * {@link module :ol/events/condition.primaryAction}.
@@ -114,7 +114,7 @@ export type Options = {
     condition?: import("../events/condition.js").Condition | undefined;
     /**
      * A function
-     * that takes an {@link module :ol/MapBrowserEvent~MapBrowserEvent} and returns a
+     * that takes a {@link module :ol/MapBrowserEvent~MapBrowserEvent} and returns a
      * boolean to indicate whether that event should be handled. By default,
      * {@link module :ol/events/condition.singleClick} with
      * {@link module :ol/events/condition.altKeyOnly} results in a vertex deletion.
@@ -122,7 +122,7 @@ export type Options = {
     deleteCondition?: import("../events/condition.js").Condition | undefined;
     /**
      * A
-     * function that takes an {@link module :ol/MapBrowserEvent~MapBrowserEvent} and
+     * function that takes a {@link module :ol/MapBrowserEvent~MapBrowserEvent} and
      * returns a boolean to indicate whether a new vertex should be added to the sketch
      * features. Default is {@link module :ol/events/condition.always}.
      */
@@ -155,7 +155,7 @@ export type Options = {
      * the `pixelTolerance` from the pointer location. When a {@link module :ol/layer/BaseVector~BaseVectorLayer} is
      * provided, only the rendered representation of the features on that layer will be considered.
      */
-    hitDetection?: boolean | import("../layer/BaseVector").default<any, any> | undefined;
+    hitDetection?: boolean | import("../layer/BaseVector").default<any, any, any> | undefined;
     /**
      * The features the interaction works on.  If a feature collection is not
      * provided, a vector source must be provided with the `source` option.
@@ -175,7 +175,7 @@ export type Options = {
 /**
  * *
  */
-export type ModifyOnSignature<Return> = import("../Observable").OnSignature<import("../Observable").EventTypes, import("../events/Event.js").default, Return> & import("../Observable").OnSignature<import("../ObjectEventType").Types | 'change:active', import("../Object").ObjectEvent, Return> & import("../Observable").OnSignature<'modifyend' | 'modifystart', ModifyEvent, Return> & import("../Observable").CombinedOnSignature<import("../Observable").EventTypes | import("../ObjectEventType").Types | 'change:active' | 'modifyend' | 'modifystart', Return>;
+export type ModifyOnSignature<Return> = import("../Observable").OnSignature<import("../Observable").EventTypes, import("../events/Event.js").default, Return> & import("../Observable").OnSignature<import("../ObjectEventType").Types | "change:active", import("../Object").ObjectEvent, Return> & import("../Observable").OnSignature<"modifyend" | "modifystart", ModifyEvent, Return> & import("../Observable").CombinedOnSignature<import("../Observable").EventTypes | import("../ObjectEventType").Types | "change:active" | "modifyend" | "modifystart", Return>;
 import Event from '../events/Event.js';
 import Collection from '../Collection.js';
 import Feature from '../Feature.js';
@@ -330,8 +330,9 @@ declare class Modify extends PointerInteraction {
     private source_;
     /**
      * @type {boolean|import("../layer/BaseVector").default}
+     * @private
      */
-    hitDetection_: boolean | import("../layer/BaseVector").default<any, any>;
+    private hitDetection_;
     /**
      * @type {Collection<Feature>}
      * @private
@@ -345,8 +346,9 @@ declare class Modify extends PointerInteraction {
     /**
      * Delta (x, y in map units) between matched rtree vertex and pointer vertex.
      * @type {Array<number>}
+     * @private
      */
-    delta_: Array<number>;
+    private delta_;
     /**
      * @private
      */
@@ -377,14 +379,15 @@ declare class Modify extends PointerInteraction {
      * Subclasses may set up event handlers to get notified about changes to
      * the map here.
      * @param {import("../Map.js").default} map Map.
+     * @override
      */
-    setMap(map: import("../Map.js").default): void;
+    override setMap(map: import("../Map.js").default): void;
     /**
      * Get the overlay layer that this interaction renders the modification point or vertex to.
      * @return {VectorLayer} Overlay layer.
      * @api
      */
-    getOverlay(): VectorLayer<any>;
+    getOverlay(): VectorLayer;
     /**
      * @param {import("../source/Vector.js").VectorSourceEvent} event Event.
      * @private

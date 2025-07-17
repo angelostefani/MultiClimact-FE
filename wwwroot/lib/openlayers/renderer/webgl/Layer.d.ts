@@ -52,7 +52,7 @@ export type Options = {
  * @template {import("../../layer/Layer.js").default} LayerType
  * @extends {LayerRenderer<LayerType>}
  */
-declare class WebGLLayerRenderer<LayerType extends import("../../layer/Layer.js").default<import("../../source/Source.js").default, LayerRenderer<any>>> extends LayerRenderer<LayerType> {
+declare class WebGLLayerRenderer<LayerType extends import("../../layer/Layer.js").default> extends LayerRenderer<LayerType> {
     /**
      * @param {LayerType} layer Layer.
      * @param {Options} [options] Options.
@@ -67,11 +67,6 @@ declare class WebGLLayerRenderer<LayerType extends import("../../layer/Layer.js"
     private inversePixelTransform_;
     /**
      * @private
-     * @type {CanvasRenderingContext2D}
-     */
-    private pixelContext_;
-    /**
-     * @private
      */
     private postProcesses_;
     /**
@@ -83,6 +78,7 @@ declare class WebGLLayerRenderer<LayerType extends import("../../layer/Layer.js"
      * @protected
      */
     protected helper: WebGLHelper;
+    onMapChanged_: () => void;
     /**
      * @param {WebGLRenderingContext} context The WebGL rendering context.
      * @param {import("../../Map.js").FrameState} frameState Frame state.
@@ -115,6 +111,10 @@ declare class WebGLLayerRenderer<LayerType extends import("../../layer/Layer.js"
      * @protected
      */
     protected prepareFrameInternal(frameState: import("../../Map.js").FrameState): boolean;
+    /**
+     * @protected
+     */
+    protected clearCache(): void;
     /**
      * @param {import("../../render/EventType.js").default} type Event type.
      * @param {WebGLRenderingContext} context The rendering context.

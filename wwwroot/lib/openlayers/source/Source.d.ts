@@ -2,7 +2,7 @@ export default Source;
 /**
  * State of the source, one of 'undefined', 'loading', 'ready' or 'error'.
  */
-export type State = 'undefined' | 'loading' | 'ready' | 'error';
+export type State = "undefined" | "loading" | "ready" | "error";
 /**
  * A function that takes a {@link import ("../View.js").ViewStateLayerStateExtent} and returns a string or
  * an array of strings representing source attributions.
@@ -161,7 +161,7 @@ declare class Source extends BaseObject {
      * @param {import("../proj/Projection").default} [projection] Projection.
      * @return {Array<number>|null} Resolutions.
      */
-    getResolutions(projection?: import("../proj/Projection.js").default | undefined): Array<number> | null;
+    getResolutions(projection?: import("../proj.js").Projection | undefined): Array<number> | null;
     /**
      * @return {Promise<import("../View.js").ViewOptions>} A promise for view-related properties.
      */

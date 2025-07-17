@@ -1,5 +1,5 @@
 /**
- * @typedef {'addlayer'|'removelayer'} EventType
+ * @typedef {'addlayer'|'removelayer'} GroupEventType
  */
 /**
  * @classdesc
@@ -9,10 +9,10 @@
  */
 export class GroupEvent extends Event {
     /**
-     * @param {EventType} type The event type.
+     * @param {GroupEventType} type The event type.
      * @param {BaseLayer} layer The layer.
      */
-    constructor(type: EventType, layer: BaseLayer);
+    constructor(type: GroupEventType, layer: BaseLayer);
     /**
      * The added or removed layer.
      * @type {BaseLayer}
@@ -21,11 +21,11 @@ export class GroupEvent extends Event {
     layer: BaseLayer;
 }
 export default LayerGroup;
-export type EventType = 'addlayer' | 'removelayer';
+export type GroupEventType = "addlayer" | "removelayer";
 /**
  * *
  */
-export type GroupOnSignature<Return> = import("../Observable").OnSignature<import("../Observable").EventTypes, import("../events/Event.js").default, Return> & import("../Observable").OnSignature<import("./Base").BaseLayerObjectEventTypes | 'change:layers', import("../Object").ObjectEvent, Return> & import("../Observable").CombinedOnSignature<import("../Observable").EventTypes | import("./Base").BaseLayerObjectEventTypes | 'change:layers', Return>;
+export type GroupOnSignature<Return> = import("../Observable").OnSignature<import("../Observable").EventTypes, import("../events/Event.js").default, Return> & import("../Observable").OnSignature<import("./Base").BaseLayerObjectEventTypes | "change:layers", import("../Object").ObjectEvent, Return> & import("../Observable").CombinedOnSignature<import("../Observable").EventTypes | import("./Base").BaseLayerObjectEventTypes | "change:layers", Return>;
 export type Options = {
     /**
      * Opacity (0, 1).
@@ -80,7 +80,6 @@ export type Options = {
 };
 import Event from '../events/Event.js';
 import BaseLayer from './Base.js';
-import EventType from '../events/EventType.js';
 /**
  * @classdesc
  * A {@link module:ol/Collection~Collection} of layers that are handled together.

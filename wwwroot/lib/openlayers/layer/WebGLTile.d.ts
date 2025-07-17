@@ -1,5 +1,5 @@
 export default WebGLTileLayer;
-export type SourceType = import("../source/DataTile.js").default | import("../source/TileImage.js").default;
+export type SourceType = import("../source/DataTile.js").default<import("../DataTile.js").default | import("../ImageTile.js").default>;
 /**
  * Translates tile data to rendered pixels.
  */
@@ -100,7 +100,7 @@ export type Options = {
     /**
      * Source for this layer.
      */
-    source?: SourceType | undefined;
+    source?: import("../source/DataTile.js").default<import("../DataTile.js").default | import("../ImageTile.js").default> | undefined;
     /**
      * Array
      * of sources for this layer. Takes precedence over `source`. Can either be an array of sources, or a function that
@@ -108,7 +108,7 @@ export type Options = {
      * {@link module :ol/source.sourcesFromTileGrid} for a helper function to generate sources that are organized in a
      * pyramid following the same pattern as a tile grid. **Note:** All sources must have the same band count and content.
      */
-    sources?: SourceType[] | ((arg0: import("../extent.js").Extent, arg1: number) => Array<SourceType>) | undefined;
+    sources?: import("../source/DataTile.js").default<import("../DataTile.js").default | import("../ImageTile.js").default>[] | ((arg0: import("../extent.js").Extent, arg1: number) => Array<SourceType>) | undefined;
     /**
      * Sets the layer as overlay on a map. The map will not manage
      * this layer in its layers collection, and the layer will be rendered on top. This is useful for
@@ -117,7 +117,7 @@ export type Options = {
      */
     map?: import("../Map.js").default | undefined;
     /**
-     * Use interim tiles on error.
+     * Deprecated.  Use interim tiles on error.
      */
     useInterimTilesOnError?: boolean | undefined;
     /**
@@ -164,7 +164,7 @@ export type ParsedStyle = {
  * @fires import("../render/Event.js").RenderEvent
  * @api
  */
-declare class WebGLTileLayer extends BaseTileLayer<SourceType, WebGLTileLayerRenderer> {
+declare class WebGLTileLayer extends BaseTileLayer<import("../source/DataTile.js").default<import("../DataTile.js").default | import("../ImageTile.js").default>, WebGLTileLayerRenderer<any>> {
     /**
      * @param {Options} options Tile layer options.
      */
@@ -190,11 +190,6 @@ declare class WebGLTileLayer extends BaseTileLayer<SourceType, WebGLTileLayerRen
      */
     private style_;
     /**
-     * @type {number}
-     * @private
-     */
-    private cacheSize_;
-    /**
      * @type {Object<string, (string|number)>}
      * @private
      */
@@ -208,8 +203,9 @@ declare class WebGLTileLayer extends BaseTileLayer<SourceType, WebGLTileLayerRen
     getSources(extent: import("../extent.js").Extent, resolution: number): Array<SourceType>;
     /**
      * @return {SourceType} The source being rendered.
+     * @override
      */
-    getRenderSource(): SourceType;
+    override getRenderSource(): SourceType;
     /**
      * @private
      */
@@ -219,6 +215,10 @@ declare class WebGLTileLayer extends BaseTileLayer<SourceType, WebGLTileLayerRen
      * @return {number} The number of source bands.
      */
     private getSourceBandCount_;
+    /**
+     * @override
+     */
+    override createRenderer(): WebGLTileLayerRenderer<this>;
     /**
      * @param {import("../Map").FrameState} frameState Frame state.
      * @param {Array<SourceType>} sources Sources.
@@ -230,8 +230,9 @@ declare class WebGLTileLayer extends BaseTileLayer<SourceType, WebGLTileLayerRen
      * @param {HTMLElement} target Target which the renderer may (but need not) use
      * for rendering its content.
      * @return {HTMLElement} The rendered element.
+     * @override
      */
-    render(frameState: import("../Map.js").FrameState | null, target: HTMLElement): HTMLElement;
+    override render(frameState: import("../Map.js").FrameState | null, target: HTMLElement): HTMLElement;
     /**
      * Update the layer style.  The `updateStyleVariables` function is a more efficient
      * way to update layer rendering.  In cases where the whole style needs to be updated,

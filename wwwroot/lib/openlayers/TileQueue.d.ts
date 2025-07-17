@@ -6,7 +6,7 @@
  * @param {number} tileResolution Tile resolution.
  * @return {number} Tile priority.
  */
-export function getTilePriority(frameState: import('./Map.js').FrameState, tile: import("./Tile.js").default, tileSourceKey: string, tileCenter: import("./coordinate.js").Coordinate, tileResolution: number): number;
+export function getTilePriority(frameState: import("./Map.js").FrameState, tile: import("./Tile.js").default, tileSourceKey: string, tileCenter: import("./coordinate.js").Coordinate, tileResolution: number): number;
 export default TileQueue;
 export type PriorityFunction = (arg0: import("./Tile.js").default, arg1: string, arg2: import("./coordinate.js").Coordinate, arg3: number) => number;
 /**
@@ -38,8 +38,9 @@ declare class TileQueue extends PriorityQueue<any> {
     /**
      * @param {Array} element Element.
      * @return {boolean} The element was added to the queue.
+     * @override
      */
-    enqueue(element: any[]): boolean;
+    override enqueue(element: any[]): boolean;
     /**
      * @return {number} Number of tiles loading.
      */

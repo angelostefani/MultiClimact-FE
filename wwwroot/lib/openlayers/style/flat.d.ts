@@ -89,7 +89,12 @@
  * Fill style properties applied to polygon features.
  *
  * @typedef {Object} FlatFill
- * @property {ColorExpression} [fill-color] The fill color.
+ * @property {ColorExpression} [fill-color] The fill color. `'none'` means no fill and no hit detection.
+ * @property {StringExpression} [fill-pattern-src] Fill pattern image URL.
+ * @property {SizeExpression} [fill-pattern-size] Fill pattern image size in pixels.
+ * Can be used together with `fill-pattern-offset` to define the sub-rectangle to use
+ * from a fill pattern image sprite sheet.
+ * @property {SizeExpression} [fill-pattern-offset] Fill pattern image offset in pixels.
  */
 /**
  * Stroke style properties applied to line strings and polygon boundaries.  To apply a stroke, at least one of
@@ -134,8 +139,8 @@
  * `'hanging'`, `'ideographic'`.
  * @property {NumberArrayExpression} [text-padding=[0, 0, 0, 0]] Padding in pixels around the text for decluttering and background. The order of
  * values in the array is `[top, right, bottom, left]`.
- * @property {ColorExpression} [text-fill-color] The fill color. Specify `'none'` to avoid hit detection on the fill.
- * @property {ColorExpression} [text-background-fill-color] The fill color.
+ * @property {ColorExpression} [text-fill-color] The fill color. `'none'` means no fill and no hit detection.
+ * @property {ColorExpression} [text-background-fill-color] The fill color. `'none'` means no fill and no hit detection.
  * @property {ColorExpression} [text-stroke-color] The stroke color.
  * @property {StringExpression} [text-stroke-line-cap='round'] Line cap style: `butt`, `round`, or `square`.
  * @property {StringExpression} [text-stroke-line-join='round'] Line join style: `bevel`, `round`, or `miter`.
@@ -150,6 +155,7 @@
  * @property {NumberExpression} [text-background-stroke-line-dash-offset=0] Line dash offset.
  * @property {NumberExpression} [text-background-stroke-miter-limit=10] Miter limit.
  * @property {NumberExpression} [text-background-stroke-width] Stroke pixel width.
+ * @property {import("./Style.js").DeclutterMode} [text-declutter-mode] Declutter mode
  * @property {NumberExpression} [z-index] The zIndex of the style.
  */
 /**
@@ -187,7 +193,7 @@
  * @property {BooleanExpression} [icon-rotate-with-view=false] Whether to rotate the icon with the view.
  * @property {import("../size.js").Size} [icon-size] Icon size in pixel. Can be used together with `icon-offset` to define the
  * sub-rectangle to use from the origin (sprite) icon image.
- * @property {"declutter"|"obstacle"|"none"|undefined} [icon-declutter-mode] Declutter mode
+ * @property {import("./Style.js").DeclutterMode} [icon-declutter-mode] Declutter mode
  * @property {NumberExpression} [z-index] The zIndex of the style.
  */
 /**
@@ -196,7 +202,7 @@
  * @typedef {Object} FlatShape
  * @property {number} [shape-points] Number of points for stars and regular polygons. In case of a polygon, the number of points
  * is the number of sides.
- * @property {ColorExpression} [shape-fill-color] The fill color.
+ * @property {ColorExpression} [shape-fill-color] The fill color. `'none'` means no fill and no hit detection.
  * @property {ColorExpression} [shape-stroke-color] The stroke color.
  * @property {NumberExpression} [shape-stroke-width] Stroke pixel width.
  * @property {StringExpression} [shape-stroke-line-cap='round'] Line cap style: `butt`, `round`, or `square`.
@@ -205,15 +211,14 @@
  * @property {NumberExpression} [shape-stroke-line-dash-offset=0] Line dash offset.
  * @property {NumberExpression} [shape-stroke-miter-limit=10] Miter limit.
  * @property {number} [shape-radius] Radius of a regular polygon.
- * @property {number} [shape-radius1] First radius of a star. Ignored if radius is set.
- * @property {number} [shape-radius2] Second radius of a star.
+ * @property {number} [shape-radius2] Second radius to make a star instead of a regular polygon.
  * @property {number} [shape-angle=0] Shape's angle in radians. A value of 0 will have one of the shape's point facing up.
  * @property {NumberArrayExpression} [shape-displacement=[0,0]] Displacement of the shape
  * @property {NumberExpression} [shape-rotation=0] Rotation in radians (positive rotation clockwise).
  * @property {BooleanExpression} [shape-rotate-with-view=false] Whether to rotate the shape with the view.
  * @property {SizeExpression} [shape-scale=1] Scale. Unless two dimensional scaling is required a better
- * result may be obtained with appropriate settings for `shape-radius`, `shape-radius1` and `shape-radius2`.
- * @property {"declutter"|"obstacle"|"none"|undefined} [shape-declutter-mode] Declutter mode.
+ * result may be obtained with appropriate settings for `shape-radius` and `shape-radius2`.
+ * @property {import("./Style.js").DeclutterMode} [shape-declutter-mode] Declutter mode.
  * @property {NumberExpression} [z-index] The zIndex of the style.
  */
 /**
@@ -221,7 +226,7 @@
  *
  * @typedef {Object} FlatCircle
  * @property {number} [circle-radius] Circle radius.
- * @property {ColorExpression} [circle-fill-color] The fill color.
+ * @property {ColorExpression} [circle-fill-color] The fill color. `'none'` means no fill and no hit detection.
  * @property {ColorExpression} [circle-stroke-color] The stroke color.
  * @property {NumberExpression} [circle-stroke-width] Stroke pixel width.
  * @property {StringExpression} [circle-stroke-line-cap='round'] Line cap style: `butt`, `round`, or `square`.
@@ -236,7 +241,7 @@
  * (positive rotation clockwise, meaningful only when used in conjunction with a two dimensional scale).
  * @property {BooleanExpression} [circle-rotate-with-view=false] Whether to rotate the shape with the view
  * (meaningful only when used in conjunction with a two dimensional scale).
- * @property {"declutter"|"obstacle"|"none"|undefined} [circle-declutter-mode] Declutter mode
+ * @property {import("./Style.js").DeclutterMode} [circle-declutter-mode] Declutter mode
  * @property {NumberExpression} [z-index] The zIndex of the style.
  */
 /**
@@ -294,9 +299,23 @@ export type FlatStyleLike = FlatStyle | Array<FlatStyle> | Array<Rule>;
  */
 export type FlatFill = {
     /**
-     * The fill color.
+     * The fill color. `'none'` means no fill and no hit detection.
      */
     "fill-color"?: ColorExpression | undefined;
+    /**
+     * Fill pattern image URL.
+     */
+    "fill-pattern-src"?: StringExpression | undefined;
+    /**
+     * Fill pattern image size in pixels.
+     * Can be used together with `fill-pattern-offset` to define the sub-rectangle to use
+     * from a fill pattern image sprite sheet.
+     */
+    "fill-pattern-size"?: SizeExpression | undefined;
+    /**
+     * Fill pattern image offset in pixels.
+     */
+    "fill-pattern-offset"?: SizeExpression | undefined;
 };
 /**
  * Stroke style properties applied to line strings and polygon boundaries.  To apply a stroke, at least one of
@@ -411,11 +430,11 @@ export type FlatText = {
      */
     "text-padding"?: NumberArrayExpression | undefined;
     /**
-     * The fill color. Specify `'none'` to avoid hit detection on the fill.
+     * The fill color. `'none'` means no fill and no hit detection.
      */
     "text-fill-color"?: ColorExpression | undefined;
     /**
-     * The fill color.
+     * The fill color. `'none'` means no fill and no hit detection.
      */
     "text-background-fill-color"?: ColorExpression | undefined;
     /**
@@ -474,6 +493,10 @@ export type FlatText = {
      * Stroke pixel width.
      */
     "text-background-stroke-width"?: NumberExpression | undefined;
+    /**
+     * Declutter mode
+     */
+    "text-declutter-mode"?: import("./Style.js").DeclutterMode | undefined;
     /**
      * The zIndex of the style.
      */
@@ -568,7 +591,7 @@ export type FlatIcon = {
     /**
      * Declutter mode
      */
-    "icon-declutter-mode"?: "declutter" | "obstacle" | "none" | undefined;
+    "icon-declutter-mode"?: import("./Style.js").DeclutterMode | undefined;
     /**
      * The zIndex of the style.
      */
@@ -584,7 +607,7 @@ export type FlatShape = {
      */
     "shape-points"?: number | undefined;
     /**
-     * The fill color.
+     * The fill color. `'none'` means no fill and no hit detection.
      */
     "shape-fill-color"?: ColorExpression | undefined;
     /**
@@ -620,11 +643,7 @@ export type FlatShape = {
      */
     "shape-radius"?: number | undefined;
     /**
-     * First radius of a star. Ignored if radius is set.
-     */
-    "shape-radius1"?: number | undefined;
-    /**
-     * Second radius of a star.
+     * Second radius to make a star instead of a regular polygon.
      */
     "shape-radius2"?: number | undefined;
     /**
@@ -645,13 +664,13 @@ export type FlatShape = {
     "shape-rotate-with-view"?: BooleanExpression | undefined;
     /**
      * Scale. Unless two dimensional scaling is required a better
-     * result may be obtained with appropriate settings for `shape-radius`, `shape-radius1` and `shape-radius2`.
+     * result may be obtained with appropriate settings for `shape-radius` and `shape-radius2`.
      */
     "shape-scale"?: SizeExpression | undefined;
     /**
      * Declutter mode.
      */
-    "shape-declutter-mode"?: "declutter" | "obstacle" | "none" | undefined;
+    "shape-declutter-mode"?: import("./Style.js").DeclutterMode | undefined;
     /**
      * The zIndex of the style.
      */
@@ -666,7 +685,7 @@ export type FlatCircle = {
      */
     "circle-radius"?: number | undefined;
     /**
-     * The fill color.
+     * The fill color. `'none'` means no fill and no hit detection.
      */
     "circle-fill-color"?: ColorExpression | undefined;
     /**
@@ -719,7 +738,7 @@ export type FlatCircle = {
     /**
      * Declutter mode
      */
-    "circle-declutter-mode"?: "declutter" | "obstacle" | "none" | undefined;
+    "circle-declutter-mode"?: import("./Style.js").DeclutterMode | undefined;
     /**
      * The zIndex of the style.
      */

@@ -1,17 +1,17 @@
 /**
- * A function that takes an {@link module:ol/Feature~Feature} and returns `true` if the feature may be
+ * A function that takes a {@link module:ol/Feature~Feature} and returns `true` if the feature may be
  * selected or `false` otherwise.
  * @typedef {function(import("../Feature.js").default, import("../layer/Layer.js").default<import("../source/Source").default>):boolean} FilterFunction
  */
 /**
  * @typedef {Object} Options
  * @property {import("../events/condition.js").Condition} [addCondition] A function
- * that takes an {@link module:ol/MapBrowserEvent~MapBrowserEvent} and returns a
+ * that takes a {@link module:ol/MapBrowserEvent~MapBrowserEvent} and returns a
  * boolean to indicate whether that event should be handled.
  * By default, this is {@link module:ol/events/condition.never}. Use this if you
  * want to use different events for add and remove instead of `toggle`.
  * @property {import("../events/condition.js").Condition} [condition] A function that
- * takes an {@link module:ol/MapBrowserEvent~MapBrowserEvent} and returns a
+ * takes a {@link module:ol/MapBrowserEvent~MapBrowserEvent} and returns a
  * boolean to indicate whether that event should be handled. This is the event
  * for the selected features as a whole. By default, this is
  * {@link module:ol/events/condition.singleClick}. Clicking on a feature selects that
@@ -31,12 +31,12 @@
  * any style changes for selected features.
  * If set to a falsey value, the selected feature's style will not change.
  * @property {import("../events/condition.js").Condition} [removeCondition] A function
- * that takes an {@link module:ol/MapBrowserEvent~MapBrowserEvent} and returns a
+ * that takes a {@link module:ol/MapBrowserEvent~MapBrowserEvent} and returns a
  * boolean to indicate whether that event should be handled.
  * By default, this is {@link module:ol/events/condition.never}. Use this if you
  * want to use different events for add and remove instead of `toggle`.
  * @property {import("../events/condition.js").Condition} [toggleCondition] A function
- * that takes an {@link module:ol/MapBrowserEvent~MapBrowserEvent} and returns a
+ * that takes a {@link module:ol/MapBrowserEvent~MapBrowserEvent} and returns a
  * boolean to indicate whether that event should be handled. This is in addition
  * to the `condition` event. By default,
  * {@link module:ol/events/condition.shiftKeyOnly}, i.e. pressing `shift` as
@@ -52,7 +52,7 @@
  * used by the interaction is returned by
  * {@link module:ol/interaction/Select~Select#getFeatures}.
  * @property {FilterFunction} [filter] A function
- * that takes an {@link module:ol/Feature~Feature} and an
+ * that takes a {@link module:ol/Feature~Feature} and a
  * {@link module:ol/layer/Layer~Layer} and returns `true` if the feature may be
  * selected or `false` otherwise.
  * @property {number} [hitTolerance=0] Hit-detection tolerance. Pixels inside
@@ -93,14 +93,14 @@ export class SelectEvent extends Event {
 }
 export default Select;
 /**
- * A function that takes an {@link module :ol/Feature~Feature} and returns `true` if the feature may be
+ * A function that takes a {@link module :ol/Feature~Feature} and returns `true` if the feature may be
  * selected or `false` otherwise.
  */
 export type FilterFunction = (arg0: import("../Feature.js").default, arg1: import("../layer/Layer.js").default<import("../source/Source").default>) => boolean;
 export type Options = {
     /**
      * A function
-     * that takes an {@link module :ol/MapBrowserEvent~MapBrowserEvent} and returns a
+     * that takes a {@link module :ol/MapBrowserEvent~MapBrowserEvent} and returns a
      * boolean to indicate whether that event should be handled.
      * By default, this is {@link module :ol/events/condition.never}. Use this if you
      * want to use different events for add and remove instead of `toggle`.
@@ -108,7 +108,7 @@ export type Options = {
     addCondition?: import("../events/condition.js").Condition | undefined;
     /**
      * A function that
-     * takes an {@link module :ol/MapBrowserEvent~MapBrowserEvent} and returns a
+     * takes a {@link module :ol/MapBrowserEvent~MapBrowserEvent} and returns a
      * boolean to indicate whether that event should be handled. This is the event
      * for the selected features as a whole. By default, this is
      * {@link module :ol/events/condition.singleClick}. Clicking on a feature selects that
@@ -135,7 +135,7 @@ export type Options = {
     style?: import("../style/Style.js").StyleLike | null | undefined;
     /**
      * A function
-     * that takes an {@link module :ol/MapBrowserEvent~MapBrowserEvent} and returns a
+     * that takes a {@link module :ol/MapBrowserEvent~MapBrowserEvent} and returns a
      * boolean to indicate whether that event should be handled.
      * By default, this is {@link module :ol/events/condition.never}. Use this if you
      * want to use different events for add and remove instead of `toggle`.
@@ -143,7 +143,7 @@ export type Options = {
     removeCondition?: import("../events/condition.js").Condition | undefined;
     /**
      * A function
-     * that takes an {@link module :ol/MapBrowserEvent~MapBrowserEvent} and returns a
+     * that takes a {@link module :ol/MapBrowserEvent~MapBrowserEvent} and returns a
      * boolean to indicate whether that event should be handled. This is in addition
      * to the `condition` event. By default,
      * {@link module :ol/events/condition.shiftKeyOnly}, i.e. pressing `shift` as
@@ -164,10 +164,10 @@ export type Options = {
      * used by the interaction is returned by
      * {@link module :ol/interaction/Select~Select#getFeatures}.
      */
-    features?: Collection<Feature<import("../geom/Geometry.js").default>> | undefined;
+    features?: Collection<Feature<import("../geom.js").Geometry>> | undefined;
     /**
      * A function
-     * that takes an {@link module :ol/Feature~Feature} and an
+     * that takes a {@link module :ol/Feature~Feature} and a
      * {@link module :ol/layer/Layer~Layer} and returns `true` if the feature may be
      * selected or `false` otherwise.
      */
@@ -181,7 +181,7 @@ export type Options = {
 /**
  * *
  */
-export type SelectOnSignature<Return> = import("../Observable").OnSignature<import("../Observable").EventTypes, import("../events/Event.js").default, Return> & import("../Observable").OnSignature<import("../ObjectEventType").Types | 'change:active', import("../Object").ObjectEvent, Return> & import("../Observable").OnSignature<'select', SelectEvent, Return> & import("../Observable").CombinedOnSignature<import("../Observable").EventTypes | import("../ObjectEventType").Types | 'change:active' | 'select', Return>;
+export type SelectOnSignature<Return> = import("../Observable").OnSignature<import("../Observable").EventTypes, import("../events/Event.js").default, Return> & import("../Observable").OnSignature<import("../ObjectEventType").Types | "change:active", import("../Object").ObjectEvent, Return> & import("../Observable").OnSignature<"select", SelectEvent, Return> & import("../Observable").CombinedOnSignature<import("../Observable").EventTypes | import("../ObjectEventType").Types | "change:active" | "select", Return>;
 import Event from '../events/Event.js';
 type SelectEventType = string;
 declare namespace SelectEventType {
@@ -316,7 +316,7 @@ declare class Select extends Interaction {
      * @return {import('../layer/Vector.js').default} Layer.
      * @api
      */
-    getLayer(feature: import("../Feature.js").default): VectorLayer<any>;
+    getLayer(feature: import("../Feature.js").default): import("../layer/Vector.js").default;
     /**
      * Hit-detection tolerance. Pixels inside the radius around the given position
      * will be checked for features.
@@ -357,5 +357,4 @@ declare class Select extends Interaction {
 import Feature from '../Feature.js';
 import Collection from '../Collection.js';
 import Interaction from './Interaction.js';
-import VectorLayer from '../layer/Vector.js';
 //# sourceMappingURL=Select.d.ts.map

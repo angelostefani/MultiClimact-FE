@@ -34,7 +34,7 @@ export type TileRepresentationLookup = {
      * Tile representations by zoom level.
      */
     representationsByZ: {
-        [x: number]: Set<import("../../webgl/BaseTileRepresentation.js").default<import("../../Tile.js").default>>;
+        [x: number]: Set<AbstractTileRepresentation>;
     };
 };
 export type Options = {
@@ -73,7 +73,7 @@ export type BaseLayerType = import("../../layer/BaseTile.js").default<any, any>;
  * @template {import("../../webgl/BaseTileRepresentation.js").default<TileType>} TileRepresentation
  * @extends {WebGLLayerRenderer<LayerType>}
  */
-declare class WebGLBaseTileLayerRenderer<LayerType extends import("../../layer/BaseTile.js").default<any, any>, TileType extends import("../../Tile.js").default, TileRepresentation extends import("../../webgl/BaseTileRepresentation.js").default<TileType>> extends WebGLLayerRenderer<LayerType> {
+declare class WebGLBaseTileLayerRenderer<LayerType extends BaseLayerType, TileType extends import("../../Tile.js").default, TileRepresentation extends import("../../webgl/BaseTileRepresentation.js").default<TileType>> extends WebGLLayerRenderer<LayerType> {
     /**
      * @param {LayerType} tileLayer Tile layer.
      * @param {Options} options Options.
@@ -124,17 +124,12 @@ declare class WebGLBaseTileLayerRenderer<LayerType extends import("../../layer/B
      * @private
      * @type {import("../../proj/Projection.js").default}
      */
-    private projection_;
+    private renderedProjection_;
     /**
      * @param {Options} options Options.
+     * @override
      */
-    reset(options: Options): void;
-    /**
-     * @param {TileType} tile Tile.
-     * @return {boolean} Tile is drawable.
-     * @private
-     */
-    private isDrawableTile_;
+    override reset(options: Options): void;
     /**
      * @abstract
      * @param {import("../../webgl/BaseTileRepresentation.js").TileRepresentationOptions<TileType>} options tile representation options
@@ -190,8 +185,14 @@ declare class WebGLBaseTileLayerRenderer<LayerType extends import("../../layer/B
      * Render the layer.
      * @param {import("../../Map.js").FrameState} frameState Frame state.
      * @return {HTMLElement} The rendered element.
+     * @override
      */
-    renderFrame(frameState: import("../../Map.js").FrameState): HTMLElement;
+    override renderFrame(frameState: import("../../Map.js").FrameState): HTMLElement;
+    /**
+     * @param {import("../../Map.js").FrameState} frameState Frame state.
+     * @protected
+     */
+    protected beforeFinalize(frameState: import("../../Map.js").FrameState): void;
     /**
      * Look for tiles covering the provided tile coordinate at an alternate
      * zoom level.  Loaded tiles will be added to the provided tile representation lookup.
@@ -204,7 +205,6 @@ declare class WebGLBaseTileLayerRenderer<LayerType extends import("../../layer/B
      * @private
      */
     private findAltTiles_;
-    clearCache(): void;
 }
 import WebGLLayerRenderer from './Layer.js';
 //# sourceMappingURL=TileLayerBase.d.ts.map

@@ -8,7 +8,8 @@ import TileGrid from '../tilegrid/TileGrid.js';
 import TileImage from './TileImage.js';
 import TileState from '../TileState.js';
 import {createCanvasContext2D} from '../dom.js';
-import {createFromTileUrlFunctions, expandUrl} from '../tileurlfunction.js';
+import {createFromTileUrlFunctions} from '../tileurlfunction.js';
+import {expandUrl} from '../uri.js';
 import {getCenter} from '../extent.js';
 import {toSize} from '../size.js';
 
@@ -33,7 +34,7 @@ export class CustomTile extends ImageTile {
     src,
     crossOrigin,
     tileLoadFunction,
-    options
+    options,
   ) {
     super(tileCoord, state, src, crossOrigin, tileLoadFunction, options);
 
@@ -44,6 +45,7 @@ export class CustomTile extends ImageTile {
     this.zoomifyImage_ = null;
 
     /**
+     * @private
      * @type {import("../size.js").Size}
      */
     this.tileSize_ = tileSize;
@@ -52,6 +54,7 @@ export class CustomTile extends ImageTile {
   /**
    * Get the image element for this tile.
    * @return {HTMLCanvasElement|HTMLImageElement|HTMLVideoElement} Image.
+   * @override
    */
   getImage() {
     if (this.zoomifyImage_) {
@@ -76,7 +79,7 @@ export class CustomTile extends ImageTile {
 /**
  * @typedef {Object} Options
  * @property {import("./Source.js").AttributionLike} [attributions] Attributions.
- * @property {number} [cacheSize] Initial tile cache size. Will auto-grow to hold at least the number of tiles in the viewport.
+ * @property {number} [cacheSize] Deprecated.  Use the cacheSize option on the layer instead.
  * @property {null|string} [crossOrigin] The `crossOrigin` attribute for loaded images.  Note that
  * you must provide a `crossOrigin` value  you want to access pixel data with the Canvas renderer.
  * See https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image for more detail.
@@ -177,7 +180,7 @@ class Zoomify extends TileImage {
       resolutions.push(tilePixelRatio << i);
       tileCountUpToTier.push(
         tierSizeInTiles[i - 1][0] * tierSizeInTiles[i - 1][1] +
-          tileCountUpToTier[i - 1]
+          tileCountUpToTier[i - 1],
       );
     }
     resolutions.reverse();
@@ -234,12 +237,12 @@ class Zoomify extends TileImage {
     }
 
     const tileUrlFunction = createFromTileUrlFunctions(
-      urls.map(createFromTemplate)
+      urls.map(createFromTemplate),
     );
 
     const ZoomifyTileClass = CustomTile.bind(
       null,
-      toSize(tileSize * tilePixelRatio)
+      toSize(tileSize * tilePixelRatio),
     );
 
     super({
@@ -267,7 +270,7 @@ class Zoomify extends TileImage {
     // tile url calculation.
     const tileUrl = tileGrid.getTileCoordForCoordAndResolution(
       getCenter(tileGrid.getExtent()),
-      resolutions[resolutions.length - 1]
+      resolutions[resolutions.length - 1],
     );
     const testTileUrl = tileUrlFunction(tileUrl, 1, null);
     const image = new Image();

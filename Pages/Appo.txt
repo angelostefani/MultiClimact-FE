@@ -1,0 +1,481 @@
+// List of geographic maps (this list contains different base maps for selection)
+    List<string> Maps = new List<string>
+{
+    "OpenStreetMap - EPSG:3857",
+    "Google Normal - EPSG:3857",
+    "Google Satellite - EPSG:3857",
+    "Google Hybrid - EPSG:3857",
+    "OpenTopoMap",
+    "Sentinel-2 cloudless",
+    "Metacarta - EPSG:4326",
+    "geoSdi - EPSG:4326",
+    "geoSdi No Map - EPSG:4326",
+    "Stamen Terrain",
+    "Stamen Toner Lite",
+    "Stamen Watercolor",
+    "CartoDB Positron",
+    "CartoDB Dark Matter",
+    "Carto Voyager",
+    "Hike & Bike",
+    "OSM Bright",
+    "Humanitarian OSM",
+    "National Geographic Style",
+    "Esri World Topographic",
+    "Esri World Imagery",
+    "Esri Ocean Basemap",
+    "Thunderforest Outdoor",
+    "Thunderforest Landscape",
+    "Thunderforest Transport",
+    "HERE Maps Standard",
+    "HERE Maps Terrain",
+    "HERE Maps Satellite",
+    "Natural Earth II",
+    "NASAGIBS Blue Marble",
+    "NASAGIBS MODIS Terra",
+    "World Relief Map",
+    "ESA Land Cover"
+};
+
+
+
+ <!-- JavaScript for initializing maps and UI interactions -->
+        <script type="text/javascript">
+
+            var idRun = "@(ViewData["idRunLastEarthquake"] ?? "undefined")";
+            console.log("idRun:", idRun);
+
+            // Imposta 'activeRiskRunID' solo se non è già definito o è vuoto (falsy).
+            if (!activeRiskRunID) {
+                activeRiskRunID = idRun;
+            }
+
+            // Initialization configuration for different map instances
+            // Creazione di un oggetto di configurazione per l'inizializzazione di una mappa con più layer WMS da una matrice
+
+            //[true, true, '@ViewData["wmsurl_lay00"]', '@ViewData["wmslayer_lay00"]', 'Latest Earthquakes'],  //  layer
+
+            let configWMSMatrixMapC1 = {
+                targetHtmlMapId: 'mapC1',                  // ID del div HTML dove la mappa verrà renderizzata
+                baseMapName: 'Metacarta - EPSG:4326',  // Nome del layer della mappa di base
+                centerLongitude: 13.0683,                  // Longitudine del centro della mappa
+                centerLatitude: 39.700,                   // Latitudine del centro della mappa
+                zoomValue: 6,                             // Livello di zoom iniziale
+                layerMatrix: [                             // Matrice che contiene i layer WMS da aggiungere
+                    [true, true, '@ViewData["wmsurl_lay00"]', '@ViewData["wmslayer_lay00"]', 'Latest Earthquakes'],  //  layer
+                    [true, true, '@ViewData["wmsurl_lay10"]', '@ViewData["wmslayer_lay10"]', 'Shakemap']  //  layer
+                ]
+            };
+
+            mapC1 = initWMSMatrixMap(configWMSMatrixMapC1);
+
+            // Creazione di un oggetto di configurazione per l'inizializzazione di una mappa con più layer WMS da una matrice
+            let configWMSMatrixMapC2 = {
+                targetHtmlMapId: 'mapC2',                  // ID del div HTML dove la mappa verrà renderizzata
+                baseMapName: 'OpenStreetMap - EPSG:3857',  // Nome del layer della mappa di base
+                centerLongitude: 13.0683,                  // Longitudine del centro della mappa
+                centerLatitude: 43.1357,                   // Latitudine del centro della mappa
+                zoomValue: 14,                             // Livello di zoom iniziale
+                layerMatrix: [                             // Matrice che contiene i layer WMS da aggiungere
+                    [true, true, '@ViewData["wmsurl_lay03"]', '@ViewData["wmslayer_lay03"]', 'Lay03_PD1', 'mypd:pd1'],  //  layer
+                    [true, false, '@ViewData["wmsurl_lay03"]', '@ViewData["wmslayer_lay03"]', 'Lay03_PD2', 'mypd:pd2'],  //  layer
+                    [true, false, '@ViewData["wmsurl_lay03"]', '@ViewData["wmslayer_lay03"]', 'Lay03_PD3', 'mypd:pd3'],  //  layer
+                    [true, false, '@ViewData["wmsurl_lay03"]', '@ViewData["wmslayer_lay03"]', 'Lay03_PD4', 'mypd:pd4'],  //  layer
+                    [true, false, '@ViewData["wmsurl_lay03"]', '@ViewData["wmslayer_lay03"]', 'Lay03_PD5', 'mypd:pd5'],  //  layer
+                    [true, true, '@ViewData["wmsurl_lay02"]', '@ViewData["wmslayer_lay02"]', 'Lay02_PD1', 'mypd:pd1'],  //  layer
+                    [true, false, '@ViewData["wmsurl_lay02"]', '@ViewData["wmslayer_lay02"]', 'Lay02_PD2', 'mypd:pd2'],  //  layer
+                    [true, false, '@ViewData["wmsurl_lay02"]', '@ViewData["wmslayer_lay02"]', 'Lay02_PD3', 'mypd:pd3'],  //  layer
+                    [true, false, '@ViewData["wmsurl_lay02"]', '@ViewData["wmslayer_lay02"]', 'Lay02_PD4', 'mypd:pd4'],  //  layer
+                    [true, false, '@ViewData["wmsurl_lay02"]', '@ViewData["wmslayer_lay02"]', 'Lay02_PD5', 'mypd:pd5'],  //  layer
+                    [true, true, '@ViewData["wmsurl_lay01"]', '@ViewData["wmslayer_lay01"]', 'Lay01_PD1', 'mypd:pd1'],  //  layer
+                    [true, false, '@ViewData["wmsurl_lay01"]', '@ViewData["wmslayer_lay01"]', 'Lay01_PD2', 'mypd:pd2'],  //  layer
+                    [true, false, '@ViewData["wmsurl_lay01"]', '@ViewData["wmslayer_lay01"]', 'Lay01_PD3', 'mypd:pd3'],  //  layer
+                    [true, false, '@ViewData["wmsurl_lay01"]', '@ViewData["wmslayer_lay01"]', 'Lay01_PD4', 'mypd:pd4'],  //  layer
+                    [true, false, '@ViewData["wmsurl_lay01"]', '@ViewData["wmslayer_lay01"]', 'Lay01_PD5', 'mypd:pd5'],  //  layer
+                    [true, true, '@ViewData["wmsurl_lay10"]', '@ViewData["wmslayer_lay10"]', 'Shakemap']  //  layer  
+                ]
+            };
+
+            mapC2 = initWMSMatrixMap(configWMSMatrixMapC2);
+
+            // Creazione di un oggetto di configurazione per l'inizializzazione di una mappa con più layer WMS da una matrice
+            let configWMSMatrixMapC3 = {
+                targetHtmlMapId: 'mapC3',                  // ID del div HTML dove la mappa verrà renderizzata
+                baseMapName: 'OpenStreetMap - EPSG:3857',  // Nome del layer della mappa di base
+                centerLongitude: 13.0683,                  // Longitudine del centro della mappa
+                centerLatitude: 43.1357,                   // Latitudine del centro della mappa
+                zoomValue: 14,                             // Livello di zoom iniziale
+                layerMatrix: [                             // Matrice che contiene i layer WMS da aggiungere
+                    [true, true, '@ViewData["wmsurl_lay04"]', '@ViewData["wmslayer_lay04"]', 'Lay04_PD1', 'mypd:pd1'],  //  layer
+                    [true, false, '@ViewData["wmsurl_lay04"]', '@ViewData["wmslayer_lay04"]', 'Lay04_PD2', 'mypd:pd2'],  //  layer
+                    [true, false, '@ViewData["wmsurl_lay04"]', '@ViewData["wmslayer_lay04"]', 'Lay04_PD3', 'mypd:pd3'],  //  layer
+                    [true, false, '@ViewData["wmsurl_lay04"]', '@ViewData["wmslayer_lay04"]', 'Lay04_PD4', 'mypd:pd4'],  //  layer
+                    [true, true, '@ViewData["wmsurl_lay05"]', '@ViewData["wmslayer_lay05"]', 'Lay05_PD1', 'mypd:pd1'],  //  layer
+                    [true, false, '@ViewData["wmsurl_lay05"]', '@ViewData["wmslayer_lay05"]', 'Lay05_PD2', 'mypd:pd2'],  //  layer
+                    [true, false, '@ViewData["wmsurl_lay05"]', '@ViewData["wmslayer_lay05"]', 'Lay05_PD3', 'mypd:pd3'],  //  layer
+                    [true, false, '@ViewData["wmsurl_lay05"]', '@ViewData["wmslayer_lay05"]', 'Lay05_PD4', 'mypd:pd4'],  //  layer
+                    [true, true, '@ViewData["wmsurl_lay06"]', '@ViewData["wmslayer_lay06"]', 'Lay06_PD1', 'mypd:pd1'],  //  layer
+                    [true, false, '@ViewData["wmsurl_lay06"]', '@ViewData["wmslayer_lay06"]', 'Lay06_PD2', 'mypd:pd2'],  //  layer
+                    [true, false, '@ViewData["wmsurl_lay06"]', '@ViewData["wmslayer_lay06"]', 'Lay06_PD3', 'mypd:pd3'],  //  layer
+                    [true, false, '@ViewData["wmsurl_lay06"]', '@ViewData["wmslayer_lay06"]', 'Lay06_PD4', 'mypd:pd4'],  //  layer
+                    [true, true, '@ViewData["wmsurl_lay07"]', '@ViewData["wmslayer_lay07"]', 'Lay07_PD1', 'mypd:pd1'],  //  layer
+                    [true, false, '@ViewData["wmsurl_lay07"]', '@ViewData["wmslayer_lay07"]', 'Lay07_PD2', 'mypd:pd2'],  //  layer
+                    [true, false, '@ViewData["wmsurl_lay07"]', '@ViewData["wmslayer_lay07"]', 'Lay07_PD3', 'mypd:pd3'],  //  layer
+                    [true, false, '@ViewData["wmsurl_lay07"]', '@ViewData["wmslayer_lay07"]', 'Lay07_PD4', 'mypd:pd4'],  //  layer
+                    [true, true, '@ViewData["wmsurl_lay10"]', '@ViewData["wmslayer_lay10"]', 'Shakemap']  //  layer
+                ]
+            };
+
+            mapC3 = initWMSMatrixMap(configWMSMatrixMapC3);
+
+             // Creazione di un oggetto di configurazione per l'inizializzazione di una mappa con più layer WMS da una matrice
+            let configWMSMatrixMapC4 = {
+                targetHtmlMapId: 'mapC4',                  // ID del div HTML dove la mappa verrà renderizzata
+                baseMapName: 'OpenStreetMap - EPSG:3857',  // Nome del layer della mappa di base
+                centerLongitude: 13.0683,                  // Longitudine del centro della mappa
+                centerLatitude: 43.1357,                   // Latitudine del centro della mappa
+                zoomValue: 14,                             // Livello di zoom iniziale
+                layerMatrix: [                             // Matrice che contiene i layer WMS da aggiungere
+                   [true, true, '@ViewData["wmsurl_lay08"]', '@ViewData["wmslayer_lay08"]', 'Failure_scenario_view'],  //  layer
+                   [true, true, '@ViewData["wmsurl_lay09"]', '@ViewData["wmslayer_lay09"]', 'Earth_waste_water_damage_view']  //  layer
+                ]
+            };
+
+            mapC4 = initWMSMatrixMap(configWMSMatrixMapC4);
+                        
+            $(document).ready(() => {
+                // Inizializzazione delle tab
+                initTabs();
+                tabManager();
+                selectTab(activeTab);
+
+                // Gestione del menu a tendina
+                setupDropdownMenuHandler('.dropdown-item', '.dropdown-menu');
+
+                // Nascondi elementi specifici se necessario
+                /*
+                $('#mouseCoordinates').hide();
+                $('#addressInput').hide();
+                */
+
+                // Eventi legati all'icona della mappa
+                setupFixedSidebarIconHandler();
+                
+            });
+            
+        </script>   
+
+
+
+
+        /*
+This class is part of an ASP.NET Core application. 
+It is the code-behind for the Index page in a Razor Pages application, 
+handling logic for configuration and ViewData population for use in the associated Razor view.
+*/
+
+using System;
+using System.Net.Http;
+using System.Text.Json;            // Namespace per la deserializzazione JSON
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using MultiClimact.Models;
+
+namespace MultiClimact.Pages
+{
+    /// <summary>
+    /// The IndexModel class handles the backend logic for the Index Razor page.
+    /// It initializes configurations and maps configuration values to ViewData 
+    /// for rendering dynamic content in the Razor view.
+    /// </summary>
+    public class IndexModel : PageModel
+    {
+        private readonly ILogger<IndexModel> _logger;
+        private readonly IConfiguration _configuration;
+
+        /// <summary>
+        /// Constructor for IndexModel.
+        /// Initializes the logger and configuration dependencies.
+        /// </summary>
+        /// <param name="logger">Logger to handle logging operations.</param>
+        /// <param name="configuration">Configuration interface for accessing app settings.</param>
+        public IndexModel(ILogger<IndexModel> logger, IConfiguration configuration)
+        {
+            _logger = logger;
+            _configuration = configuration;
+        }
+
+        /// <summary>
+        /// Handles GET requests to the Index page asynchronously.
+        /// Invokes a REST endpoint to retrieve the last earthquake data and stores the 'idRun' value in ViewData.
+        /// </summary>
+        /// <returns>An asynchronous Task.</returns>
+        public async Task OnGetAsync()
+        {
+            await GetLastEarthquakeIdRun();
+            ConfigurationToViewDataMapping();
+        }
+
+        private async Task GetLastEarthquakeIdRun()
+        {
+            // URL del servizio da invocare
+            var serviceUrl = "http://localhost:5022/api/EarthquakeProxy/GetLastEarthquake";
+
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    var response = await client.GetAsync(serviceUrl);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        // Legge la risposta come stringa
+                        var responseBody = await response.Content.ReadAsStringAsync();
+
+                        // Deserializza il JSON in un oggetto .NET
+                        // qui utilizziamo un modello semplificato per contenere la proprietà idRun
+                        var data = JsonSerializer.Deserialize<LastEarthquakeResponse>(responseBody);
+
+                        // Se data non è null e la proprietà idRun è valorizzata, la salviamo in ViewData
+                        if (data?.id_run != null)
+                        {
+                            ViewData["idRunLastEarthquake"] = data.id_run;
+                        }
+                        else
+                        {
+                            ViewData["idRunLastEarthquake"] = "idRun non presente nella risposta";
+                        }
+                    }
+                    else
+                    {
+                        // Gestione di eventuali errori di chiamata
+                        ViewData["idRunLastEarthquake"] = $"Errore durante la chiamata al servizio: {response.StatusCode}";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log dell'eccezione in caso di errore
+                _logger.LogError(ex, "Si è verificato un errore durante la chiamata al servizio EarthquakeProxy.");
+                ViewData["idRunLastEarthquake"] = $"Eccezione: {ex.Message}";
+            }
+        }
+
+        /// <summary>
+        /// Maps configuration settings to ViewData for use in the Razor view.
+        /// These settings are used to dynamically populate the view with 
+        /// WMS (Web Map Service) URLs, layers, and legends.
+        /// </summary>
+        private void ConfigurationToViewDataMapping()
+        {
+            // Mapping configuration settings for WMS layers and legends
+
+            // Real-time earthquakes with Risk Analsysis properties
+            ViewData["wmsurl_lay00"] = _configuration["wms:wmsurl_lay00"];
+            ViewData["wmslayer_lay00"] = _configuration["wms:wmslayer_lay00"];
+
+            // POI Building of Marche Region
+            ViewData["wmsurl_lay01"] = _configuration["wms:wmsurl_lay01"];
+            ViewData["wmslayer_lay01"] = _configuration["wms:wmslayer_lay01"];
+
+            //Camerino buildings
+            ViewData["wmsurl_lay02"] = _configuration["wms:wmsurl_lay02"];
+            ViewData["wmslayer_lay02"] = _configuration["wms:wmslayer_lay02"];
+
+            //Fazzini building
+            ViewData["wmsurl_lay03"] = _configuration["wms:wmsurl_lay03"];
+            ViewData["wmslayer_lay03"] = _configuration["wms:wmslayer_lay03"];
+
+            //Electric substations
+            ViewData["wmsurl_lay04"] = _configuration["wms:wmsurl_lay04"];
+            ViewData["wmslayer_lay04"] = _configuration["wms:wmslayer_lay04"];
+
+            //Water tower
+            ViewData["wmsurl_lay05"] = _configuration["wms:wmsurl_lay05"];
+            ViewData["wmslayer_lay05"] = _configuration["wms:wmslayer_lay05"];
+
+            //Water well
+            ViewData["wmsurl_lay06"] = _configuration["wms:wmsurl_lay06"];
+            ViewData["wmslayer_lay06"] = _configuration["wms:wmslayer_lay06"];
+
+            //Wastewater plant
+            ViewData["wmsurl_lay07"] = _configuration["wms:wmsurl_lay07"];
+            ViewData["wmslayer_lay07"] = _configuration["wms:wmslayer_lay07"];
+
+            //Risk paths
+            ViewData["wmsurl_lay08"] = _configuration["wms:wmsurl_lay08"];
+            ViewData["wmslayer_lay08"] = _configuration["wms:wmslayer_lay08"];
+
+            //Failure scenario
+            ViewData["wmsurl_lay09"] = _configuration["wms:wmsurl_lay09"];
+            ViewData["wmslayer_lay09"] = _configuration["wms:wmslayer_lay09"];
+
+            //Shakemap
+            ViewData["wmsurl_lay10"] = _configuration["wms:wmsurl_lay10"];
+            ViewData["wmslayer_lay10"] = _configuration["wms:wmslayer_lay10"];
+
+
+            //Points of interes
+            //ViewData["wmsurl_map_poi"] = _configuration["wms:wmsurl_map_poi"];
+
+            //ViewData["wmslayer_map_poibui"] = _configuration["wms:wmslayer_map_poibui"];
+            //ViewData["wmslegend_map_poibui"] = _configuration["wms:wmslegend_map_poibui"];
+
+            //ViewData["wmslayer_map_poiinf"] = _configuration["wms:wmslayer_map_poiinf"];
+            //ViewData["wmslegend_map_poiinf"] = _configuration["wms:wmslegend_map_poiinf"];
+
+            //ViewData["wmslayer_map_poigen"] = _configuration["wms:wmslayer_map_poigen"];
+            //ViewData["wmslegend_map_poigen"] = _configuration["wms:wmslegend_map_poigen"];
+        }
+    }
+}
+
+
+
+
+
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    var idRun = document.getElementById("idRunLastEarthquake").dataset.value;
+    console.log("idRun:", idRun);
+
+    // Imposta 'activeRiskRunID' solo se non è già definito o è vuoto (falsy).
+    if (!activeRiskRunID) {
+        activeRiskRunID = idRun;
+    }
+        
+    // Creazione di un oggetto di configurazione per l'inizializzazione di una mappa con più layer WMS da una matrice
+    configWMSMatrixMapC1 = {
+        targetHtmlMapId: 'mapC1',                  // ID del div HTML dove la mappa verrà renderizzata
+        baseMapName: 'Metacarta - EPSG:4326',  // Nome del layer della mappa di base
+        centerLongitude: 13.0683,                  // Longitudine del centro della mappa
+        centerLatitude: 39.700,                   // Latitudine del centro della mappa
+        zoomValue: 6,                             // Livello di zoom iniziale
+        layerMatrix: [                             // Matrice che contiene i layer WMS da aggiungere
+            [true, true, document.getElementById("wmsurl_lay00").dataset.value, document.getElementById("wmslayer_lay00").dataset.value, 'Latest Earthquakes'],  //  layer
+            [true, true, document.getElementById("wmsurl_lay10").dataset.value, document.getElementById("wmslayer_lay10").dataset.value, 'Shakemap']  //  layer
+        ]
+    };
+
+    mapC1 = initWMSMatrixMap(configWMSMatrixMapC1);
+
+    // Creazione di un oggetto di configurazione per l'inizializzazione di una mappa con più layer WMS da una matrice
+    configWMSMatrixMapC2 = {
+        targetHtmlMapId: 'mapC2',                  // ID del div HTML dove la mappa verrà renderizzata
+        baseMapName: 'OpenStreetMap - EPSG:3857',  // Nome del layer della mappa di base
+        centerLongitude: 13.0683,                  // Longitudine del centro della mappa
+        centerLatitude: 43.1357,                   // Latitudine del centro della mappa
+        zoomValue: 14,                             // Livello di zoom iniziale
+        layerMatrix: [                             // Matrice che contiene i layer WMS da aggiungere
+            [true, true, document.getElementById("wmsurl_lay03").dataset.value, document.getElementById("wmslayer_lay03").dataset.value, 'Lay03_PD1', 'mypd:pd1'],  //  layer
+            [true, false, document.getElementById("wmsurl_lay03").dataset.value, document.getElementById("wmslayer_lay03").dataset.value, 'Lay03_PD2', 'mypd:pd2'],  //  layer
+            [true, false, document.getElementById("wmsurl_lay03").dataset.value, document.getElementById("wmslayer_lay03").dataset.value, 'Lay03_PD3', 'mypd:pd3'],  //  layer
+            [true, false, document.getElementById("wmsurl_lay03").dataset.value, document.getElementById("wmslayer_lay03").dataset.value, 'Lay03_PD4', 'mypd:pd4'],  //  layer
+            [true, false, document.getElementById("wmsurl_lay03").dataset.value, document.getElementById("wmslayer_lay03").dataset.value, 'Lay03_PD5', 'mypd:pd5'],  //  layer
+            [true, true, document.getElementById("wmsurl_lay02").dataset.value, document.getElementById("wmslayer_lay02").dataset.value, 'Lay02_PD1', 'mypd:pd1'],  //  layer
+            [true, false, document.getElementById("wmsurl_lay02").dataset.value, document.getElementById("wmslayer_lay02").dataset.value, 'Lay02_PD2', 'mypd:pd2'],  //  layer
+            [true, false, document.getElementById("wmsurl_lay02").dataset.value, document.getElementById("wmslayer_lay02").dataset.value, 'Lay02_PD3', 'mypd:pd3'],  //  layer
+            [true, false, document.getElementById("wmsurl_lay02").dataset.value, document.getElementById("wmslayer_lay02").dataset.value, 'Lay02_PD4', 'mypd:pd4'],  //  layer
+            [true, false, document.getElementById("wmsurl_lay02").dataset.value, document.getElementById("wmslayer_lay02").dataset.value, 'Lay02_PD5', 'mypd:pd5'],  //  layer
+            [true, true, document.getElementById("wmsurl_lay01").dataset.value, document.getElementById("wmslayer_lay01").dataset.value, 'Lay01_PD1', 'mypd:pd1'],  //  layer
+            [true, false, document.getElementById("wmsurl_lay01").dataset.value, document.getElementById("wmslayer_lay01").dataset.value, 'Lay01_PD2', 'mypd:pd2'],  //  layer
+            [true, false, document.getElementById("wmsurl_lay01").dataset.value, document.getElementById("wmslayer_lay01").dataset.value, 'Lay01_PD3', 'mypd:pd3'],  //  layer
+            [true, false, document.getElementById("wmsurl_lay01").dataset.value, document.getElementById("wmslayer_lay01").dataset.value, 'Lay01_PD4', 'mypd:pd4'],  //  layer
+            [true, false, document.getElementById("wmsurl_lay01").dataset.value, document.getElementById("wmslayer_lay01").dataset.value, 'Lay01_PD5', 'mypd:pd5'],  //  layer
+            [true, true, document.getElementById("wmsurl_lay10").dataset.value, document.getElementById("wmslayer_lay10").dataset.value, 'Shakemap']  //  layer  
+        ]
+    };
+
+    mapC2 = initWMSMatrixMap(configWMSMatrixMapC2);
+
+    // Creazione di un oggetto di configurazione per l'inizializzazione di una mappa con più layer WMS da una matrice
+    configWMSMatrixMapC3 = {
+        targetHtmlMapId: 'mapC3',                  // ID del div HTML dove la mappa verrà renderizzata
+        baseMapName: 'OpenStreetMap - EPSG:3857',  // Nome del layer della mappa di base
+        centerLongitude: 13.0683,                  // Longitudine del centro della mappa
+        centerLatitude: 43.1357,                   // Latitudine del centro della mappa
+        zoomValue: 14,                             // Livello di zoom iniziale
+        layerMatrix: [                             // Matrice che contiene i layer WMS da aggiungere
+            [true, true, document.getElementById("wmsurl_lay04").dataset.value, document.getElementById("wmslayer_lay04").dataset.value, 'Lay04_PD1', 'mypd:pd1'],  //  layer
+            [true, false, document.getElementById("wmsurl_lay04").dataset.value, document.getElementById("wmslayer_lay04").dataset.value, 'Lay04_PD2', 'mypd:pd2'],  //  layer
+            [true, false, document.getElementById("wmsurl_lay04").dataset.value, document.getElementById("wmslayer_lay04").dataset.value, 'Lay04_PD3', 'mypd:pd3'],  //  layer
+            [true, false, document.getElementById("wmsurl_lay04").dataset.value, document.getElementById("wmslayer_lay04").dataset.value, 'Lay04_PD4', 'mypd:pd4'],  //  layer
+            [true, true, document.getElementById("wmsurl_lay05").dataset.value,  document.getElementById("wmslayer_lay05").dataset.value, 'Lay05_PD1', 'mypd:pd1'],  //  layer
+            [true, false, document.getElementById("wmsurl_lay05").dataset.value, document.getElementById("wmslayer_lay05").dataset.value, 'Lay05_PD2', 'mypd:pd2'],  //  layer
+            [true, false, document.getElementById("wmsurl_lay05").dataset.value, document.getElementById("wmslayer_lay05").dataset.value, 'Lay05_PD3', 'mypd:pd3'],  //  layer
+            [true, false, document.getElementById("wmsurl_lay05").dataset.value, document.getElementById("wmslayer_lay05").dataset.value, 'Lay05_PD4', 'mypd:pd4'],  //  layer
+            [true, true, document.getElementById("wmsurl_lay06").dataset.value, document.getElementById("wmslayer_lay06").dataset.value, 'Lay06_PD1', 'mypd:pd1'],  //  layer
+            [true, false, document.getElementById("wmsurl_lay06").dataset.value, document.getElementById("wmslayer_lay06").dataset.value, 'Lay06_PD2', 'mypd:pd2'],  //  layer
+            [true, false, document.getElementById("wmsurl_lay06").dataset.value, document.getElementById("wmslayer_lay06").dataset.value, 'Lay06_PD3', 'mypd:pd3'],  //  layer
+            [true, false, document.getElementById("wmsurl_lay06").dataset.value, document.getElementById("wmslayer_lay06").dataset.value, 'Lay06_PD4', 'mypd:pd4'],  //  layer
+            [true, true, document.getElementById("wmsurl_lay07").dataset.value, document.getElementById("wmslayer_lay07").dataset.value, 'Lay07_PD1', 'mypd:pd1'],  //  layer
+            [true, false, document.getElementById("wmsurl_lay07").dataset.value, document.getElementById("wmslayer_lay07").dataset.value, 'Lay07_PD2', 'mypd:pd2'],  //  layer
+            [true, false, document.getElementById("wmsurl_lay07").dataset.value, document.getElementById("wmslayer_lay07").dataset.value, 'Lay07_PD3', 'mypd:pd3'],  //  layer
+            [true, false, document.getElementById("wmsurl_lay07").dataset.value, document.getElementById("wmslayer_lay07").dataset.value, 'Lay07_PD4', 'mypd:pd4'],  //  layer
+            [true, true, document.getElementById("wmsurl_lay10").dataset.value, document.getElementById("wmslayer_lay10").dataset.value, 'Shakemap']  //  layer
+        ]
+    };
+
+    mapC3 = initWMSMatrixMap(configWMSMatrixMapC3);
+
+    // Creazione di un oggetto di configurazione per l'inizializzazione di una mappa con più layer WMS da una matrice
+    configWMSMatrixMapC4 = {
+        targetHtmlMapId: 'mapC4',                  // ID del div HTML dove la mappa verrà renderizzata
+        baseMapName: 'OpenStreetMap - EPSG:3857',  // Nome del layer della mappa di base
+        centerLongitude: 13.0683,                  // Longitudine del centro della mappa
+        centerLatitude: 43.1357,                   // Latitudine del centro della mappa
+        zoomValue: 14,                             // Livello di zoom iniziale
+        layerMatrix: [                             // Matrice che contiene i layer WMS da aggiungere
+            [true, true, document.getElementById("wmsurl_lay08").dataset.value, document.getElementById("wmslayer_lay08").dataset.value, 'Failure_scenario_view'],  //  layer
+            [true, true, document.getElementById("wmsurl_lay09").dataset.value, document.getElementById("wmslayer_lay09").dataset.value, 'Earth_waste_water_damage_view']  //  layer
+        ]
+    };
+
+    mapC4 = initWMSMatrixMap(configWMSMatrixMapC4);
+
+    $(document).ready(() => {
+        // Inizializzazione delle tab
+        initTabs();
+        tabManager();
+        selectTab(activeTab);
+
+        // Gestione del menu a tendina
+        setupDropdownMenuHandler('.dropdown-item', '.dropdown-menu');       
+
+        // Eventi legati all'icona della mappa
+        setupFixedSidebarIconHandler();
+    });
+});
+
+
+
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <RestoreSuccess Condition=" '$(RestoreSuccess)' == '' ">True</RestoreSuccess>
+    <RestoreTool Condition=" '$(RestoreTool)' == '' ">NuGet</RestoreTool>
+    <ProjectAssetsFile Condition=" '$(ProjectAssetsFile)' == '' ">$(MSBuildThisFileDirectory)project.assets.json</ProjectAssetsFile>
+    <NuGetPackageRoot Condition=" '$(NuGetPackageRoot)' == '' ">$(UserProfile)\.nuget\packages\</NuGetPackageRoot>
+    <NuGetPackageFolders Condition=" '$(NuGetPackageFolders)' == '' ">C:\Users\Angelo\.nuget\packages\;C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages</NuGetPackageFolders>
+    <NuGetProjectStyle Condition=" '$(NuGetProjectStyle)' == '' ">PackageReference</NuGetProjectStyle>
+    <NuGetToolVersion Condition=" '$(NuGetToolVersion)' == '' ">6.12.3</NuGetToolVersion>
+  </PropertyGroup>
+  <ItemGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <SourceRoot Include="C:\Users\Angelo\.nuget\packages\" />
+    <SourceRoot Include="C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages\" />
+  </ItemGroup>
+  <ImportGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <Import Project="$(NuGetPackageRoot)microsoft.entityframeworkcore\8.0.1\buildTransitive\net8.0\Microsoft.EntityFrameworkCore.props" Condition="Exists('$(NuGetPackageRoot)microsoft.entityframeworkcore\8.0.1\buildTransitive\net8.0\Microsoft.EntityFrameworkCore.props')" />
+    <Import Project="$(NuGetPackageRoot)microsoft.codeanalysis.analyzers\3.3.4\buildTransitive\Microsoft.CodeAnalysis.Analyzers.props" Condition="Exists('$(NuGetPackageRoot)microsoft.codeanalysis.analyzers\3.3.4\buildTransitive\Microsoft.CodeAnalysis.Analyzers.props')" />
+    <Import Project="$(NuGetPackageRoot)microsoft.entityframeworkcore.design\8.0.1\build\net8.0\Microsoft.EntityFrameworkCore.Design.props" Condition="Exists('$(NuGetPackageRoot)microsoft.entityframeworkcore.design\8.0.1\build\net8.0\Microsoft.EntityFrameworkCore.Design.props')" />
+    <Import Project="$(NuGetPackageRoot)microsoft.aspnetcore.identity.ui\8.0.1\build\Microsoft.AspNetCore.Identity.UI.props" Condition="Exists('$(NuGetPackageRoot)microsoft.aspnetcore.identity.ui\8.0.1\build\Microsoft.AspNetCore.Identity.UI.props')" />
+    <Import Project="$(NuGetPackageRoot)microsoft.aspnetcore.components.quickgrid\8.0.1\buildTransitive\Microsoft.AspNetCore.Components.QuickGrid.props" Condition="Exists('$(NuGetPackageRoot)microsoft.aspnetcore.components.quickgrid\8.0.1\buildTransitive\Microsoft.AspNetCore.Components.QuickGrid.props')" />
+  </ImportGroup>
+  <PropertyGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <PkgMicrosoft_CodeAnalysis_Analyzers Condition=" '$(PkgMicrosoft_CodeAnalysis_Analyzers)' == '' ">C:\Users\Angelo\.nuget\packages\microsoft.codeanalysis.analyzers\3.3.4</PkgMicrosoft_CodeAnalysis_Analyzers>
+    <PkgMicrosoft_CodeAnalysis_AnalyzerUtilities Condition=" '$(PkgMicrosoft_CodeAnalysis_AnalyzerUtilities)' == '' ">C:\Users\Angelo\.nuget\packages\microsoft.codeanalysis.analyzerutilities\3.3.0</PkgMicrosoft_CodeAnalysis_AnalyzerUtilities>
+    <PkgMicrosoft_EntityFrameworkCore_Tools Condition=" '$(PkgMicrosoft_EntityFrameworkCore_Tools)' == '' ">C:\Users\Angelo\.nuget\packages\microsoft.entityframeworkcore.tools\8.0.1</PkgMicrosoft_EntityFrameworkCore_Tools>
+  </PropertyGroup>
+</Project>

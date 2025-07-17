@@ -150,7 +150,10 @@ export type PointGeometryBatch = {
  * the WebGL buffers.
  */
 declare class MixedGeometryBatch {
-    globalCounter_: number;
+    /**
+     * @private
+     */
+    private globalCounter_;
     /**
      * Refs are used as keys for hit detection.
      * @type {Map<number, Feature|RenderFeature>}
@@ -223,6 +226,7 @@ declare class MixedGeometryBatch {
      * @param {Feature|RenderFeature} feature Feature
      * @param {string} featureUid Feature uid
      * @param {number} stride Stride
+     * @param {import('../../geom/Geometry.js').GeometryLayout} [layout] Layout
      * @private
      */
     private addCoordinates_;

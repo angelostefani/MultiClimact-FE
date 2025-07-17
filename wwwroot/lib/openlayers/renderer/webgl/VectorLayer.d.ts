@@ -13,7 +13,7 @@ export const Uniforms: {
     HIT_DETECTION: string;
 };
 export default WebGLVectorLayerRenderer;
-export type VectorStyle = import('../../render/webgl/VectorStyleRenderer.js').VectorStyle;
+export type VectorStyle = import("../../render/webgl/VectorStyleRenderer.js").VectorStyle;
 export type Options = {
     /**
      * A CSS class name to set to the canvas element.
@@ -78,8 +78,14 @@ declare class WebGLVectorLayerRenderer extends WebGLLayerRenderer<any> {
      * @private
      */
     private hitRenderTarget_;
-    sourceRevision_: number;
-    previousExtent_: import("../../extent.js").Extent;
+    /**
+     * @private
+     */
+    private sourceRevision_;
+    /**
+     * @private
+     */
+    private previousExtent_;
     /**
      * This transform is updated on every frame and is the composition of:
      * - invert of the world->screen transform that was used when rebuilding buffers (see `this.renderTransform_`)
@@ -88,9 +94,18 @@ declare class WebGLVectorLayerRenderer extends WebGLLayerRenderer<any> {
      * @private
      */
     private currentTransform_;
-    tmpCoords_: number[];
-    tmpTransform_: number[];
-    tmpMat4_: number[];
+    /**
+     * @private
+     */
+    private tmpCoords_;
+    /**
+     * @private
+     */
+    private tmpTransform_;
+    /**
+     * @private
+     */
+    private tmpMat4_;
     /**
      * @type {import("../../transform.js").Transform}
      * @private
@@ -139,7 +154,10 @@ declare class WebGLVectorLayerRenderer extends WebGLLayerRenderer<any> {
      * @private
      */
     private createRenderers_;
-    reset(options: any): void;
+    /**
+     * @override
+     */
+    override reset(options: any): void;
     /**
      * @param {import("../../proj.js").TransformFunction} projectionTransform Transform function.
      * @param {import("../../source/Vector.js").VectorSourceEvent} event Event.
@@ -169,8 +187,9 @@ declare class WebGLVectorLayerRenderer extends WebGLLayerRenderer<any> {
      * Render the layer.
      * @param {import("../../Map.js").FrameState} frameState Frame state.
      * @return {HTMLElement} The rendered element.
+     * @override
      */
-    renderFrame(frameState: import("../../Map.js").FrameState): HTMLElement;
+    override renderFrame(frameState: import("../../Map.js").FrameState): HTMLElement;
     /**
      * Render the world, either to the main framebuffer or to the hit framebuffer
      * @param {import("../../Map.js").FrameState} frameState current frame state
@@ -180,6 +199,11 @@ declare class WebGLVectorLayerRenderer extends WebGLLayerRenderer<any> {
      * @param {number} worldWidth the width of the worlds being rendered
      */
     renderWorlds(frameState: import("../../Map.js").FrameState, forHitDetection: boolean, startWorld: number, endWorld: number, worldWidth: number): void;
+    /**
+     * Will release a set of Webgl buffers
+     * @param {import('../../render/webgl/VectorStyleRenderer.js').WebGLBuffers} buffers Buffers
+     */
+    disposeBuffers(buffers: import("../../render/webgl/VectorStyleRenderer.js").WebGLBuffers): void;
 }
 import WebGLLayerRenderer from './Layer.js';
 //# sourceMappingURL=VectorLayer.d.ts.map

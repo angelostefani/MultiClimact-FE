@@ -37,7 +37,6 @@ class TileDebug extends XYZ {
     options = options || {};
 
     super({
-      opaque: false,
       projection: options.projection,
       tileGrid: options.tileGrid,
       wrapX: options.wrapX !== undefined ? options.wrapX : true,
@@ -61,7 +60,7 @@ class TileDebug extends XYZ {
         context.fillText(text, tileSize[0] / 2, tileSize[1] / 2, tileSize[0]);
 
         /** @type {import("../ImageTile.js").default} */ (tile).setImage(
-          context.canvas
+          context.canvas,
         );
       },
     });

@@ -84,7 +84,7 @@ class Polygon extends SimpleGeometry {
     if (layout !== undefined && ends) {
       this.setFlatCoordinates(
         layout,
-        /** @type {Array<number>} */ (coordinates)
+        /** @type {Array<number>} */ (coordinates),
       );
       this.ends_ = ends;
     } else {
@@ -92,7 +92,7 @@ class Polygon extends SimpleGeometry {
         /** @type {Array<Array<import("../coordinate.js").Coordinate>>} */ (
           coordinates
         ),
-        layout
+        layout,
       );
     }
   }
@@ -116,12 +116,13 @@ class Polygon extends SimpleGeometry {
    * Make a complete copy of the geometry.
    * @return {!Polygon} Clone.
    * @api
+   * @override
    */
   clone() {
     const polygon = new Polygon(
       this.flatCoordinates.slice(),
       this.layout,
-      this.ends_.slice()
+      this.ends_.slice(),
     );
     polygon.applyProperties(this);
     return polygon;
@@ -133,6 +134,7 @@ class Polygon extends SimpleGeometry {
    * @param {import("../coordinate.js").Coordinate} closestPoint Closest point.
    * @param {number} minSquaredDistance Minimum squared distance.
    * @return {number} Minimum squared distance.
+   * @override
    */
   closestPointXY(x, y, closestPoint, minSquaredDistance) {
     if (minSquaredDistance < closestSquaredDistanceXY(this.getExtent(), x, y)) {
@@ -145,8 +147,8 @@ class Polygon extends SimpleGeometry {
           0,
           this.ends_,
           this.stride,
-          0
-        )
+          0,
+        ),
       );
       this.maxDeltaRevision_ = this.getRevision();
     }
@@ -160,7 +162,7 @@ class Polygon extends SimpleGeometry {
       x,
       y,
       closestPoint,
-      minSquaredDistance
+      minSquaredDistance,
     );
   }
 
@@ -168,6 +170,7 @@ class Polygon extends SimpleGeometry {
    * @param {number} x X.
    * @param {number} y Y.
    * @return {boolean} Contains (x, y).
+   * @override
    */
   containsXY(x, y) {
     return linearRingsContainsXY(
@@ -176,7 +179,7 @@ class Polygon extends SimpleGeometry {
       this.ends_,
       this.stride,
       x,
-      y
+      y,
     );
   }
 
@@ -190,7 +193,7 @@ class Polygon extends SimpleGeometry {
       this.getOrientedFlatCoordinates(),
       0,
       this.ends_,
-      this.stride
+      this.stride,
     );
   }
 
@@ -206,6 +209,7 @@ class Polygon extends SimpleGeometry {
    *     constructed.
    * @return {Array<Array<import("../coordinate.js").Coordinate>>} Coordinates.
    * @api
+   * @override
    */
   getCoordinates(right) {
     let flatCoordinates;
@@ -238,7 +242,7 @@ class Polygon extends SimpleGeometry {
         this.ends_,
         this.stride,
         flatCenter,
-        0
+        0,
       );
       this.flatInteriorPointRevision_ = this.getRevision();
     }
@@ -285,9 +289,9 @@ class Polygon extends SimpleGeometry {
     return new LinearRing(
       this.flatCoordinates.slice(
         index === 0 ? 0 : this.ends_[index - 1],
-        this.ends_[index]
+        this.ends_[index],
       ),
-      this.layout
+      this.layout,
     );
   }
 
@@ -306,7 +310,7 @@ class Polygon extends SimpleGeometry {
       const end = ends[i];
       const linearRing = new LinearRing(
         flatCoordinates.slice(offset, end),
-        layout
+        layout,
       );
       linearRings.push(linearRing);
       offset = end;
@@ -328,7 +332,7 @@ class Polygon extends SimpleGeometry {
           this.orientedFlatCoordinates_,
           0,
           this.ends_,
-          this.stride
+          this.stride,
         );
       }
       this.orientedRevision_ = this.getRevision();
@@ -340,6 +344,7 @@ class Polygon extends SimpleGeometry {
    * @param {number} squaredTolerance Squared tolerance.
    * @return {Polygon} Simplified Polygon.
    * @protected
+   * @override
    */
   getSimplifiedGeometryInternal(squaredTolerance) {
     /** @type {Array<number>} */
@@ -354,7 +359,7 @@ class Polygon extends SimpleGeometry {
       Math.sqrt(squaredTolerance),
       simplifiedFlatCoordinates,
       0,
-      simplifiedEnds
+      simplifiedEnds,
     );
     return new Polygon(simplifiedFlatCoordinates, 'XY', simplifiedEnds);
   }
@@ -363,6 +368,7 @@ class Polygon extends SimpleGeometry {
    * Get the type of this geometry.
    * @return {import("./Geometry.js").Type} Geometry type.
    * @api
+   * @override
    */
   getType() {
     return 'Polygon';
@@ -373,6 +379,7 @@ class Polygon extends SimpleGeometry {
    * @param {import("../extent.js").Extent} extent Extent.
    * @return {boolean} `true` if the geometry and the extent intersect.
    * @api
+   * @override
    */
   intersectsExtent(extent) {
     return intersectsLinearRingArray(
@@ -380,7 +387,7 @@ class Polygon extends SimpleGeometry {
       0,
       this.ends_,
       this.stride,
-      extent
+      extent,
     );
   }
 
@@ -389,6 +396,7 @@ class Polygon extends SimpleGeometry {
    * @param {!Array<Array<import("../coordinate.js").Coordinate>>} coordinates Coordinates.
    * @param {import("./Geometry.js").GeometryLayout} [layout] Layout.
    * @api
+   * @override
    */
   setCoordinates(coordinates, layout) {
     this.setLayout(layout, coordinates, 2);
@@ -400,7 +408,7 @@ class Polygon extends SimpleGeometry {
       0,
       coordinates,
       this.stride,
-      this.ends_
+      this.ends_,
     );
     this.flatCoordinates.length = ends.length === 0 ? 0 : ends[ends.length - 1];
     this.changed();
@@ -428,7 +436,7 @@ export function circular(center, radius, n, sphereRadius) {
   for (let i = 0; i < n; ++i) {
     extend(
       flatCoordinates,
-      sphereOffset(center, radius, (2 * Math.PI * i) / n, sphereRadius)
+      sphereOffset(center, radius, (2 * Math.PI * i) / n, sphereRadius),
     );
   }
   flatCoordinates.push(flatCoordinates[0], flatCoordinates[1]);

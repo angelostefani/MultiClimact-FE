@@ -1,0 +1,80 @@
+﻿/* ========== MAP ELEMENTS ========== */
+
+/* Common styles for map-related overlays */
+.search-bar,
+#mouseCoordinates {
+    position: absolute;
+    z-index: 900;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Search bar placement */
+.search-bar {
+    top: 280px;
+    right: 15px;
+    width: 15%;
+}
+
+/* Mouse coordinates display */
+#mouseCoordinates {
+    bottom: 50px;
+    left: 15px;
+    width: 15%;
+}
+
+/* Fullscreen map container */
+.map-container-full,
+.map-container {
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    display: block;
+}
+
+/* Map and checkbox/radio containers */
+.map-checkbox-container,
+.map-radio-container {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    width: 100%;
+}
+
+/* Map container with side controls */
+.map-container-85 {
+    width: 85%;
+    height: 65vh;
+    background-color: #f0f0f0; /* Grigio chiaro come sfondo */
+}
+
+/* Checkbox and radio containers */
+.checkbox-container {
+    width: 15%;
+    height: 100%;
+    padding-left: 10px;
+    display: flex;
+    flex-direction: column; /* Vertical layout */
+    background-color: #f0f0f0; /* Grigio chiaro come sfondo */
+    border: 1px solid #ccc; /* Aggiunta opzionale per evidenziare il bordo */
+    border-radius: 5px; /* Arrotonda i bordi per un aspetto più gradevole */
+    padding: 10px; /* Spaziatura interna per un layout più bilanciato */
+}
+
+.radio-container {
+    width: 100%;
+    padding-left: 10px;
+    display: flex;
+    flex-direction: row; /* Orizzontal layout */
+    background-color: #f0f0f0; /* Grigio chiaro come sfondo */
+    border: 1px solid #ccc; /* Aggiunta opzionale per evidenziare il bordo */
+    border-radius: 5px; /* Arrotonda i bordi per un aspetto più gradevole */
+    padding: 10px; /* Spaziatura interna per un layout più bilanciato */
+}
+
+/* Legend control style for OpenLayers */
+.ol-control.legend-control {
+    background-color: white;
+    padding: 5px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}

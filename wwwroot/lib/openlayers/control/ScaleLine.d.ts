@@ -2,11 +2,11 @@ export default ScaleLine;
 /**
  * Units for the scale line.
  */
-export type Units = 'degrees' | 'imperial' | 'nautical' | 'metric' | 'us';
+export type Units = "degrees" | "imperial" | "nautical" | "metric" | "us";
 /**
  * *
  */
-export type ScaleLineOnSignature<Return> = import("../Observable").OnSignature<import("../Observable").EventTypes, import("../events/Event.js").default, Return> & import("../Observable").OnSignature<import("../ObjectEventType").Types | 'change:units', import("../Object").ObjectEvent, Return> & import("../Observable").CombinedOnSignature<import("../Observable").EventTypes | import("../ObjectEventType").Types | 'change:units', Return>;
+export type ScaleLineOnSignature<Return> = import("../Observable").OnSignature<import("../Observable").EventTypes, import("../events/Event.js").default, Return> & import("../Observable").OnSignature<import("../ObjectEventType").Types | "change:units", import("../Object").ObjectEvent, Return> & import("../Observable").CombinedOnSignature<import("../Observable").EventTypes | import("../ObjectEventType").Types | "change:units", Return>;
 export type Options = {
     /**
      * CSS class name. The default is `ol-scale-bar` when configured with
@@ -97,6 +97,9 @@ export type Options = {
  * but this can be changed by using the css selector `.ol-scale-line`.
  * When specifying `bar` as `true`, a scalebar will be rendered instead
  * of a scaleline.
+ * For cartesian measurements of the scaleline, you need to set the
+ * `getPointResolution` method of your projection to simply return the input
+ * value, e.g. `projection.setGetPointResolution(r => r);`
  *
  * @api
  */
@@ -214,7 +217,7 @@ declare class ScaleLine extends Control {
      * @param {'absolute'|'relative'} position The position, absolute or relative
      * @return {string} The stringified div containing the marker
      */
-    createMarker(position: 'absolute' | 'relative'): string;
+    createMarker(position: "absolute" | "relative"): string;
     /**
      * Creates the label for a marker marker at given position
      * @param {number} i The iterator

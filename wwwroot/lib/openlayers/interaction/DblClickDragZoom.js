@@ -27,7 +27,7 @@ class DblClickDragZoom extends Interaction {
     const options = opt_options ? opt_options : {};
 
     super(
-      /** @type {import("./Interaction.js").InteractionOptions} */ (options)
+      /** @type {import("./Interaction.js").InteractionOptions} */ (options),
     );
 
     if (options.stopDown) {
@@ -84,6 +84,7 @@ class DblClickDragZoom extends Interaction {
    * @param {import("../MapBrowserEvent.js").default} mapBrowserEvent Map browser event.
    * @return {boolean} `false` to stop event propagation.
    * @api
+   * @override
    */
   handleEvent(mapBrowserEvent) {
     if (!mapBrowserEvent.originalEvent) {
@@ -227,7 +228,7 @@ class DblClickDragZoom extends Interaction {
       this.handlingDoubleDownSequence_ = true;
       this.doubleTapTimeoutId_ = setTimeout(
         this.endInteraction_.bind(this),
-        250
+        250,
       );
     }
   }

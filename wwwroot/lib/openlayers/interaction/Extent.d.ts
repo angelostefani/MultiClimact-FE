@@ -19,7 +19,7 @@ export default Extent;
 export type Options = {
     /**
      * A function that
-     * takes an {@link module :ol/MapBrowserEvent~MapBrowserEvent} and returns a
+     * takes a {@link module :ol/MapBrowserEvent~MapBrowserEvent} and returns a
      * boolean to indicate whether that event should be handled.
      * Default is {@link module :ol/events/condition.always}.
      */
@@ -53,7 +53,7 @@ export type Options = {
 /**
  * *
  */
-export type ExtentOnSignature<Return> = import("../Observable").OnSignature<import("../Observable").EventTypes, import("../events/Event.js").default, Return> & import("../Observable").OnSignature<import("../ObjectEventType").Types | 'change:active', import("../Object").ObjectEvent, Return> & import("../Observable").OnSignature<'extentchanged', ExtentEvent, Return> & import("../Observable").CombinedOnSignature<import("../Observable").EventTypes | import("../ObjectEventType").Types | 'change:active' | 'extentchanged', Return>;
+export type ExtentOnSignature<Return> = import("../Observable").OnSignature<import("../Observable").EventTypes, import("../events/Event.js").default, Return> & import("../Observable").OnSignature<import("../ObjectEventType").Types | "change:active", import("../Object").ObjectEvent, Return> & import("../Observable").OnSignature<"extentchanged", ExtentEvent, Return> & import("../Observable").CombinedOnSignature<import("../Observable").EventTypes | import("../ObjectEventType").Types | "change:active" | "extentchanged", Return>;
 import Event from '../events/Event.js';
 /***
  * @template Return
@@ -173,8 +173,9 @@ declare class Extent extends PointerInteraction {
      * Subclasses may set up event handlers to get notified about changes to
      * the map here.
      * @param {import("../Map.js").default} map Map.
+     * @override
      */
-    setMap(map: import("../Map.js").default): void;
+    override setMap(map: import("../Map.js").default): void;
     /**
      * Returns the current drawn extent in the view projection (or user projection if set)
      *

@@ -40,7 +40,7 @@ class WebGLArrayBuffer {
   /**
    * @param {number} type Buffer type, either ARRAY_BUFFER or ELEMENT_ARRAY_BUFFER.
    * @param {number} [usage] Intended usage, either `STATIC_DRAW`, `STREAM_DRAW` or `DYNAMIC_DRAW`.
-   * Default is `DYNAMIC_DRAW`.
+   * Default is `STATIC_DRAW`.
    */
   constructor(type, usage) {
     /**
@@ -57,7 +57,7 @@ class WebGLArrayBuffer {
 
     assert(
       type === ARRAY_BUFFER || type === ELEMENT_ARRAY_BUFFER,
-      'A `WebGLArrayBuffer` must either be of type `ELEMENT_ARRAY_BUFFER` or `ARRAY_BUFFER`'
+      'A `WebGLArrayBuffer` must either be of type `ELEMENT_ARRAY_BUFFER` or `ARRAY_BUFFER`',
     );
 
     /**
@@ -111,6 +111,17 @@ class WebGLArrayBuffer {
    */
   getArray() {
     return this.array_;
+  }
+
+  /**
+   * @param {Float32Array|Uint32Array} array Array.
+   */
+  setArray(array) {
+    const ArrayType = getArrayClassForType(this.type_);
+    if (!(array instanceof ArrayType)) {
+      throw new Error(`Expected ${ArrayType}`);
+    }
+    this.array_ = array;
   }
 
   /**

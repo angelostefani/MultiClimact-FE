@@ -46,7 +46,7 @@ const TOS_ATTRIBUTION =
 
 /**
  * @typedef {Object} Options
- * @property {number} [cacheSize] Initial tile cache size. Will auto-grow to hold at least the number of tiles in the viewport.
+ * @property {number} [cacheSize] Deprecated.  Use the cacheSize option on the layer instead.
  * @property {boolean} [hidpi=false] If `true` hidpi tiles will be requested.
  * @property {string} [culture='en-us'] Culture code.
  * @property {string} key Bing Maps API key. Get yours at https://www.bingmapsportal.com/.
@@ -126,7 +126,6 @@ class BingMaps extends TileImage {
       cacheSize: options.cacheSize,
       crossOrigin: 'anonymous',
       interpolate: options.interpolate,
-      opaque: true,
       projection: getProjection('EPSG:3857'),
       reprojectionErrorThreshold: options.reprojectionErrorThreshold,
       state: 'loading',
@@ -265,10 +264,10 @@ class BingMaps extends TileImage {
               tileCoord[0],
               tileCoord[1],
               tileCoord[2],
-              quadKeyTileCoord
+              quadKeyTileCoord,
             );
             const url = new URL(
-              imageUrl.replace('{quadkey}', quadKey(quadKeyTileCoord))
+              imageUrl.replace('{quadkey}', quadKey(quadKeyTileCoord)),
             );
             const params = url.searchParams;
             if (hidpi) {
@@ -283,13 +282,13 @@ class BingMaps extends TileImage {
             return url.toString();
           }
         );
-      })
+      }),
     );
 
     if (resource.imageryProviders) {
       const transform = getTransformFromProjections(
         getProjection('EPSG:4326'),
-        this.getProjection()
+        this.getProjection(),
       );
 
       this.setAttributions((frameState) => {
@@ -298,11 +297,11 @@ class BingMaps extends TileImage {
         const tileGrid = this.getTileGrid();
         const z = tileGrid.getZForResolution(
           viewState.resolution,
-          this.zDirection
+          this.zDirection,
         );
         const tileCoord = tileGrid.getTileCoordForCoordAndZ(
           viewState.center,
-          z
+          z,
         );
         const zoom = tileCoord[0];
         resource.imageryProviders.map(function (imageryProvider) {

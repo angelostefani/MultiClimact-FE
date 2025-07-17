@@ -1,0 +1,7 @@
+﻿[*.cs]
+
+# CS8601: Possibile assegnazione di riferimento Null.
+dotnet_diagnostic.CS8601.severity = suggestion
+
+# CS8981: Il nome del tipo contiene solo caratteri ascii minuscoli. Tali nomi possono diventare riservati per la lingua.
+dotnet_diagnostic.CS8981.severity = none

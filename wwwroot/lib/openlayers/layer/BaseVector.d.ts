@@ -1,5 +1,5 @@
 export default BaseVectorLayer;
-export type Options<VectorSourceType extends import("../source/Vector.js").default<import("../Feature").default<import("../geom/Geometry.js").default>> | import("../source/VectorTile.js").default> = {
+export type Options<FeatureType extends import("../Feature").FeatureLike, VectorSourceType extends import("../source/Vector.js").default<FeatureType> | import("../source/VectorTile.js").default<FeatureType>> = {
     /**
      * A CSS class name to set to the layer element.
      */
@@ -68,18 +68,13 @@ export type Options<VectorSourceType extends import("../source/Vector.js").defau
      */
     map?: import("../Map.js").default | undefined;
     /**
-     * Declutter images and text. Decluttering is applied to all
-     * image and text styles of all Vector and VectorTile layers that have set this to `true`. The priority
-     * is defined by the z-index of the layer, the `zIndex` of the style and the render order of features.
-     * Higher z-index means higher priority. Within the same z-index, a feature rendered before another has
-     * higher priority.
-     *
-     * As an optimization decluttered features from layers with the same `className` are rendered above
-     * the fill and stroke styles of all of those layers regardless of z-index.  To opt out of this
-     * behavior and place declutterd features with their own layer configure the layer with a `className`
-     * other than `ol-layer`.
+     * Declutter images and text. Any truthy value will enable
+     * decluttering. Within a layer, a feature rendered before another has higher priority. All layers with the
+     * same `declutter` value will be decluttered together. The priority is determined by the drawing order of the
+     * layers with the same `declutter` value. Higher in the layer stack means higher priority. To declutter distinct
+     * layers or groups of layers separately, use different truthy values for `declutter`.
      */
-    declutter?: boolean | undefined;
+    declutter?: string | number | boolean | undefined;
     /**
      * Layer style. When set to `null`, only
      * features that have their own style will be rendered. See {@link module :ol/style/Style~Style} for the default style
@@ -117,19 +112,20 @@ export type Options<VectorSourceType extends import("../source/Vector.js").defau
  * property on the layer object; for example, setting `title: 'My Title'` in the
  * options means that `title` is observable, and has get/set accessors.
  *
- * @template {import("../source/Vector.js").default|import("../source/VectorTile.js").default} VectorSourceType
- * @template {import("../renderer/canvas/VectorLayer.js").default|import("../renderer/canvas/VectorTileLayer.js").default|import("../renderer/canvas/VectorImageLayer.js").default|import("../renderer/webgl/PointsLayer.js").default} RendererType
+ * @template {import('../Feature').FeatureLike} FeatureType
+ * @template {import("../source/Vector.js").default<FeatureType>|import("../source/VectorTile.js").default<FeatureType>} VectorSourceType<FeatureType>
  * @extends {Layer<VectorSourceType, RendererType>}
+ * @template {import("../renderer/canvas/VectorLayer.js").default|import("../renderer/canvas/VectorTileLayer.js").default|import("../renderer/canvas/VectorImageLayer.js").default|import("../renderer/webgl/PointsLayer.js").default} RendererType
  * @api
  */
-declare class BaseVectorLayer<VectorSourceType extends import("../source/Vector.js").default<import("../Feature").default<import("../geom/Geometry.js").default>> | import("../source/VectorTile.js").default, RendererType extends import("../renderer/canvas/VectorLayer.js").default | import("../renderer/canvas/VectorTileLayer.js").default | import("../renderer/canvas/VectorImageLayer.js").default | import("../renderer/webgl/PointsLayer.js").default> extends Layer<VectorSourceType, RendererType> {
+declare class BaseVectorLayer<FeatureType extends import("../Feature").FeatureLike, VectorSourceType extends import("../source/Vector.js").default<FeatureType> | import("../source/VectorTile.js").default<FeatureType>, RendererType extends import("../renderer/canvas/VectorLayer.js").default | import("../renderer/canvas/VectorTileLayer.js").default | import("../renderer/canvas/VectorImageLayer.js").default | import("../renderer/webgl/PointsLayer.js").default> extends Layer<VectorSourceType, RendererType> {
     /**
-     * @param {Options<VectorSourceType>} [options] Options.
+     * @param {Options<FeatureType, VectorSourceType>} [options] Options.
      */
-    constructor(options?: Options<VectorSourceType> | undefined);
+    constructor(options?: Options<FeatureType, VectorSourceType> | undefined);
     /**
      * @private
-     * @type {boolean}
+     * @type {string}
      */
     private declutter_;
     /**
@@ -139,7 +135,7 @@ declare class BaseVectorLayer<VectorSourceType extends import("../source/Vector.
     private renderBuffer_;
     /**
      * User provided style.
-     * @type {import("../style/Style.js").StyleLike}
+     * @type {import("../style/Style.js").StyleLike|import("../style/flat.js").FlatStyleLike}
      * @private
      */
     private style_;
@@ -160,10 +156,6 @@ declare class BaseVectorLayer<VectorSourceType extends import("../source/Vector.
      */
     private updateWhileInteracting_;
     /**
-     * @return {boolean} Declutter.
-     */
-    getDeclutter(): boolean;
-    /**
      * @return {number|undefined} Render buffer.
      */
     getRenderBuffer(): number | undefined;
@@ -175,10 +167,10 @@ declare class BaseVectorLayer<VectorSourceType extends import("../source/Vector.
     /**
      * Get the style for features.  This returns whatever was passed to the `style`
      * option at construction or to the `setStyle` method.
-     * @return {import("../style/Style.js").StyleLike|null|undefined} Layer style.
+     * @return {import("../style/Style.js").StyleLike|import("../style/flat.js").FlatStyleLike|null|undefined} Layer style.
      * @api
      */
-    getStyle(): import("../style/Style.js").StyleLike | null | undefined;
+    getStyle(): import("../style/Style.js").StyleLike | import("../style/flat.js").FlatStyleLike | null | undefined;
     /**
      * Get the style function.
      * @return {import("../style/Style.js").StyleFunction|undefined} Layer style function.
@@ -195,11 +187,6 @@ declare class BaseVectorLayer<VectorSourceType extends import("../source/Vector.
      *     interacting.
      */
     getUpdateWhileInteracting(): boolean;
-    /**
-     * Render declutter items for this layer
-     * @param {import("../Map.js").FrameState} frameState Frame state.
-     */
-    renderDeclutter(frameState: import("../Map.js").FrameState): void;
     /**
      * @param {import("../render.js").OrderFunction|null|undefined} renderOrder
      *     Render order.

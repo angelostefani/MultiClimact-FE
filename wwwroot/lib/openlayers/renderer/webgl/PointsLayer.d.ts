@@ -171,9 +171,18 @@ declare class WebGLPointsLayerRenderer extends WebGLLayerRenderer<any> {
      * @param {Options} options Options.
      */
     constructor(layer: import("../../layer/Layer.js").default, options: Options);
-    sourceRevision_: number;
-    verticesBuffer_: WebGLArrayBuffer;
-    indicesBuffer_: WebGLArrayBuffer;
+    /**
+     * @private
+     */
+    private sourceRevision_;
+    /**
+     * @private
+     */
+    private verticesBuffer_;
+    /**
+     * @private
+     */
+    private indicesBuffer_;
     /**
      * @private
      */
@@ -197,9 +206,12 @@ declare class WebGLPointsLayerRenderer extends WebGLLayerRenderer<any> {
      * index of the vertex (0 to 3) are required.
      * @type {Array<import('../../webgl/Helper.js').AttributeDescription>}
      */
-    attributes: Array<import('../../webgl/Helper.js').AttributeDescription>;
+    attributes: Array<import("../../webgl/Helper.js").AttributeDescription>;
     customAttributes: CustomAttribute[];
-    previousExtent_: import("../../extent.js").Extent;
+    /**
+     * @private
+     */
+    private previousExtent_;
     /**
      * This transform is updated on every frame and is the composition of:
      * - invert of the world->screen transform that was used when rebuilding buffers (see `this.renderTransform_`)
@@ -251,7 +263,10 @@ declare class WebGLPointsLayerRenderer extends WebGLLayerRenderer<any> {
      * @private
      */
     private featureCount_;
-    sourceListenKeys_: import("../../events.js").EventsKey[];
+    /**
+     * @private
+     */
+    private sourceListenKeys_;
     /**
      * @param {import("../../source/Vector.js").VectorSourceEvent} event Event.
      * @private
@@ -275,8 +290,9 @@ declare class WebGLPointsLayerRenderer extends WebGLLayerRenderer<any> {
      * Render the layer.
      * @param {import("../../Map.js").FrameState} frameState Frame state.
      * @return {HTMLElement} The rendered element.
+     * @override
      */
-    renderFrame(frameState: import("../../Map.js").FrameState): HTMLElement;
+    override renderFrame(frameState: import("../../Map.js").FrameState): HTMLElement;
     /**
      * Rebuild internal webgl buffers based on current view extent; costly, should not be called too much
      * @param {import("../../Map").FrameState} frameState Frame state.
@@ -292,7 +308,7 @@ declare class WebGLPointsLayerRenderer extends WebGLLayerRenderer<any> {
      * @param {number} worldWidth the width of the worlds being rendered
      */
     renderWorlds(frameState: import("../../Map.js").FrameState, forHitDetection: boolean, startWorld: number, endWorld: number, worldWidth: number): void;
+    renderDeclutter(): void;
 }
 import WebGLLayerRenderer from './Layer.js';
-import WebGLArrayBuffer from '../../webgl/Buffer.js';
 //# sourceMappingURL=PointsLayer.d.ts.map

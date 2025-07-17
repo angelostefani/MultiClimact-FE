@@ -10,27 +10,27 @@
  * @classdesc
  * Events emitted by {@link module:ol/source/Vector~VectorSource} instances are instances of this
  * type.
- * @template {import("../Feature.js").FeatureLike} [FeatureClass=import("../Feature.js").default]
+ * @template {import("../Feature.js").FeatureLike} [FeatureType=import("../Feature.js").default]
  */
-export class VectorSourceEvent<FeatureClass extends import("../Feature.js").FeatureLike = import("../Feature.js").default<import("../geom/Geometry.js").default>> extends Event {
+export class VectorSourceEvent<FeatureType extends import("../Feature.js").FeatureLike = import("../Feature.js").default<import("../geom.js").Geometry>> extends Event {
     /**
      * @param {string} type Type.
-     * @param {FeatureClass} [feature] Feature.
-     * @param {Array<FeatureClass>} [features] Features.
+     * @param {FeatureType} [feature] Feature.
+     * @param {Array<FeatureType>} [features] Features.
      */
-    constructor(type: string, feature?: FeatureClass | undefined, features?: FeatureClass[] | undefined);
+    constructor(type: string, feature?: FeatureType | undefined, features?: FeatureType[] | undefined);
     /**
      * The added or removed feature for the `ADDFEATURE` and `REMOVEFEATURE` events, `undefined` otherwise.
-     * @type {FeatureClass|undefined}
+     * @type {FeatureType|undefined}
      * @api
      */
-    feature: FeatureClass | undefined;
+    feature: FeatureType | undefined;
     /**
      * The loaded features for the `FEATURESLOADED` event, `undefined` otherwise.
-     * @type {Array<FeatureClass>|undefined}
+     * @type {Array<FeatureType>|undefined}
      * @api
      */
-    features: Array<FeatureClass> | undefined;
+    features: Array<FeatureType> | undefined;
 }
 export default VectorSource;
 /**
@@ -42,8 +42,12 @@ export type LoadingStrategy = (arg0: import("../extent.js").Extent, arg1: number
 /**
  * *
  */
-export type VectorSourceOnSignature<Return> = import("../Observable").OnSignature<import("../Observable").EventTypes, import("../events/Event.js").default, Return> & import("../Observable").OnSignature<import("../ObjectEventType").Types, import("../Object").ObjectEvent, Return> & import("../Observable").OnSignature<import("./VectorEventType").VectorSourceEventTypes, VectorSourceEvent, Return> & import("../Observable").CombinedOnSignature<import("../Observable").EventTypes | import("../ObjectEventType").Types | import("./VectorEventType").VectorSourceEventTypes, Return>;
-export type Options<FeatureClass extends import("../Feature.js").FeatureLike = import("../Feature.js").default<import("../geom/Geometry.js").default>> = {
+export type FeatureClassOrArrayOfRenderFeatures<T extends import("../Feature.js").FeatureLike = import("../Feature.js").default<import("../geom.js").Geometry>> = T extends RenderFeature ? T | Array<T> : T;
+/**
+ * *
+ */
+export type VectorSourceOnSignature<Return, FeatureType extends import("../Feature.js").FeatureLike = import("../Feature.js").default<import("../geom.js").Geometry>> = import("../Observable").OnSignature<import("../Observable").EventTypes, import("../events/Event.js").default, Return> & import("../Observable").OnSignature<import("../ObjectEventType").Types, import("../Object").ObjectEvent, Return> & import("../Observable").OnSignature<import("./VectorEventType").VectorSourceEventTypes, VectorSourceEvent<FeatureType>, Return> & import("../Observable").CombinedOnSignature<import("../Observable").EventTypes | import("../ObjectEventType").Types | import("./VectorEventType").VectorSourceEventTypes, Return>;
+export type Options<FeatureType extends import("../Feature.js").FeatureLike = import("../Feature.js").default<import("../geom.js").Geometry>> = {
     /**
      * Attributions.
      */
@@ -52,12 +56,12 @@ export type Options<FeatureClass extends import("../Feature.js").FeatureLike = i
      * Features. If provided as {@link module :ol/Collection~Collection}, the features in the source
      * and the collection will stay in sync.
      */
-    features?: FeatureClass[] | Collection<FeatureClass> | undefined;
+    features?: FeatureType[] | Collection<FeatureType> | undefined;
     /**
      * The feature format used by the XHR
      * feature loader when `url` is set. Required if `url` is set, otherwise ignored.
      */
-    format?: import("../format/Feature.js").default | undefined;
+    format?: import("../format/Feature.js").default<FeatureType> | undefined;
     /**
      * The loader function used to load features, from a remote source for example.
      * If this is not set and `url` is set, the source will create and use an XHR
@@ -101,7 +105,7 @@ export type Options<FeatureClass extends import("../Feature.js").FeatureLike = i
      * });
      * ```
      */
-    loader?: import("../featureloader.js").FeatureLoader | undefined;
+    loader?: import("../featureloader.js").FeatureLoader<FeatureType> | undefined;
     /**
      * This source may have overlapping geometries.
      * Setting this to `false` (e.g. for sources with polygons that represent administrative
@@ -157,23 +161,28 @@ export type Options<FeatureClass extends import("../Feature.js").FeatureLike = i
 };
 import Event from '../events/Event.js';
 /***
+ * @template {import("../Feature.js").FeatureLike} [T=import("../Feature.js").default]
+ * @typedef {T extends RenderFeature ? T|Array<T> : T} FeatureClassOrArrayOfRenderFeatures
+ */
+/***
  * @template Return
+ * @template {import("../Feature.js").FeatureLike} [FeatureType=import("../Feature.js").default]
  * @typedef {import("../Observable").OnSignature<import("../Observable").EventTypes, import("../events/Event.js").default, Return> &
  *   import("../Observable").OnSignature<import("../ObjectEventType").Types, import("../Object").ObjectEvent, Return> &
- *   import("../Observable").OnSignature<import("./VectorEventType").VectorSourceEventTypes, VectorSourceEvent, Return> &
+ *   import("../Observable").OnSignature<import("./VectorEventType").VectorSourceEventTypes, VectorSourceEvent<FeatureType>, Return> &
  *   import("../Observable").CombinedOnSignature<import("../Observable").EventTypes|import("../ObjectEventType").Types|
  *     import("./VectorEventType").VectorSourceEventTypes, Return>} VectorSourceOnSignature
  */
 /**
- * @template {import("../Feature.js").FeatureLike} [FeatureClass=import("../Feature.js").default]
+ * @template {import("../Feature.js").FeatureLike} [FeatureType=import("../Feature.js").default]
  * @typedef {Object} Options
  * @property {import("./Source.js").AttributionLike} [attributions] Attributions.
- * @property {Array<FeatureClass>|Collection<FeatureClass>} [features]
+ * @property {Array<FeatureType>|Collection<FeatureType>} [features]
  * Features. If provided as {@link module:ol/Collection~Collection}, the features in the source
  * and the collection will stay in sync.
- * @property {import("../format/Feature.js").default} [format] The feature format used by the XHR
+ * @property {import("../format/Feature.js").default<FeatureType>} [format] The feature format used by the XHR
  * feature loader when `url` is set. Required if `url` is set, otherwise ignored.
- * @property {import("../featureloader.js").FeatureLoader} [loader]
+ * @property {import("../featureloader.js").FeatureLoader<FeatureType>} [loader]
  * The loader function used to load features, from a remote source for example.
  * If this is not set and `url` is set, the source will create and use an XHR
  * feature loader. The `'featuresloadend'` and `'featuresloaderror'` events
@@ -264,33 +273,33 @@ import Event from '../events/Event.js';
  *
  * @fires VectorSourceEvent
  * @api
- * @template {import("../Feature.js").FeatureLike} [FeatureClass=import("../Feature.js").default]
+ * @template {import("../Feature.js").FeatureLike} [FeatureType=import("../Feature.js").default]
  */
-declare class VectorSource<FeatureClass extends import("../Feature.js").FeatureLike = import("../Feature.js").default<import("../geom/Geometry.js").default>> extends Source {
+declare class VectorSource<FeatureType extends import("../Feature.js").FeatureLike = import("../Feature.js").default<import("../geom.js").Geometry>> extends Source {
     /**
-     * @param {Options<FeatureClass>} [options] Vector source options.
+     * @param {Options<FeatureType>} [options] Vector source options.
      */
-    constructor(options?: Options<FeatureClass> | undefined);
+    constructor(options?: Options<FeatureType> | undefined);
     /***
-     * @type {VectorSourceOnSignature<import("../events").EventsKey>}
+     * @type {VectorSourceOnSignature<import("../events").EventsKey, FeatureType>}
      */
-    on: VectorSourceOnSignature<import("../events").EventsKey>;
+    on: VectorSourceOnSignature<import("../events").EventsKey, FeatureType>;
     /***
-     * @type {VectorSourceOnSignature<import("../events").EventsKey>}
+     * @type {VectorSourceOnSignature<import("../events").EventsKey, FeatureType>}
      */
-    once: VectorSourceOnSignature<import("../events").EventsKey>;
+    once: VectorSourceOnSignature<import("../events").EventsKey, FeatureType>;
     /***
      * @type {VectorSourceOnSignature<void>}
      */
     un: VectorSourceOnSignature<void>;
     /**
      * @private
-     * @type {import("../featureloader.js").FeatureLoader}
+     * @type {import("../featureloader.js").FeatureLoader<FeatureType>}
      */
     private loader_;
     /**
      * @private
-     * @type {import("../format/Feature.js").default|undefined}
+     * @type {import("../format/Feature.js").default<FeatureType>|null}
      */
     private format_;
     /**
@@ -310,7 +319,7 @@ declare class VectorSource<FeatureClass extends import("../Feature.js").FeatureL
     private strategy_;
     /**
      * @private
-     * @type {RBush<FeatureClass>}
+     * @type {RBush<FeatureType>}
      */
     private featuresRtree_;
     /**
@@ -325,19 +334,19 @@ declare class VectorSource<FeatureClass extends import("../Feature.js").FeatureL
     private loadingExtentsCount_;
     /**
      * @private
-     * @type {!Object<string, FeatureClass>}
+     * @type {!Object<string, FeatureType>}
      */
     private nullGeometryFeatures_;
     /**
      * A lookup of features by id (the return from feature.getId()).
      * @private
-     * @type {!Object<string, FeatureClass|Array<RenderFeature>>}
+     * @type {!Object<string, import('../Feature.js').FeatureLike|Array<import('../Feature.js').FeatureLike>>}
      */
     private idIndex_;
     /**
      * A lookup of features by uid (using getUid(feature)).
      * @private
-     * @type {!Object<string, FeatureClass>}
+     * @type {!Object<string, FeatureType>}
      */
     private uidIndex_;
     /**
@@ -347,7 +356,7 @@ declare class VectorSource<FeatureClass extends import("../Feature.js").FeatureL
     private featureChangeKeys_;
     /**
      * @private
-     * @type {Collection<FeatureClass>|null}
+     * @type {Collection<FeatureType>|null}
      */
     private featuresCollection_;
     /**
@@ -356,28 +365,28 @@ declare class VectorSource<FeatureClass extends import("../Feature.js").FeatureL
      * instead. A feature will not be added to the source if feature with
      * the same id is already there. The reason for this behavior is to avoid
      * feature duplication when using bbox or tile loading strategies.
-     * Note: this also applies if an {@link module:ol/Collection~Collection} is used for features,
+     * Note: this also applies if a {@link module:ol/Collection~Collection} is used for features,
      * meaning that if a feature with a duplicate id is added in the collection, it will
      * be removed from it right away.
-     * @param {FeatureClass} feature Feature to add.
+     * @param {FeatureType} feature Feature to add.
      * @api
      */
-    addFeature(feature: FeatureClass): void;
+    addFeature(feature: FeatureType): void;
     /**
      * Add a feature without firing a `change` event.
-     * @param {FeatureClass} feature Feature.
+     * @param {FeatureType} feature Feature.
      * @protected
      */
-    protected addFeatureInternal(feature: FeatureClass): void;
+    protected addFeatureInternal(feature: FeatureType): void;
     /**
      * @param {string} featureKey Unique identifier for the feature.
-     * @param {FeatureClass} feature The feature.
+     * @param {FeatureType} feature The feature.
      * @private
      */
     private setupChangeEvents_;
     /**
      * @param {string} featureKey Unique identifier for the feature.
-     * @param {FeatureClass} feature The feature.
+     * @param {FeatureType} feature The feature.
      * @return {boolean} The feature is "valid", in the sense that it is also a
      *     candidate for insertion into the Rtree.
      * @private
@@ -385,18 +394,18 @@ declare class VectorSource<FeatureClass extends import("../Feature.js").FeatureL
     private addToIndex_;
     /**
      * Add a batch of features to the source.
-     * @param {Array<FeatureClass>} features Features to add.
+     * @param {Array<FeatureType>} features Features to add.
      * @api
      */
-    addFeatures(features: Array<FeatureClass>): void;
+    addFeatures(features: Array<FeatureType>): void;
     /**
      * Add features without firing a `change` event.
-     * @param {Array<FeatureClass>} features Features.
+     * @param {Array<FeatureType>} features Features.
      * @protected
      */
-    protected addFeaturesInternal(features: Array<FeatureClass>): void;
+    protected addFeaturesInternal(features: Array<FeatureType>): void;
     /**
-     * @param {!Collection<FeatureClass>} collection Collection.
+     * @param {!Collection<FeatureType>} collection Collection.
      * @private
      */
     private bindFeaturesCollection_;
@@ -412,13 +421,13 @@ declare class VectorSource<FeatureClass extends import("../Feature.js").FeatureL
      * stop and the function will return the same value.
      * Note: this function only iterate through the feature that have a defined geometry.
      *
-     * @param {function(FeatureClass): T} callback Called with each feature
+     * @param {function(FeatureType): T} callback Called with each feature
      *     on the source.  Return a truthy value to stop iteration.
      * @return {T|undefined} The return value from the last call to the callback.
      * @template T
      * @api
      */
-    forEachFeature<T>(callback: (arg0: FeatureClass) => T): T | undefined;
+    forEachFeature<T>(callback: (arg0: FeatureType) => T): T | undefined;
     /**
      * Iterate through all features whose geometries contain the provided
      * coordinate, calling the callback with each feature.  If the callback returns
@@ -429,12 +438,12 @@ declare class VectorSource<FeatureClass extends import("../Feature.js").FeatureL
      * called for all features.
      *
      * @param {import("../coordinate.js").Coordinate} coordinate Coordinate.
-     * @param {function(FeatureClass): T} callback Called with each feature
+     * @param {function(FeatureType): T} callback Called with each feature
      *     whose goemetry contains the provided coordinate.
      * @return {T|undefined} The return value from the last call to the callback.
      * @template T
      */
-    forEachFeatureAtCoordinateDirect<T_1>(coordinate: import("../coordinate.js").Coordinate, callback: (arg0: FeatureClass) => T_1): T_1 | undefined;
+    forEachFeatureAtCoordinateDirect<T>(coordinate: import("../coordinate.js").Coordinate, callback: (arg0: FeatureType) => T): T | undefined;
     /**
      * Iterate through all features whose bounding box intersects the provided
      * extent (note that the feature's geometry may not intersect the extent),
@@ -448,13 +457,13 @@ declare class VectorSource<FeatureClass extends import("../Feature.js").FeatureL
      * features, equivalent to {@link module:ol/source/Vector~VectorSource#forEachFeature #forEachFeature()}.
      *
      * @param {import("../extent.js").Extent} extent Extent.
-     * @param {function(FeatureClass): T} callback Called with each feature
+     * @param {function(FeatureType): T} callback Called with each feature
      *     whose bounding box intersects the provided extent.
      * @return {T|undefined} The return value from the last call to the callback.
      * @template T
      * @api
      */
-    forEachFeatureInExtent<T_2>(extent: import("../extent.js").Extent, callback: (arg0: FeatureClass) => T_2): T_2 | undefined;
+    forEachFeatureInExtent<T>(extent: import("../extent.js").Extent, callback: (arg0: FeatureType) => T): T | undefined;
     /**
      * Iterate through all features whose geometry intersects the provided extent,
      * calling the callback with each feature.  If the callback returns a "truthy"
@@ -464,28 +473,28 @@ declare class VectorSource<FeatureClass extends import("../Feature.js").FeatureL
      * {@link module:ol/source/Vector~VectorSource#forEachFeatureInExtent #forEachFeatureInExtent()} method instead.
      *
      * @param {import("../extent.js").Extent} extent Extent.
-     * @param {function(FeatureClass): T} callback Called with each feature
+     * @param {function(FeatureType): T} callback Called with each feature
      *     whose geometry intersects the provided extent.
      * @return {T|undefined} The return value from the last call to the callback.
      * @template T
      * @api
      */
-    forEachFeatureIntersectingExtent<T_3>(extent: import("../extent.js").Extent, callback: (arg0: FeatureClass) => T_3): T_3 | undefined;
+    forEachFeatureIntersectingExtent<T>(extent: import("../extent.js").Extent, callback: (arg0: FeatureType) => T): T | undefined;
     /**
      * Get the features collection associated with this source. Will be `null`
      * unless the source was configured with `useSpatialIndex` set to `false`, or
-     * with an {@link module:ol/Collection~Collection} as `features`.
-     * @return {Collection<FeatureClass>|null} The collection of features.
+     * with a {@link module:ol/Collection~Collection} as `features`.
+     * @return {Collection<FeatureType>|null} The collection of features.
      * @api
      */
-    getFeaturesCollection(): Collection<FeatureClass> | null;
+    getFeaturesCollection(): Collection<FeatureType> | null;
     /**
      * Get a snapshot of the features currently on the source in random order. The returned array
      * is a copy, the features are references to the features in the source.
-     * @return {Array<FeatureClass>} Features.
+     * @return {Array<FeatureType>} Features.
      * @api
      */
-    getFeatures(): Array<FeatureClass>;
+    getFeatures(): Array<FeatureType>;
     /**
      * Get all features whose geometry intersects the provided coordinate.
      * @param {import("../coordinate.js").Coordinate} coordinate Coordinate.
@@ -504,10 +513,10 @@ declare class VectorSource<FeatureClass extends import("../Feature.js").FeatureL
      * @param {import("../extent.js").Extent} extent Extent.
      * @param {import("../proj/Projection.js").default} [projection] Include features
      * where `extent` exceeds the x-axis bounds of `projection` and wraps around the world.
-     * @return {Array<FeatureClass>} Features.
+     * @return {Array<FeatureType>} Features.
      * @api
      */
-    getFeaturesInExtent(extent: import("../extent.js").Extent, projection?: import("../proj/Projection.js").default | undefined): Array<FeatureClass>;
+    getFeaturesInExtent(extent: import("../extent.js").Extent, projection?: import("../proj/Projection.js").default | undefined): Array<FeatureType>;
     /**
      * Get the closest feature to the provided coordinate.
      *
@@ -515,13 +524,13 @@ declare class VectorSource<FeatureClass extends import("../Feature.js").FeatureL
      * `useSpatialIndex` set to `false` and the features in this source are of type
      * {@link module:ol/Feature~Feature}.
      * @param {import("../coordinate.js").Coordinate} coordinate Coordinate.
-     * @param {function(FeatureClass):boolean} [filter] Feature filter function.
+     * @param {function(FeatureType):boolean} [filter] Feature filter function.
      *     The filter function will receive one argument, the {@link module:ol/Feature~Feature feature}
      *     and it should return a boolean value. By default, no filtering is made.
-     * @return {FeatureClass} Closest feature.
+     * @return {FeatureType} Closest feature.
      * @api
      */
-    getClosestFeatureToCoordinate(coordinate: import("../coordinate.js").Coordinate, filter?: ((arg0: FeatureClass) => boolean) | undefined): FeatureClass;
+    getClosestFeatureToCoordinate(coordinate: import("../coordinate.js").Coordinate, filter?: ((arg0: FeatureType) => boolean) | undefined): FeatureType;
     /**
      * Get the extent of the features currently in the source.
      *
@@ -542,24 +551,24 @@ declare class VectorSource<FeatureClass extends import("../Feature.js").FeatureL
      * `source.getFeatureById(2)` will return a feature with id `'2'` or `2`.
      *
      * @param {string|number} id Feature identifier.
-     * @return {FeatureClass|Array<RenderFeature>|null} The feature (or `null` if not found).
+     * @return {FeatureClassOrArrayOfRenderFeatures<FeatureType>|null} The feature (or `null` if not found).
      * @api
      */
-    getFeatureById(id: string | number): FeatureClass | Array<RenderFeature> | null;
+    getFeatureById(id: string | number): FeatureClassOrArrayOfRenderFeatures<FeatureType> | null;
     /**
      * Get a feature by its internal unique identifier (using `getUid`).
      *
      * @param {string} uid Feature identifier.
-     * @return {FeatureClass|null} The feature (or `null` if not found).
+     * @return {FeatureType|null} The feature (or `null` if not found).
      */
-    getFeatureByUid(uid: string): FeatureClass | null;
+    getFeatureByUid(uid: string): FeatureType | null;
     /**
      * Get the format associated with this source.
      *
-     * @return {import("../format/Feature.js").default|undefined} The feature format.
+     * @return {import("../format/Feature.js").default<FeatureType>|null}} The feature format.
      * @api
      */
-    getFormat(): import("../format/Feature.js").default | undefined;
+    getFormat(): import("../format/Feature.js").default<FeatureType> | null;
     /**
      * @return {boolean} The source can have overlapping geometries.
      */
@@ -578,11 +587,11 @@ declare class VectorSource<FeatureClass extends import("../Feature.js").FeatureL
     private handleFeatureChange_;
     /**
      * Returns true if the feature is contained within the source.
-     * @param {FeatureClass} feature Feature.
+     * @param {FeatureType} feature Feature.
      * @return {boolean} Has feature.
      * @api
      */
-    hasFeature(feature: FeatureClass): boolean;
+    hasFeature(feature: FeatureType): boolean;
     /**
      * @return {boolean} Is empty.
      */
@@ -600,36 +609,42 @@ declare class VectorSource<FeatureClass extends import("../Feature.js").FeatureL
      */
     removeLoadedExtent(extent: import("../extent.js").Extent): void;
     /**
-     * Remove a single feature from the source.  If you want to remove all features
+     * Batch remove features from the source.  If you want to remove all features
      * at once, use the {@link module:ol/source/Vector~VectorSource#clear #clear()} method
      * instead.
-     * @param {FeatureClass} feature Feature to remove.
+     * @param {Array<FeatureType>} features Features to remove.
      * @api
      */
-    removeFeature(feature: FeatureClass): void;
+    removeFeatures(features: Array<FeatureType>): void;
+    /**
+     * Remove a single feature from the source. If you want to batch remove
+     * features, use the {@link module:ol/source/Vector~VectorSource#removeFeatures #removeFeatures()} method
+     * instead.
+     * @param {FeatureType} feature Feature to remove.
+     * @api
+     */
+    removeFeature(feature: FeatureType): void;
     /**
      * Remove feature without firing a `change` event.
-     * @param {FeatureClass} feature Feature.
-     * @return {FeatureClass|undefined} The removed feature
-     *     (or undefined if the feature was not found).
+     * @param {FeatureType} feature Feature.
+     * @return {boolean} True if the feature was removed, false if it was not found.
      * @protected
      */
-    protected removeFeatureInternal(feature: FeatureClass): FeatureClass | undefined;
+    protected removeFeatureInternal(feature: FeatureType): boolean;
     /**
      * Remove a feature from the id index.  Called internally when the feature id
      * may have changed.
-     * @param {FeatureClass} feature The feature.
-     * @return {boolean} Removed the feature from the index.
+     * @param {FeatureType} feature The feature.
      * @private
      */
     private removeFromIdIndex_;
     /**
      * Set the new loader of the source. The next render cycle will use the
      * new loader.
-     * @param {import("../featureloader.js").FeatureLoader} loader The loader to set.
+     * @param {import("../featureloader.js").FeatureLoader<FeatureType>} loader The loader to set.
      * @api
      */
-    setLoader(loader: import("../featureloader.js").FeatureLoader): void;
+    setLoader(loader: import("../featureloader.js").FeatureLoader<FeatureType>): void;
     /**
      * Points the source to a new url. The next render cycle will use the new url.
      * @param {string|import("../featureloader.js").FeatureUrlFunction} url Url.
@@ -637,7 +652,7 @@ declare class VectorSource<FeatureClass extends import("../Feature.js").FeatureL
      */
     setUrl(url: string | import("../featureloader.js").FeatureUrlFunction): void;
 }
+import RenderFeature from '../render/Feature.js';
 import Collection from '../Collection.js';
 import Source from './Source.js';
-import RenderFeature from '../render/Feature.js';
 //# sourceMappingURL=Vector.d.ts.map

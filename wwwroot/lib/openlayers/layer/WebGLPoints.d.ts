@@ -1,9 +1,9 @@
 export default WebGLPointsLayer;
-export type Options<VectorSourceType extends import("../source/Vector.js").default<import("../Feature.js").default<import("../geom/Geometry.js").default>>> = {
+export type Options<VectorSourceType extends import("../source/Vector.js").default<import("../Feature").FeatureLike>> = {
     /**
      * Literal style to apply to the layer features.
      */
-    style: import('../style/webgl.js').WebGLStyle;
+    style: import("../style/webgl.js").WebGLStyle;
     /**
      * A CSS class name to set to the layer element.
      */
@@ -65,7 +65,7 @@ export type Options<VectorSourceType extends import("../source/Vector.js").defau
     } | undefined;
 };
 /**
- * @template {import("../source/Vector.js").default} VectorSourceType
+ * @template {import("../source/Vector.js").default<import('../Feature').FeatureLike>} VectorSourceType
  * @typedef {Object} Options
  * @property {import('../style/webgl.js').WebGLStyle} style Literal style to apply to the layer features.
  * @property {string} [className='ol-layer'] A CSS class name to set to the layer element.
@@ -120,11 +120,11 @@ export type Options<VectorSourceType extends import("../source/Vector.js").defau
  * property on the layer object; for example, setting `title: 'My Title'` in the
  * options means that `title` is observable, and has get/set accessors.
  *
- * @template {import("../source/Vector.js").default} VectorSourceType
+ * @template {import("../source/Vector.js").default<import('../Feature').FeatureLike>} VectorSourceType
  * @extends {Layer<VectorSourceType, WebGLPointsLayerRenderer>}
  * @fires import("../render/Event.js").RenderEvent
  */
-declare class WebGLPointsLayer<VectorSourceType extends import("../source/Vector.js").default<import("../Feature.js").default<import("../geom/Geometry.js").default>>> extends Layer<VectorSourceType, WebGLPointsLayerRenderer> {
+declare class WebGLPointsLayer<VectorSourceType extends import("../source/Vector.js").default<import("../Feature").FeatureLike>> extends Layer<VectorSourceType, WebGLPointsLayerRenderer> {
     /**
      * @param {Options<VectorSourceType>} options Options.
      */
@@ -144,7 +144,6 @@ declare class WebGLPointsLayer<VectorSourceType extends import("../source/Vector
      * @type {boolean}
      */
     private hitDetectionDisabled_;
-    createRenderer(): any;
     /**
      * Update any variables used by the layer style and trigger a re-render.
      * @param {Object<string, number>} variables Variables to update.

@@ -1,72 +1,30 @@
-html {
-  font-size: 14px;
-}
+/* ========== GLOBAL STYLES ========== */
+@import url('global.css');
 
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
+/* ========== MAIN CONTENT ========== */
+@import url('main-content.css');
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
+/* ========== MAP ELEMENTS ========== */
+@import url('map-elements.css');
 
-html {
-  position: relative;
-  min-height: 100%;
-}
+/* ========== SIDEBARS ========== */
+@import url('sidebars.css');
 
-body {
-  margin-bottom: 60px;
-}
+/* ========== BOTTOM BAR ========== */
+@import url('bottom-bar.css');
 
-/* Stile per la barra di ricerca */
-.search-bar {
-    position: absolute;
-    top: 280px;
-    right: 15px;
-    width: 15%;
-    z-index: 1000;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5); /* Effetto ombra */
-}
+/* ========== TABS ========== */
+@import url('tabs.css');
 
-/* Stile per le coordinate del mouse */
-#mouseCoordinates {
-    position: absolute;
-    bottom: 330px;
-    left: 15px;
-    width: 15%;
-    z-index: 1000;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5); /* Effetto ombra */
-}
+/* ========== ICONS ========== */
+@import url('icons.css');
 
-/* Stile per le legende delle mappe */
-#legendBuildings {
-    position: absolute;
-    bottom: 450px;
-    left: 15px;
-    width: 25%;
-    z-index: 1000;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5); /* Effetto ombra */
-}
+/* ========== FORMS AND TABLES ========== */
+@import url('forms-tables.css');
 
-.ol-control.legend-control {
-    background-color: white;
-    padding: 5px;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-}
+/* ========== LEGENDS ========== */
+@import url('legends.css');
 
-/* Stile per la form di input alla simulazione di terremoto */
-#formEarthquakeSimulation {
-  width: 80%;
-  max-width: 600px;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-.form-label {
-  font-weight: bold;
-}
+/* ========== CHAT ========== */
+@import url('chat.css');
+

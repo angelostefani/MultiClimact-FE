@@ -3,13 +3,13 @@ export default Geometry;
  * The coordinate layout for geometries, indicating whether a 3rd or 4th z ('Z')
  * or measure ('M') coordinate is available.
  */
-export type GeometryLayout = 'XY' | 'XYZ' | 'XYM' | 'XYZM';
+export type GeometryLayout = "XY" | "XYZ" | "XYM" | "XYZM";
 /**
  * The geometry type.  One of `'Point'`, `'LineString'`, `'LinearRing'`,
  * `'Polygon'`, `'MultiPoint'`, `'MultiLineString'`, `'MultiPolygon'`,
  * `'GeometryCollection'`, or `'Circle'`.
  */
-export type Type = 'Point' | 'LineString' | 'LinearRing' | 'Polygon' | 'MultiPoint' | 'MultiLineString' | 'MultiPolygon' | 'GeometryCollection' | 'Circle';
+export type Type = "Point" | "LineString" | "LinearRing" | "Polygon" | "MultiPoint" | "MultiLineString" | "MultiPolygon" | "GeometryCollection" | "Circle";
 /**
  * @classdesc
  * Abstract base class; normally only used for creating subclasses and not
@@ -195,11 +195,11 @@ declare class Geometry extends BaseObject {
      *     string identifier or a {@link module:ol/proj/Projection~Projection} object.
      * @param {import("../proj.js").ProjectionLike} destination The desired projection.  Can be a
      *     string identifier or a {@link module:ol/proj/Projection~Projection} object.
-     * @return {Geometry} This geometry.  Note that original geometry is
+     * @return {this} This geometry.  Note that original geometry is
      *     modified in place.
      * @api
      */
-    transform(source: import("../proj.js").ProjectionLike, destination: import("../proj.js").ProjectionLike): Geometry;
+    transform(source: import("../proj.js").ProjectionLike, destination: import("../proj.js").ProjectionLike): this;
 }
 import BaseObject from '../Object.js';
 //# sourceMappingURL=Geometry.d.ts.map

@@ -209,8 +209,8 @@ class DragAndDrop extends Interaction {
             DragAndDropEventType.ADD_FEATURES,
             file,
             features,
-            projection
-          )
+            projection,
+          ),
         );
         break;
       }
@@ -238,6 +238,7 @@ class DragAndDrop extends Interaction {
    * @param {boolean} active Active.
    * @observable
    * @api
+   * @override
    */
   setActive(active) {
     if (!this.getActive() && active) {
@@ -254,6 +255,7 @@ class DragAndDrop extends Interaction {
    * Subclasses may set up event handlers to get notified about changes to
    * the map here.
    * @param {import("../Map.js").default} map Map.
+   * @override
    */
   setMap(map) {
     this.unregisterListeners_();
@@ -301,7 +303,7 @@ class DragAndDrop extends Interaction {
       const reader = new FileReader();
       reader.addEventListener(
         EventType.LOAD,
-        this.handleResult_.bind(this, file)
+        this.handleResult_.bind(this, file),
       );
       if (this.readAsBuffer_) {
         reader.readAsArrayBuffer(file);

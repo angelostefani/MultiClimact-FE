@@ -1,265 +1,176 @@
 /*
-This code sets up services related to localization, database, authentication, and HTTP requests in an ASP.NET Core application.
-It configures localization for different cultures, connects to a PostgreSQL database, sets up identity management with Entity Framework, adds HTTP client services, and configures the HTTP request pipeline for routing, authentication, and authorization.
+This class is part of an ASP.NET Core application. 
+It serves as the backend logic for the Index page in a Razor Pages application, 
+handling configuration settings and ViewData population for dynamic rendering in the Razor view.
 */
 
 using System;
-using System.Net;
 using System.Net.Http;
-using System.Net.Security;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
+using System.Text.Json;  // Namespace for JSON deserialization
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using MultiClimact.Models;
 
 namespace MultiClimact.Pages
 {
-    public class IndexModel : PageModel
+    /// <summary>
+    /// The IndexModel class handles the backend logic for the Index Razor page.
+    /// It retrieves and processes earthquake data from an external API and 
+    /// maps configuration values to ViewData for dynamic content rendering in the Razor view.
+    /// </summary>
+    /// <remarks>
+    /// Initializes an instance of the <see cref="IndexModel"/> class.
+    /// </remarks>
+    /// <param name="logger">Logger instance for logging errors and information.</param>
+    /// <param name="configuration">Application configuration for retrieving settings.</param>
+    public class IndexModel(ILogger<IndexModel> logger, IConfiguration configuration) : PageModel
     {
-        double Lon;
-        double Lat;
-        string? Description;
-        int DamageLaw;
-        int PgaLaw;
-        double Depth;
-        double Magnitude;
-        int Fault;
-        string? Options;
-        int Radius;
+        private readonly ILogger<IndexModel> _logger = logger;
+        private readonly IConfiguration _configuration = configuration;
 
-        private readonly ILogger<IndexModel> _logger;
-        private readonly IConfiguration _configuration;
-        private readonly HttpClient _httpClient;
-        private readonly IHttpClientFactory _httpClientFactory;
-
-        private readonly IHttpContextAccessor _httpContextAccessor;
-
-        public IndexModel(ILogger<IndexModel> logger, IConfiguration configuration, IHttpClientFactory httpClientFactory, IHttpContextAccessor httpContextAccessor)
-        {
-            _logger = logger;
-            _configuration = configuration;
-            _httpClientFactory = httpClientFactory;
-            _httpContextAccessor = httpContextAccessor;
-
-            // Configura l'oggetto HttpClient per accettare connessioni HTTPS
-            _httpClient = httpClientFactory.CreateClient();
-            _httpClient.BaseAddress = new Uri("http://venere.dhcpnet.casaccia:8080");
-            _httpClient.DefaultRequestHeaders.Accept.Clear();
-            _httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
-        }
-
+        /// <summary>
+        /// Handles HTTP GET requests for the Index page asynchronously.
+        /// Fetches the latest earthquake run ID from an external API and 
+        /// populates ViewData with relevant WMS (Web Map Service) configuration settings.
+        /// </summary>
+        /// <returns>A Task representing the asynchronous operation.</returns>
         public async Task OnGetAsync()
         {
-            // URL del servizio che restituisce il JSON
-            string apiUrl = "multic-cipcast-earthquake-ws-8.1/today";
+            await GetLastEarthquakeIdRun();
 
-            try
-            {
-                // Ignora eventuali errori di certificato (solo per scopi di test)
-                ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true;
-
-                // Effettua la richiesta HTTP
-                HttpResponseMessage response = await _httpClient.GetAsync(apiUrl);
-
-                // Controlla se la richiesta ha avuto successo (codice 200)
-                if (response.IsSuccessStatusCode)
-                {
-                    // Leggi i dati JSON come stringa
-                    string jsonContent = await response.Content.ReadAsStringAsync();
-                    // Pass jsonContent to the view model
-                    ViewData["jsonContent"] = jsonContent;
-                }
-                else
-                {
-                    // Se la richiesta non ha avuto successo, logga l'errore
-                    _logger.LogError($"Error fetching earthquake data. Status code: {response.StatusCode}");
-                }
-            }
-            catch (Exception ex)
-            {
-                // Gestisci eventuali eccezioni durante la richiesta
-                _logger.LogError($"Error fetching earthquake data: {ex.Message}");
-            }
-
-            // Altri dati da passare alla vista
-            ViewData["wmsurl_mapA1"] = _configuration["wms:wmsurl_mapA1"];
-            ViewData["wmslayer_mapA1"] = _configuration["wms:wmslayer_mapA1"];
-
-            ViewData["wmsurl_mapA2"] = _configuration["wms:wmsurl_mapA2"];
-            ViewData["wmslayer_mapA2"] = _configuration["wms:wmslayer_mapA2"];
-
-            ViewData["wmsurl_mapA3"] = _configuration["wms:wmsurl_mapA3"];
-            ViewData["wmslayer_mapA3"] = _configuration["wms:wmslayer_mapA3"];
-
-            ViewData["wmsurl_mapA4"] = _configuration["wms:wmsurl_mapA4"];
-            ViewData["wmslayer_mapA4"] = _configuration["wms:wmslayer_mapA4"];
-
-            ViewData["wmsurl_mapB1"] = _configuration["wms:wmsurl_mapB1"];
-            ViewData["wmslayer_mapB1"] = _configuration["wms:wmslayer_mapB1"];
-
-            ViewData["wmsurl_mapB2"] = _configuration["wms:wmsurl_mapB2"];
-            ViewData["wmslayer_mapB2"] = _configuration["wms:wmslayer_mapB2"];
-
-            ViewData["wmsurl_mapB3"] = _configuration["wms:wmsurl_mapB3"];
-            ViewData["wmslayer_mapB3"] = _configuration["wms:wmslayer_mapB3"];
-
-            ViewData["wmsurl_mapB4"] = _configuration["wms:wmsurl_mapB4"];
-            ViewData["wmslayer_mapB4"] = _configuration["wms:wmslayer_mapB4"];
-
-            ViewData["wmsurl_mapB5"] = _configuration["wms:wmsurl_mapB5"];
-            ViewData["wmslayer_mapB5"] = _configuration["wms:wmslayer_mapB5"];
-
-            ViewData["wmsurl_mapB6"] = _configuration["wms:wmsurl_mapB6"];
-            ViewData["wmslayer_mapB6"] = _configuration["wms:wmslayer_mapB6"];
-
-           
-
-            ViewData["wmsurl_mapC1"] = _configuration["wms:wmsurl_mapC1"];
-            ViewData["wmslayer_mapC1"] = _configuration["wms:wmslayer_mapC1"];
-
-            ViewData["wmsurl_mapC2"] = _configuration["wms:wmsurl_mapC2"];
-            ViewData["wmslayer_mapC2"] = _configuration["wms:wmslayer_mapC2"];
-
-            ViewData["wmsurl_mapC3"] = _configuration["wms:wmsurl_mapC3"];
-            ViewData["wmslayer_mapC3"] = _configuration["wms:wmslayer_mapC3"];
-
-            ViewData["wmsurl_mapC4"] = _configuration["wms:wmsurl_mapC4"];
-            ViewData["wmslayer_mapC4"] = _configuration["wms:wmslayer_mapC4"];
-
-            ViewData["wmsurl_mapC5"] = _configuration["wms:wmsurl_mapC5"];
-            ViewData["wmslayer_mapC5"] = _configuration["wms:wmslayer_mapC5"];
-
-            ViewData["wmsurl_mapC6"] = _configuration["wms:wmsurl_mapC6"];
-            ViewData["wmslayer_mapC6"] = _configuration["wms:wmslayer_mapC6"];
-
-            ViewData["wmsurl_mapC7"] = _configuration["wms:wmsurl_mapC7"];
-            ViewData["wmslayer_mapC7"] = _configuration["wms:wmslayer_mapC7"];
-
-            ViewData["wmsurl_mapC8"] = _configuration["wms:wmsurl_mapC8"];
-            ViewData["wmslayer_mapC8"] = _configuration["wms:wmslayer_mapC8"];
-
-            ViewData["wmsurl_mapC9"] = _configuration["wms:wmsurl_mapC9"];
-            ViewData["wmslayer_mapC9"] = _configuration["wms:wmslayer_mapC9"];
-
-            ViewData["wmsurl_mapC10"] = _configuration["wms:wmsurl_mapC10"];
-            ViewData["wmslayer_mapC10"] = _configuration["wms:wmslayer_mapC10"];
-
-            ViewData["wmsurl_mapC11"] = _configuration["wms:wmsurl_mapC11"];
-            ViewData["wmslayer_mapC11"] = _configuration["wms:wmslayer_mapC11"];
-
-            ViewData["wmsurl_mapC12"] = _configuration["wms:wmsurl_mapC12"];
-            ViewData["wmslayer_mapC12"] = _configuration["wms:wmslayer_mapC12"];
-
-            ViewData["wmsurl_mapC13"] = _configuration["wms:wmsurl_mapC13"];
-            ViewData["wmslayer_mapC13"] = _configuration["wms:wmslayer_mapC13"];
-
-            ViewData["wmsurl_mapD1"] = _configuration["wms:wmsurl_mapD1"];
-            ViewData["wmslayer_mapD1"] = _configuration["wms:wmslayer_mapD1"];
-
-            ViewData["wmsurl_mapD2"] = _configuration["wms:wmsurl_mapD2"];
-            ViewData["wmslayer_mapD2"] = _configuration["wms:wmslayer_mapD2"];
-
-            ViewData["wmsurl_mapD3"] = _configuration["wms:wmsurl_mapD3"];
-            ViewData["wmslayer_mapD3"] = _configuration["wms:wmslayer_mapD3"];
-
-            ViewData["wmsurl_mapD4"] = _configuration["wms:wmsurl_mapD4"];
-            ViewData["wmslayer_mapD4"] = _configuration["wms:wmslayer_mapD4"];
-
-            ViewData["wmsurl_mapD5"] = _configuration["wms:wmsurl_mapD5"];
-            ViewData["wmslayer_mapD5"] = _configuration["wms:wmslayer_mapD5"];
-            
-           
+            ConfigurationToViewDataMapping();
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        /// <summary>
+        /// Fetches the latest earthquake ID run from an external REST API.
+        /// The retrieved ID is stored in ViewData["idRunLastEarthquake"] for use in the Razor view.
+        /// </summary>
+        /// <returns>An asynchronous Task.</returns>
+        private async Task GetLastEarthquakeIdRun()
         {
+            // Define the API endpoint URL
+            var serviceUrl = "http://localhost:5022/api/EarthquakeProxy/GetLastEarthquake";
+
             try
             {
-                var apiUrl = _configuration["servizioWeb"]; // Get the API URL from configuration
-
-                Lon = double.Parse(Request.Form["lon"], System.Globalization.CultureInfo.InvariantCulture);
-                Lat = double.Parse(Request.Form["lat"], System.Globalization.CultureInfo.InvariantCulture);
-                Description = Request.Form["description"];
-                DamageLaw = int.Parse(Request.Form["damageLaw"]);
-                PgaLaw = int.Parse(Request.Form["pgaLaw"]);
-                Depth = double.Parse(Request.Form["depth"], System.Globalization.CultureInfo.InvariantCulture);
-                Magnitude = double.Parse(Request.Form["magnitude"], System.Globalization.CultureInfo.InvariantCulture);
-                Fault = int.Parse(Request.Form["fault"]);
-                Options = Request.Form["options"];
-                Radius = int.Parse(Request.Form["radius"]);
-
-                var earthquake = new
-                {                 
-                    lon = Lon,
-                    lat = Lat,
-                    description = Description,
-                    damageLaw = DamageLaw,
-                    pgaLaw = PgaLaw,
-                    depth = Depth,
-                    magnitude = Magnitude,
-                    fault = Fault,
-                    options = Options,
-                    radius = Radius
-                };
-
-                var userPlatform = new
+                using (var client = new HttpClient())
                 {
-                    idUser = "az123" // Hardcoded user ID for now
-                };
+                    var response = await client.GetAsync(serviceUrl);
 
-                var requestData = new
-                {
-                    earthquake,
-                    userPlatform
-                };
+                    if (response.IsSuccessStatusCode)
+                    {
+                        // Read the response content as a JSON string
+                        var responseBody = await response.Content.ReadAsStringAsync();
 
-                // Esempio di stampa dei dati sulla console
-                System.Console.WriteLine("Lon: " + Lon);
-                System.Console.WriteLine("Lat: " + Lat);
-                System.Console.WriteLine("Description: " + Description);
-                System.Console.WriteLine("DamageLaw: " + DamageLaw);
-                System.Console.WriteLine("PgaLaw: " + PgaLaw);
-                System.Console.WriteLine("Depth: " + Depth);
-                System.Console.WriteLine("Magnitude: " + Magnitude);
-                System.Console.WriteLine("Fault: " + Fault);
-                System.Console.WriteLine("Options: " + Options);
-                System.Console.WriteLine("Radius: " + Radius);
-               
-                var client = new HttpClient();
-                var request = new HttpRequestMessage(HttpMethod.Post, apiUrl);
+                        // Deserialize the JSON response into a .NET object
+                        var data = JsonSerializer.Deserialize<LastEarthquakeResponse>(responseBody);
 
-                String s3 = Newtonsoft.Json.JsonConvert.SerializeObject(requestData);
-
-                var content = new StringContent(s3, null, "application/json");
-
-                request.Content = content;
-                var response = await client.SendAsync(request);
-                response.EnsureSuccessStatusCode();
-                Console.WriteLine(await response.Content.ReadAsStringAsync());
-
-                if (response.IsSuccessStatusCode)
-                {
-                    // Salva un valore nella sessione
-                    HttpContext.Session.SetString("activeMenu", "Earthquake");
-                    // Handle success
-                    return RedirectToPage("/index"); // Redirect to a success page
-                }
-                else
-                {
-                    // Handle failure
-                    _logger.LogError($"Error submitting earthquake data. Status code: {response.StatusCode}");
-                    return Page(); // Stay on the same page
+                        // Store the retrieved earthquake ID in ViewData
+                        ViewData["idRunLastEarthquake"] = data?.id_run ?? "idRun not available in the response";
+                    }
+                    else
+                    {
+                        // Handle unsuccessful API response
+                        ViewData["idRunLastEarthquake"] = $"Error calling the service: {response.StatusCode}";
+                    }
                 }
             }
             catch (Exception ex)
             {
-                // Handle exceptions
-                _logger.LogError($"Error submitting earthquake data: {ex.Message}");
-                return Page(); // Stay on the same page
+                // Log the exception and store an error message in ViewData
+                _logger.LogError(ex, "An error occurred while calling the EarthquakeProxy service.");
+                ViewData["idRunLastEarthquake"] = $"Exception: {ex.Message}";
             }
+        }
+
+        /// <summary>
+        /// Fetches the latest heatwave ID run from an external REST API.
+        /// The retrieved ID is stored in ViewData["idRunLastHeatwave"] for use in the Razor view.
+        /// </summary>
+        /// <returns>An asynchronous Task.</returns>
+        private async Task GetLastHeatwaveIdRun()
+        {
+            // Define the API endpoint URL
+            var serviceUrl = "http://localhost:5022/api/HeatwaveProxy/GetLastHeatwave";
+
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    var response = await client.GetAsync(serviceUrl);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        // Read the response content as a JSON string
+                        var responseBody = await response.Content.ReadAsStringAsync();
+
+                        // Deserialize the JSON response into a .NET object
+                        var data = JsonSerializer.Deserialize<LastEarthquakeResponse>(responseBody);
+
+                        // Store the retrieved earthquake ID in ViewData
+                        ViewData["idRunLastHeatwave"] = data?.id_run ?? "idRun not available in the response";
+                    }
+                    else
+                    {
+                        // Handle unsuccessful API response
+                        ViewData["idRunLastHeatwave"] = $"Error calling the service: {response.StatusCode}";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception and store an error message in ViewData
+                _logger.LogError(ex, "An error occurred while calling the EarthquakeProxy service.");
+                ViewData["idRunLastEarthquake"] = $"Exception: {ex.Message}";
+            }
+        }
+
+        /// <summary>
+        /// Maps configuration settings from appsettings.json to ViewData for use in the Razor view.
+        /// These settings define WMS (Web Map Service) URLs and layers to dynamically populate the view.
+        /// </summary>
+        private void ConfigurationToViewDataMapping()
+        {
+            // Mapping configuration settings for WMS layers and legends
+            var wmsLayers = new[]
+            {
+                new { Key = "wmsurl_lay00", Description = "Real-time earthquakes with risk analysis" },
+                new { Key = "wmsurl_lay01", Description = "POI Buildings in Marche Region" },
+                new { Key = "wmsurl_lay02", Description = "Camerino buildings" },
+                new { Key = "wmsurl_lay03", Description = "Fazzini buildings" },
+                new { Key = "wmsurl_lay04", Description = "Electric substations" },
+                new { Key = "wmsurl_lay05", Description = "Water towers" },
+                new { Key = "wmsurl_lay06", Description = "Water wells" },
+                new { Key = "wmsurl_lay07", Description = "Wastewater plants" },
+                new { Key = "wmsurl_lay08", Description = "Risk paths" },
+                new { Key = "wmsurl_lay09", Description = "Failure scenarios" },
+                new { Key = "wmsurl_lay10", Description = "Shakemap" },
+                new { Key = "wmsurl_lay11", Description = "Temperature above ground" },
+                new { Key = "wmsurl_lay12", Description = "Flood precipitation rate" }
+            };
+
+            // Loop through WMS layers and store them in ViewData dynamically
+            foreach (var layer in wmsLayers)
+            {
+                ViewData[layer.Key] = _configuration[$"wms:{layer.Key}"];
+                ViewData[layer.Key.Replace("url", "layer")] = _configuration[$"wms:{layer.Key.Replace("url", "layer")}"];
+            }
+
+            // Additional commented-out configurations for Points of Interest (POI)
+            /*
+            ViewData["wmsurl_map_poi"] = _configuration["wms:wmsurl_map_poi"];
+
+            ViewData["wmslayer_map_poibui"] = _configuration["wms:wmslayer_map_poibui"];
+            ViewData["wmslegend_map_poibui"] = _configuration["wms:wmslegend_map_poibui"];
+
+            ViewData["wmslayer_map_poiinf"] = _configuration["wms:wmslayer_map_poiinf"];
+            ViewData["wmslegend_map_poiinf"] = _configuration["wms:wmslegend_map_poiinf"];
+
+            ViewData["wmslayer_map_poigen"] = _configuration["wms:wmslayer_map_poigen"];
+            ViewData["wmslegend_map_poigen"] = _configuration["wms:wmslegend_map_poigen"];
+            */
         }
     }
 }

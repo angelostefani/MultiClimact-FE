@@ -22,7 +22,7 @@ export default RenderFeature;
  * The geometry type.  One of `'Point'`, `'LineString'`, `'LinearRing'`,
  * `'Polygon'`, `'MultiPoint'` or 'MultiLineString'`.
  */
-export type Type = 'Point' | 'LineString' | 'LinearRing' | 'Polygon' | 'MultiPoint' | 'MultiLineString';
+export type Type = "Point" | "LineString" | "LinearRing" | "Polygon" | "MultiPoint" | "MultiLineString";
 /**
  * Lightweight, read-only, {@link module:ol/Feature~Feature} and {@link module:ol/geom/Geometry~Geometry} like
  * structure, optimized for vector tile rendering and styling. Geometry access
@@ -77,7 +77,7 @@ declare class RenderFeature {
     private flatMidpoints_;
     /**
      * @private
-     * @type {Array<number>}
+     * @type {Array<number>|null}
      */
     private ends_;
     /**
@@ -86,13 +86,15 @@ declare class RenderFeature {
      */
     private properties_;
     /**
+     * @private
      * @type {number}
      */
-    squaredTolerance_: number;
+    private squaredTolerance_;
     /**
+     * @private
      * @type {number}
      */
-    stride_: number;
+    private stride_;
     /**
      * @private
      * @type {RenderFeature}
@@ -180,7 +182,7 @@ declare class RenderFeature {
     /**
      * @return {import('../style/Style.js').StyleFunction|undefined} Style
      */
-    getStyleFunction(): import('../style/Style.js').StyleFunction | undefined;
+    getStyleFunction(): import("../style/Style.js").StyleFunction | undefined;
     /**
      * Get the type of this feature's geometry.
      * @return {Type} Geometry type.
@@ -206,9 +208,9 @@ declare class RenderFeature {
      */
     clone(): RenderFeature;
     /**
-     * @return {Array<number>} Ends.
+     * @return {Array<number>|null} Ends.
      */
-    getEnds(): Array<number>;
+    getEnds(): Array<number> | null;
     /**
      * Add transform and resolution based geometry simplification to this instance.
      * @return {RenderFeature} This render feature.

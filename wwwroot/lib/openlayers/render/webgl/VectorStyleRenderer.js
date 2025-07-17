@@ -33,6 +33,8 @@ export const Attributes = {
   INDEX: 'a_index',
   SEGMENT_START: 'a_segmentStart',
   SEGMENT_END: 'a_segmentEnd',
+  MEASURE_START: 'a_measureStart',
+  MEASURE_END: 'a_measureEnd',
   PARAMETERS: 'a_parameters',
   JOIN_ANGLES: 'a_joinAngles',
   DISTANCE: 'a_distance',
@@ -106,8 +108,15 @@ class VectorStyleRenderer {
    * @param {boolean} enableHitDetection Whether to enable the hit detection (needs compatible shader)
    */
   constructor(styleOrShaders, helper, enableHitDetection) {
-    this.helper_ = helper;
+    /**
+     * @private
+     * @type {import('../../webgl/Helper.js').default}
+     */
+    this.helper_;
 
+    /**
+     * @private
+     */
     this.hitDetectionEnabled_ = enableHitDetection;
     let shaders = /** @type {StyleShaders} */ (styleOrShaders);
     const isShaders = 'builder' in styleOrShaders;
@@ -115,7 +124,7 @@ class VectorStyleRenderer {
       const parseResult = parseLiteralStyle(
         /** @type {import('../../style/webgl.js').WebGLStyle} */ (
           styleOrShaders
-        )
+        ),
       );
       shaders = {
         builder: parseResult.builder,
@@ -125,17 +134,37 @@ class VectorStyleRenderer {
     }
 
     /**
+     * @private
+     * @type {WebGLProgram}
+     */
+    this.fillProgram_;
+
+    /**
+     * @private
+     * @type {WebGLProgram}
+     */
+    this.strokeProgram_;
+
+    /**
+     * @private
+     * @type {WebGLProgram}
+     */
+    this.symbolProgram_;
+
+    /**
      * @type {boolean}
      * @private
      */
     this.hasFill_ = !!shaders.builder.getFillVertexShader();
     if (this.hasFill_) {
+      /**
+       * @private
+       */
       this.fillVertexShader_ = shaders.builder.getFillVertexShader();
+      /**
+       * @private
+       */
       this.fillFragmentShader_ = shaders.builder.getFillFragmentShader();
-      this.fillProgram_ = this.helper_.getProgram(
-        this.fillFragmentShader_,
-        this.fillVertexShader_
-      );
     }
 
     /**
@@ -144,12 +173,14 @@ class VectorStyleRenderer {
      */
     this.hasStroke_ = !!shaders.builder.getStrokeVertexShader();
     if (this.hasStroke_) {
+      /**
+       * @private
+       */
       this.strokeVertexShader_ = shaders.builder.getStrokeVertexShader();
+      /**
+       * @private
+       */
       this.strokeFragmentShader_ = shaders.builder.getStrokeFragmentShader();
-      this.strokeProgram_ = this.helper_.getProgram(
-        this.strokeFragmentShader_,
-        this.strokeVertexShader_
-      );
     }
 
     /**
@@ -158,12 +189,14 @@ class VectorStyleRenderer {
      */
     this.hasSymbol_ = !!shaders.builder.getSymbolVertexShader();
     if (this.hasSymbol_) {
+      /**
+       * @private
+       */
       this.symbolVertexShader_ = shaders.builder.getSymbolVertexShader();
+      /**
+       * @private
+       */
       this.symbolFragmentShader_ = shaders.builder.getSymbolFragmentShader();
-      this.symbolProgram_ = this.helper_.getProgram(
-        this.symbolFragmentShader_,
-        this.symbolVertexShader_
-      );
     }
 
     const hitDetectionAttributes = this.hitDetectionEnabled_
@@ -177,11 +210,17 @@ class VectorStyleRenderer {
         }
       : {};
 
+    /**
+     * @private
+     */
     this.customAttributes_ = Object.assign(
       {},
       hitDetectionAttributes,
-      shaders.attributes
+      shaders.attributes,
     );
+    /**
+     * @private
+     */
     this.uniforms_ = shaders.uniforms;
 
     const customAttributesDesc = Object.entries(this.customAttributes_).map(
@@ -189,7 +228,7 @@ class VectorStyleRenderer {
         name: `a_prop_${name}`,
         size: value.size || 1,
         type: AttributeType.FLOAT,
-      })
+      }),
     );
     /**
      * @type {Array<import('../../webgl/Helper.js').AttributeDescription>}
@@ -214,8 +253,18 @@ class VectorStyleRenderer {
         type: AttributeType.FLOAT,
       },
       {
+        name: Attributes.MEASURE_START,
+        size: 1,
+        type: AttributeType.FLOAT,
+      },
+      {
         name: Attributes.SEGMENT_END,
         size: 2,
+        type: AttributeType.FLOAT,
+      },
+      {
+        name: Attributes.MEASURE_END,
+        size: 1,
         type: AttributeType.FLOAT,
       },
       {
@@ -253,9 +302,7 @@ class VectorStyleRenderer {
       ...customAttributesDesc,
     ];
 
-    if (shaders.uniforms) {
-      this.helper_.addUniforms(shaders.uniforms);
-    }
+    this.setHelper(helper);
   }
 
   /**
@@ -266,31 +313,31 @@ class VectorStyleRenderer {
   async generateBuffers(geometryBatch, transform) {
     const renderInstructions = this.generateRenderInstructions_(
       geometryBatch,
-      transform
+      transform,
     );
     const [polygonBuffers, lineStringBuffers, pointBuffers] = await Promise.all(
       [
         this.generateBuffersForType_(
           renderInstructions.polygonInstructions,
           'Polygon',
-          transform
+          transform,
         ),
         this.generateBuffersForType_(
           renderInstructions.lineStringInstructions,
           'LineString',
-          transform
+          transform,
         ),
         this.generateBuffersForType_(
           renderInstructions.pointInstructions,
           'Point',
-          transform
+          transform,
         ),
-      ]
+      ],
     );
     // also return the inverse of the transform that was applied when generating buffers
     const invertVerticesTransform = makeInverseTransform(
       createTransform(),
-      transform
+      transform,
     );
     return {
       polygonBuffers: polygonBuffers,
@@ -312,7 +359,7 @@ class VectorStyleRenderer {
           geometryBatch.polygonBatch,
           new Float32Array(0),
           this.customAttributes_,
-          transform
+          transform,
         )
       : null;
     const lineStringInstructions = this.hasStroke_
@@ -320,7 +367,7 @@ class VectorStyleRenderer {
           geometryBatch.lineStringBatch,
           new Float32Array(0),
           this.customAttributes_,
-          transform
+          transform,
         )
       : null;
     const pointInstructions = this.hasSymbol_
@@ -328,7 +375,7 @@ class VectorStyleRenderer {
           geometryBatch.pointBatch,
           new Float32Array(0),
           this.customAttributes_,
-          transform
+          transform,
         )
       : null;
 
@@ -403,11 +450,11 @@ class VectorStyleRenderer {
         // copy & flush received buffers to GPU
         const verticesBuffer = new WebGLArrayBuffer(
           ARRAY_BUFFER,
-          DYNAMIC_DRAW
+          DYNAMIC_DRAW,
         ).fromArrayBuffer(received.vertexBuffer);
         const indicesBuffer = new WebGLArrayBuffer(
           ELEMENT_ARRAY_BUFFER,
-          DYNAMIC_DRAW
+          DYNAMIC_DRAW,
         ).fromArrayBuffer(received.indexBuffer);
         this.helper_.flushBufferData(verticesBuffer);
         this.helper_.flushBufferData(indicesBuffer);
@@ -433,7 +480,7 @@ class VectorStyleRenderer {
         this.fillProgram_,
         this.polygonAttributesDesc_,
         frameState,
-        preRenderCallback
+        preRenderCallback,
       );
     this.hasStroke_ &&
       this.renderInternal_(
@@ -442,7 +489,7 @@ class VectorStyleRenderer {
         this.strokeProgram_,
         this.lineStringAttributesDesc_,
         frameState,
-        preRenderCallback
+        preRenderCallback,
       );
     this.hasSymbol_ &&
       this.renderInternal_(
@@ -451,7 +498,7 @@ class VectorStyleRenderer {
         this.symbolProgram_,
         this.pointAttributesDesc_,
         frameState,
-        preRenderCallback
+        preRenderCallback,
       );
   }
 
@@ -470,7 +517,7 @@ class VectorStyleRenderer {
     program,
     attributes,
     frameState,
-    preRenderCallback
+    preRenderCallback,
   ) {
     const renderCount = indicesBuffer.getSize();
     if (renderCount === 0) {
@@ -482,6 +529,49 @@ class VectorStyleRenderer {
     this.helper_.enableAttributes(attributes);
     preRenderCallback();
     this.helper_.drawElements(0, renderCount);
+  }
+
+  /**
+   * @param {import('../../webgl/Helper.js').default} helper Helper
+   * @param {WebGLBuffers} buffers WebGL Buffers to reload if any
+   */
+  setHelper(helper, buffers = null) {
+    this.helper_ = helper;
+
+    if (this.hasFill_) {
+      this.fillProgram_ = this.helper_.getProgram(
+        this.fillFragmentShader_,
+        this.fillVertexShader_,
+      );
+    }
+    if (this.hasStroke_) {
+      this.strokeProgram_ = this.helper_.getProgram(
+        this.strokeFragmentShader_,
+        this.strokeVertexShader_,
+      );
+    }
+    if (this.hasSymbol_) {
+      this.symbolProgram_ = this.helper_.getProgram(
+        this.symbolFragmentShader_,
+        this.symbolVertexShader_,
+      );
+    }
+    this.helper_.addUniforms(this.uniforms_);
+
+    if (buffers) {
+      if (buffers.polygonBuffers) {
+        this.helper_.flushBufferData(buffers.polygonBuffers[0]);
+        this.helper_.flushBufferData(buffers.polygonBuffers[1]);
+      }
+      if (buffers.lineStringBuffers) {
+        this.helper_.flushBufferData(buffers.lineStringBuffers[0]);
+        this.helper_.flushBufferData(buffers.lineStringBuffers[1]);
+      }
+      if (buffers.pointBuffers) {
+        this.helper_.flushBufferData(buffers.pointBuffers[0]);
+        this.helper_.flushBufferData(buffers.pointBuffers[1]);
+      }
+    }
   }
 }
 

@@ -1,6 +1,7 @@
 /**
  * @module ol/renderer/Composite
  */
+import BaseVectorLayer from '../layer/BaseVector.js';
 import MapRenderer from './Map.js';
 import ObjectEventType from '../ObjectEventType.js';
 import RenderEvent from '../render/Event.js';
@@ -24,12 +25,14 @@ class CompositeMapRenderer extends MapRenderer {
     super(map);
 
     /**
+     * @private
      * @type {import("../events.js").EventsKey}
      */
     this.fontChangeListenerKey_ = listen(
       checkedFonts,
       ObjectEventType.PROPERTYCHANGE,
-      map.redrawText.bind(map)
+      map.redrawText,
+      map,
     );
 
     /**
@@ -59,16 +62,12 @@ class CompositeMapRenderer extends MapRenderer {
      * @type {boolean}
      */
     this.renderedVisible_ = true;
-
-    /**
-     * @type {Array<import("../layer/BaseVector.js").default>}
-     */
-    this.declutterLayers_ = [];
   }
 
   /**
    * @param {import("../render/EventType.js").default} type Event type.
    * @param {import("../Map.js").FrameState} frameState Frame state.
+   * @override
    */
   dispatchRenderEvent(type, frameState) {
     const map = this.getMap();
@@ -78,15 +77,19 @@ class CompositeMapRenderer extends MapRenderer {
     }
   }
 
+  /**
+   * @override
+   */
   disposeInternal() {
     unlistenByKey(this.fontChangeListenerKey_);
-    this.element_.parentNode.removeChild(this.element_);
+    this.element_.remove();
     super.disposeInternal();
   }
 
   /**
    * Render.
    * @param {?import("../Map.js").FrameState} frameState Frame state.
+   * @override
    */
   renderFrame(frameState) {
     if (!frameState) {
@@ -100,16 +103,23 @@ class CompositeMapRenderer extends MapRenderer {
     this.calculateMatrices2D(frameState);
     this.dispatchRenderEvent(RenderEventType.PRECOMPOSE, frameState);
 
-    const layerStatesArray = frameState.layerStatesArray.sort(function (a, b) {
-      return a.zIndex - b.zIndex;
-    });
+    const layerStatesArray = frameState.layerStatesArray.sort(
+      (a, b) => a.zIndex - b.zIndex,
+    );
+    const declutter = layerStatesArray.some(
+      (layerState) =>
+        layerState.layer instanceof BaseVectorLayer &&
+        layerState.layer.getDeclutter(),
+    );
+    if (declutter) {
+      // Some layers need decluttering, turn on deferred rendering hint
+      frameState.declutter = {};
+    }
     const viewState = frameState.viewState;
 
     this.children_.length = 0;
 
-    const declutterLayers = this.declutterLayers_;
-    declutterLayers.length = 0;
-
+    const renderedLayerStates = [];
     let previousElement = null;
     for (let i = 0, ii = layerStatesArray.length; i < ii; ++i) {
       const layerState = layerStatesArray[i];
@@ -133,13 +143,11 @@ class CompositeMapRenderer extends MapRenderer {
         this.children_.push(element);
         previousElement = element;
       }
-      if ('getDeclutter' in layer) {
-        declutterLayers.push(
-          /** @type {import("../layer/BaseVector.js").default} */ (layer)
-        );
-      }
+
+      renderedLayerStates.push(layerState);
     }
-    this.flushDeclutterItems(frameState);
+
+    this.declutter(frameState, renderedLayerStates);
 
     replaceChildren(this.element_, this.children_);
 
@@ -155,13 +163,22 @@ class CompositeMapRenderer extends MapRenderer {
 
   /**
    * @param {import("../Map.js").FrameState} frameState Frame state.
+   * @param {Array<import('../layer/Layer.js').State>} layerStates Layers.
    */
-  flushDeclutterItems(frameState) {
-    const layers = this.declutterLayers_;
-    for (let i = layers.length - 1; i >= 0; --i) {
-      layers[i].renderDeclutter(frameState);
+  declutter(frameState, layerStates) {
+    if (!frameState.declutter) {
+      return;
     }
-    layers.length = 0;
+    for (let i = layerStates.length - 1; i >= 0; --i) {
+      const layerState = layerStates[i];
+      const layer = layerState.layer;
+      if (layer.getDeclutter()) {
+        layer.renderDeclutter(frameState, layerState);
+      }
+    }
+    layerStates.forEach((layerState) =>
+      layerState.layer.renderDeferred(frameState),
+    );
   }
 }
 

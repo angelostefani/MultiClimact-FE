@@ -51,7 +51,7 @@ import {getUid} from '../util.js';
  * @property {import("../size.js").Size} [size] Icon size in pixels. Used together with `offset` to define the
  * sub-rectangle to use from the original (sprite) image.
  * @property {string} [src] Image source URI.
- * @property {"declutter"|"obstacle"|"none"|undefined} [declutterMode] Declutter mode.
+ * @property {import("./Style.js").DeclutterMode} [declutterMode] Declutter mode.
  */
 
 /**
@@ -163,7 +163,7 @@ class Icon extends ImageStyle {
 
     assert(
       !(cacheKey !== undefined && image),
-      '`image` and `src` cannot be provided at the same time'
+      '`image` and `src` cannot be provided at the same time',
     );
 
     if ((cacheKey === undefined || cacheKey.length === 0) && image) {
@@ -171,7 +171,7 @@ class Icon extends ImageStyle {
     }
     assert(
       cacheKey !== undefined && cacheKey.length > 0,
-      'A defined and non-empty `src` or `image` must be provided'
+      'A defined and non-empty `src` or `image` must be provided',
     );
 
     assert(
@@ -179,14 +179,14 @@ class Icon extends ImageStyle {
         (options.width !== undefined || options.height !== undefined) &&
         options.scale !== undefined
       ),
-      '`width` or `height` cannot be provided together with `scale`'
+      '`width` or `height` cannot be provided together with `scale`',
     );
 
     let imageState;
     if (options.src !== undefined) {
       imageState = ImageState.IDLE;
     } else if (image !== undefined) {
-      if (image instanceof HTMLImageElement) {
+      if ('complete' in image) {
         if (image.complete) {
           imageState = image.src ? ImageState.LOADED : ImageState.IDLE;
         } else {
@@ -212,7 +212,7 @@ class Icon extends ImageStyle {
       /** @type {string} */ (cacheKey),
       this.crossOrigin_,
       imageState,
-      this.color_
+      this.color_,
     );
 
     /**
@@ -240,6 +240,11 @@ class Icon extends ImageStyle {
     this.size_ = options.size !== undefined ? options.size : null;
 
     /**
+     * @private
+     */
+    this.initialOptions_;
+
+    /**
      * Calculate the scale if width or height were given.
      */
     if (options.width !== undefined || options.height !== undefined) {
@@ -264,8 +269,8 @@ class Icon extends ImageStyle {
                 imageSize[0],
                 imageSize[1],
                 options.width,
-                options.height
-              )
+                options.height,
+              ),
             );
           };
           this.listenImageChange(onload);
@@ -274,7 +279,7 @@ class Icon extends ImageStyle {
       }
       if (width !== undefined) {
         this.setScale(
-          calculateScale(width, height, options.width, options.height)
+          calculateScale(width, height, options.width, options.height),
         );
       }
     }
@@ -284,6 +289,7 @@ class Icon extends ImageStyle {
    * Clones the style. The underlying Image/HTMLCanvasElement is not cloned.
    * @return {Icon} The cloned style.
    * @api
+   * @override
    */
   clone() {
     let scale, width, height;
@@ -324,6 +330,7 @@ class Icon extends ImageStyle {
    * symbolizer.
    * @return {Array<number>} Anchor.
    * @api
+   * @override
    */
   getAnchor() {
     let anchor = this.normalizedAnchor_;
@@ -405,6 +412,7 @@ class Icon extends ImageStyle {
    * @return {HTMLImageElement|HTMLCanvasElement|ImageBitmap} Image or Canvas element. If the Icon
    * style was configured with `src` or with a not let loaded `img`, an `ImageBitmap` will be returned.
    * @api
+   * @override
    */
   getImage(pixelRatio) {
     return this.iconImage_.getImage(pixelRatio);
@@ -415,6 +423,7 @@ class Icon extends ImageStyle {
    * @param {number} pixelRatio Pixel ratio.
    * @return {number} The pixel ratio of the image.
    * @api
+   * @override
    */
   getPixelRatio(pixelRatio) {
     return this.iconImage_.getPixelRatio(pixelRatio);
@@ -422,6 +431,7 @@ class Icon extends ImageStyle {
 
   /**
    * @return {import("../size.js").Size} Image size.
+   * @override
    */
   getImageSize() {
     return this.iconImage_.getSize();
@@ -429,6 +439,7 @@ class Icon extends ImageStyle {
 
   /**
    * @return {import("../ImageState.js").default} Image state.
+   * @override
    */
   getImageState() {
     return this.iconImage_.getImageState();
@@ -436,6 +447,7 @@ class Icon extends ImageStyle {
 
   /**
    * @return {HTMLImageElement|HTMLCanvasElement|ImageBitmap} Image element.
+   * @override
    */
   getHitDetectionImage() {
     return this.iconImage_.getHitDetectionImage();
@@ -445,6 +457,7 @@ class Icon extends ImageStyle {
    * Get the origin of the symbolizer.
    * @return {Array<number>} Origin.
    * @api
+   * @override
    */
   getOrigin() {
     if (this.origin_) {
@@ -489,6 +502,7 @@ class Icon extends ImageStyle {
    * Get the size of the icon (in pixels).
    * @return {import("../size.js").Size} Image size.
    * @api
+   * @override
    */
   getSize() {
     return !this.size_ ? this.iconImage_.getSize() : this.size_;
@@ -531,6 +545,7 @@ class Icon extends ImageStyle {
    *
    * @param {number|import("../size.js").Size} scale Scale.
    * @api
+   * @override
    */
   setScale(scale) {
     delete this.initialOptions_;
@@ -539,6 +554,7 @@ class Icon extends ImageStyle {
 
   /**
    * @param {function(import("../events/Event.js").default): void} listener Listener function.
+   * @override
    */
   listenImageChange(listener) {
     this.iconImage_.addEventListener(EventType.CHANGE, listener);
@@ -550,6 +566,7 @@ class Icon extends ImageStyle {
    * automatically call this method. However, you might want to call this
    * method yourself for preloading or other purposes.
    * @api
+   * @override
    */
   load() {
     this.iconImage_.load();
@@ -557,9 +574,17 @@ class Icon extends ImageStyle {
 
   /**
    * @param {function(import("../events/Event.js").default): void} listener Listener function.
+   * @override
    */
   unlistenImageChange(listener) {
     this.iconImage_.removeEventListener(EventType.CHANGE, listener);
+  }
+
+  /**
+   * @override
+   */
+  ready() {
+    return this.iconImage_.ready();
   }
 }
 

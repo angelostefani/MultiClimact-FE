@@ -1,0 +1,20 @@
+﻿/* ========== LEGENDS ========== */
+.center-panel {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0); /* Totalmente invisibile */
+    box-shadow: none;
+    padding: 20px;
+    width: 70%;
+    height: 70%;
+    max-width: 2000px;
+    max-height: 2000px;
+    z-index: 900;
+}
+
+.panel-title {
+    margin-bottom: 15px;
+}

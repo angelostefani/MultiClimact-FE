@@ -1,11 +1,4 @@
 /**
- * @param {Uint8ClampedArray} data Image data.
- * @param {number} width Number of columns.
- * @param {number} height Number of rows.
- * @return {ImageData} Image data.
- */
-export function newImageData(data: Uint8ClampedArray, width: number, height: number): ImageData;
-/**
  * @typedef {function(Error, ImageData, (Object|Array<Object>)): void} JobCallback
  */
 /**
@@ -31,25 +24,41 @@ export class Processor extends Disposable {
      * @param {ProcessorOptions} config Configuration.
      */
     constructor(config: ProcessorOptions);
-    _imageOps: boolean;
-    _workers: Worker[];
+    /**
+     * @type {boolean}
+     * @private
+     */
+    private imageOps_;
+    /**
+     * @type {Array<Worker>}
+     * @private
+     */
+    private workers_;
     /**
      * @type {Array<Job>}
      * @private
      */
-    private _queue;
-    _maxQueueLength: number;
-    _running: number;
+    private queue_;
+    /**
+     * @type {number}
+     * @private
+     */
+    private maxQueueLength_;
+    /**
+     * @type {number}
+     * @private
+     */
+    private running_;
     /**
      * @type {Object<number, any>}
      * @private
      */
-    private _dataLookup;
+    private dataLookup_;
     /**
-     * @type {Job}
+     * @type {Job|null}
      * @private
      */
-    private _job;
+    private job_;
     /**
      * Run operation on input data.
      * @param {Array<ImageData>} inputs Array of image data.
@@ -64,22 +73,22 @@ export class Processor extends Disposable {
      * Add a job to the queue.
      * @param {Job} job The job.
      */
-    _enqueue(job: Job): void;
+    enqueue_(job: Job): void;
     /**
      * Dispatch a job.
      */
-    _dispatch(): void;
+    dispatch_(): void;
     /**
      * Handle messages from the worker.
      * @param {number} index The worker index.
      * @param {MessageEvent} event The message event.
      */
-    _onWorkerMessage(index: number, event: MessageEvent): void;
+    onWorkerMessage_(index: number, event: MessageEvent): void;
     /**
      * Resolve a job.  If there are no more worker threads, the processor callback
      * will be called.
      */
-    _resolveJob(): void;
+    resolveJob_(): void;
 }
 /**
  * @typedef {'pixel' | 'image'} RasterOperationType
@@ -208,8 +217,8 @@ export type Operation = (arg0: (Array<Array<number>> | Array<ImageData>), arg1: 
 /**
  * Raster operation type. Supported values are `'pixel'` and `'image'`.
  */
-export type RasterOperationType = 'pixel' | 'image';
-export type RasterSourceEventTypes = import("./Image.js").ImageSourceEventTypes | 'beforeoperations' | 'afteroperations';
+export type RasterOperationType = "pixel" | "image";
+export type RasterSourceEventTypes = import("./Image.js").ImageSourceEventTypes | "beforeoperations" | "afteroperations";
 export type Options = {
     /**
      * Input
@@ -332,8 +341,11 @@ declare class RasterSource extends ImageSource {
      * @type {Array<import("../layer/Layer.js").default>}
      */
     private layers_;
-    /** @type {boolean} */
-    useResolutions_: boolean;
+    /**
+     * @private
+     * @type {boolean}
+     */
+    private useResolutions_;
     /**
      * @private
      * @type {import("../TileQueue.js").default}
@@ -354,8 +366,9 @@ declare class RasterSource extends ImageSource {
     /**
      * The most recently rendered revision.
      * @type {number}
+     * @private
      */
-    renderedRevision_: number;
+    private renderedRevision_;
     /**
      * @private
      * @type {import("../Map.js").FrameState}
@@ -390,8 +403,9 @@ declare class RasterSource extends ImageSource {
      * @param {number} pixelRatio Pixel ratio.
      * @param {import("../proj/Projection.js").default} projection Projection.
      * @return {import("../ImageCanvas.js").default} Single image.
+     * @override
      */
-    getImage(extent: import("../extent.js").Extent, resolution: number, pixelRatio: number, projection: import("../proj/Projection.js").default): import("../ImageCanvas.js").default;
+    override getImage(extent: import("../extent.js").Extent, resolution: number, pixelRatio: number, projection: import("../proj/Projection.js").default): import("../ImageCanvas.js").default;
     /**
      * Start processing source data.
      * @private
@@ -409,8 +423,9 @@ declare class RasterSource extends ImageSource {
     /**
      * @param {import("../proj/Projection").default} [projection] Projection.
      * @return {Array<number>|null} Resolutions.
+     * @override
      */
-    getResolutions(projection?: import("../proj/Projection.js").default | undefined): Array<number> | null;
+    override getResolutions(projection?: import("../proj/Projection.js").default | undefined): Array<number> | null;
 }
 import ImageSource from './Image.js';
 //# sourceMappingURL=Raster.d.ts.map
