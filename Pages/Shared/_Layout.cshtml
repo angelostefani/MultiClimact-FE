@@ -18,13 +18,12 @@
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-
+    
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-light bg-light border-bottom fixed-top shadow-sm">
-            <div class="container-fluid">
+        <nav class="navbar navbar-expand-sm navbar-light bg-light border-bottom fixed-top shadow-sm" style="padding-top: 2px; padding-bottom: 2px;">
+            <div class="container-fluid" style="padding-left: 2px; padding-right: 2px;">
                 <!-- Logo aziendale -->
                 <div class="d-flex align-items-center">
                     <!-- Prima immagine di logo -->
@@ -58,8 +57,7 @@
                                 @Thread.CurrentThread.CurrentUICulture.Name
                             </a>
                             <ul class="dropdown-menu" aria-labelleby="navbarDropdown">
-                                <li><a class="dropdown-item" href="/Lang?culture=en">en</a></li>
-                                <li><a class="dropdown-item" href="/Lang?culture=it">it</a></li>
+                                <li><a class="dropdown-item" href="/Lang?culture=en">en</a></li>                               
                             </ul>
                         </li>
                     </ul>
@@ -67,7 +65,7 @@
             </div>
         </nav>
     </header>
-    <div class="container-fluid">
+    <div class="container-fluid" style="padding-left: 0px; padding-right: 0px;">
         <main role="main" >
             @RenderBody()
         </main>
@@ -76,7 +74,7 @@
     <footer>
         <nav class="navbar navbar-expand-sm navbar-light bg-light border-top fixed-bottom text-center justify-content-center shadow-sm">
             <div class="container-fluid justify-content-center ">
-                &copy; 2024 - MULTICLIMACT
+                &copy; MULTICLIMACT
             </div>
             
        </nav>

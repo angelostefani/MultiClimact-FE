@@ -17,11 +17,11 @@ let taintedTestContext = null;
 
 class IconImage extends EventTarget {
   /**
-   * @param {HTMLImageElement|HTMLCanvasElement|ImageBitmap} image Image.
+   * @param {HTMLImageElement|HTMLCanvasElement|ImageBitmap|null} image Image.
    * @param {string|undefined} src Src.
    * @param {?string} crossOrigin Cross origin.
-   * @param {import("../ImageState.js").default} imageState Image state.
-   * @param {import("../color.js").Color} color Color.
+   * @param {import("../ImageState.js").default|undefined} imageState Image state.
+   * @param {import("../color.js").Color|string|null} color Color.
    */
   constructor(image, src, crossOrigin, imageState, color) {
     super();
@@ -34,7 +34,7 @@ class IconImage extends EventTarget {
 
     /**
      * @private
-     * @type {HTMLImageElement|HTMLCanvasElement|ImageBitmap}
+     * @type {HTMLImageElement|HTMLCanvasElement|ImageBitmap|null}
      */
     this.image_ = image;
 
@@ -52,7 +52,7 @@ class IconImage extends EventTarget {
 
     /**
      * @private
-     * @type {import("../color.js").Color}
+     * @type {import("../color.js").Color|string|null}
      */
     this.color_ = color;
 
@@ -79,6 +79,12 @@ class IconImage extends EventTarget {
      * @private
      */
     this.tainted_;
+
+    /**
+     * @private
+     * @type {Promise<void>|null}
+     */
+    this.ready_ = null;
   }
 
   /**
@@ -245,11 +251,12 @@ class IconImage extends EventTarget {
     }
 
     const image = this.image_;
-    const canvas = document.createElement('canvas');
-    canvas.width = Math.ceil(image.width * pixelRatio);
-    canvas.height = Math.ceil(image.height * pixelRatio);
+    const ctx = createCanvasContext2D(
+      Math.ceil(image.width * pixelRatio),
+      Math.ceil(image.height * pixelRatio),
+    );
+    const canvas = ctx.canvas;
 
-    const ctx = canvas.getContext('2d');
     ctx.scale(pixelRatio, pixelRatio);
     ctx.drawImage(image, 0, 0);
 
@@ -262,17 +269,46 @@ class IconImage extends EventTarget {
 
     this.canvas_[pixelRatio] = canvas;
   }
+
+  /**
+   * @return {Promise<void>} Promise that resolves when the image is loaded.
+   */
+  ready() {
+    if (!this.ready_) {
+      this.ready_ = new Promise((resolve) => {
+        if (
+          this.imageState_ === ImageState.LOADED ||
+          this.imageState_ === ImageState.ERROR
+        ) {
+          resolve();
+        } else {
+          const onChange = () => {
+            if (
+              this.imageState_ === ImageState.LOADED ||
+              this.imageState_ === ImageState.ERROR
+            ) {
+              this.removeEventListener(EventType.CHANGE, onChange);
+              resolve();
+            }
+          };
+          this.addEventListener(EventType.CHANGE, onChange);
+        }
+      });
+    }
+    return this.ready_;
+  }
 }
 
 /**
- * @param {HTMLImageElement|HTMLCanvasElement|ImageBitmap} image Image.
- * @param {string} cacheKey Src.
+ * @param {HTMLImageElement|HTMLCanvasElement|ImageBitmap|null} image Image.
+ * @param {string|undefined} cacheKey Src.
  * @param {?string} crossOrigin Cross origin.
- * @param {import("../ImageState.js").default} imageState Image state.
- * @param {import("../color.js").Color} color Color.
+ * @param {import("../ImageState.js").default|undefined} imageState Image state.
+ * @param {import("../color.js").Color|string|null} color Color.
+ * @param {boolean} [pattern] Also cache a `repeat` pattern with the icon image.
  * @return {IconImage} Icon image.
  */
-export function get(image, cacheKey, crossOrigin, imageState, color) {
+export function get(image, cacheKey, crossOrigin, imageState, color, pattern) {
   let iconImage =
     cacheKey === undefined
       ? undefined
@@ -280,12 +316,19 @@ export function get(image, cacheKey, crossOrigin, imageState, color) {
   if (!iconImage) {
     iconImage = new IconImage(
       image,
-      image instanceof HTMLImageElement ? image.src || undefined : cacheKey,
+      image && 'src' in image ? image.src || undefined : cacheKey,
       crossOrigin,
       imageState,
-      color
+      color,
     );
-    iconImageCache.set(cacheKey, crossOrigin, color, iconImage);
+    iconImageCache.set(cacheKey, crossOrigin, color, iconImage, pattern);
+  }
+  if (
+    pattern &&
+    iconImage &&
+    !iconImageCache.getPattern(cacheKey, crossOrigin, color)
+  ) {
+    iconImageCache.set(cacheKey, crossOrigin, color, iconImage, pattern);
   }
   return iconImage;
 }

@@ -27,6 +27,7 @@ export function calculateSourceExtentResolution(sourceProj: import("./proj/Proje
 /**
  * @typedef {Object} ImageExtent
  * @property {import("./extent.js").Extent} extent Extent.
+ * @property {import("./extent.js").Extent} [clipExtent] Clip extent.
  * @property {import('./DataTile.js').ImageLike} image Image.
  */
 /**
@@ -45,9 +46,10 @@ export function calculateSourceExtentResolution(sourceProj: import("./proj/Proje
  * @param {boolean} [renderEdges] Render reprojection edges.
  * @param {boolean} [interpolate] Use linear interpolation when resampling.
  * @param {boolean} [drawSingle] Draw single source images directly without stitchContext.
+ * @param {boolean} [clipExtent] Clip stitchContext to sourceExtent.
  * @return {HTMLCanvasElement} Canvas with reprojected data.
  */
-export function render(width: number, height: number, pixelRatio: number, sourceResolution: number, sourceExtent: import("./extent.js").Extent, targetResolution: number, targetExtent: import("./extent.js").Extent, triangulation: import("./reproj/Triangulation.js").default, sources: Array<ImageExtent>, gutter: number, renderEdges?: boolean | undefined, interpolate?: boolean | undefined, drawSingle?: boolean | undefined): HTMLCanvasElement;
+export function render(width: number, height: number, pixelRatio: number, sourceResolution: number, sourceExtent: import("./extent.js").Extent, targetResolution: number, targetExtent: import("./extent.js").Extent, triangulation: import("./reproj/Triangulation.js").default, sources: Array<ImageExtent>, gutter: number, renderEdges?: boolean | undefined, interpolate?: boolean | undefined, drawSingle?: boolean | undefined, clipExtent?: boolean | undefined): HTMLCanvasElement;
 /**
  * @type {Array<HTMLCanvasElement>}
  */
@@ -58,8 +60,12 @@ export type ImageExtent = {
      */
     extent: import("./extent.js").Extent;
     /**
+     * Clip extent.
+     */
+    clipExtent?: import("./extent.js").Extent | undefined;
+    /**
      * Image.
      */
-    image: import('./DataTile.js').ImageLike;
+    image: import("./DataTile.js").ImageLike;
 };
 //# sourceMappingURL=reproj.d.ts.map

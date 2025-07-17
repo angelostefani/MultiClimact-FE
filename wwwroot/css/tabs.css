@@ -1,0 +1,38 @@
+﻿/* ========== TABS ========== */
+
+/* Common styles for tabs */
+.tab {
+    position: fixed;
+    background-color: #cfc3c3;
+    color: white;
+    font-size: 12px;
+    cursor: pointer;
+    z-index: 1001;
+    text-align: center;
+    transition: background-color 0.3s;
+}
+
+    .tab:hover {
+        background-color: #575757;
+    }
+
+/* Specific tab placements */
+.tab-left {
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    padding: 15px 5px;
+}
+
+.tab-right {
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+}
+
+.tab-bottom {
+    left: 50%;
+    bottom: 30px;
+    transform: translateX(-50%);
+    padding: 2px 20px;
+}

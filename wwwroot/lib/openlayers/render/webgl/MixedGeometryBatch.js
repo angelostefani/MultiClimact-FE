@@ -71,7 +71,11 @@ import {inflateEnds} from '../../geom/flat/orient.js';
  */
 class MixedGeometryBatch {
   constructor() {
+    /**
+     * @private
+     */
     this.globalCounter_ = 0;
+
     /**
      * Refs are used as keys for hit detection.
      * @type {Map<number, Feature|RenderFeature>}
@@ -223,7 +227,7 @@ class MixedGeometryBatch {
           multiPolygonGeom.getEndss(),
           feature,
           getUid(feature),
-          multiPolygonGeom.getStride()
+          multiPolygonGeom.getStride(),
         );
         break;
       }
@@ -238,7 +242,7 @@ class MixedGeometryBatch {
           multiLineGeom.getEnds(),
           feature,
           getUid(feature),
-          multiLineGeom.getStride()
+          multiLineGeom.getStride(),
         );
         break;
       }
@@ -253,7 +257,7 @@ class MixedGeometryBatch {
           null,
           feature,
           getUid(feature),
-          multiPointGeom.getStride()
+          multiPointGeom.getStride(),
         );
         break;
       }
@@ -268,7 +272,7 @@ class MixedGeometryBatch {
           polygonGeom.getEnds(),
           feature,
           getUid(feature),
-          polygonGeom.getStride()
+          polygonGeom.getStride(),
         );
         break;
       }
@@ -282,7 +286,7 @@ class MixedGeometryBatch {
           null,
           feature,
           getUid(feature),
-          pointGeom.getStride()
+          pointGeom.getStride(),
         );
         break;
       }
@@ -291,13 +295,17 @@ class MixedGeometryBatch {
         const lineGeom = /** @type {import("../../geom.js").LineString} */ (
           geometry
         );
+
+        const stride = lineGeom.getStride();
+
         this.addCoordinates_(
           type,
           lineGeom.getFlatCoordinates(),
           null,
           feature,
           getUid(feature),
-          lineGeom.getStride()
+          stride,
+          lineGeom.getLayout?.(),
         );
         break;
       }
@@ -313,9 +321,10 @@ class MixedGeometryBatch {
    * @param {Feature|RenderFeature} feature Feature
    * @param {string} featureUid Feature uid
    * @param {number} stride Stride
+   * @param {import('../../geom/Geometry.js').GeometryLayout} [layout] Layout
    * @private
    */
-  addCoordinates_(type, flatCoords, ends, feature, featureUid, stride) {
+  addCoordinates_(type, flatCoords, ends, feature, featureUid, stride, layout) {
     /** @type {number} */
     let verticesCount;
     switch (type) {
@@ -338,7 +347,8 @@ class MixedGeometryBatch {
             polygonEnds,
             feature,
             featureUid,
-            stride
+            stride,
+            layout,
           );
         }
         break;
@@ -353,7 +363,8 @@ class MixedGeometryBatch {
             null,
             feature,
             featureUid,
-            stride
+            stride,
+            layout,
           );
         }
         break;
@@ -366,7 +377,8 @@ class MixedGeometryBatch {
             null,
             feature,
             featureUid,
-            null
+            null,
+            null,
           );
         }
         break;
@@ -381,7 +393,8 @@ class MixedGeometryBatch {
               multiPolygonEnds,
               feature,
               featureUid,
-              stride
+              stride,
+              layout,
             );
             return;
           }
@@ -395,22 +408,22 @@ class MixedGeometryBatch {
               verticesCount: 0,
               ringsCount: 0,
               ringsVerticesCounts: [],
-            }
+            },
           );
         }
         verticesCount = flatCoords.length / stride;
         const ringsCount = ends.length;
         const ringsVerticesCount = ends.map((end, ind, arr) =>
-          ind > 0 ? (end - arr[ind - 1]) / stride : end / stride
+          ind > 0 ? (end - arr[ind - 1]) / stride : end / stride,
         );
         this.polygonBatch.verticesCount += verticesCount;
         this.polygonBatch.ringsCount += ringsCount;
         this.polygonBatch.geometriesCount++;
         this.polygonBatch.entries[featureUid].flatCoordss.push(
-          getFlatCoordinatesXY(flatCoords, stride)
+          getFlatCoordinatesXY(flatCoords, stride),
         );
         this.polygonBatch.entries[featureUid].ringsVerticesCounts.push(
-          ringsVerticesCount
+          ringsVerticesCount,
         );
         this.polygonBatch.entries[featureUid].verticesCount += verticesCount;
         this.polygonBatch.entries[featureUid].ringsCount += ringsCount;
@@ -422,7 +435,8 @@ class MixedGeometryBatch {
             null,
             feature,
             featureUid,
-            stride
+            stride,
+            layout,
           );
         }
         break;
@@ -434,7 +448,7 @@ class MixedGeometryBatch {
             {
               feature: feature,
               flatCoordss: [],
-            }
+            },
           );
         }
         this.pointBatch.geometriesCount++;
@@ -449,14 +463,14 @@ class MixedGeometryBatch {
               feature: feature,
               flatCoordss: [],
               verticesCount: 0,
-            }
+            },
           );
         }
         verticesCount = flatCoords.length / stride;
         this.lineStringBatch.verticesCount += verticesCount;
         this.lineStringBatch.geometriesCount++;
         this.lineStringBatch.entries[featureUid].flatCoordss.push(
-          getFlatCoordinatesXY(flatCoords, stride)
+          getFlatCoordinatesXYM(flatCoords, stride, layout),
         );
         this.lineStringBatch.entries[featureUid].verticesCount += verticesCount;
         break;
@@ -561,6 +575,30 @@ function getFlatCoordinatesXY(flatCoords, stride) {
     return flatCoords;
   }
   return flatCoords.filter((v, i) => i % stride < 2);
+}
+
+/**
+ * @param {Array<number>} flatCoords Flat coords
+ * @param {number} stride Stride
+ * @param {string} layout Layout
+ * @return {Array<number>} Flat coords with only XY components
+ */
+function getFlatCoordinatesXYM(flatCoords, stride, layout) {
+  if (stride === 3 && layout === 'XYM') {
+    return flatCoords;
+  }
+  // this is XYZM layout
+  if (stride === 4) {
+    return flatCoords.filter((v, i) => i % stride !== 2);
+  }
+  // this is XYZ layout
+  if (stride === 3) {
+    return flatCoords.map((v, i) => (i % stride !== 2 ? v : 0));
+  }
+  // this is XY layout
+  return new Array(flatCoords.length * 1.5)
+    .fill(0)
+    .map((v, i) => (i % 3 === 2 ? 0 : flatCoords[Math.round(i / 1.5)]));
 }
 
 export default MixedGeometryBatch;

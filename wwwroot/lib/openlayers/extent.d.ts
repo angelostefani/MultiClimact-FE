@@ -193,7 +193,7 @@ export function extendXY(extent: Extent, x: number, y: number): void;
  * @return {S|boolean} Value.
  * @template S
  */
-export function forEachCorner<S>(extent: Extent, callback: (arg0: import("./coordinate.js").Coordinate) => S): boolean | S;
+export function forEachCorner<S>(extent: Extent, callback: (arg0: import("./coordinate.js").Coordinate) => S): S | boolean;
 /**
  * Get the size of an extent.
  * @param {Extent} extent Extent.
@@ -373,9 +373,10 @@ export function wrapX(extent: Extent, projection: import("./proj/Projection.js")
  *
  * @param {Extent} extent Extent.
  * @param {import("./proj/Projection.js").default} projection Projection
+ * @param {boolean} [multiWorld] Return all worlds
  * @return {Array<Extent>} The extent within the real world extent.
  */
-export function wrapAndSliceX(extent: Extent, projection: import("./proj/Projection.js").default): Array<Extent>;
+export function wrapAndSliceX(extent: Extent, projection: import("./proj/Projection.js").default, multiWorld?: boolean | undefined): Array<Extent>;
 /**
  * An array of numbers representing an extent: `[minx, miny, maxx, maxy]`.
  */
@@ -383,5 +384,5 @@ export type Extent = Array<number>;
 /**
  * Extent corner.
  */
-export type Corner = 'bottom-left' | 'bottom-right' | 'top-left' | 'top-right';
+export type Corner = "bottom-left" | "bottom-right" | "top-left" | "top-right";
 //# sourceMappingURL=extent.d.ts.map

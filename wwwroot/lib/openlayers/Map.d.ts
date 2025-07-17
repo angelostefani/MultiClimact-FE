@@ -25,9 +25,12 @@ export type FrameState = {
      */
     coordinateToPixelTransform: import("./transform.js").Transform;
     /**
-     * DeclutterTree.
+     * Declutter trees by declutter group.
+     * When null, no decluttering is needed because no layers have decluttering enabled.
      */
-    declutterTree: any;
+    declutter: {
+        [x: string]: import("rbush").default<import("./render/canvas/Executor.js").DeclutterEntry>;
+    } | null;
     /**
      * Extent (in view projection coordinates).
      */
@@ -140,7 +143,7 @@ export type MapOptionsInternal = {
         [x: string]: any;
     };
 };
-export type MapObjectEventTypes = import("./ObjectEventType").Types | 'change:layergroup' | 'change:size' | 'change:target' | 'change:view';
+export type MapObjectEventTypes = import("./ObjectEventType").Types | "change:layergroup" | "change:size" | "change:target" | "change:view";
 /**
  * *
  */
@@ -202,6 +205,9 @@ export type MapOptions = {
      * element itself or the `id` of the element. If not specified at construction
      * time, {@link module :ol/Map~Map#setTarget} must be called for the map to be
      * rendered. If passed by element, the container can be in a secondary document.
+     * For accessibility (focus and keyboard events for map navigation), the `target` element must have a
+     * properly configured `tabindex` attribute. If the `target` element is inside a Shadow DOM, the
+     * `tabindex` atribute must be set on the custom element's host element.
      * **Note:** CSS `transform` support for the target element is limited to `scale`.
      */
     target?: string | HTMLElement | undefined;
@@ -283,7 +289,7 @@ declare class Map extends BaseObject {
     un: MapEventHandler<void>;
     /**
      * @private
-     * @type {boolean|undefined}
+     * @type {boolean}
      */
     private renderComplete_;
     /**
@@ -399,9 +405,10 @@ declare class Map extends BaseObject {
      */
     private targetElement_;
     /**
+     * @private
      * @type {ResizeObserver}
      */
-    resizeObserver_: ResizeObserver;
+    private resizeObserver_;
     /**
      * @type {Collection<import("./control/Control.js").default>}
      * @protected
@@ -597,10 +604,10 @@ declare class Map extends BaseObject {
      * Note that the index treats string and numeric identifiers as the same. So
      * `map.getOverlayById(2)` will return an overlay with id `'2'` or `2`.
      * @param {string|number} id Overlay identifier.
-     * @return {import("./Overlay.js").default} Overlay.
+     * @return {import("./Overlay.js").default|null} Overlay.
      * @api
      */
-    getOverlayById(id: string | number): import("./Overlay.js").default;
+    getOverlayById(id: string | number): import("./Overlay.js").default | null;
     /**
      * Get the map interactions. Modifying this collection changes the interactions
      * associated with the map.
@@ -758,14 +765,6 @@ declare class Map extends BaseObject {
      */
     render(): void;
     /**
-     * This method is meant to be called in a layer's `prerender` listener. It causes all collected
-     * declutter items to be decluttered and rendered on the map immediately. This is useful for
-     * layers that need to appear entirely above the decluttered items of layers lower in the layer
-     * stack.
-     * @api
-     */
-    flushDeclutterItems(): void;
-    /**
      * Remove the given control from the map.
      * @param {import("./control/Control.js").default} control Control.
      * @return {import("./control/Control.js").default|undefined} The removed control (or undefined
@@ -823,6 +822,9 @@ declare class Map extends BaseObject {
     setSize(size: import("./size.js").Size | undefined): void;
     /**
      * Set the target element to render this map into.
+     * For accessibility (focus and keyboard events for map navigation), the `target` element must have a
+     *  properly configured `tabindex` attribute. If the `target` element is inside a Shadow DOM, the
+     *  `tabindex` atribute must be set on the custom element's host element.
      * @param {HTMLElement|string} [target] The Element or id of the Element
      *     that the map is rendered in.
      * @observable

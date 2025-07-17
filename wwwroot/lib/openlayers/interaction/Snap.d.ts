@@ -53,7 +53,7 @@ export type Options = {
 /**
  * *
  */
-export type SnapOnSignature<Return> = import("../Observable").OnSignature<import("../Observable").EventTypes, import("../events/Event.js").default, Return> & import("../Observable").OnSignature<import("../ObjectEventType").Types | 'change:active', import("../Object").ObjectEvent, Return> & import("../Observable").OnSignature<'snap', SnapEvent, Return> & import("../Observable").CombinedOnSignature<import("../Observable").EventTypes | import("../ObjectEventType").Types | 'change:active' | 'snap', Return>;
+export type SnapOnSignature<Return> = import("../Observable").OnSignature<import("../Observable").EventTypes, import("../events/Event.js").default, Return> & import("../Observable").OnSignature<import("../ObjectEventType").Types | "change:active", import("../Object").ObjectEvent, Return> & import("../Observable").OnSignature<"snap", SnapEvent, Return> & import("../Observable").CombinedOnSignature<import("../Observable").EventTypes | import("../ObjectEventType").Types | "change:active" | "snap", Return>;
 /***
  * @template Return
  * @typedef {import("../Observable").OnSignature<import("../Observable").EventTypes, import("../events/Event.js").default, Return> &
@@ -72,7 +72,7 @@ export type SnapOnSignature<Return> = import("../Observable").OnSignature<import
  * as it is added before.
  *
  * The snap interaction modifies map browser event `coordinate` and `pixel`
- * properties to force the snap to occur to any interaction that them.
+ * properties to force the snap to occur to any interaction that uses them.
  *
  * Example:
  *
@@ -207,8 +207,9 @@ declare class Snap extends PointerInteraction {
      * Subclasses may set up event handlers to get notified about changes to
      * the map here.
      * @param {import("../Map.js").default} map Map.
+     * @override
      */
-    setMap(map: import("../Map.js").default): void;
+    override setMap(map: import("../Map.js").default): void;
     /**
      * @param {import("../pixel.js").Pixel} pixel Pixel
      * @param {import("../coordinate.js").Coordinate} pixelCoordinate Coordinate

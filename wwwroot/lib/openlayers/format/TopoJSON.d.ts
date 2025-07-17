@@ -79,7 +79,7 @@ export type Options = {
  *
  * @api
  */
-declare class TopoJSON extends JSONFeature {
+declare class TopoJSON extends JSONFeature<Feature<import("../geom/Geometry.js").default>> {
     /**
      * @param {Options} [options] Options.
      */
@@ -94,14 +94,7 @@ declare class TopoJSON extends JSONFeature {
      * @type {?Array<string>}
      */
     private layers_;
-    /**
-     * @param {Object} object Object.
-     * @param {import("./Feature.js").ReadOptions} [options] Read options.
-     * @protected
-     * @return {Array<Feature>} Features.
-     */
-    protected readFeaturesFromObject(object: any, options?: import("./Feature.js").ReadOptions | undefined): Array<Feature>;
 }
-import JSONFeature from './JSONFeature.js';
 import Feature from '../Feature.js';
+import JSONFeature from './JSONFeature.js';
 //# sourceMappingURL=TopoJSON.d.ts.map

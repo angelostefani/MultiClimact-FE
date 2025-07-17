@@ -12,7 +12,7 @@ import {hash as tileCoordHash} from '../tilecoord.js';
 /**
  * @typedef {Object} Options
  * @property {import("./Source.js").AttributionLike} [attributions] Attributions.
- * @property {number} [cacheSize] Initial tile cache size. Will auto-grow to hold at least the number of tiles in the viewport.
+ * @property {number} [cacheSize] Deprecated.  Use the cacheSize option on the layer instead.
  * @property {null|string} [crossOrigin] The `crossOrigin` attribute for loaded images.  Note that
  * you must provide a `crossOrigin` value if you want to access pixel data with the Canvas renderer.
  * See https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image for more detail.
@@ -92,7 +92,7 @@ class TileArcGISRest extends TileImage {
      * @private
      * @type {!Object}
      */
-    this.params_ = options.params || {};
+    this.params_ = Object.assign({}, options.params);
 
     /**
      * @private
@@ -148,7 +148,7 @@ class TileArcGISRest extends TileImage {
     tileExtent,
     pixelRatio,
     projection,
-    params
+    params,
   ) {
     const urls = this.urls;
     if (!urls) {
@@ -170,7 +170,7 @@ class TileArcGISRest extends TileImage {
       ).getResolution(tileCoord[0]),
       pixelRatio,
       projection,
-      params
+      params,
     );
   }
 
@@ -178,6 +178,7 @@ class TileArcGISRest extends TileImage {
    * Get the tile pixel ratio for this source.
    * @param {number} pixelRatio Pixel ratio.
    * @return {number} Tile pixel ratio.
+   * @override
    */
   getTilePixelRatio(pixelRatio) {
     return this.hidpi_ ? pixelRatio : 1;
@@ -235,7 +236,7 @@ class TileArcGISRest extends TileImage {
       tileExtent,
       pixelRatio,
       projection,
-      baseParams
+      baseParams,
     );
   }
 }

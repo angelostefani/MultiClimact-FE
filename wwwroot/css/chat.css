@@ -1,0 +1,84 @@
+﻿/* Stile del Pannello della Chat */
+.chat-panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 600px; /* Allargato da 400px a 600px */
+    max-width: 90%; /* Assicura che non superi il 90% della larghezza della finestra */
+    height: auto;
+    padding: 20px;
+    z-index: 1000;
+}
+
+/* Contenitore della Chat */
+.chat-container {
+    padding: 10px;
+}
+
+/* Titolo della Chat */
+.chat-title {
+    font-size: 1.5em;
+    text-align: center;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+/* Area dei messaggi */
+.chat-messages {
+    height: 400px; /* Aumentata l'altezza dell'area messaggi */
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+    /* Messaggi */
+    .chat-messages div {
+        margin-bottom: 10px;
+        padding: 8px 12px;
+        border-radius: 8px;
+    }
+
+        .chat-messages div:nth-child(odd) {
+            background-color: #e6f7ff;
+            align-self: flex-start;
+        }
+
+        .chat-messages div:nth-child(even) {
+            background-color: #d9f7be;
+            align-self: flex-end;
+        }
+
+/* Campo di input e bottone di invio */
+.chat-input-container {
+    display: flex;
+    gap: 10px;
+}
+
+.chat-input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.chat-send-button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+    .chat-send-button:hover {
+        background-color: #0056b3;
+    }

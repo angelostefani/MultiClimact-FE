@@ -376,7 +376,7 @@ export type ViewStateLayerStateExtent = {
      */
     layerStatesArray?: import("./layer/Layer.js").State[] | undefined;
 };
-export type ViewObjectEventTypes = import("./ObjectEventType").Types | 'change:center' | 'change:resolution' | 'change:rotation';
+export type ViewObjectEventTypes = import("./ObjectEventType").Types | "change:center" | "change:resolution" | "change:rotation";
 /**
  * *
  */
@@ -580,7 +580,7 @@ declare class View extends BaseObject {
      * @type {Constraints}
      */
     private constraints_;
-    set padding(arg: number[] | undefined);
+    set padding(padding: number[] | undefined);
     /**
      * Padding (in css pixels).
      * If the map viewport is partially covered with other content (overlays) along

@@ -1,0 +1,40 @@
+OLLAMA
+Set di Ollama su Marte
+
+setx OLLAMA_HOST "0.0.0.0"
+
+
+1 - Avvia Ollama in ascolto sulla rete
+ollama serve
+
+2️ - Abilitare il port forwarding su Windows
+netsh interface portproxy add v4tov4 listenport=11434 listenaddress=0.0.0.0 connectport=11434 connectaddress=127.0.0.1
+2a - Verifica
+netsh interface portproxy show all
+2b - Rimozione
+netsh interface portproxy delete v4tov4 listenport=11434 listenaddress=0.0.0.0
+
+3 - Aprire la porta 11434 nel Firewall di Windows
+netsh advfirewall firewall add rule name="Ollama API" dir=in action=allow protocol=TCP localport=11434
+oppure
+New-NetFirewallRule -DisplayName "Ollama Intranet Access" -Direction Inbound -Protocol TCP -LocalPort 11434 -Action Allow
+
+4 - TEST funzionamento
+curl http://192.168.154.105:11434/api/tags
+
+Per spegnere
+netstat -ano | findstr :11434
+
+taskkill /PID <numero_PID> /F
+
+Stop-Service -Name "Ollama"
+
+Set-Service -Name "Ollama" -StartupType Disabled
+
+PS C:\Windows\system32> netstat -ano | findstr :11434
+  TCP    127.0.0.1:11434        0.0.0.0:0              LISTENING       15988
+  TCP    127.0.0.1:11434        127.0.0.1:51244        ESTABLISHED     15988
+  TCP    127.0.0.1:51244        127.0.0.1:11434        ESTABLISHED     17488
+
+
+Stop-Process -Id 15988 -Force

@@ -42,7 +42,7 @@ export class ImageSourceEvent extends Event {
     image: import("../Image.js").default;
 }
 export default ImageSource;
-export type ImageSourceEventTypes = 'imageloadend' | 'imageloaderror' | 'imageloadstart';
+export type ImageSourceEventTypes = "imageloadend" | "imageloaderror" | "imageloadstart";
 /**
  * *
  */
@@ -169,8 +169,9 @@ declare class ImageSource extends Source {
     private wantedProjection_;
     /**
      * @return {Array<number>|null} Resolutions.
+     * @override
      */
-    getResolutions(): Array<number> | null;
+    override getResolutions(): Array<number> | null;
     /**
      * @param {Array<number>|null} resolutions Resolutions.
      */

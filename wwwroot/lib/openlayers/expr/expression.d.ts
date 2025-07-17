@@ -30,7 +30,7 @@ export function isType(type: number, expected: number): boolean;
  * @property {Set<string>} variables Variables referenced with the 'var' operator.
  * @property {Set<string>} properties Properties referenced with the 'get' operator.
  * @property {boolean} featureId The style uses the feature id.
- * @property {import("../style/flat.js").FlatStyle|import("../style/webgl.js").WebGLStyle} style The style being parsed
+ * @property {boolean} geometryType The style uses the feature geometry type.
  */
 /**
  * @return {ParsingContext} A new parsing context.
@@ -41,17 +41,24 @@ export function newParsingContext(): ParsingContext;
  */
 /**
  * @param {EncodedExpression} encoded The encoded expression.
+ * @param {number} expectedType The expected type.
  * @param {ParsingContext} context The parsing context.
- * @param {number} [typeHint] Optional type hint
  * @return {Expression} The parsed expression result.
  */
-export function parse(encoded: EncodedExpression, context: ParsingContext, typeHint?: number | undefined): Expression;
+export function parse(encoded: EncodedExpression, expectedType: number, context: ParsingContext): Expression;
+/**
+ * Returns a simplified geometry type suited for the `geometry-type` operator
+ * @param {import('../geom/Geometry.js').default|import('../render/Feature.js').default} geometry Geometry object
+ * @return {'Point'|'LineString'|'Polygon'|''} Simplified geometry type; empty string of no geometry found
+ */
+export function computeGeometryType(geometry: import("../geom/Geometry.js").default | import("../render/Feature.js").default): "Point" | "LineString" | "Polygon" | "";
 export const NoneType: 0;
 export const BooleanType: number;
 export const NumberType: number;
 export const StringType: number;
 export const ColorType: number;
 export const NumberArrayType: number;
+export const SizeType: number;
 export const AnyType: number;
 /**
  * @typedef {boolean|number|string|Array<number>} LiteralValue
@@ -97,23 +104,21 @@ export type ParsingContext = {
      */
     featureId: boolean;
     /**
-     * The style being parsed
+     * The style uses the feature geometry type.
      */
-    style: import("../style/flat.js").FlatStyle | import("../style/webgl.js").WebGLStyle;
+    geometryType: boolean;
 };
 export type EncodedExpression = LiteralValue | any[];
 /**
- * An argument validator applies various checks to an encoded expression arguments
- * Returns the parsed arguments if any.
- * Third argument is the array of parsed arguments from previous validators
- * Fourth argument is an optional type hint
+ * An argument validator applies various checks to an encoded expression arguments and
+ * returns the parsed arguments if any.  The second argument is the return type of the call expression.
  */
-export type ArgValidator = (arg0: Array<EncodedExpression>, arg1: ParsingContext, arg2: Array<Expression>, arg3: number | null) => Array<Expression> | void;
+export type ArgValidator = (arg0: Array<EncodedExpression>, arg1: number, arg2: ParsingContext) => Array<Expression> | void;
 /**
  * Base type used for literal style parameters; can be a number literal or the output of an operator,
  * which in turns takes {@link import ("./expression.js").ExpressionValue} arguments.
  *
- * The following operators can be used:
+ * See below for details on the available operators (with notes for those that are WebGL or Canvas only).
  *
  * * Reading operators:
  *   * `['band', bandIndex, xOffset, yOffset]` For tile layers only. Fetches pixel values from band
@@ -122,18 +127,21 @@ export type ArgValidator = (arg0: Array<EncodedExpression>, arg1: ParsingContext
  *     green, blue and alpha. {@link import ("../source/DataTile.js").default} sources can have any number
  *     of bands, depending on the underlying data source and
  *     {@link import ("../source/GeoTIFF.js").Options configuration}. `xOffset` and `yOffset` are optional
- *     and allow specifying pixel offsets for x and y. This is used for sampling data from neighboring pixels.
- *   * `['get', 'attributeName', typeHint]` fetches a feature property value, similar to `feature.get('attributeName')`
- *     A type hint can optionally be specified, in case the resulting expression contains a type ambiguity which
- *     will make it invalid. Type hints can be one of: 'string', 'color', 'number', 'boolean', 'number[]'
+ *     and allow specifying pixel offsets for x and y. This is used for sampling data from neighboring pixels (WebGL only).
+ *   * `['get', attributeName]` fetches a feature property value, similar to `feature.get('attributeName')`.
+ *   * `['get', attributeName, keyOrArrayIndex, ...]` (Canvas only) Access nested properties and array items of a
+ *     feature property. The result is `undefined` when there is nothing at the specified key or index.
  *   * `['geometry-type']` returns a feature's geometry type as string, either: 'LineString', 'Point' or 'Polygon'
  *     `Multi*` values are returned as their singular equivalent
  *     `Circle` geometries are returned as 'Polygon'
- *     `GeometryCollection` geometries are returned as the type of the first geometry found in the collection
+ *     `GeometryCollection` geometries are returned as the type of the first geometry found in the collection (WebGL only).
  *   * `['resolution']` returns the current resolution
- *   * `['time']` returns the time in seconds since the creation of the layer
+ *   * `['time']` The time in seconds since the creation of the layer (WebGL only).
  *   * `['var', 'varName']` fetches a value from the style variables; will throw an error if that variable is undefined
- *   * `['zoom']` returns the current zoom level
+ *   * `['zoom']` The current zoom level (WebGL only).
+ *   * `['line-metric']` returns the M component of the current point on a line (WebGL only); in case where the geometry layout of the line
+ *      does not contain an M component (e.g. XY or XYZ), 0 is returned; 0 is also returned for geometries other than lines.
+ *      Please note that the M component will be linearly interpolated between the two points composing a segment.
  *
  * * Math operators:
  *   * `['*', value1, value2, ...]` multiplies the values (either numbers or colors)
@@ -168,6 +176,15 @@ export type ArgValidator = (arg0: Array<EncodedExpression>, arg1: ParsingContext
  *     `input` and `stopX` values must all be of type `number`. `outputX` values can be `number` or `color` values.
  *     Note: `input` will be clamped between `stop1` and `stopN`, meaning that all output values will be comprised
  *     between `output1` and `outputN`.
+ *   * `['string', value1, value2, ...]` returns the first value in the list that evaluates to a string.
+ *     An example would be to provide a default value for get: `['string', ['get', 'propertyname'], 'default value']]`
+ *     (Canvas only).
+ *   * `['number', value1, value2, ...]` returns the first value in the list that evaluates to a number.
+ *     An example would be to provide a default value for get: `['string', ['get', 'propertyname'], 42]]`
+ *     (Canvas only).
+ *   * `['coalesce', value1, value2, ...]` returns the first value in the list which is not null or undefined.
+ *     An example would be to provide a default value for get: `['coalesce', ['get','propertyname'], 'default value']]`
+ *     (Canvas only).
  *
  * * Logical operators:
  *   * `['<', value1, value2]` returns `true` if `value1` is strictly lower than `value2`, or `false` otherwise.
@@ -179,6 +196,8 @@ export type ArgValidator = (arg0: Array<EncodedExpression>, arg1: ParsingContext
  *   * `['!', value1]` returns `false` if `value1` is `true` or greater than `0`, or `true` otherwise.
  *   * `['all', value1, value2, ...]` returns `true` if all the inputs are `true`, `false` otherwise.
  *   * `['any', value1, value2, ...]` returns `true` if any of the inputs are `true`, `false` otherwise.
+ *   * `['has', attributeName, keyOrArrayIndex, ...]` returns `true` if feature properties include the (nested) key `attributeName`,
+ *     `false` otherwise.
  *   * `['between', value1, value2, value3]` returns `true` if `value1` is contained between `value2` and `value3`
  *     (inclusively), or `false` otherwise.
  *   * `['in', needle, haystack]` returns `true` if `needle` is found in `haystack`, and
@@ -191,15 +210,18 @@ export type ArgValidator = (arg0: Array<EncodedExpression>, arg1: ParsingContext
  *
  * * Conversion operators:
  *   * `['array', value1, ...valueN]` creates a numerical array from `number` values; please note that the amount of
- *     values can currently only be 2, 3 or 4.
- *   * `['color', red, green, blue, alpha]` creates a `color` value from `number` values; the `alpha` parameter is
- *     optional; if not specified, it will be set to 1.
- *     Note: `red`, `green` and `blue` components must be values between 0 and 255; `alpha` between 0 and 1.
+ *     values can currently only be 2, 3 or 4 (WebGL only).
+ *   * `['color', red, green, blue, alpha]` or `['color', shade, alpha]` creates a `color` value from `number` values;
+ *     the `alpha` parameter is optional; if not specified, it will be set to 1 (WebGL only).
+ *     Note: `red`, `green` and `blue` or `shade` components must be values between 0 and 255; `alpha` between 0 and 1.
  *   * `['palette', index, colors]` picks a `color` value from an array of colors using the given index; the `index`
  *     expression must evaluate to a number; the items in the `colors` array must be strings with hex colors
  *     (e.g. `'#86A136'`), colors using the rgba[a] functional notation (e.g. `'rgb(134, 161, 54)'` or `'rgba(134, 161, 54, 1)'`),
  *     named colors (e.g. `'red'`), or array literals with 3 ([r, g, b]) or 4 ([r, g, b, a]) values (with r, g, and b
- *     in the 0-255 range and a in the 0-1 range).
+ *     in the 0-255 range and a in the 0-1 range) (WebGL only).
+ *   * `['to-string', value]` converts the input value to a string. If the input is a boolean, the result is "true" or "false".
+ *     If the input is a number, it is converted to a string as specified by the "NumberToString" algorithm of the ECMAScript
+ *     Language Specification. If the input is a color, it is converted to a string of the form "rgba(r,g,b,a)". (Canvas only)
  *
  * Values can either be literals or another operator, as they will be evaluated recursively.
  * Literal values can be of the following types:
@@ -212,7 +234,7 @@ export type ArgValidator = (arg0: Array<EncodedExpression>, arg1: ParsingContext
 export type ExpressionValue = Array<any> | import("../color.js").Color | string | number | boolean;
 export type LiteralValue = boolean | number | string | Array<number>;
 /**
- * Third argument is a type hint
+ * Second argument is the expected type.
  */
-export type Parser = (arg0: any[], arg1: ParsingContext, arg2: number) => Expression;
+export type Parser = (arg0: any[], arg1: number, arg2: ParsingContext) => Expression;
 //# sourceMappingURL=expression.d.ts.map

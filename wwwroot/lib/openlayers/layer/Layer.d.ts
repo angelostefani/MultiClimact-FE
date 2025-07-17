@@ -8,7 +8,7 @@
 export function inView(layerState: State, viewState: import("../View.js").State): boolean;
 export default Layer;
 export type RenderFunction = (arg0: import("../Map.js").FrameState) => HTMLElement;
-export type LayerEventType = 'sourceready' | 'change:source';
+export type LayerEventType = "sourceready" | "change:source";
 /**
  * *
  */
@@ -104,7 +104,7 @@ export type State = {
     /**
      * ZIndex.
      */
-    zIndex: number | undefined;
+    zIndex: number;
     /**
      * Maximum resolution.
      */
@@ -172,7 +172,7 @@ export type State = {
  * @property {boolean} visible Visible.
  * @property {boolean} managed Managed.
  * @property {import("../extent.js").Extent} [extent] Extent.
- * @property {number | undefined} zIndex ZIndex.
+ * @property {number} zIndex ZIndex.
  * @property {number} maxResolution Maximum resolution.
  * @property {number} minResolution Minimum resolution.
  * @property {number} minZoom Minimum zoom.
@@ -312,6 +312,18 @@ declare class Layer<SourceType extends import("../source/Source.js").default = i
      * Called when a layer is not visible during a map render.
      */
     unrender(): void;
+    /** @return {string} Declutter */
+    getDeclutter(): string;
+    /**
+     * @param {import("../Map.js").FrameState} frameState Frame state.
+     * @param {import("../layer/Layer.js").State} layerState Layer state.
+     */
+    renderDeclutter(frameState: import("../Map.js").FrameState, layerState: import("../layer/Layer.js").State): void;
+    /**
+     * When the renderer follows a layout -> render approach, do the final rendering here.
+     * @param {import('../Map.js').FrameState} frameState Frame state
+     */
+    renderDeferred(frameState: import("../Map.js").FrameState): void;
     /**
      * For use inside the library only.
      * @param {import("../Map.js").default|null} map Map.
@@ -334,6 +346,11 @@ declare class Layer<SourceType extends import("../source/Source.js").default = i
      * @api
      */
     setMap(map: import("../Map.js").default | null): void;
+    /**
+     * @param {import("../events/Event.js").default} renderEvent Render event
+     * @private
+     */
+    private handlePrecompose_;
     /**
      * Set the layer source.
      * @param {SourceType|null} source The layer source.

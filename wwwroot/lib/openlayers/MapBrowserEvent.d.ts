@@ -25,13 +25,15 @@ declare class MapBrowserEvent<EVENT extends UIEvent> extends MapEvent {
     /**
      * The map pixel relative to the viewport corresponding to the original browser event.
      * @type {?import("./pixel.js").Pixel}
+     * @private
      */
-    pixel_: import("./pixel.js").Pixel | null;
+    private pixel_;
     /**
      * The coordinate in the user projection corresponding to the original browser event.
      * @type {?import("./coordinate.js").Coordinate}
+     * @private
      */
-    coordinate_: import("./coordinate.js").Coordinate | null;
+    private coordinate_;
     /**
      * Indicates if the map is currently being dragged. Only set for
      * `POINTERDRAG` and `POINTERMOVE` events. Default is `false`.
@@ -44,14 +46,14 @@ declare class MapBrowserEvent<EVENT extends UIEvent> extends MapEvent {
      * @type {Array<PointerEvent>|undefined}
      */
     activePointers: Array<PointerEvent> | undefined;
-    set pixel(arg: import("./pixel.js").Pixel);
+    set pixel(pixel: import("./pixel.js").Pixel);
     /**
      * The map pixel relative to the viewport corresponding to the original event.
      * @type {import("./pixel.js").Pixel}
      * @api
      */
     get pixel(): import("./pixel.js").Pixel;
-    set coordinate(arg: import("./coordinate.js").Coordinate);
+    set coordinate(coordinate: import("./coordinate.js").Coordinate);
     /**
      * The coordinate corresponding to the original browser event.  This will be in the user
      * projection if one is set.  Otherwise it will be in the view projection.

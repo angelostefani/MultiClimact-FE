@@ -274,18 +274,19 @@ export type Options = {
  * Note that the view projection must define both extent and worldExtent.
  *
  * @fires import("../render/Event.js").RenderEvent
- * @extends {VectorLayer<import("../source/Vector.js").default>}
+ * @extends {VectorLayer<VectorSource<Feature>>}
  * @api
  */
-declare class Graticule extends VectorLayer<VectorSource<Feature<import("../geom/Geometry.js").default>>> {
+declare class Graticule extends VectorLayer<VectorSource<Feature<import("../geom.js").Geometry>>, Feature<import("../geom.js").Geometry>> {
     /**
      * @param {Options} [options] Options.
      */
     constructor(options?: Options | undefined);
     /**
      * @type {import("../proj/Projection.js").default}
+     * @private
      */
-    projection_: import("../proj/Projection.js").default;
+    private projection_;
     /**
      * @type {number}
      * @private

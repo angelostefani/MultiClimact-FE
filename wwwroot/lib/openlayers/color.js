@@ -17,6 +17,13 @@ import {clamp} from './math.js';
  */
 
 /**
+ * Color to indicate that no color should be rendered. This is meant to be used for per-reference
+ * comparisons only.
+ * @type {Color}
+ */
+export const NO_COLOR = [NaN, NaN, NaN, 0];
+
+/**
  * Return the color as an rgba string.
  * @param {Color|string} color Color.
  * @return {string} Rgba string.
@@ -87,6 +94,9 @@ export function lchaToRgba(color) {
  * @return {Color} Color.
  */
 export function fromString(s) {
+  if (s === 'none') {
+    return NO_COLOR;
+  }
   if (cache.hasOwnProperty(s)) {
     return cache[s];
   }
@@ -102,11 +112,11 @@ export function fromString(s) {
 
   const color = parseRgba(s);
   if (color.length !== 4) {
-    throw new Error('Failed to parse "' + s + '" as color');
+    throw new Error('failed to parse "' + s + '" as color');
   }
   for (const c of color) {
     if (isNaN(c)) {
-      throw new Error('Failed to parse "' + s + '" as color');
+      throw new Error('failed to parse "' + s + '" as color');
     }
   }
   normalize(color);
@@ -159,7 +169,7 @@ export function toString(color) {
   if (b != (b | 0)) {
     b = (b + 0.5) | 0;
   }
-  const a = color[3] === undefined ? 1 : Math.round(color[3] * 100) / 100;
+  const a = color[3] === undefined ? 1 : Math.round(color[3] * 1000) / 1000;
   return 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
 }
 

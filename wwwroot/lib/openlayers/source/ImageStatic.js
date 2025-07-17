@@ -79,12 +79,12 @@ class Static extends ImageSource {
           imageLoadFunction(this.image, src);
           return decode(image);
         },
-      })
+      }),
     );
 
     this.image.addEventListener(
       EventType.CHANGE,
-      this.handleImageChange.bind(this)
+      this.handleImageChange.bind(this),
     );
   }
 
@@ -103,6 +103,7 @@ class Static extends ImageSource {
    * @param {number} pixelRatio Pixel ratio.
    * @param {import("../proj/Projection.js").default} projection Projection.
    * @return {import("../Image.js").default} Single image.
+   * @override
    */
   getImageInternal(extent, resolution, pixelRatio, projection) {
     if (intersects(extent, this.image.getExtent())) {

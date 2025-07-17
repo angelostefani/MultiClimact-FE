@@ -74,7 +74,7 @@ export const AttributeType = {
  */
 
 /**
- * @typedef {number|Array<number>|HTMLCanvasElement|HTMLImageElement|ImageData|import("../transform").Transform} UniformLiteralValue
+ * @typedef {number|Array<number>|HTMLCanvasElement|HTMLImageElement|ImageData|WebGLTexture|import("../transform").Transform} UniformLiteralValue
  */
 
 /**
@@ -367,11 +367,11 @@ class WebGLHelper extends Disposable {
 
     canvas.addEventListener(
       ContextEventType.LOST,
-      this.boundHandleWebGLContextLost_
+      this.boundHandleWebGLContextLost_,
     );
     canvas.addEventListener(
       ContextEventType.RESTORED,
-      this.boundHandleWebGLContextRestored_
+      this.boundHandleWebGLContextRestored_,
     );
 
     /**
@@ -431,7 +431,7 @@ class WebGLHelper extends Disposable {
               vertexShader: options.vertexShader,
               fragmentShader: options.fragmentShader,
               uniforms: options.uniforms,
-            })
+            }),
         )
       : [new WebGLPostProcessingPass({webGlContext: this.gl_})];
 
@@ -527,27 +527,24 @@ class WebGLHelper extends Disposable {
    * @param {import("./Buffer.js").default} buf Buffer.
    */
   deleteBuffer(buf) {
-    const gl = this.gl_;
     const bufferKey = getUid(buf);
-    const bufferCacheEntry = this.bufferCache_[bufferKey];
-    if (bufferCacheEntry && !gl.isContextLost()) {
-      gl.deleteBuffer(bufferCacheEntry.webGlBuffer);
-    }
+    // Note: gl.deleteBuffer is not called here since we let WebGL garbage collect it automatically
     delete this.bufferCache_[bufferKey];
   }
 
   /**
    * Clean up.
+   * @override
    */
   disposeInternal() {
     const canvas = this.gl_.canvas;
     canvas.removeEventListener(
       ContextEventType.LOST,
-      this.boundHandleWebGLContextLost_
+      this.boundHandleWebGLContextLost_,
     );
     canvas.removeEventListener(
       ContextEventType.RESTORED,
-      this.boundHandleWebGLContextRestored_
+      this.boundHandleWebGLContextRestored_,
     );
 
     releaseCanvas(this.canvasCacheKey_);
@@ -602,6 +599,41 @@ class WebGLHelper extends Disposable {
   }
 
   /**
+   * @param {WebGLFramebuffer|null} frameBuffer The frame buffer.
+   * @param {WebGLTexture} [texture] The texture.
+   */
+  bindFrameBuffer(frameBuffer, texture) {
+    const gl = this.getGL();
+    gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuffer);
+    if (texture) {
+      gl.framebufferTexture2D(
+        gl.FRAMEBUFFER,
+        gl.COLOR_ATTACHMENT0,
+        gl.TEXTURE_2D,
+        texture,
+        0,
+      );
+    }
+  }
+
+  /**
+   * Bind the frame buffer from the initial render.
+   */
+  bindInitialFrameBuffer() {
+    const gl = this.getGL();
+    const frameBuffer = this.postProcessPasses_[0].getFrameBuffer();
+    gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuffer);
+    const texture = this.postProcessPasses_[0].getRenderTargetTexture();
+    gl.framebufferTexture2D(
+      gl.FRAMEBUFFER,
+      gl.COLOR_ATTACHMENT0,
+      gl.TEXTURE_2D,
+      texture,
+      0,
+    );
+  }
+
+  /**
    * Prepare a program to use a texture.
    * @param {WebGLTexture} texture The texture.
    * @param {number} slot The texture slot.
@@ -612,6 +644,20 @@ class WebGLHelper extends Disposable {
     gl.activeTexture(gl.TEXTURE0 + slot);
     gl.bindTexture(gl.TEXTURE_2D, texture);
     gl.uniform1i(this.getUniformLocation(uniformName), slot);
+  }
+
+  /**
+   * Set up an attribute array buffer for use in the vertex shader.
+   * @param {import("./Buffer").default} buffer The buffer.
+   * @param {string} attributeName The attribute name.
+   * @param {number} size The number of components per attribute vertex.
+   */
+  bindAttribute(buffer, attributeName, size) {
+    const gl = this.getGL();
+    this.bindBuffer(buffer);
+    const index = this.getAttributeLocation(attributeName);
+    gl.enableVertexAttribArray(index);
+    gl.vertexAttribPointer(index, size, gl.FLOAT, false, 0, 0);
   }
 
   /**
@@ -627,7 +673,7 @@ class WebGLHelper extends Disposable {
     frameState,
     renderTarget,
     disableAlphaBlend,
-    enableDepth
+    enableDepth,
   ) {
     const gl = this.gl_;
     const size = renderTarget.getSize();
@@ -681,12 +727,12 @@ class WebGLHelper extends Disposable {
           frameState,
           null,
           preCompose,
-          postCompose
+          postCompose,
         );
       } else {
         this.postProcessPasses_[i].apply(
           frameState,
-          this.postProcessPasses_[i + 1]
+          this.postProcessPasses_[i + 1],
         );
       }
     }
@@ -718,12 +764,12 @@ class WebGLHelper extends Disposable {
 
     this.setUniformFloatValue(
       DefaultUniform.TIME,
-      (Date.now() - this.startTime_) * 0.001
+      (Date.now() - this.startTime_) * 0.001,
     );
     this.setUniformFloatValue(DefaultUniform.ZOOM, frameState.viewState.zoom);
     this.setUniformFloatValue(
       DefaultUniform.RESOLUTION,
-      frameState.viewState.resolution
+      frameState.viewState.resolution,
     );
     this.setUniformFloatValue(DefaultUniform.PIXEL_RATIO, pixelRatio);
     this.setUniformFloatVec2(DefaultUniform.VIEWPORT_SIZE_PX, [
@@ -766,10 +812,14 @@ class WebGLHelper extends Disposable {
       if (
         value instanceof HTMLCanvasElement ||
         value instanceof HTMLImageElement ||
-        value instanceof ImageData
+        value instanceof ImageData ||
+        value instanceof WebGLTexture
       ) {
         // create a texture & put data
-        if (!uniform.texture) {
+        if (value instanceof WebGLTexture && !uniform.texture) {
+          uniform.prevValue = undefined;
+          uniform.texture = value;
+        } else if (!uniform.texture) {
           uniform.prevValue = undefined;
           uniform.texture = gl.createTexture();
         }
@@ -781,7 +831,11 @@ class WebGLHelper extends Disposable {
         const imageReady =
           !(value instanceof HTMLImageElement) ||
           /** @type {HTMLImageElement} */ (value).complete;
-        if (imageReady && uniform.prevValue !== value) {
+        if (
+          !(value instanceof WebGLTexture) &&
+          imageReady &&
+          uniform.prevValue !== value
+        ) {
           uniform.prevValue = value;
           gl.texImage2D(
             gl.TEXTURE_2D,
@@ -789,14 +843,14 @@ class WebGLHelper extends Disposable {
             gl.RGBA,
             gl.RGBA,
             gl.UNSIGNED_BYTE,
-            value
+            value,
           );
         }
         textureSlot++;
       } else if (Array.isArray(value) && value.length === 6) {
         this.setUniformMatrixValue(
           uniform.name,
-          fromTransform(this.tmpMat4_, value)
+          fromTransform(this.tmpMat4_, value),
         );
       } else if (Array.isArray(value) && value.length <= 4) {
         switch (value.length) {
@@ -804,7 +858,7 @@ class WebGLHelper extends Disposable {
             gl.uniform2f(
               this.getUniformLocation(uniform.name),
               value[0],
-              value[1]
+              value[1],
             );
             return;
           case 3:
@@ -812,7 +866,7 @@ class WebGLHelper extends Disposable {
               this.getUniformLocation(uniform.name),
               value[0],
               value[1],
-              value[2]
+              value[2],
             );
             return;
           case 4:
@@ -821,7 +875,7 @@ class WebGLHelper extends Disposable {
               value[0],
               value[1],
               value[2],
-              value[3]
+              value[3],
             );
             return;
           default:
@@ -837,14 +891,16 @@ class WebGLHelper extends Disposable {
    * Set up a program for use. The program will be set as the current one. Then, the uniforms used
    * in the program will be set based on the current frame state and the helper configuration.
    * @param {WebGLProgram} program Program.
-   * @param {import("../Map.js").FrameState} frameState Frame state.
+   * @param {import("../Map.js").FrameState} [frameState] Frame state.
    */
   useProgram(program, frameState) {
     const gl = this.gl_;
     gl.useProgram(program);
     this.currentProgram_ = program;
-    this.applyFrameState(frameState);
-    this.applyUniforms(frameState);
+    if (frameState) {
+      this.applyFrameState(frameState);
+      this.applyUniforms(frameState);
+    }
   }
 
   /**
@@ -875,12 +931,12 @@ class WebGLHelper extends Disposable {
 
     const fragmentShader = this.compileShader(
       fragmentShaderSource,
-      gl.FRAGMENT_SHADER
+      gl.FRAGMENT_SHADER,
     );
 
     const vertexShader = this.compileShader(
       vertexShaderSource,
-      gl.VERTEX_SHADER
+      gl.VERTEX_SHADER,
     );
 
     const program = gl.createProgram();
@@ -890,7 +946,7 @@ class WebGLHelper extends Disposable {
 
     if (!gl.getShaderParameter(fragmentShader, gl.COMPILE_STATUS)) {
       const message = `Fragment shader compilation failed: ${gl.getShaderInfoLog(
-        fragmentShader
+        fragmentShader,
       )}`;
       throw new Error(message);
     }
@@ -898,7 +954,7 @@ class WebGLHelper extends Disposable {
 
     if (!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS)) {
       const message = `Vertex shader compilation failed: ${gl.getShaderInfoLog(
-        vertexShader
+        vertexShader,
       )}`;
       throw new Error(message);
     }
@@ -906,7 +962,7 @@ class WebGLHelper extends Disposable {
 
     if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
       const message = `GL program linking failed: ${gl.getProgramInfoLog(
-        program
+        program,
       )}`;
       throw new Error(message);
     }
@@ -968,7 +1024,7 @@ class WebGLHelper extends Disposable {
       2 / (resolution * size[1]),
       -rotation,
       -center[0],
-      -center[1]
+      -center[1],
     );
     return transform;
   }
@@ -1045,7 +1101,7 @@ class WebGLHelper extends Disposable {
         attr.size,
         attr.type || FLOAT,
         stride,
-        offset
+        offset,
       );
       offset += attr.size * getByteSizeFromType(attr.type);
     }
@@ -1082,25 +1138,45 @@ class WebGLHelper extends Disposable {
   /**
    * Will create or reuse a given webgl texture and apply the given size. If no image data
    * specified, the texture will be empty, otherwise image data will be used and the `size`
-   * parameter will be ignored.
+   * parameter will be ignored.  If a Uint8Array is provided for data, a size must also be provided.
    * Note: wrap parameters are set to clamp to edge, min filter is set to linear.
    * @param {Array<number>} size Expected size of the texture
-   * @param {ImageData|HTMLImageElement|HTMLCanvasElement} [data] Image data/object to bind to the texture
+   * @param {ImageData|HTMLImageElement|HTMLCanvasElement|Uint8Array|null} data Image data/object to bind to the texture
    * @param {WebGLTexture} [texture] Existing texture to reuse
+   * @param {boolean} [nearest] Use gl.NEAREST for min/mag filter.
    * @return {WebGLTexture} The generated texture
    */
-  createTexture(size, data, texture) {
+  createTexture(size, data, texture, nearest) {
     const gl = this.gl_;
     texture = texture || gl.createTexture();
+    const filter = nearest ? gl.NEAREST : gl.LINEAR;
 
-    // set params & size
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, filter);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, filter);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
     const level = 0;
     const internalFormat = gl.RGBA;
     const border = 0;
     const format = gl.RGBA;
     const type = gl.UNSIGNED_BYTE;
-    gl.bindTexture(gl.TEXTURE_2D, texture);
-    if (data) {
+
+    if (data instanceof Uint8Array) {
+      gl.texImage2D(
+        gl.TEXTURE_2D,
+        level,
+        internalFormat,
+        size[0],
+        size[1],
+        border,
+        format,
+        type,
+        data,
+      );
+    } else if (data) {
       gl.texImage2D(gl.TEXTURE_2D, level, internalFormat, format, type, data);
     } else {
       gl.texImage2D(
@@ -1112,13 +1188,9 @@ class WebGLHelper extends Disposable {
         border,
         format,
         type,
-        null
+        null,
       );
     }
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-
     return texture;
   }
 }

@@ -14,7 +14,7 @@ import {getUid} from '../util.js';
 import {listen, unlistenByKey} from '../events.js';
 
 /**
- * @typedef {'addlayer'|'removelayer'} EventType
+ * @typedef {'addlayer'|'removelayer'} GroupEventType
  */
 
 /**
@@ -25,7 +25,7 @@ import {listen, unlistenByKey} from '../events.js';
  */
 export class GroupEvent extends Event {
   /**
-   * @param {EventType} type The event type.
+   * @param {GroupEventType} type The event type.
    * @param {BaseLayer} layer The layer.
    */
   constructor(type, layer) {
@@ -134,7 +134,7 @@ class LayerGroup extends BaseLayer {
       } else {
         assert(
           typeof (/** @type {?} */ (layers).getArray) === 'function',
-          'Expected `layers` to be an array or a `Collection`'
+          'Expected `layers` to be an array or a `Collection`',
         );
       }
     } else {
@@ -161,7 +161,12 @@ class LayerGroup extends BaseLayer {
     const layers = this.getLayers();
     this.layersListenerKeys_.push(
       listen(layers, CollectionEventType.ADD, this.handleLayersAdd_, this),
-      listen(layers, CollectionEventType.REMOVE, this.handleLayersRemove_, this)
+      listen(
+        layers,
+        CollectionEventType.REMOVE,
+        this.handleLayersRemove_,
+        this,
+      ),
     );
 
     for (const id in this.listenerKeys_) {
@@ -187,7 +192,7 @@ class LayerGroup extends BaseLayer {
         layer,
         ObjectEventType.PROPERTYCHANGE,
         this.handleLayerChange_,
-        this
+        this,
       ),
       listen(layer, EventType.CHANGE, this.handleLayerChange_, this),
     ];
@@ -195,7 +200,7 @@ class LayerGroup extends BaseLayer {
     if (layer instanceof LayerGroup) {
       listenerKeys.push(
         listen(layer, 'addlayer', this.handleLayerGroupAdd_, this),
-        listen(layer, 'removelayer', this.handleLayerGroupRemove_, this)
+        listen(layer, 'removelayer', this.handleLayerGroupRemove_, this),
       );
     }
 
@@ -277,6 +282,7 @@ class LayerGroup extends BaseLayer {
   /**
    * @param {Array<import("./Layer.js").default>} [array] Array of layers (to be modified in place).
    * @return {Array<import("./Layer.js").default>} Array of layers.
+   * @override
    */
   getLayersArray(array) {
     array = array !== undefined ? array : [];
@@ -294,6 +300,7 @@ class LayerGroup extends BaseLayer {
    * @param {Array<import("./Layer.js").State>} [dest] Optional list
    * of layer states (to be modified in place).
    * @return {Array<import("./Layer.js").State>} List of layer states.
+   * @override
    */
   getLayerStatesArray(dest) {
     const states = dest !== undefined ? dest : [];
@@ -314,11 +321,11 @@ class LayerGroup extends BaseLayer {
       layerState.visible = layerState.visible && ownLayerState.visible;
       layerState.maxResolution = Math.min(
         layerState.maxResolution,
-        ownLayerState.maxResolution
+        ownLayerState.maxResolution,
       );
       layerState.minResolution = Math.max(
         layerState.minResolution,
-        ownLayerState.minResolution
+        ownLayerState.minResolution,
       );
       layerState.minZoom = Math.max(layerState.minZoom, ownLayerState.minZoom);
       layerState.maxZoom = Math.min(layerState.maxZoom, ownLayerState.maxZoom);
@@ -326,7 +333,7 @@ class LayerGroup extends BaseLayer {
         if (layerState.extent !== undefined) {
           layerState.extent = getIntersection(
             layerState.extent,
-            ownLayerState.extent
+            ownLayerState.extent,
           );
         } else {
           layerState.extent = ownLayerState.extent;
@@ -342,6 +349,7 @@ class LayerGroup extends BaseLayer {
 
   /**
    * @return {import("../source/Source.js").State} Source state.
+   * @override
    */
   getSourceState() {
     return 'ready';

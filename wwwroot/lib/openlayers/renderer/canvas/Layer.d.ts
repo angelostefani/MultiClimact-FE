@@ -8,7 +8,7 @@ export default CanvasLayerRenderer;
  * @template {import("../../layer/Layer.js").default} LayerType
  * @extends {LayerRenderer<LayerType>}
  */
-declare class CanvasLayerRenderer<LayerType extends import("../../layer/Layer.js").default<import("../../source/Source.js").default, LayerRenderer<any>>> extends LayerRenderer<LayerType> {
+declare class CanvasLayerRenderer<LayerType extends import("../../layer/Layer.js").default> extends LayerRenderer<LayerType> {
     /**
      * @protected
      * @type {HTMLElement}
@@ -45,14 +45,14 @@ declare class CanvasLayerRenderer<LayerType extends import("../../layer/Layer.js
      */
     context: CanvasRenderingContext2D;
     /**
+     * @private
+     * @type {ZIndexContext}
+     */
+    private deferredContext_;
+    /**
      * @type {boolean}
      */
     containerReused: boolean;
-    /**
-     * @private
-     * @type {CanvasRenderingContext2D}
-     */
-    private pixelContext_;
     /**
      * @protected
      * @type {import("../../Map.js").FrameState|null}
@@ -64,12 +64,12 @@ declare class CanvasLayerRenderer<LayerType extends import("../../layer/Layer.js
      * @param {number} row The row index.
      * @return {Uint8ClampedArray|null} The image data.
      */
-    getImageData(image: import('../../DataTile.js').ImageLike, col: number, row: number): Uint8ClampedArray | null;
+    getImageData(image: import("../../DataTile.js").ImageLike, col: number, row: number): Uint8ClampedArray | null;
     /**
      * @param {import('../../Map.js').FrameState} frameState Frame state.
      * @return {string} Background color.
      */
-    getBackground(frameState: import('../../Map.js').FrameState): string;
+    getBackground(frameState: import("../../Map.js").FrameState): string;
     /**
      * Get a rendering container from an existing target, if compatible.
      * @param {HTMLElement} target Potential render target.
@@ -84,6 +84,12 @@ declare class CanvasLayerRenderer<LayerType extends import("../../layer/Layer.js
      * @protected
      */
     protected clipUnrotated(context: CanvasRenderingContext2D, frameState: import("../../Map.js").FrameState, extent: import("../../extent.js").Extent): void;
+    /**
+     * @param {import("../../Map.js").FrameState} frameState Frame state.
+     * @param {HTMLElement} target Target that may be used to render content to.
+     * @protected
+     */
+    protected prepareContainer(frameState: import("../../Map.js").FrameState, target: HTMLElement): void;
     /**
      * @param {import("../../render/EventType.js").default} type Event type.
      * @param {CanvasRenderingContext2D} context Context.
@@ -103,6 +109,15 @@ declare class CanvasLayerRenderer<LayerType extends import("../../layer/Layer.js
      * @protected
      */
     protected postRender(context: CanvasRenderingContext2D, frameState: import("../../Map.js").FrameState): void;
+    /**
+     * @param {import("../../Map.js").FrameState} frameState Frame state.
+     */
+    renderDeferredInternal(frameState: import("../../Map.js").FrameState): void;
+    /**
+     * @param {import("../../Map.js").FrameState} frameState Frame state.
+     * @return {import('../../render/canvas/ZIndexContext.js').ZIndexContextProxy} Context.
+     */
+    getRenderContext(frameState: import("../../Map.js").FrameState): import("../../render/canvas/ZIndexContext.js").ZIndexContextProxy;
     /**
      * Creates a transform for rendering to an element that will be rotated after rendering.
      * @param {import("../../coordinate.js").Coordinate} center Center.

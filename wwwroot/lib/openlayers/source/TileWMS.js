@@ -16,7 +16,7 @@ import {hash as tileCoordHash} from '../tilecoord.js';
  * @typedef {Object} Options
  * @property {import("./Source.js").AttributionLike} [attributions] Attributions.
  * @property {boolean} [attributionsCollapsible=true] Attributions are collapsible.
- * @property {number} [cacheSize] Initial tile cache size. Will auto-grow to hold at least the number of tiles in the viewport.
+ * @property {number} [cacheSize] Deprecated.  Use the cacheSize option on the layer instead.
  * @property {null|string} [crossOrigin] The `crossOrigin` attribute for loaded images.  Note that
  * you must provide a `crossOrigin` value if you want to access pixel data with the Canvas renderer.
  * See https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image for more detail.
@@ -84,15 +84,12 @@ class TileWMS extends TileImage {
 
     const params = Object.assign({}, options.params);
 
-    const transparent = 'TRANSPARENT' in params ? params['TRANSPARENT'] : true;
-
     super({
       attributions: options.attributions,
       attributionsCollapsible: options.attributionsCollapsible,
       cacheSize: options.cacheSize,
       crossOrigin: options.crossOrigin,
       interpolate: options.interpolate,
-      opaque: !transparent,
       projection: options.projection,
       reprojectionErrorThreshold: options.reprojectionErrorThreshold,
       tileClass: options.tileClass,
@@ -171,13 +168,13 @@ class TileWMS extends TileImage {
     const sourceProjCoord = transform(
       coordinate,
       projectionObj,
-      sourceProjectionObj
+      sourceProjectionObj,
     );
     const sourceResolution = calculateSourceResolution(
       sourceProjectionObj,
       projectionObj,
       coordinate,
-      resolution
+      resolution,
     );
 
     const z = tileGrid.getZForResolution(sourceResolution, this.zDirection);
@@ -201,7 +198,7 @@ class TileWMS extends TileImage {
     Object.assign(
       baseParams,
       getRequestParams(this.params_, 'GetFeatureInfo'),
-      params
+      params,
     );
 
     const x = Math.floor((sourceProjCoord[0] - tileExtent[0]) / tileResolution);
@@ -215,7 +212,7 @@ class TileWMS extends TileImage {
       tileExtent,
       1,
       sourceProjectionObj || projectionObj,
-      baseParams
+      baseParams,
     );
   }
 
@@ -269,6 +266,7 @@ class TileWMS extends TileImage {
 
   /**
    * @return {number} Gutter.
+   * @override
    */
   getGutter() {
     return this.gutter_;
@@ -315,7 +313,7 @@ class TileWMS extends TileImage {
       projection,
       url,
       params,
-      this.serverType_
+      this.serverType_,
     );
   }
 
@@ -323,6 +321,7 @@ class TileWMS extends TileImage {
    * Get the tile pixel ratio for this source.
    * @param {number} pixelRatio Pixel ratio.
    * @return {number} Tile pixel ratio.
+   * @override
    */
   getTilePixelRatio(pixelRatio) {
     return !this.hidpi_ || this.serverType_ === undefined ? 1 : pixelRatio;
@@ -391,7 +390,7 @@ class TileWMS extends TileImage {
 
     const baseParams = Object.assign(
       {},
-      getRequestParams(this.params_, 'GetMap')
+      getRequestParams(this.params_, 'GetMap'),
     );
 
     return this.getRequestUrl_(
@@ -399,7 +398,7 @@ class TileWMS extends TileImage {
       tileExtent,
       pixelRatio,
       projection,
-      baseParams
+      baseParams,
     );
   }
 }

@@ -1,0 +1,27 @@
+﻿/* ========== BOTTOM BAR ========== */
+
+/* Collapsible bottom bar */
+.bottom-bar {
+    height: 0; /* Hidden by default */
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    background-color: #f8f9fa;
+    box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.2);
+    transition: height 0.3s;
+    z-index: 1000;
+    box-sizing: border-box;
+    padding: 0 20px;
+}
+
+    /* Expanded bottom bar */
+    .bottom-bar.open {
+        height: 50%; /* Takes up half the viewport */
+    }
+
+/* Bottom bar content */
+.bottom-bar-content {
+    display: block;
+    font-size: 16px;
+    padding-top: 20px;
+}

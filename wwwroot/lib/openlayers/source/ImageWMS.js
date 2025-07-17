@@ -81,7 +81,7 @@ class ImageWMS extends ImageSource {
      * @private
      * @type {!Object}
      */
-    this.params_ = options.params;
+    this.params_ = Object.assign({}, options.params);
 
     /**
      * @private
@@ -137,7 +137,7 @@ class ImageWMS extends ImageSource {
         sourceProjectionObj,
         projectionObj,
         coordinate,
-        resolution
+        resolution,
       );
       coordinate = transform(coordinate, projectionObj, sourceProjectionObj);
     }
@@ -176,7 +176,7 @@ class ImageWMS extends ImageSource {
           ...params,
         },
       },
-      resolution
+      resolution,
     );
   }
 
@@ -196,6 +196,7 @@ class ImageWMS extends ImageSource {
    * @param {number} pixelRatio Pixel ratio.
    * @param {import("../proj/Projection.js").default} projection Projection.
    * @return {import("../Image.js").default} Single image.
+   * @override
    */
   getImageInternal(extent, resolution, pixelRatio, projection) {
     if (this.url_ === undefined) {
@@ -274,6 +275,9 @@ class ImageWMS extends ImageSource {
     this.changed();
   }
 
+  /**
+   * @override
+   */
   changed() {
     this.image = null;
     super.changed();

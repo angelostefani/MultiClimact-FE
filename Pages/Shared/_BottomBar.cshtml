@@ -1,0 +1,49 @@
+﻿<div id="myBottomBar" class="bottom-bar">
+    <div class="bottom-bar-content">
+        <!-- New Earthquake Form -->
+        <form id="earthquakeForm" class="p-3 ms-5" method="GET" action="http://localhost:5022/api/EarthquakeProxy/GetEarthquakes" onsubmit="fetchEarthquakeData(event)">
+            <input type="hidden" name="user_id" value="system">
+            <input type="hidden" name="simulated" value="false">
+            <div class="form-group">
+                <label for="startDate">Start Date</label>
+                <input type="date" class="form-control" id="startDate" name="start_date" value="2024-10-01" placeholder="2024-10-01">
+            </div>
+            <div class="form-group">
+                <label for="endDate">End Date</label>
+                <input type="date" class="form-control" id="endDate" name="end_date" value="2025-10-01" placeholder="2025-10-01">
+            </div>
+            <div class="separator"></div>
+            <div class="form-group">
+                <label for="minMagnitude">Minimum Magnitude</label>
+                <input type="number" step="0.1" class="form-control" id="minMagnitude" name="min_magnitude" value="1.8" placeholder="1.8">
+            </div>
+            <div class="form-group">
+                <label for="maxMagnitude">Maximum Magnitude</label>
+                <input type="number" step="0.1" class="form-control" id="maxMagnitude" name="max_magnitude" value="5.0" placeholder="5.0">
+            </div>
+            <div class="form-group">
+                <label></label>
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+        </form>
+
+        <!-- Earthquake Results Table -->
+        <div id="earthquakeResults" class="mt-4 ms-5">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Select</th>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Magnitude</th>
+                    </tr>
+                </thead>
+                <tbody id="earthquakeTableBody">
+                    <!-- Results will be populated here -->
+                </tbody>
+            </table>
+            <div id="paginationControls" class="mt-3"></div>
+        </div>
+
+    </div>
+</div>

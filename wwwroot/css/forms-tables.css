@@ -1,0 +1,31 @@
+﻿/* ========== FORMS AND TABLES ========== */
+
+/* Form and table margins */
+#earthquakeForm,
+#earthquakeResults {
+    margin-right: 20px;
+}
+
+    /* Submit button styles */
+    #earthquakeForm button[type="submit"] {
+        background-color: #185BA1;
+        border-color: #185BA1;
+    }
+
+    /* Table headers */
+    #earthquakeResults th {
+        background-color: #185BA1;
+        color: white;
+    }
+
+    /* Form groups in single line */
+    #earthquakeForm .form-group {
+        display: inline-block;
+        margin-right: 20px;
+    }
+
+    /* Separator between form elements */
+    #earthquakeForm .separator {
+        display: inline-block;
+        width: 40px;
+    }

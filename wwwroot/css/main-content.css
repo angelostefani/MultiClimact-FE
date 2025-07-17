@@ -1,0 +1,10 @@
+﻿/* ========== MAIN CONTENT ========== */
+
+/* Central section styling */
+.main-content {
+    height: 100%;
+    padding: 20px;
+    background-color: #f0f0f0;
+    position: relative;
+    z-index: 1;
+}

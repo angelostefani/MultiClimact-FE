@@ -7,24 +7,6 @@ export const Uniforms: {
     RENDER_EXTENT: string;
     PATTERN_ORIGIN: string;
     RESOLUTION: string;
-    /**
-     * @typedef {import('../../render/webgl/VectorStyleRenderer.js').VectorStyle} VectorStyle
-     */
-    /**
-     * @typedef {Object} Options
-     * @property {VectorStyle|Array<VectorStyle>} style Vector style as literal style or shaders; can also accept an array of styles
-     * @property {boolean} [disableHitDetection=false] Setting this to true will provide a slight performance boost, but will
-     * prevent all hit detection on the layer.
-     * @property {number} [cacheSize=512] The vector tile cache size.
-     */
-    /**
-     * @typedef {import("../../layer/BaseTile.js").default} LayerType
-     */
-    /**
-     * @classdesc
-     * WebGL renderer for vector tile layers. Experimental.
-     * @extends {WebGLBaseTileLayerRenderer<LayerType>}
-     */
     ZOOM: string;
     GLOBAL_ALPHA: string;
     PROJECTION_MATRIX: string;
@@ -34,7 +16,7 @@ export namespace Attributes {
     let POSITION: string;
 }
 export default WebGLVectorTileLayerRenderer;
-export type VectorStyle = import('../../render/webgl/VectorStyleRenderer.js').VectorStyle;
+export type VectorStyle = import("../../render/webgl/VectorStyleRenderer.js").VectorStyle;
 export type Options = {
     /**
      * Vector style as literal style or shaders; can also accept an array of styles
@@ -74,7 +56,7 @@ declare class WebGLVectorTileLayerRenderer extends WebGLBaseTileLayerRenderer<im
      * @param {LayerType} tileLayer Tile layer.
      * @param {Options} options Options.
      */
-    constructor(tileLayer: import("../../layer/BaseTile.js").default<any, any>, options: Options);
+    constructor(tileLayer: LayerType, options: Options);
     /**
      * @type {boolean}
      * @private
@@ -98,8 +80,14 @@ declare class WebGLVectorTileLayerRenderer extends WebGLBaseTileLayerRenderer<im
      * @private
      */
     private currentFrameStateTransform_;
-    tmpTransform_: number[];
-    tmpMat4_: number[];
+    /**
+     * @private
+     */
+    private tmpTransform_;
+    /**
+     * @private
+     */
+    private tmpMat4_;
     /**
      * @type {WebGLRenderTarget}
      * @private
@@ -116,12 +104,14 @@ declare class WebGLVectorTileLayerRenderer extends WebGLBaseTileLayerRenderer<im
     private tileMaskAttributes_;
     /**
      * @type {WebGLProgram}
+     * @private
      */
-    tileMaskProgram_: WebGLProgram;
+    private tileMaskProgram_;
     /**
      * @param {Options} options Options.
+     * @override
      */
-    reset(options: Options): void;
+    override reset(options: Options): void;
     /**
      * @param {Options} options Options.
      * @private
@@ -135,10 +125,22 @@ declare class WebGLVectorTileLayerRenderer extends WebGLBaseTileLayerRenderer<im
      * @private
      */
     private initTileMask_;
-    createTileRepresentation(options: any): TileGeometry;
-    beforeTilesRender(frameState: any, tilesWithAlpha: any): void;
-    beforeTilesMaskRender(frameState: any): boolean;
-    renderTileMask(tileRepresentation: any, tileZ: any, extent: any, depth: any): void;
+    /**
+     * @override
+     */
+    override createTileRepresentation(options: any): TileGeometry;
+    /**
+     * @override
+     */
+    override beforeTilesRender(frameState: any, tilesWithAlpha: any): void;
+    /**
+     * @override
+     */
+    override beforeTilesMaskRender(frameState: any): boolean;
+    /**
+     * @override
+     */
+    override renderTileMask(tileRepresentation: any, tileZ: any, extent: any, depth: any): void;
     /**
      * @param {number} alpha Alpha value of the tile
      * @param {import("../../extent.js").Extent} renderExtent Which extent to restrict drawing to
@@ -148,7 +150,10 @@ declare class WebGLVectorTileLayerRenderer extends WebGLBaseTileLayerRenderer<im
      * @private
      */
     private applyUniforms_;
-    renderTile(tileRepresentation: any, tileTransform: any, frameState: any, renderExtent: any, tileResolution: any, tileSize: any, tileOrigin: any, tileExtent: any, depth: any, gutter: any, alpha: any): void;
+    /**
+     * @override
+     */
+    override renderTile(tileRepresentation: any, tileTransform: any, frameState: any, renderExtent: any, tileResolution: any, tileSize: any, tileOrigin: any, tileExtent: any, depth: any, gutter: any, alpha: any): void;
     /**
      * Render declutter items for this layer
      * @param {import("../../Map.js").FrameState} frameState Frame state.

@@ -37,7 +37,7 @@ export type Options = {
      */
     className?: string | undefined;
     /**
-     * A function that takes an {@link module :ol/MapBrowserEvent~MapBrowserEvent} and returns a boolean
+     * A function that takes a {@link module :ol/MapBrowserEvent~MapBrowserEvent} and returns a boolean
      * to indicate whether that event should be handled.
      * Default is {@link ol /events/condition~mouseActionButton}.
      */
@@ -62,7 +62,7 @@ export type Options = {
 /**
  * *
  */
-export type DragBoxOnSignature<Return> = import("../Observable").OnSignature<import("../Observable").EventTypes, import("../events/Event.js").default, Return> & import("../Observable").OnSignature<import("../ObjectEventType").Types | 'change:active', import("../Object").ObjectEvent, Return> & import("../Observable").OnSignature<'boxcancel' | 'boxdrag' | 'boxend' | 'boxstart', DragBoxEvent, Return> & import("../Observable").CombinedOnSignature<import("../Observable").EventTypes | import("../ObjectEventType").Types | 'change:active' | 'boxcancel' | 'boxdrag' | 'boxend', Return>;
+export type DragBoxOnSignature<Return> = import("../Observable").OnSignature<import("../Observable").EventTypes, import("../events/Event.js").default, Return> & import("../Observable").OnSignature<import("../ObjectEventType").Types | "change:active", import("../Object").ObjectEvent, Return> & import("../Observable").OnSignature<"boxcancel" | "boxdrag" | "boxend" | "boxstart", DragBoxEvent, Return> & import("../Observable").CombinedOnSignature<import("../Observable").EventTypes | import("../ObjectEventType").Types | "change:active" | "boxcancel" | "boxdrag" | "boxend", Return>;
 import Event from '../events/Event.js';
 /***
  * @template Return
@@ -76,7 +76,7 @@ import Event from '../events/Event.js';
 /**
  * @classdesc
  * Allows the user to draw a vector box by clicking and dragging on the map,
- * normally combined with an {@link module:ol/events/condition} that limits
+ * normally combined with a {@link module:ol/events/condition} that limits
  * it to when the shift or other key is held down. This is used, for example,
  * for zooming to a specific area of the map
  * (see {@link module:ol/interaction/DragZoom~DragZoom} and

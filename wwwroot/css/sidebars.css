@@ -1,0 +1,49 @@
+﻿/* ========== SIDEBARS ========== */
+
+/* Common sidebar styles */
+.sidebar-left,
+.sidebar-right {
+    height: 100%;
+    width: 0; /* Hidden by default */
+    position: fixed;
+    top: 0;
+    background-color: #f8f9fa;
+    box-shadow: 3px 0 10px rgba(0, 0, 0, 0.2);
+    overflow-x: hidden;
+    transition: width 0.3s;
+    padding-top: 60px;
+    color: black;
+    z-index: 1000;
+}
+
+/* Sidebar-specific positioning */
+.sidebar-left {
+    left: 0;
+}
+
+.sidebar-right {
+    right: 0;
+}
+
+/* Fixed sidebar style */
+.fixed-sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 40px;
+    height: 100%;
+    background-color: #f8f9fa;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    overflow-y: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+    /* Highlighted state for fixed sidebar */
+    .fixed-sidebar.selected {
+        background-color: #d4edda;
+        box-shadow: -2px 0 10px rgba(40, 167, 69, 0.5);
+    }

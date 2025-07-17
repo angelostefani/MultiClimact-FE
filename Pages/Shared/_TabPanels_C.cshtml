@@ -1,0 +1,116 @@
+﻿<!-- TAB PANELS GROUP MENU C -->
+<div class="tab-pane fade" id="panelC1" role="tabpanel" aria-labelledby="tabC1-tab">
+    <div id="mapC1" class="map-container"></div>
+</div>
+<div class="tab-pane fade" id="panelC2" role="tabpanel" aria-labelledby="tabC2-tab">
+    <div class="map-radio-container">
+        <!-- Mappa -->
+        <div id="mapC2" class="map-container-85"></div>
+
+        <!-- Checkbox accanto alla mappa -->
+        <div class="checkbox-container">
+            <label>
+                <input type="checkbox" id="checkboxC2_1" checked onclick="toggleLayerBlock(configWMSMatrixMapC2, 0, mapC2, 5)"> Fazzini Building damage risk
+            </label><br>
+            <label>
+                <input type="checkbox" id="checkboxC2_2" checked onclick="toggleLayerBlock(configWMSMatrixMapC2, 1, mapC2, 5)"> Camerino Building damage risk
+            </label><br>
+            <label>
+                <input type="checkbox" id="checkboxC2_3" checked onclick="toggleLayerBlock(configWMSMatrixMapC2, 2, mapC2, 5)"> Regional Building damage Risk
+            </label>
+        </div>
+    </div>
+    <!-- Radio button sotto alla mappa -->
+    <div class="radio-container">
+        <label>
+            <input type="radio" name="layerC2" id="layerC2_1" checked onclick="switchLayers(configWMSMatrixMapC2, 0, mapC2, 5)"> Pd1
+        </label>
+        <label>
+            <input type="radio" name="layerC2" id="layerC2_2" onclick="switchLayers(configWMSMatrixMapC2, 1, mapC2, 5)"> Pd2
+        </label>
+        <label>
+            <input type="radio" name="layerC2" id="layerC2_3" onclick="switchLayers(configWMSMatrixMapC2, 2, mapC2, 5)"> Pd3
+        </label>
+        <label>
+            <input type="radio" name="layerC2" id="layerC2_4" onclick="switchLayers(configWMSMatrixMapC2, 3, mapC2, 5)"> Pd4
+        </label>
+        <label>
+            <input type="radio" name="layerC2" id="layerC2_5" onclick="switchLayers(configWMSMatrixMapC2, 4, mapC2, 5)"> Pd5
+        </label>
+    </div>
+</div>
+
+<div class="tab-pane fade" id="panelC3" role="tabpanel" aria-labelledby="tabC3-tab">
+    <div class="map-radio-container">
+        <!-- Mappa -->
+        <div id="mapC3" class="map-container-85"></div>
+
+        <!-- Checkbox accanto alla mappa -->
+        <div class="checkbox-container">
+            <label>
+                <input type="checkbox" id="checkboxC3_1" checked onclick="toggleLayerBlock(configWMSMatrixMapC3, 0, mapC3, 4)"> Electric substation
+            </label><br>
+            <label>
+                <input type="checkbox" id="checkboxC3_2" checked onclick="toggleLayerBlock(configWMSMatrixMapC3, 1, mapC3, 4)"> Water tower
+            </label><br>
+            <label>
+                <input type="checkbox" id="checkboxC3_3" checked onclick="toggleLayerBlock(configWMSMatrixMapC3, 2, mapC3, 4)"> Water well
+            </label>
+            <label>
+                <input type="checkbox" id="checkboxC3_4" checked onclick="toggleLayerBlock(configWMSMatrixMapC3, 3, mapC3, 4)"> Wastewater plant
+            </label>
+        </div>
+    </div>
+    <!-- Radio button sotto alla mappa -->
+    <div class="radio-container">
+        <label>
+            <input type="radio" name="layerC3" id="layerC3_1" checked onclick="switchLayers(configWMSMatrixMapC3, 0, mapC3, 4)"> Pd1
+        </label>
+        <label>
+            <input type="radio" name="layerC3" id="layerC3_2" onclick="switchLayers(configWMSMatrixMapC3, 1, mapC3, 4)"> Pd2
+        </label>
+        <label>
+            <input type="radio" name="layerC3" id="layerC3_3" onclick="switchLayers(configWMSMatrixMapC3, 2, mapC3, 4)"> Pd3
+        </label>
+        <label>
+            <input type="radio" name="layerC3" id="layerC3_4" onclick="switchLayers(configWMSMatrixMapC3, 3, mapC3, 4)"> Pd4
+        </label>
+    </div>
+</div>
+
+<div class="tab-pane fade" id="panelC4" role="tabpanel" aria-labelledby="tabC4-tab">
+    <div class="map-radio-container">
+        <div id="mapC4" class="map-container-85"></div>
+        <!-- Checkbox sopra ai radio button -->
+        <div class="checkbox-container">
+            <label>
+                <input type="checkbox" id="checkboxC4_1" checked onclick="toggleLayerBlock(configWMSMatrixMapC4, 0, mapC4, 1)"> Risk paths
+            </label><br>
+            <label>
+                <input type="checkbox" id="checkboxC4_2" checked onclick="toggleLayerBlock(configWMSMatrixMapC4, 1, mapC4, 1)"> Water tower
+            </label><br>
+        </div>
+    </div>
+</div>
+
+<div class="tab-pane fade" id="panelC5" role="tabpanel" aria-labelledby="tabC5-tab">
+    <div id="mapC5" class="map-container"></div>
+</div>
+<div class="tab-pane fade" id="panelC6" role="tabpanel" aria-labelledby="tabC6-tab">
+    <div id="mapC6" class="map-container"></div>
+</div>
+<div class="tab-pane fade" id="panelC7" role="tabpanel" aria-labelledby="tabC7-tab">
+    <div id="mapC7" class="map-container"></div>
+</div>
+<div class="tab-pane fade" id="panelC8" role="tabpanel" aria-labelledby="tabC8-tab">
+    <div id="mapC8" class="map-container"></div>
+</div>
+<div class="tab-pane fade" id="panelC9" role="tabpanel" aria-labelledby="tabC9-tab">
+    <div id="mapC9" class="map-container"></div>
+</div>
+<div class="tab-pane fade" id="panelC10" role="tabpanel" aria-labelledby="tabC10-tab">
+    <div id="mapC10" class="map-container"></div>
+</div>
+<div class="tab-pane fade" id="panelC11" role="tabpanel" aria-labelledby="tabC11-tab">
+    <div id="mapC11" class="map-container"></div>
+</div>

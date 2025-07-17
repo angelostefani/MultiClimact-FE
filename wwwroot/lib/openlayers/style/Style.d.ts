@@ -20,7 +20,15 @@ export function createDefaultStyle(feature: import("../Feature.js").FeatureLike,
 export function createEditingStyle(): any;
 export default Style;
 /**
- * A function that takes an {@link module :ol/Feature~Feature} and a `{number}`
+ * Defines how symbols and text are decluttered on layers ith `declutter` set to `true`
+ * * **declutter**: Overlapping symbols and text are decluttered.
+ * * **obstacle**: Symbols and text are rendered, but serve as obstacle for subsequent attempts
+ *   to place a symbol or text at the same location.
+ * * **none**: No decluttering is done.
+ */
+export type DeclutterMode = "declutter" | "obstacle" | "none";
+/**
+ * A function that takes a {@link module :ol/Feature~Feature} and a `{number}`
  * representing the view's resolution. The function should return a
  * {@link module :ol/style/Style~Style} or an array of them. This way e.g. a
  * vector layer can be styled. If the function returns `undefined`, the
@@ -28,11 +36,11 @@ export default Style;
  */
 export type StyleFunction = (arg0: import("../Feature.js").FeatureLike, arg1: number) => (Style | Array<Style> | void);
 /**
- * A {@link Style }, an array of {@link Style }, or a {@link StyleFunction }.
+ * A {@link Style}, an array of {@link Style}, or a {@link StyleFunction}.
  */
 export type StyleLike = Style | Array<Style> | StyleFunction;
 /**
- * A function that takes an {@link module :ol/Feature~Feature} as argument and returns an
+ * A function that takes a {@link module :ol/Feature~Feature} as argument and returns an
  * {@link module :ol/geom/Geometry~Geometry} that will be rendered and styled for the feature.
  */
 export type GeometryFunction = (arg0: import("../Feature.js").FeatureLike) => (import("../geom/Geometry.js").default | import("../render/Feature.js").default | undefined);
@@ -81,7 +89,16 @@ export type Options = {
     zIndex?: number | undefined;
 };
 /**
- * A function that takes an {@link module:ol/Feature~Feature} and a `{number}`
+ * Defines how symbols and text are decluttered on layers ith `declutter` set to `true`
+ * * **declutter**: Overlapping symbols and text are decluttered.
+ * * **obstacle**: Symbols and text are rendered, but serve as obstacle for subsequent attempts
+ *   to place a symbol or text at the same location.
+ * * **none**: No decluttering is done.
+ *
+ * @typedef {"declutter"|"obstacle"|"none"} DeclutterMode
+ */
+/**
+ * A function that takes a {@link module:ol/Feature~Feature} and a `{number}`
  * representing the view's resolution. The function should return a
  * {@link module:ol/style/Style~Style} or an array of them. This way e.g. a
  * vector layer can be styled. If the function returns `undefined`, the
@@ -94,7 +111,7 @@ export type Options = {
  * @typedef {Style|Array<Style>|StyleFunction} StyleLike
  */
 /**
- * A function that takes an {@link module:ol/Feature~Feature} as argument and returns an
+ * A function that takes a {@link module:ol/Feature~Feature} as argument and returns an
  * {@link module:ol/geom/Geometry~Geometry} that will be rendered and styled for the feature.
  *
  * @typedef {function(import("../Feature.js").FeatureLike):

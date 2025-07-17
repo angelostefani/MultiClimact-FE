@@ -35,6 +35,19 @@ export function createCanvasContext2D(width, height, canvasPool, settings) {
   );
 }
 
+/** @type {CanvasRenderingContext2D} */
+let sharedCanvasContext;
+
+/**
+ * @return {CanvasRenderingContext2D} Shared canvas context.
+ */
+export function getSharedCanvasContext2D() {
+  if (!sharedCanvasContext) {
+    sharedCanvasContext = createCanvasContext2D(1, 1);
+  }
+  return sharedCanvasContext;
+}
+
 /**
  * Releases canvas memory to avoid exceeding memory limits in Safari.
  * See https://pqina.nl/blog/total-canvas-memory-use-exceeds-the-maximum-limit/
@@ -89,19 +102,11 @@ export function replaceNode(newNode, oldNode) {
 }
 
 /**
- * @param {Node} node The node to remove.
- * @return {Node|null} The node that was removed or null.
- */
-export function removeNode(node) {
-  return node && node.parentNode ? node.parentNode.removeChild(node) : null;
-}
-
-/**
  * @param {Node} node The node to remove the children from.
  */
 export function removeChildren(node) {
   while (node.lastChild) {
-    node.removeChild(node.lastChild);
+    node.lastChild.remove();
   }
 }
 

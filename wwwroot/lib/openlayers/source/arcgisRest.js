@@ -25,7 +25,7 @@ export function getRequestUrl(
   resolution,
   pixelRatio,
   projection,
-  params
+  params,
 ) {
   // ArcGIS Server only wants the numeric portion of the projection ID.
   // (if there is no numeric portion the entire projection code must
@@ -47,15 +47,12 @@ export function getRequestUrl(
   params['BBOXSR'] = srid;
   params['IMAGESR'] = srid;
   params['DPI'] = Math.round(
-    params['DPI'] ? params['DPI'] * pixelRatio : 90 * pixelRatio
+    params['DPI'] ? params['DPI'] * pixelRatio : 90 * pixelRatio,
   );
 
   const modifiedUrl = baseUrl
     .replace(/MapServer\/?$/, 'MapServer/export')
     .replace(/ImageServer\/?$/, 'ImageServer/exportImage');
-  if (modifiedUrl == baseUrl) {
-    throw new Error('`options.featureTypes` should be an Array');
-  }
   return appendParams(modifiedUrl, params);
 }
 
@@ -77,7 +74,7 @@ export function getRequestUrl(
  * or the entire code must form a valid ArcGIS SpatialReference definition.
  * @property {number} [ratio=1.5] Ratio. `1` means image requests are the size of the map viewport,
  * `2` means twice the size of the map viewport, and so on.
- * @property {string} [url] ArcGIS Rest service URL for a Map Service or Image Service. The url
+ * @property {string} url ArcGIS Rest service URL for a Map Service or Image Service. The url
  * should include /MapServer or /ImageServer.
  * @property {function(HTMLImageElement, string): Promise<import('../DataTile.js').ImageLike>} [load] Function
  * to perform loading of the image. Receives the created `HTMLImageElement` and the desired `src` as argument and
@@ -93,6 +90,8 @@ export function getRequestUrl(
 export function createLoader(options) {
   const load = options.load ? options.load : decode;
   const projection = getProjection(options.projection || 'EPSG:3857');
+  const ratio = options.ratio ?? 1.5;
+  const crossOrigin = options.crossOrigin ?? null;
 
   /** @type {import('../Image.js').ImageObjectPromiseLoader} */
   return function (extent, resolution, pixelRatio) {
@@ -105,7 +104,7 @@ export function createLoader(options) {
     };
     Object.assign(params, options.params);
 
-    extent = getRequestExtent(extent, resolution, pixelRatio, options.ratio);
+    extent = getRequestExtent(extent, resolution, pixelRatio, ratio);
 
     const src = getRequestUrl(
       options.url,
@@ -113,13 +112,11 @@ export function createLoader(options) {
       resolution,
       pixelRatio,
       projection,
-      params
+      params,
     );
 
     const image = new Image();
-    if (options.crossOrigin !== null) {
-      image.crossOrigin = options.crossOrigin;
-    }
+    image.crossOrigin = crossOrigin;
 
     return load(image, src).then((image) => {
       // Update resolution, because the server may return a smaller size than requested

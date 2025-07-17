@@ -25,6 +25,9 @@ builder.Services.AddRazorPages()
     .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
     .AddDataAnnotationsLocalization();
 
+// Add support for controllers
+builder.Services.AddControllers();
+
 // DATABASE: Configure Entity Framework to use a PostgreSQL database
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
@@ -96,6 +99,9 @@ app.UseSession();
 
 // Map Razor Pages routes
 app.MapRazorPages();
+
+// Map Controller routes for API endpoints
+app.MapControllers();
 
 // Run the application
 app.Run();

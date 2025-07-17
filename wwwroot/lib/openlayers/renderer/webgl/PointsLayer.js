@@ -136,12 +136,21 @@ class WebGLPointsLayerRenderer extends WebGLLayerRenderer {
       postProcesses: options.postProcesses,
     });
 
+    /**
+     * @private
+     */
     this.sourceRevision_ = -1;
 
+    /**
+     * @private
+     */
     this.verticesBuffer_ = new WebGLArrayBuffer(ARRAY_BUFFER, DYNAMIC_DRAW);
+    /**
+     * @private
+     */
     this.indicesBuffer_ = new WebGLArrayBuffer(
       ELEMENT_ARRAY_BUFFER,
-      DYNAMIC_DRAW
+      DYNAMIC_DRAW,
     );
 
     /**
@@ -196,7 +205,7 @@ class WebGLPointsLayerRenderer extends WebGLLayerRenderer {
 
     if (this.hitDetectionEnabled_) {
       this.attributes.push({
-        name: 'a_hitColor',
+        name: 'a_prop_hitColor',
         size: 4,
         type: AttributeType.FLOAT,
       });
@@ -210,6 +219,9 @@ class WebGLPointsLayerRenderer extends WebGLLayerRenderer {
 
     this.customAttributes = options.attributes ? options.attributes : [];
 
+    /**
+     * @private
+     */
     this.previousExtent_ = createEmpty();
 
     /**
@@ -275,17 +287,17 @@ class WebGLPointsLayerRenderer extends WebGLLayerRenderer {
           this.renderTransform_ = projectionTransform;
           makeInverseTransform(
             this.invertRenderTransform_,
-            this.renderTransform_
+            this.renderTransform_,
           );
           this.renderInstructions_ = new Float32Array(
-            event.data.renderInstructions
+            event.data.renderInstructions,
           );
           if (received.id === this.lastSentId) {
             this.ready = true;
           }
           this.getLayer().changed();
         }
-      }
+      },
     );
 
     /**
@@ -303,30 +315,33 @@ class WebGLPointsLayerRenderer extends WebGLLayerRenderer {
     this.featureCount_ = 0;
 
     const source = this.getLayer().getSource();
+    /**
+     * @private
+     */
     this.sourceListenKeys_ = [
       listen(
         source,
         VectorEventType.ADDFEATURE,
         this.handleSourceFeatureAdded_,
-        this
+        this,
       ),
       listen(
         source,
         VectorEventType.CHANGEFEATURE,
         this.handleSourceFeatureChanged_,
-        this
+        this,
       ),
       listen(
         source,
         VectorEventType.REMOVEFEATURE,
         this.handleSourceFeatureDelete_,
-        this
+        this,
       ),
       listen(
         source,
         VectorEventType.CLEAR,
         this.handleSourceFeatureClear_,
-        this
+        this,
       ),
     ];
     source.forEachFeature((feature) => {
@@ -339,14 +354,25 @@ class WebGLPointsLayerRenderer extends WebGLLayerRenderer {
     });
   }
 
+  /**
+   * @override
+   */
   afterHelperCreated() {
     this.program_ = this.helper.getProgram(
       this.fragmentShader_,
-      this.vertexShader_
+      this.vertexShader_,
     );
 
     if (this.hitDetectionEnabled_) {
       this.hitRenderTarget_ = new WebGLRenderTarget(this.helper);
+    }
+
+    // upload buffers again if any
+    if (this.verticesBuffer_.getArray()) {
+      this.helper.flushBufferData(this.verticesBuffer_);
+    }
+    if (this.indicesBuffer_.getArray()) {
+      this.helper.flushBufferData(this.indicesBuffer_);
     }
   }
 
@@ -399,13 +425,14 @@ class WebGLPointsLayerRenderer extends WebGLLayerRenderer {
    * Render the layer.
    * @param {import("../../Map.js").FrameState} frameState Frame state.
    * @return {HTMLElement} The rendered element.
+   * @override
    */
   renderFrame(frameState) {
     const gl = this.helper.getGL();
     this.preRender(gl, frameState);
     const [startWorld, endWorld, worldWidth] = getWorldParameters(
       frameState,
-      this.getLayer()
+      this.getLayer(),
     );
 
     // draw the normal canvas
@@ -413,7 +440,7 @@ class WebGLPointsLayerRenderer extends WebGLLayerRenderer {
     this.helper.finalizeDraw(
       frameState,
       this.dispatchPreComposeEvent,
-      this.dispatchPostComposeEvent
+      this.dispatchPostComposeEvent,
     );
 
     if (this.hitDetectionEnabled_) {
@@ -432,6 +459,7 @@ class WebGLPointsLayerRenderer extends WebGLLayerRenderer {
    * Determine whether renderFrame should be called.
    * @param {import("../../Map.js").FrameState} frameState Frame state.
    * @return {boolean} Layer is ready to be rendered.
+   * @override
    */
   prepareFrameInternal(frameState) {
     const layer = this.getLayer();
@@ -510,7 +538,7 @@ class WebGLPointsLayerRenderer extends WebGLLayerRenderer {
       if (userProjection) {
         const userCoords = fromUserCoordinate(
           geometry.getFlatCoordinates(),
-          frameState.viewState.projection
+          frameState.viewState.projection,
         );
         tmpCoords[0] = userCoords[0];
         tmpCoords[1] = userCoords[1];
@@ -538,7 +566,7 @@ class WebGLPointsLayerRenderer extends WebGLLayerRenderer {
       for (let j = 0; j < this.customAttributes.length; j++) {
         const value = this.customAttributes[j].callback(
           featureCache.feature,
-          featureCache.properties
+          featureCache.properties,
         );
         this.renderInstructions_[++idx] = value;
       }
@@ -566,17 +594,18 @@ class WebGLPointsLayerRenderer extends WebGLLayerRenderer {
    * @param {Array<import("../Map.js").HitMatch<T>>} matches The hit detected matches with tolerance.
    * @return {T|undefined} Callback result.
    * @template T
+   * @override
    */
   forEachFeatureAtCoordinate(
     coordinate,
     frameState,
     hitTolerance,
     callback,
-    matches
+    matches,
   ) {
     assert(
       this.hitDetectionEnabled_,
-      '`forEachFeatureAtCoordinate` cannot be used on a WebGL layer if the hit detection logic has been disabled using the `disableHitDetection: true` option.'
+      '`forEachFeatureAtCoordinate` cannot be used on a WebGL layer if the hit detection logic has been disabled using the `disableHitDetection: true` option.',
     );
     if (!this.renderInstructions_ || !this.hitDetectionEnabled_) {
       return undefined;
@@ -584,7 +613,7 @@ class WebGLPointsLayerRenderer extends WebGLLayerRenderer {
 
     const pixel = applyTransform(
       frameState.coordinateToPixelTransform,
-      coordinate.slice()
+      coordinate.slice(),
     );
 
     const data = this.hitRenderTarget_.readPixel(pixel[0] / 2, pixel[1] / 2);
@@ -622,7 +651,7 @@ class WebGLPointsLayerRenderer extends WebGLLayerRenderer {
       this.helper.prepareDrawToRenderTarget(
         frameState,
         this.hitRenderTarget_,
-        true
+        true,
       );
     }
 
@@ -643,16 +672,18 @@ class WebGLPointsLayerRenderer extends WebGLLayerRenderer {
 
   /**
    * Clean up.
+   * @override
    */
   disposeInternal() {
     this.worker_.terminate();
-    this.layer_ = null;
     this.sourceListenKeys_.forEach(function (key) {
       unlistenByKey(key);
     });
     this.sourceListenKeys_ = null;
     super.disposeInternal();
   }
+
+  renderDeclutter() {}
 }
 
 export default WebGLPointsLayerRenderer;

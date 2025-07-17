@@ -100,8 +100,14 @@ class WebGLVectorLayerRenderer extends WebGLLayerRenderer {
      */
     this.hitRenderTarget_;
 
+    /**
+     * @private
+     */
     this.sourceRevision_ = -1;
 
+    /**
+     * @private
+     */
     this.previousExtent_ = createEmpty();
 
     /**
@@ -113,8 +119,17 @@ class WebGLVectorLayerRenderer extends WebGLLayerRenderer {
      */
     this.currentTransform_ = createTransform();
 
+    /**
+     * @private
+     */
     this.tmpCoords_ = [0, 0];
+    /**
+     * @private
+     */
     this.tmpTransform_ = createTransform();
+    /**
+     * @private
+     */
     this.tmpMat4_ = createMat4();
 
     /**
@@ -172,7 +187,7 @@ class WebGLVectorLayerRenderer extends WebGLLayerRenderer {
     if (userProjection) {
       projectionTransform = getTransformFromProjections(
         userProjection,
-        frameState.viewState.projection
+        frameState.viewState.projection,
       );
     }
     this.batch_.addFeatures(source.getFeatures(), projectionTransform);
@@ -181,25 +196,24 @@ class WebGLVectorLayerRenderer extends WebGLLayerRenderer {
         source,
         VectorEventType.ADDFEATURE,
         this.handleSourceFeatureAdded_.bind(this, projectionTransform),
-        this
       ),
       listen(
         source,
         VectorEventType.CHANGEFEATURE,
         this.handleSourceFeatureChanged_,
-        this
+        this,
       ),
       listen(
         source,
         VectorEventType.REMOVEFEATURE,
         this.handleSourceFeatureDelete_,
-        this
+        this,
       ),
       listen(
         source,
         VectorEventType.CLEAR,
         this.handleSourceFeatureClear_,
-        this
+        this,
       ),
     ];
   }
@@ -221,10 +235,13 @@ class WebGLVectorLayerRenderer extends WebGLLayerRenderer {
     this.buffers_ = [];
     this.styleRenderers_ = this.styles_.map(
       (style) =>
-        new VectorStyleRenderer(style, this.helper, this.hitDetectionEnabled_)
+        new VectorStyleRenderer(style, this.helper, this.hitDetectionEnabled_),
     );
   }
 
+  /**
+   * @override
+   */
   reset(options) {
     this.applyOptions_(options);
     if (this.helper) {
@@ -233,8 +250,19 @@ class WebGLVectorLayerRenderer extends WebGLLayerRenderer {
     super.reset(options);
   }
 
+  /**
+   * @override
+   */
   afterHelperCreated() {
-    this.createRenderers_();
+    if (this.styleRenderers_.length) {
+      // To reuse buffers
+      this.styleRenderers_.forEach((renderer, i) =>
+        renderer.setHelper(this.helper, this.buffers_[i]),
+      );
+    } else {
+      this.createRenderers_();
+    }
+
     if (this.hitDetectionEnabled_) {
       this.hitRenderTarget_ = new WebGLRenderTarget(this.helper);
     }
@@ -285,14 +313,14 @@ class WebGLVectorLayerRenderer extends WebGLLayerRenderer {
     multiplyTransform(this.tmpTransform_, batchInvertTransform);
     this.helper.setUniformMatrixValue(
       Uniforms.PROJECTION_MATRIX,
-      mat4FromTransform(this.tmpMat4_, this.tmpTransform_)
+      mat4FromTransform(this.tmpMat4_, this.tmpTransform_),
     );
 
     // screen to world matrix
     makeInverseTransform(this.tmpTransform_, this.tmpTransform_);
     this.helper.setUniformMatrixValue(
       Uniforms.SCREEN_TO_WORLD_MATRIX,
-      mat4FromTransform(this.tmpMat4_, this.tmpTransform_)
+      mat4FromTransform(this.tmpMat4_, this.tmpTransform_),
     );
 
     // pattern origin should always be [0, 0] in world coordinates
@@ -307,6 +335,7 @@ class WebGLVectorLayerRenderer extends WebGLLayerRenderer {
    * Render the layer.
    * @param {import("../../Map.js").FrameState} frameState Frame state.
    * @return {HTMLElement} The rendered element.
+   * @override
    */
   renderFrame(frameState) {
     const gl = this.helper.getGL();
@@ -314,7 +343,7 @@ class WebGLVectorLayerRenderer extends WebGLLayerRenderer {
 
     const [startWorld, endWorld, worldWidth] = getWorldParameters(
       frameState,
-      this.getLayer()
+      this.getLayer(),
     );
 
     // draw the normal canvas
@@ -343,6 +372,7 @@ class WebGLVectorLayerRenderer extends WebGLLayerRenderer {
    * Determine whether renderFrame should be called.
    * @param {import("../../Map.js").FrameState} frameState Frame state.
    * @return {boolean} Layer is ready to be rendered.
+   * @override
    */
   prepareFrameInternal(frameState) {
     if (!this.initialFeaturesAdded_) {
@@ -376,7 +406,7 @@ class WebGLVectorLayerRenderer extends WebGLLayerRenderer {
         vectorSource.loadFeatures(
           toUserExtent(extent, userProjection),
           toUserResolution(resolution, projection),
-          userProjection
+          userProjection,
         );
       } else {
         vectorSource.loadFeatures(extent, resolution, projection);
@@ -386,13 +416,16 @@ class WebGLVectorLayerRenderer extends WebGLLayerRenderer {
 
       const transform = this.helper.makeProjectionTransform(
         frameState,
-        createTransform()
+        createTransform(),
       );
 
       const generatePromises = this.styleRenderers_.map((renderer, i) =>
         renderer.generateBuffers(this.batch_, transform).then((buffers) => {
+          if (this.buffers_[i]) {
+            this.disposeBuffers(this.buffers_[i]);
+          }
           this.buffers_[i] = buffers;
-        })
+        }),
       );
       Promise.all(generatePromises).then(() => {
         this.ready = true;
@@ -424,16 +457,20 @@ class WebGLVectorLayerRenderer extends WebGLLayerRenderer {
       this.helper.prepareDrawToRenderTarget(
         frameState,
         this.hitRenderTarget_,
-        true
+        true,
       );
     }
 
-    this.currentFrameStateTransform_ = this.helper.makeProjectionTransform(
-      frameState,
-      this.currentFrameStateTransform_
-    );
-
     do {
+      this.helper.makeProjectionTransform(
+        frameState,
+        this.currentFrameStateTransform_,
+      );
+      translateTransform(
+        this.currentFrameStateTransform_,
+        world * worldWidth,
+        0,
+      );
       for (let i = 0, ii = this.styleRenderers_.length; i < ii; i++) {
         const renderer = this.styleRenderers_[i];
         const buffers = this.buffers_[i];
@@ -445,7 +482,6 @@ class WebGLVectorLayerRenderer extends WebGLLayerRenderer {
           this.helper.applyHitDetectionUniform(forHitDetection);
         });
       }
-      translateTransform(this.currentFrameStateTransform_, worldWidth, 0);
     } while (++world < endWorld);
   }
 
@@ -457,17 +493,18 @@ class WebGLVectorLayerRenderer extends WebGLLayerRenderer {
    * @param {Array<import("../Map.js").HitMatch<T>>} matches The hit detected matches with tolerance.
    * @return {T|undefined} Callback result.
    * @template T
+   * @override
    */
   forEachFeatureAtCoordinate(
     coordinate,
     frameState,
     hitTolerance,
     callback,
-    matches
+    matches,
   ) {
     assert(
       this.hitDetectionEnabled_,
-      '`forEachFeatureAtCoordinate` cannot be used on a WebGL layer if the hit detection logic has been disabled using the `disableHitDetection: true` option.'
+      '`forEachFeatureAtCoordinate` cannot be used on a WebGL layer if the hit detection logic has been disabled using the `disableHitDetection: true` option.',
     );
     if (!this.styleRenderers_.length || !this.hitDetectionEnabled_) {
       return undefined;
@@ -475,7 +512,7 @@ class WebGLVectorLayerRenderer extends WebGLLayerRenderer {
 
     const pixel = applyTransform(
       frameState.coordinateToPixelTransform,
-      coordinate.slice()
+      coordinate.slice(),
     );
 
     const data = this.hitRenderTarget_.readPixel(pixel[0] / 2, pixel[1] / 2);
@@ -489,9 +526,35 @@ class WebGLVectorLayerRenderer extends WebGLLayerRenderer {
   }
 
   /**
+   * Will release a set of Webgl buffers
+   * @param {import('../../render/webgl/VectorStyleRenderer.js').WebGLBuffers} buffers Buffers
+   */
+  disposeBuffers(buffers) {
+    if (buffers.pointBuffers) {
+      buffers.pointBuffers
+        .filter(Boolean)
+        .forEach((buffer) => this.helper.deleteBuffer(buffer));
+    }
+    if (buffers.lineStringBuffers) {
+      buffers.lineStringBuffers
+        .filter(Boolean)
+        .forEach((buffer) => this.helper.deleteBuffer(buffer));
+    }
+    if (buffers.polygonBuffers) {
+      buffers.polygonBuffers
+        .filter(Boolean)
+        .forEach((buffer) => this.helper.deleteBuffer(buffer));
+    }
+  }
+
+  /**
    * Clean up.
+   * @override
    */
   disposeInternal() {
+    this.buffers_.forEach((buffers) => {
+      this.disposeBuffers(buffers);
+    });
     if (this.sourceListenKeys_) {
       this.sourceListenKeys_.forEach(function (key) {
         unlistenByKey(key);

@@ -8,6 +8,8 @@ export namespace Attributes {
     let INDEX: string;
     let SEGMENT_START: string;
     let SEGMENT_END: string;
+    let MEASURE_START: string;
+    let MEASURE_END: string;
     let PARAMETERS: string;
     let JOIN_ANGLES: string;
     let DISTANCE: string;
@@ -87,7 +89,7 @@ export type StyleShaders = {
     builder: import("../../webgl/ShaderBuilder.js").ShaderBuilder;
     /**
      * Custom attributes made available in the vertex shaders.
-     * Default shaders rely on the attributes in {@link Attributes }.
+     * Default shaders rely on the attributes in {@link Attributes}.
      */
     attributes?: {
         [x: string]: AttributeDefinition;
@@ -99,7 +101,7 @@ export type StyleShaders = {
         [x: string]: import("../../webgl/Helper.js").UniformValue;
     } | undefined;
 };
-export type VectorStyle = import('../../style/webgl.js').WebGLStyle | StyleShaders;
+export type VectorStyle = import("../../style/webgl.js").WebGLStyle | StyleShaders;
 /**
  * @typedef {Object} AttributeDefinition A description of a custom attribute to be passed on to the GPU, with a value different
  * for each feature.
@@ -160,48 +162,78 @@ declare class VectorStyleRenderer {
      * @param {import('../../webgl/Helper.js').default} helper Helper
      * @param {boolean} enableHitDetection Whether to enable the hit detection (needs compatible shader)
      */
-    constructor(styleOrShaders: VectorStyle, helper: import('../../webgl/Helper.js').default, enableHitDetection: boolean);
-    helper_: import("../../webgl/Helper.js").default;
-    hitDetectionEnabled_: boolean;
+    constructor(styleOrShaders: VectorStyle, helper: import("../../webgl/Helper.js").default, enableHitDetection: boolean);
+    /**
+     * @private
+     * @type {import('../../webgl/Helper.js').default}
+     */
+    private helper_;
+    /**
+     * @private
+     */
+    private hitDetectionEnabled_;
+    /**
+     * @private
+     * @type {WebGLProgram}
+     */
+    private fillProgram_;
+    /**
+     * @private
+     * @type {WebGLProgram}
+     */
+    private strokeProgram_;
+    /**
+     * @private
+     * @type {WebGLProgram}
+     */
+    private symbolProgram_;
     /**
      * @type {boolean}
      * @private
      */
     private hasFill_;
-    fillVertexShader_: string | null | undefined;
-    fillFragmentShader_: string | null | undefined;
-    fillProgram_: WebGLProgram | undefined;
+    /**
+     * @private
+     */
+    private fillVertexShader_;
+    /**
+     * @private
+     */
+    private fillFragmentShader_;
     /**
      * @type {boolean}
      * @private
      */
     private hasStroke_;
-    strokeVertexShader_: string | null | undefined;
-    strokeFragmentShader_: string | null | undefined;
-    strokeProgram_: WebGLProgram | undefined;
+    /**
+     * @private
+     */
+    private strokeVertexShader_;
+    /**
+     * @private
+     */
+    private strokeFragmentShader_;
     /**
      * @type {boolean}
      * @private
      */
     private hasSymbol_;
-    symbolVertexShader_: string | null | undefined;
-    symbolFragmentShader_: string | null | undefined;
-    symbolProgram_: WebGLProgram | undefined;
-    customAttributes_: ({
-        hitColor: {
-            callback(): number[];
-            size: number;
-        };
-    } & {
-        [x: string]: AttributeDefinition;
-    }) | ({
-        hitColor?: undefined;
-    } & {
-        [x: string]: AttributeDefinition;
-    });
-    uniforms_: {
-        [x: string]: import("../../webgl/Helper.js").UniformValue;
-    } | undefined;
+    /**
+     * @private
+     */
+    private symbolVertexShader_;
+    /**
+     * @private
+     */
+    private symbolFragmentShader_;
+    /**
+     * @private
+     */
+    private customAttributes_;
+    /**
+     * @private
+     */
+    private uniforms_;
     /**
      * @type {Array<import('../../webgl/Helper.js').AttributeDescription>}
      * @private
@@ -222,7 +254,7 @@ declare class VectorStyleRenderer {
      * @param {import("../../transform.js").Transform} transform Transform to apply to coordinates
      * @return {Promise<WebGLBuffers>} A promise resolving to WebGL buffers
      */
-    generateBuffers(geometryBatch: import('./MixedGeometryBatch.js').default, transform: import("../../transform.js").Transform): Promise<WebGLBuffers>;
+    generateBuffers(geometryBatch: import("./MixedGeometryBatch.js").default, transform: import("../../transform.js").Transform): Promise<WebGLBuffers>;
     /**
      * @param {import('./MixedGeometryBatch.js').default} geometryBatch Geometry batch
      * @param {import("../../transform.js").Transform} transform Transform to apply to coordinates
@@ -255,6 +287,11 @@ declare class VectorStyleRenderer {
      * @private
      */
     private renderInternal_;
+    /**
+     * @param {import('../../webgl/Helper.js').default} helper Helper
+     * @param {WebGLBuffers} buffers WebGL Buffers to reload if any
+     */
+    setHelper(helper: import("../../webgl/Helper.js").default, buffers?: WebGLBuffers): void;
 }
 import WebGLArrayBuffer from '../../webgl/Buffer.js';
 //# sourceMappingURL=VectorStyleRenderer.d.ts.map
