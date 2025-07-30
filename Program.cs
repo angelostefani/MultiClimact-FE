@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.JSInterop;
 using MultiClimact.Data;
+using MultiClimact.Services;
 
 // Create a new builder for the web application
 var builder = WebApplication.CreateBuilder(args);
@@ -42,6 +43,21 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 
 // Add HttpClient services
 builder.Services.AddHttpClient();
+
+// Configure typed HTTP clients for external services
+builder.Services.AddHttpClient<EarthquakeServiceClient>(client =>
+{
+    var baseUrl = builder.Configuration["EarthquakeService:BaseUrl"];
+    if (!string.IsNullOrEmpty(baseUrl))
+        client.BaseAddress = new Uri(baseUrl);
+});
+
+builder.Services.AddHttpClient<HeatwaveServiceClient>(client =>
+{
+    var baseUrl = builder.Configuration["HeatwaveService:BaseUrl"];
+    if (!string.IsNullOrEmpty(baseUrl))
+        client.BaseAddress = new Uri(baseUrl);
+});
 
 // Add distributed memory cache for session state
 builder.Services.AddDistributedMemoryCache();
