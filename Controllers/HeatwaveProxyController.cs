@@ -3,7 +3,9 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.WebUtilities;
 using MultiClimact.Models;
+using MultiClimact.Services;
 
 
 namespace MultiClimact.Controllers
@@ -15,9 +17,9 @@ namespace MultiClimact.Controllers
         private readonly HttpClient _httpClient;
         private readonly ILogger<HeatwaveProxyController> _logger;
 
-        public HeatwaveProxyController(HttpClient httpClient, ILogger<HeatwaveProxyController> logger)
+        public HeatwaveProxyController(HeatwaveServiceClient client, ILogger<HeatwaveProxyController> logger)
         {
-            _httpClient = httpClient;
+            _httpClient = client.HttpClient;
             _logger = logger;
         }
 
@@ -220,7 +222,13 @@ namespace MultiClimact.Controllers
         [HttpGet("GetLastHeatwave")]
         public async Task<IActionResult> GetLastHeatwave()
         {
-            string lastHeatwaveServiceUrl = $"http://192.168.154.23:8000/users/system/last_id_run?staus_str=submitted&haztype_id=2";
+            var query = new Dictionary<string, string?>
+            {
+                ["staus_str"] = "submitted",
+                ["haztype_id"] = "2"
+            };
+
+            string lastHeatwaveServiceUrl = QueryHelpers.AddQueryString("users/system/last_id_run", query);
 
             _logger.LogInformation("Requesting LastHeatwave Service URL: {lastHeatwaveServiceUrl}", lastHeatwaveServiceUrl);
 

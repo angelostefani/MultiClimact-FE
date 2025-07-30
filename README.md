@@ -36,6 +36,8 @@ Application settings are defined in `appsettings.json`. Important options are:
 - `ConnectionStrings:DefaultConnection` – PostgreSQL connection string.
 - `earthquakeSimulationServiceUrl` – endpoint for submitting earthquake simulations.
 - `earthquakeTodayBaseAddress` and `earthquakeTodayAPIUrl` – base address and path for obtaining earthquake data.
+- `EarthquakeService:BaseUrl` – base URL for the earthquake REST service.
+- `HeatwaveService:BaseUrl` – base URL for the heatwave REST service.
 - `wms` – URLs and layer names for WMS geospatial services.
 
 Environment specific files such as `appsettings.Development.json` can override these settings.
