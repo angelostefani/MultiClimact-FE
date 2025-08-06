@@ -3,6 +3,8 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.WebUtilities;
+using MultiClimact.Services;
 using MultiClimact.Models;
 
 
@@ -15,9 +17,9 @@ namespace MultiClimact.Controllers
         private readonly HttpClient _httpClient;
         private readonly ILogger<EarthquakeProxyController> _logger;
 
-        public EarthquakeProxyController(HttpClient httpClient, ILogger<EarthquakeProxyController> logger)
+        public EarthquakeProxyController(EarthquakeServiceClient client, ILogger<EarthquakeProxyController> logger)
         {
-            _httpClient = httpClient;
+            _httpClient = client.HttpClient;
             _logger = logger;
         }
 
@@ -193,7 +195,17 @@ namespace MultiClimact.Controllers
             [FromQuery] string max_magnitude,
             [FromQuery] bool simulated)
         {
-            string earthquakeServiceUrl = $"http://192.168.154.23:8000/users/system/earthquakes?simulated=false&status=completed&min_magnitude={min_magnitude}&event_date_min={start_date}&event_date_max={end_date}&run_end_max=2025-01-01";
+            var query = new Dictionary<string, string?>
+            {
+                ["simulated"] = simulated.ToString().ToLower(),
+                ["status"] = "completed",
+                ["min_magnitude"] = min_magnitude,
+                ["event_date_min"] = start_date,
+                ["event_date_max"] = end_date,
+                ["run_end_max"] = "2025-01-01"
+            };
+
+            string earthquakeServiceUrl = QueryHelpers.AddQueryString("users/system/earthquakes", query);
 
             _logger.LogInformation("Requesting Earthquake Service URL: {earthquakeServiceUrl}", earthquakeServiceUrl);
 
@@ -222,7 +234,13 @@ namespace MultiClimact.Controllers
         [HttpGet("GetLastEarthquake")]
         public async Task<IActionResult> GetLastEarthquake()
         {
-            string lastEarthquakeServiceUrl = $"http://192.168.154.23:8000/users/system/last_id_run?staus_str=submitted&haztype_id=1";
+            var query = new Dictionary<string, string?>
+            {
+                ["staus_str"] = "submitted",
+                ["haztype_id"] = "1"
+            };
+
+            string lastEarthquakeServiceUrl = QueryHelpers.AddQueryString("users/system/last_id_run", query);
 
             _logger.LogInformation("Requesting LastEarthquake Service URL: {lastEarthquakeServiceUrl}", lastEarthquakeServiceUrl);
 
