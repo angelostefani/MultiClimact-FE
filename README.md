@@ -42,6 +42,22 @@ Application settings are defined in `appsettings.json`. Important options are:
 
 Environment specific files such as `appsettings.Development.json` can override these settings.
 
+## Connectivity Checklist
+
+- Database: verify the connection string points to a reachable PostgreSQL instance. Quick check: `dotnet ef database update` should succeed.
+- Earthquake/Heatwave services: confirm the base URLs respond. Example: `curl -I http://<earthquake-base>/users/system/last_id_run` should return `200`.
+- WMS endpoint: use the bare service endpoint (no query). Example check: `curl -I "http://<geoserver>/geoserver/multic/wms?service=WMS&request=GetCapabilities"`.
+- App start: run `dotnet run` and open the homepage; check map layers toggle and GetFeatureInfo.
+
+Note: In `appsettings.json`, prefer `wms:wmsurl_lay00` without query parameters (e.g., `http://<geoserver>/geoserver/multic/wms`). The app appends required `service`, `request`, etc.
+
+## Environment Overrides
+
+- For local tweaks without committing secrets, create a local override from the example:
+
+  - Copy `appsettings.Local.json.example` to `appsettings.Development.json` (or use environment variables/user-secrets).
+  - Set `ConnectionStrings:DefaultConnection`, `EarthquakeService:BaseUrl`, `HeatwaveService:BaseUrl`, and `wms:wmsurl_lay00`.
+
 ## Panoramica dell'applicazione e gestione delle mappe WMS
 
 L'interfaccia web è sviluppata in ASP.NET Core con pagine Razor. All'avvio vengono configurati i servizi per localizzazione, database PostgreSQL, autenticazione e client HTTP tipizzati per i servizi di terremoti e ondate di calore.
