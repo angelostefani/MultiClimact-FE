@@ -65,7 +65,8 @@ namespace MultiClimact.Controllers
                             ["region"] = featureNode[$"multic:region"]?.InnerText,
                             ["town"] = featureNode[$"multic:town"]?.InnerText
                         };
-                        return Ok(jsonResult.ToString());
+                        // Return as JSON object, not a serialized string
+                        return Ok(jsonResult);
                     }
                     else
                     {

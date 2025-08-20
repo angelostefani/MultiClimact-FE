@@ -29,11 +29,23 @@ builder.Services.AddRazorPages()
 // Add support for controllers
 builder.Services.AddControllers();
 
-// DATABASE: Configure Entity Framework to use a PostgreSQL database
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
-    ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(connectionString));
+// DATABASE: Configure Entity Framework to use a database provider based on configuration
+var databaseProvider = builder.Configuration["DatabaseProvider"] ?? "Sqlite"; // "Sqlite" or "PostgreSQL"
+if (databaseProvider.Equals("PostgreSQL", StringComparison.OrdinalIgnoreCase))
+{
+    var pgConnection = builder.Configuration.GetConnectionString("DefaultConnection");
+    if (string.IsNullOrWhiteSpace(pgConnection))
+        throw new InvalidOperationException("Connection string 'DefaultConnection' (PostgreSQL) is missing. Configure via user-secrets or environment.");
+    builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(pgConnection));
+}
+else
+{
+    var sqliteConnection = builder.Configuration.GetConnectionString("SqliteConnection")
+        ?? builder.Configuration.GetConnectionString("DefaultConnection");
+    if (string.IsNullOrWhiteSpace(sqliteConnection))
+        throw new InvalidOperationException("SQLite connection string is missing. Set 'ConnectionStrings:SqliteConnection' or 'DefaultConnection'.");
+    builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite(sqliteConnection));
+}
 // Add a filter to catch database-related exceptions in development mode
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -43,6 +55,7 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 
 // Add HttpClient services
 builder.Services.AddHttpClient();
+builder.Services.AddTransient<RetryHandler>();
 
 // Configure typed HTTP clients for external services
 builder.Services.AddHttpClient<EarthquakeServiceClient>(client =>
@@ -50,14 +63,25 @@ builder.Services.AddHttpClient<EarthquakeServiceClient>(client =>
     var baseUrl = builder.Configuration["EarthquakeService:BaseUrl"];
     if (!string.IsNullOrEmpty(baseUrl))
         client.BaseAddress = new Uri(baseUrl);
-});
+    client.Timeout = TimeSpan.FromSeconds(30);
+})
+    .AddHttpMessageHandler<RetryHandler>();
 
 builder.Services.AddHttpClient<HeatwaveServiceClient>(client =>
 {
     var baseUrl = builder.Configuration["HeatwaveService:BaseUrl"];
     if (!string.IsNullOrEmpty(baseUrl))
         client.BaseAddress = new Uri(baseUrl);
-});
+    client.Timeout = TimeSpan.FromSeconds(30);
+})
+    .AddHttpMessageHandler<RetryHandler>();
+
+// Default named client for internal calls
+builder.Services.AddHttpClient("Default", client =>
+{
+    client.Timeout = TimeSpan.FromSeconds(30);
+})
+    .AddHttpMessageHandler<RetryHandler>();
 
 // Add distributed memory cache for session state
 builder.Services.AddDistributedMemoryCache();
@@ -65,7 +89,7 @@ builder.Services.AddDistributedMemoryCache();
 // Configure session state with a timeout and essential cookie settings
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromSeconds(10);
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
@@ -118,6 +142,14 @@ app.MapRazorPages();
 
 // Map Controller routes for API endpoints
 app.MapControllers();
+
+// On first run with SQLite in dev, ensure DB is created (avoid migrations overhead for local dev)
+if ((builder.Configuration["DatabaseProvider"] ?? "Sqlite").Equals("Sqlite", StringComparison.OrdinalIgnoreCase))
+{
+    using var scope = app.Services.CreateScope();
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    db.Database.EnsureCreated();
+}
 
 // Run the application
 app.Run();

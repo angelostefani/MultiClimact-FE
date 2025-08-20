@@ -1,0 +1,17 @@
+{
+  "DatabaseProvider": "Sqlite",
+  "AllowedHosts": "*",
+  "ConnectionStrings": {
+    "DefaultConnection": "Host=localhost;Port=5432;Database=multiclimact_fe;Username=postgres;Password=postgres",
+    "SqliteConnection": "Data Source=multiclimact.local.db"
+  },
+  "EarthquakeService": {
+    "BaseUrl": "http://localhost:8000"
+  },
+  "HeatwaveService": {
+    "BaseUrl": "http://localhost:8000"
+  },
+  "wms": {
+    "wmsurl_lay00": "http://localhost:8180/geoserver/multic/wms"
+  }
+}

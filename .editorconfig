@@ -1,7 +1,24 @@
-﻿[*.cs]
+root = true
+
+[*]
+end_of_line = crlf
+insert_final_newline = true
+charset = utf-8
+indent_style = space
+indent_size = 4
+trim_trailing_whitespace = true
+
+[*.cs]
 
 # CS8601: Possibile assegnazione di riferimento Null.
 dotnet_diagnostic.CS8601.severity = suggestion
 
 # CS8981: Il nome del tipo contiene solo caratteri ascii minuscoli. Tali nomi possono diventare riservati per la lingua.
 dotnet_diagnostic.CS8981.severity = none
+
+# General C# formatting preferences
+dotnet_sort_system_directives_first = true
+csharp_prefer_braces = true:suggestion
+csharp_new_line_before_open_brace = all
+csharp_indent_switch_labels = true
+csharp_indent_case_contents = true

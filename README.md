@@ -5,7 +5,7 @@ ASP.NET Core web interface for the **MULTICLIMACT** project.
 ## Prerequisites
 
 - [.NET SDK 8.0](https://dotnet.microsoft.com/download) or later
-- Access to a PostgreSQL database instance
+- Access to a PostgreSQL database instance (optional if using SQLite locally)
 
 ## Building and running
 
@@ -33,7 +33,9 @@ The application will start on `https://localhost:5001` by default.
 
 Application settings are defined in `appsettings.json`. Important options are:
 
-- `ConnectionStrings:DefaultConnection` – PostgreSQL connection string.
+- `DatabaseProvider` – set to `Sqlite` (default for dev) or `PostgreSQL`.
+- `ConnectionStrings:DefaultConnection` – PostgreSQL connection string (used when `DatabaseProvider=PostgreSQL`).
+- `ConnectionStrings:SqliteConnection` – SQLite connection string (used when `DatabaseProvider=Sqlite`).
 - `earthquakeSimulationServiceUrl` – endpoint for submitting earthquake simulations.
 - `earthquakeTodayBaseAddress` and `earthquakeTodayAPIUrl` – base address and path for obtaining earthquake data.
 - `EarthquakeService:BaseUrl` – base URL for the earthquake REST service.
@@ -41,6 +43,29 @@ Application settings are defined in `appsettings.json`. Important options are:
 - `wms` – URLs and layer names for WMS geospatial services.
 
 Environment specific files such as `appsettings.Development.json` can override these settings.
+
+## Connectivity Checklist
+
+- Database: verify the connection string points to a reachable PostgreSQL instance. Quick check: `dotnet ef database update` should succeed.
+- Earthquake/Heatwave services: confirm the base URLs respond. Example: `curl -I http://<earthquake-base>/users/system/last_id_run` should return `200`.
+- WMS endpoint: use the bare service endpoint (no query). Example check: `curl -I "http://<geoserver>/geoserver/multic/wms?service=WMS&request=GetCapabilities"`.
+- App start: run `dotnet run` and open the homepage; check map layers toggle and GetFeatureInfo.
+
+Note: In `appsettings.json`, prefer `wms:wmsurl_lay00` without query parameters (e.g., `http://<geoserver>/geoserver/multic/wms`). The app appends required `service`, `request`, etc.
+
+## Environment Overrides
+
+- For local tweaks without committing secrets, create a local override from the example:
+
+  - Copy `appsettings.Local.json.example` to `appsettings.Development.json` (or use environment variables/user-secrets).
+  - Set `DatabaseProvider`, `ConnectionStrings:DefaultConnection` or `ConnectionStrings:SqliteConnection`, `EarthquakeService:BaseUrl`, `HeatwaveService:BaseUrl`, and `wms:wmsurl_lay00`.
+
+## Database Providers
+
+- Development (default): `DatabaseProvider=Sqlite` uses a local `multiclimact.db` file and auto-creates schema with `EnsureCreated()`.
+- Production (example): set `DatabaseProvider=PostgreSQL` and provide `ConnectionStrings:DefaultConnection`; apply EF Core migrations targeting PostgreSQL.
+
+Note: Existing migrations in `Migrations/` are tailored for PostgreSQL. For SQLite local development we avoid migrations and rely on `EnsureCreated()`. If you need migrations for SQLite as well, consider a separate migrations assembly per provider.
 
 ## Panoramica dell'applicazione e gestione delle mappe WMS
 

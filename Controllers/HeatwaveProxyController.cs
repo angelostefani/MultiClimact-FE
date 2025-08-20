@@ -224,7 +224,7 @@ namespace MultiClimact.Controllers
         {
             var query = new Dictionary<string, string?>
             {
-                ["staus_str"] = "submitted",
+                ["status_str"] = "submitted",
                 ["haztype_id"] = "2"
             };
 

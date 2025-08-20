@@ -25,10 +25,11 @@ namespace MultiClimact.Pages
     /// </remarks>
     /// <param name="logger">Logger instance for logging errors and information.</param>
     /// <param name="configuration">Application configuration for retrieving settings.</param>
-    public class IndexModel(ILogger<IndexModel> logger, IConfiguration configuration) : PageModel
+    public class IndexModel(ILogger<IndexModel> logger, IConfiguration configuration, IHttpClientFactory httpClientFactory) : PageModel
     {
         private readonly ILogger<IndexModel> _logger = logger;
         private readonly IConfiguration _configuration = configuration;
+        private readonly IHttpClientFactory _httpClientFactory = httpClientFactory;
 
         /// <summary>
         /// Handles HTTP GET requests for the Index page asynchronously.
@@ -51,12 +52,12 @@ namespace MultiClimact.Pages
         private async Task GetLastEarthquakeIdRun()
         {
             // Define the API endpoint URL
-            var serviceUrl = "http://localhost:5022/api/EarthquakeProxy/GetLastEarthquake";
+            var baseUrl = $"{Request.Scheme}://{Request.Host}";
+            var serviceUrl = $"{baseUrl}/api/EarthquakeProxy/GetLastEarthquake";
 
             try
             {
-                using (var client = new HttpClient())
-                {
+                var client = _httpClientFactory.CreateClient("Default");
                     var response = await client.GetAsync(serviceUrl);
 
                     if (response.IsSuccessStatusCode)
@@ -75,7 +76,6 @@ namespace MultiClimact.Pages
                         // Handle unsuccessful API response
                         ViewData["idRunLastEarthquake"] = $"Error calling the service: {response.StatusCode}";
                     }
-                }
             }
             catch (Exception ex)
             {
@@ -93,12 +93,12 @@ namespace MultiClimact.Pages
         private async Task GetLastHeatwaveIdRun()
         {
             // Define the API endpoint URL
-            var serviceUrl = "http://localhost:5022/api/HeatwaveProxy/GetLastHeatwave";
+            var baseUrl = $"{Request.Scheme}://{Request.Host}";
+            var serviceUrl = $"{baseUrl}/api/HeatwaveProxy/GetLastHeatwave";
 
             try
             {
-                using (var client = new HttpClient())
-                {
+                var client = _httpClientFactory.CreateClient("Default");
                     var response = await client.GetAsync(serviceUrl);
 
                     if (response.IsSuccessStatusCode)
@@ -107,7 +107,7 @@ namespace MultiClimact.Pages
                         var responseBody = await response.Content.ReadAsStringAsync();
 
                         // Deserialize the JSON response into a .NET object
-                        var data = JsonSerializer.Deserialize<LastEarthquakeResponse>(responseBody);
+                        var data = JsonSerializer.Deserialize<LastHeatwaveResponse>(responseBody);
 
                         // Store the retrieved earthquake ID in ViewData
                         ViewData["idRunLastHeatwave"] = data?.id_run ?? "idRun not available in the response";
@@ -117,13 +117,12 @@ namespace MultiClimact.Pages
                         // Handle unsuccessful API response
                         ViewData["idRunLastHeatwave"] = $"Error calling the service: {response.StatusCode}";
                     }
-                }
             }
             catch (Exception ex)
             {
                 // Log the exception and store an error message in ViewData
-                _logger.LogError(ex, "An error occurred while calling the EarthquakeProxy service.");
-                ViewData["idRunLastEarthquake"] = $"Exception: {ex.Message}";
+                _logger.LogError(ex, "An error occurred while calling the HeatwaveProxy service.");
+                ViewData["idRunLastHeatwave"] = $"Exception: {ex.Message}";
             }
         }
 
