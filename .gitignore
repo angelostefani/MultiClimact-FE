@@ -217,6 +217,16 @@ rcf/
 # Windows Store app package directories and files
 AppPackages/
 BundleArtifacts/
+
+# Local development databases (SQLite)
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# Local app settings (example file is committed)
+appsettings.Local.json
 Package.StoreAssociation.xml
 _pkginfo.txt
 *.appx
