@@ -115,7 +115,7 @@ else
         <span id="idRunLastEarthquake" data-value="@(ViewData["idRunLastEarthquake"] ?? "undefined")"></span>
 
         @* Dynamic WMS layers data *@
-        @for (int i = 0; i <= 12; i++)
+        @for (int i = 0; i <= 14; i++)
         {
             string layerIndex = i.ToString("D2"); // Ensures two-digit formatting for numbers below 10
             <span id="wmsurl_lay@(layerIndex)" data-value="@ViewData[$"wmsurl_lay{layerIndex}"]"></span>
@@ -129,6 +129,7 @@ else
             let configWMSMatrixMapC2;
             let configWMSMatrixMapC3;
             let configWMSMatrixMapC4;
+            let configWMSMatrixMapC5;
         </script>
       
         <script src="~/js/site.js" ></script>

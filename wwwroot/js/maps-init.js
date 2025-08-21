@@ -121,7 +121,7 @@ document.addEventListener("DOMContentLoaded", function () {
         ]
     };
 
-    // Initialize the map (C5)
+    // Initialize the map (C4)
     mapC4 = initWMSMatrixMap(configWMSMatrixMapC4);
 
     /**
@@ -130,12 +130,13 @@ document.addEventListener("DOMContentLoaded", function () {
      */
     configWMSMatrixMapC5 = {
         targetHtmlMapId: 'mapC5',                 // Target HTML element ID
-        baseMapName: 'OpenStreetMap - EPSG:3857', // Base map layer name
+        baseMapName: 'Metacarta - EPSG:4326', // Base map layer name
         centerLongitude: 13.0683,                 // Initial longitude
         centerLatitude: 43.1357,                  // Initial latitude
         zoomValue: 9,                            // Initial zoom level
         layerMatrix: [                            // Array of WMS layers
-            [true, true, document.getElementById("wmsurl_lay12").dataset.value, document.getElementById("wmslayer_lay12").dataset.value, 'Flood precipitation rate']
+            //[true, true, document.getElementById("wmsurl_lay12").dataset.value, document.getElementById("wmslayer_lay12").dataset.value, 'Flood precipitation rate']
+           [true, true, document.getElementById("wmsurl_lay00").dataset.value, document.getElementById("wmslayer_lay00").dataset.value,'River Floods risk analisys']
         ]
     };
 
