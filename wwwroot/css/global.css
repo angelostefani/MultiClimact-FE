@@ -2,14 +2,15 @@
 
 /* Base font size and full viewport setup */
 html {
-    font-size: 12px;
+    /* Scala tipografia per desktop: tra 14px e 16px */
+    font-size: clamp(14px, 1.1vw, 16px);
     position: relative;
     min-height: 100%;
 }
 
 @media (min-width: 768px) {
     html {
-        font-size: 12px; /* Same font size for larger screens */
+        font-size: clamp(14px, 1.1vw, 16px);
     }
 }
 
@@ -19,7 +20,7 @@ body {
     margin: 0;
     padding: 0;
     height: 100vh;
-    overflow: hidden; /* Prevent scrollbars */
+    overflow-y: auto; /* Consenti scroll quando necessario su desktop */
 }
 
 /* Focus styles for interactive elements */

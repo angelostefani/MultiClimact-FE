@@ -1,4 +1,4 @@
-﻿/* ========== MAP ELEMENTS ========== */
+/* ========== MAP ELEMENTS ========== */
 
 /* Common styles for map-related overlays */
 .search-bar,
@@ -77,70 +77,4 @@
     padding: 5px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-}
-
-/* Responsive adjustments for map heights and radio bar visibility */
-.map-container {
-    height: clamp(400px, 75dvh, 1000px);
-}
-
-.map-container-85 {
-    height: clamp(320px, 55dvh, 820px);
-}
-
-.radio-container {
-    position: sticky;
-    bottom: 0;
-    z-index: 10;
-    flex-wrap: wrap;
-    gap: 2rem; /* Spazio tra le label dei radio */
-}
-
-@media (max-height: 900px) {
-    .map-container-85 { height: 45dvh; }
-}
-
-@media (max-height: 800px) {
-    .map-container-85 { height: 40dvh; }
-}
-
-/* Spaziatura dentro ogni label: separa pallino e testo */
-.radio-container label {
-    display: inline-flex;
-    align-items: center;
-    gap: .5rem;
-    font-size: 1.05rem;
-}
-
-/* Improve size and spacing of side checkboxes */
-.checkbox-container label {
-    display: inline-flex;
-    align-items: center;
-    gap: .5rem;
-    margin-right: 1rem;
-    margin-bottom: .5rem;
-    font-size: 1.05rem;
-}
-
-/* Increase visual size of radios and checkboxes on desktop */
-.radio-container input[type="radio"],
-.checkbox-container input[type="checkbox"] {
-    inline-size: 1.15em;
-    block-size: 1.15em;
-    accent-color: #0d6efd; /* Bootstrap primary color */
-}
-
-/* When window is narrow (snap to half screen), stack controls below map */
-@media (max-width: 1400px) {
-    .map-radio-container {
-        flex-direction: column;
-        align-items: stretch;
-        gap: .75rem;
-    }
-    .map-container-85 { width: 100%; }
-    .checkbox-container {
-        width: 100%;
-        flex-direction: row;
-        flex-wrap: wrap;
-    }
 }
