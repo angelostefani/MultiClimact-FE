@@ -5,6 +5,8 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>aspnet-MultiClimact-30632e09-1f90-492d-92d2-896010ecd747</UserSecretsId>
+    <!-- Ensure duplicate-obj cleanup runs at start of each build invocation -->
+    <InitialTargets>CleanObjDuplicateNuGetProps</InitialTargets>
   </PropertyGroup>
 
   <ItemGroup>
@@ -714,6 +716,21 @@
     <None Include="wwwroot\lib\openlayers\xml.d.ts.map" />
     <None Include="wwwroot\lib\openlayers\xml.js" />
   </ItemGroup>
+
+  <!-- Auto-clean stale machine-suffixed NuGet props/assets that can trigger MSB4011 duplicate import warnings -->
+  <Target Name="CleanObjDuplicateNuGetProps" BeforeTargets="Restore">
+    <ItemGroup>
+      <_DuplicateProps Include="$(MSBuildProjectExtensionsPath)/*nuget.g-*.props" />
+      <_DuplicateDgspec Include="$(MSBuildProjectExtensionsPath)/*nuget.dgspec-*.json" />
+      <_DuplicateAssets Include="$(MSBuildProjectExtensionsPath)/project.assets-*.json" />
+      <_DuplicateNugetCache Include="$(MSBuildProjectExtensionsPath)/project.nuget-*.cache" />
+    </ItemGroup>
+    <Message Importance="low" Text="Cleaning stale obj files that cause duplicate imports (MSB4011)..." />
+    <Delete Files="@(_DuplicateProps)" />
+    <Delete Files="@(_DuplicateDgspec)" />
+    <Delete Files="@(_DuplicateAssets)" />
+    <Delete Files="@(_DuplicateNugetCache)" />
+  </Target>
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid.EntityFrameworkAdapter" Version="8.0.1" />
