@@ -1,4 +1,4 @@
-/**
+﻿/**
  * This script initializes multiple WMS (Web Map Service) maps with various layers.
  * It also sets up user interface elements and manages tab interactions.
  */
@@ -136,7 +136,7 @@ document.addEventListener("DOMContentLoaded", function () {
         zoomValue: 9,                            // Initial zoom level
         layerMatrix: [                            // Array of WMS layers
             [true, true, document.getElementById("wmsurl_lay12").dataset.value, document.getElementById("wmslayer_lay12").dataset.value, 'Flood precipitation rate'],
-           [true, true, document.getElementById("wmsurl_lay13").dataset.value, document.getElementById("wmslayer_lay13").dataset.value,'River Floods risk analisys']
+           [true, true, document.getElementById("wmsurl_lay13").dataset.value, document.getElementById("wmslayer_lay13").dataset.value,'River Floods risk analisys','ed:rt10']
         ]
     };
 

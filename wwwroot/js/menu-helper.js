@@ -438,8 +438,8 @@ function selectTab(selectedItem) {
  * Funzione per abilitare la barra di scorrimento verticale.
  */
 function enableVerticalScrollBar() {
-    // Imposta overflow-y su 'scroll' per abilitare la barra di scorrimento
-    document.body.style.overflowY = 'scroll';
+    // Imposta overflow-y su 'auto' per abilitare la barra di scorrimento quando necessario
+    document.body.style.overflowY = 'auto';
 
     // Nasconde elementi specifici quando la barra di scorrimento è abilitata
     document.getElementById("mouseCoordinates").style.display = "none";
@@ -450,8 +450,8 @@ function enableVerticalScrollBar() {
  * Funzione per disabilitare la barra di scorrimento verticale.
  */
 function disableVerticalScrollBar() {
-    // Imposta overflow-y su 'hidden' per disabilitare la barra di scorrimento
-    document.body.style.overflowY = 'hidden';
+    // Non nascondere la scrollbar su desktop: mantieni 'auto' per adattarsi a finestre affiancate
+    document.body.style.overflowY = 'auto';
 }
 
 /**

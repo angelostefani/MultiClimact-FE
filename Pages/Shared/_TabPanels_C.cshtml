@@ -93,8 +93,68 @@
     </div>
 </div>
 
+<!-- Codice prima dell'aggiunta delle checkbox e dei radio batton
 <div class="tab-pane fade" id="panelC5" role="tabpanel" aria-labelledby="tabC5-tab">
     <div id="mapC5" class="map-container"></div>
+-->
+<div class="tab-pane fade" id="panelC5" role="tabpanel" aria-labelledby="tabC5-tab">
+    <div class="map-radio-container">
+        <!-- Mappa -->
+        <div id="mapC5" class="map-container-85"></div>
+
+        <!-- Checkbox accanto alla mappa -->
+        <div class="checkbox-container">
+            <label>
+                <input type="checkbox" id="checkboxC5_1" checked onclick="toggleLayerBlock(configWMSMatrixMapC5, 0, mapC5, 9)"> Residential buildings
+            </label><br>
+            <label>
+                <input type="checkbox" id="checkboxC5_2" checked onclick="toggleLayerBlock(configWMSMatrixMapC5, 1, mapC5, 9)">  Commercial buildings
+            </label><br>
+            <label>
+                <input type="checkbox" id="checkboxC5_3" checked onclick="toggleLayerBlock(configWMSMatrixMapC5, 3, mapC5, 9)"> Industrial buildings
+            </label><br>
+              <label>
+                <input type="checkbox" id="checkboxC5_4" checked onclick="toggleLayerBlock(configWMSMatrixMapC5, 4, mapC5, 9)"> Infrastructure (roads)
+            </label><br>
+              <label>
+                <input type="checkbox" id="checkboxC5_5" checked onclick="toggleLayerBlock(configWMSMatrixMapC5, 5, mapC5, 9)"> Energy (substation)
+            </label>
+        </div>
+    </div>
+
+    <!-- Radio button sotto la mappa -->
+    <div class="radio-container">
+        <label>
+            <input type="radio" name="layerC5" id="layerC5_1" checked onclick="switchLayers(configWMSMatrixMapC5, 1, mapC5, 9)"> 10 years
+        </label>
+        <label>
+            <input type="radio" name="layerC5" id="layerC5_2" onclick="switchLayers(configWMSMatrixMapC5, 0, mapC5, 9)"> 20 years
+        </label>
+        <label>
+            <input type="radio" name="layerC5" id="layerC5_3" onclick="switchLayers(configWMSMatrixMapC5, 2, mapC5, 9)"> 30 years
+        </label>
+         <label>
+            <input type="radio" name="layerC5" id="layerC5_4" onclick="switchLayers(configWMSMatrixMapC5, 3, mapC5, 9)"> 40 years
+        </label>
+         <label>
+            <input type="radio" name="layerC5" id="layerC5_5" onclick="switchLayers(configWMSMatrixMapC5, 4, mapC5, 9)"> 50 years
+        </label>
+         <label>
+            <input type="radio" name="layerC5" id="layerC5_6" onclick="switchLayers(configWMSMatrixMapC5, 5, mapC5, 9)"> 75 years
+        </label>
+         <label>
+            <input type="radio" name="layerC5" id="layerC5_7" onclick="switchLayers(configWMSMatrixMapC5, 6, mapC5, 9)"> 100 years
+        </label>
+         <label>
+            <input type="radio" name="layerC5" id="layerC5_8" onclick="switchLayers(configWMSMatrixMapC5, 7, mapC5, 9)"> 200 years
+        </label>
+         <label>
+            <input type="radio" name="layerC5" id="layerC5_9" onclick="switchLayers(configWMSMatrixMapC5, 8, mapC5, 9)"> 500 years
+        </label>
+    </div>
+</div>
+
+
 </div>
 <div class="tab-pane fade" id="panelC6" role="tabpanel" aria-labelledby="tabC6-tab">
     <div id="mapC6" class="map-container"></div>
