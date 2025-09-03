@@ -205,6 +205,46 @@ function addMapClickListener(map, wmsLayer, wmsUrl) {
     map.addOverlay(popupOverlay);
 
     map.on('singleclick', function (evt) {
+        // Determine the target WMS layer name to query
+        let layerName = null;
+        try {
+            if (wmsLayer && typeof wmsLayer.getSource === 'function') {
+                const src = wmsLayer.getSource();
+                const params = src && typeof src.getParams === 'function' ? src.getParams() : null;
+                if (params && params.LAYERS) {
+                    layerName = (params.LAYERS + '').split(',')[0].trim();
+                }
+            }
+            if (!layerName && map && typeof map.getLayers === 'function') {
+                const layers = map.getLayers().getArray ? map.getLayers().getArray() : [];
+                for (let i = layers.length - 1; i >= 0; i--) {
+                    const lyr = layers[i];
+                    const visible = typeof lyr.getVisible === 'function' ? lyr.getVisible() : true;
+                    if (!visible) continue;
+                    const src = lyr && typeof lyr.getSource === 'function' ? lyr.getSource() : null;
+                    // Accept TileWMS sources only
+                    const isTileWMS = src && (
+                        (typeof ol !== 'undefined' && ol.source && src instanceof ol.source.TileWMS) ||
+                        (typeof src.getParams === 'function' && typeof src.getUrls === 'function')
+                    );
+                    if (!isTileWMS) continue;
+                    const params = typeof src.getParams === 'function' ? src.getParams() : null;
+                    if (params && params.LAYERS) {
+                        layerName = (params.LAYERS + '').split(',')[0].trim();
+                        break;
+                    }
+                }
+            }
+        } catch (e) {
+            console.warn('Impossibile determinare il layer WMS per GetFeatureInfo:', e);
+        }
+
+        // Early-exit: se non è stato determinato alcun layer WMS visibile, evita la fetch
+        if (!layerName) {
+            console.warn('Nessun layer WMS visibile selezionabile per GetFeatureInfo. Interrompo la richiesta.');
+            popupElement.style.display = 'none';
+            return;
+        }
         let bbox = map.getView().calculateExtent();
         const mapSize = map.getSize();
         const width = mapSize[0];
@@ -214,25 +254,67 @@ function addMapClickListener(map, wmsLayer, wmsUrl) {
 
         if (x >= 0 && x <= width && y >= 0 && y <= height) {
             let url = `/api/WmsProxy/GetFeatureInfo?bbox=${bbox}&x=${x}&y=${y}&width=${width}&height=${height}`;
+            url += `&layer=${encodeURIComponent(layerName)}`;
+
+            const ts = new Date().toISOString();
+            console.info(`[${ts}] GetFeatureInfo request -> layer: ${layerName}, x: ${x}, y: ${y}, size: ${width}x${height}, bbox: ${bbox}`);
 
             fetch(url)
                 .then(response => {
+                    if (response.status === 404) {
+                        // Nessuna feature trovata sotto al click: silenzioso, niente errori in console
+                        return null;
+                    }
                     if (!response.ok) {
                         throw new Error("Errore nella richiesta al WMS: " + response.statusText);
                     }
                     return response.json();
                 })
                 .then(data => {
-                    popupElement.innerHTML = `
-                        <strong>Informazioni:</strong><br>
-                        Latitudine: ${data.lat || 'N/A'}<br>
-                        Longitudine: ${data.lon || 'N/A'}<br>
-                        Abitanti: ${data.residents || 'N/A'}<br>
-                        Seismic V: ${data.seismic_v || 'N/A'}<br>
-                        Vs30: ${data.vs30 || 'N/A'}<br>
-                        Regione: ${data.region || 'N/A'}<br>
-                        Città: ${data.town || 'N/A'}
-                    `;
+                    if (!data) {
+                        // Caso 404 gestito sopra: nessun popup
+                        popupElement.style.display = 'none';
+                        return;
+                    }
+
+                    // Costruzione contenuto popup: se presenti campi noti, mostriamoli; in ogni caso, aggiungiamo un riepilogo generico
+                    const lines = [];
+                    lines.push('<strong>Informazioni:</strong>');
+                    const known = [
+                        ['Latitudine', data.lat],
+                        ['Longitudine', data.lon],
+                        ['Abitanti', data.residents],
+                        ['Seismic V', data.seismic_v],
+                        ['Vs30', data.vs30],
+                        ['Regione', data.region],
+                        ['Città', data.town]
+                    ];
+                    known.forEach(([label, val]) => {
+                        if (val !== undefined && val !== null && String(val).trim() !== '') {
+                            lines.push(`${label}: ${val}`);
+                        }
+                    });
+
+                    // Riepilogo generico da data.properties (se presente)
+                    if (data.properties && typeof data.properties === 'object') {
+                        const keys = Object.keys(data.properties);
+                        if (keys.length > 0) {
+                            lines.push('<hr style="margin:4px 0;">');
+                            lines.push('<strong>Dettagli:</strong>');
+                            lines.push('<table style="font-size: 12px; border-collapse: collapse;">');
+                            keys.forEach(k => {
+                                const v = data.properties[k];
+                                if (v !== undefined && v !== null && String(v).trim() !== '') {
+                                    const escK = String(k).replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                                    const escV = String(v).replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                                    lines.push(`<tr><td style="padding-right:6px; vertical-align: top;"><em>${escK}</em></td><td>${escV}</td></tr>`);
+                                }
+                            });
+                            lines.push('</table>');
+                        }
+                    }
+
+                    popupElement.innerHTML = lines.join('<br>');
                     popupElement.style.display = 'block';
                     popupOverlay.setPosition(evt.coordinate);
                 })
