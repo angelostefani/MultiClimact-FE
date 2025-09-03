@@ -6,8 +6,53 @@
 * Libreria JavaScript per le applicazioni GIS di ENEA.
 * Framework utilizzati:
 * - OpenLayers
-* - Bootstrap
 * - JQuery
+
+Panoramica:
+- Fornisce funzioni per inizializzare mappe OpenLayers con layer WMS singoli o multipli.
+- Integra una “matrice” di configurazione per gestire visibilità, gruppi di layer e legende.
+- Supporta parametri extra nei request WMS come ENV e un eventuale risk_run_id globale.
+
+Funzioni Chiave:
+- initWMSMap(config): crea una mappa con basemap + un layer WMS opzionale.
+    - Parametri principali: targetHtmlMapId, baseMapName, centerLongitude, centerLatitude, zoomValue, wmsUrl, wmsLayer, env.
+    - Chiama getBaseMapLayer(...) e, se presente, aggiunge il WMS con addLayerToMap(...).
+    - Registra il click sulla mappa con addMapClickListener(...) per le GetFeatureInfo (definita in openlayer-helper.js).
+- initWMSMatrixMap(config): crea una mappa con una matrice di layer WMS.
+    - Parametri principali: come sopra + layerMatrix (vedi sezione Matrice).
+    - Aggiunge i layer WMS previsti dalla matrice e registra il click per GetFeatureInfo.
+- addLayerToMap(layersArray, wmsUrl, wmsLayer, env): istanzia un ol.layer.Tile WMS e lo aggiunge ai layers.
+    - Imposta params WMS: LAYERS, TILED=true, opzionale ENV, opzionale risk_run_id se definito globalmente in activeRiskRunID.
+- toggleLayer(configWMSMatrixMap, layerIndex, map): attiva/disattiva la visibilità del singolo layer indicizzato nella matrice e aggiorna la mappa.
+- toggleLayerBlock(configWMSMatrixMap, layerBlockIndex, map, blockSize): attiva/disattiva interi blocchi di layer (per gruppi logici) e aggiorna.
+- switchLayer(configWMSMatrixMap, layerIndex, map): rende visibile solo un layer (tutti gli altri off) e aggiorna.
+- switchLayers(configWMSMatrixMap, layersIndex, map, blockSize): per ogni blocco, rende visibile solo il layer con offset layersIndex e aggiorna.
+- updateMapLayers(configWMSMatrixMap, map): ricostruisce i layer della mappa:
+    - Svuota la mappa, aggiunge la basemap OSM.
+    - Per ogni riga visibile della matrice, crea e aggiunge il corrispondente TileWMS con serverType='geoserver' e params (inclusi ENV e risk_run_id se presenti).
+    - Mostra/nasconde la relativa legenda HTML in base all’id (campo legendId).
+
+Matrice dei Layer:
+Ogni riga di layerMatrix è un array con struttura:
+
+- [0] enabled: abilita/disabilita il layer a livello di gruppo/blocco.
+- [1] visible: visibilità puntuale del layer.
+- [2] wmsUrl: URL del servizio WMS (GeoServer).
+- [3] wmsLayerName: nome del layer WMS.
+- [4] legendId: id dell’elemento HTML della legenda da mostrare/nascondere.
+- [5] env: stringa opzionale da passare come ENV` al WMS.
+
+Un layer viene renderizzato se e solo se enabled && visible è vero.
+
+Dipendenze:
+- Basemap e GetFeatureInfo: usa getBaseMapLayer(...) e addMapClickListener(...) definite in wwwroot/js/openlayer-helper.js.
+- GetFeatureInfo: il click invia richieste a /api/WmsProxy/GetFeatureInfo tramite proxy server-side (Controllers/WmsProxyController.cs). Nota: il proxy richiede anche il parametro layer; assicurati che addMapClickListener(...) lo
+- Variabile globale opzionale: activeRiskRunID se definita, viene aggiunta ai parametri WMS come risk_run_id.
+
+Flusso Operativo:
+- Inizializzazione: crea la mappa con la basemap, aggiunge uno o più WMS (diretto o da matrice).
+- Interazione: click su mappa → GetFeatureInfo via proxy → popup con attributi (implementato in openlayer-helper.js).
+- Gestione layer: funzioni toggle/switch aggiornano flags nella matrice → updateMapLayers(...) ricrea i layer e sincronizza legende.
 */
 
 /**
@@ -121,6 +166,7 @@ function addLayerToMap(layersArray, wmsUrl, wmsLayer, env) {
             params.ENV = env;
         }
 
+        // Aggiungi il parametro risk_run_id se definito globalmente
         if (activeRiskRunID && activeRiskRunID.trim() !== '') {
             params.risk_run_id = activeRiskRunID;
         }
@@ -140,7 +186,7 @@ function addLayerToMap(layersArray, wmsUrl, wmsLayer, env) {
 }
 
 /**
- * Attiva o disattiva la visibilità di un layer specifico nella mappa.
+ * Attiva/disattiva la visibilità del singolo layer indicizzato nella matrice e aggiorna la mappa.
  *
  * @param {Object} configWMSMatrixMap - Configurazione della matrice di layer.
  * @param {number} layerIndex - L'indice del layer da modificare.
@@ -152,7 +198,7 @@ function toggleLayer(configWMSMatrixMap, layerIndex, map) {
 }
 
 /**
- * Attiva o disattiva la visibilità di un blocco di layers nella mappa.
+ * Attiva/disattiva interi blocchi di layer (per gruppi logici) e aggiorna.
  *
  * @param {Object} configWMSMatrixMap - Configurazione della matrice di layer.
  * @param {number} layerBlockIndex - L'indice del blocco di layers da modificare.
@@ -201,7 +247,7 @@ function switchLayer(configWMSMatrixMap, layerIndex, map) {
 }
 
 /**
- * Attiva il layer specificato in ogni blocco e disattiva tutti gli altri.
+ * Per ogni blocco logico di layers, attiva il layer specificato (rende visibile solo il layer con offset layersIndex) e disattiva tutti gli altri. 
  *
  * @param {Object} configWMSMatrixMap - Configurazione della matrice di layer.
  * @param {number} layersIndex - L'indice del layer da attivare in ogni blocco.
@@ -231,6 +277,9 @@ function switchLayers(configWMSMatrixMap, layersIndex, map, blockSize) {
 
 /**
  * Aggiorna i layer della mappa e gestisce la visibilità delle legende.
+ *  - Svuota la mappa, aggiunge la basemap OSM.
+    - Per ogni riga visibile della matrice, crea e aggiunge il corrispondente TileWMS con serverType='geoserver' e params (inclusi ENV e risk_run_id se presenti).
+    - Mostra/nasconde la relativa legenda HTML in base all’id (campo legendId).
  *
  * @param {Object} configWMSMatrixMap - Configurazione della matrice di layer.
  * @param {Object} map - L'oggetto mappa di OpenLayers.
@@ -247,9 +296,11 @@ function updateMapLayers(configWMSMatrixMap, map) {
 
     // Cicla attraverso la layerMatrix e aggiungi i layer visibili
     configWMSMatrixMap.layerMatrix.forEach(function (layerConfig, index) {
-        let isVisible = layerConfig[0] && layerConfig[1];
-        let wmsUrl = layerConfig[2];
-        let wmsLayerName = layerConfig[3];
+        let isVisible = layerConfig[0] && layerConfig[1]; // TRUE se entrambi sono TRUE:
+        //[0] enabled: abilita/disabilita il layer a livello di gruppo/blocco.
+        //[1] visible: visibilità puntuale del layer.
+        let wmsUrl = layerConfig[2]; // URL del servizio WMS (GeoServer).
+        let wmsLayerName = layerConfig[3]; // Nome del layer WMS
         let legendId = layerConfig[4]; // ID della legenda corrispondente
         let env = layerConfig[5]; // Parametro env che verrà aggiunto alla richiesta verso geoserver
 
@@ -260,10 +311,12 @@ function updateMapLayers(configWMSMatrixMap, map) {
             params.ENV = env;
         }
 
+        // Aggiungi il parametro risk_run_id se definito globalmente
         if (activeRiskRunID && activeRiskRunID.trim() !== '') {
             params.risk_run_id = activeRiskRunID;
         }
 
+        // Aggiungi il layer WMS se è visibile
         if (isVisible) {
             let wmsLayer = new ol.layer.Tile({
                 source: new ol.source.TileWMS({
@@ -275,7 +328,7 @@ function updateMapLayers(configWMSMatrixMap, map) {
             map.addLayer(wmsLayer);
         }
 
-        // Gestione della visibilità della legenda
+        // Gestisci la visibilità della legenda corrispondente
         let legendElement = document.getElementById(legendId);
         if (legendElement) {
             legendElement.style.display = isVisible ? 'block' : 'none';
