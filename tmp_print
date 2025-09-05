@@ -1,4 +1,4 @@
-﻿/* ========== GLOBAL STYLES ========== */
+/* ========== GLOBAL STYLES ========== */
 
 /* Base font size and full viewport setup */
 html {
@@ -32,13 +32,3 @@ body {
     box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
-/* Layout-safe variables and paddings for fixed header/footer */
-:root {
-    --mc-header-h: 60px;
-    --mc-footer-h: 34px;
-}
-
-body {
-    padding-top: var(--mc-header-h);
-    padding-bottom: var(--mc-footer-h);
-}

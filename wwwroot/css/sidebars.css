@@ -47,3 +47,9 @@
         background-color: #d4edda;
         box-shadow: -2px 0 10px rgba(40, 167, 69, 0.5);
     }
+
+/* Respect fixed header space and avoid overflow */
+.fixed-sidebar {
+    padding-top: var(--mc-header-h);
+    max-height: calc(100vh - var(--mc-header-h));
+}
