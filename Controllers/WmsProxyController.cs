@@ -14,7 +14,7 @@ namespace MultiClimact.Controllers
     {
         private readonly HttpClient _httpClient = httpClient;
         private readonly ILogger<WmsProxyController> _logger = logger;
-        private readonly string _wmsBaseUrl = configuration["wms:wmsurl_lay00"];
+        private readonly string _wmsBaseUrl = configuration["wms:wmsurl_lay13"];
 
         public string WmsBaseUrl => _wmsBaseUrl;
 
@@ -35,7 +35,8 @@ namespace MultiClimact.Controllers
                 _logger.LogWarning("Parametri mancanti: bbox, x, y, width, height e layer sono richiesti.");
                 return BadRequest("Parametri mancanti: bbox, x, y, width, height e layer sono richiesti.");
             }
-
+            
+            //da rivedere (provare ad usare la getFeatureInfo di OpenLayer)
             string wmsUrl = $"{_wmsBaseUrl}?" +
                             $"service=WMS&REQUEST=GetFeatureInfo&QUERY_LAYERS={layer}&" +
                             $"VERSION=1.3.0&FORMAT=image/png&TRANSPARENT=true&LAYERS={layer}&" +
