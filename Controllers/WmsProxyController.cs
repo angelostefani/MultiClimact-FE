@@ -5,6 +5,9 @@ using Newtonsoft.Json.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Xml;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace MultiClimact.Controllers
 {
@@ -12,9 +15,11 @@ namespace MultiClimact.Controllers
     [ApiController]
     public class WmsProxyController(HttpClient httpClient, ILogger<WmsProxyController> logger, IConfiguration configuration) : ControllerBase
     {
+
         private readonly HttpClient _httpClient = httpClient;
+
         private readonly ILogger<WmsProxyController> _logger = logger;
-        private readonly string _wmsBaseUrl = configuration["wms:wmsurl_lay13"];
+        private string _wmsBaseUrl = configuration["wms:wmsurl_lay00"];
 
         public string WmsBaseUrl => _wmsBaseUrl;
 
@@ -35,28 +40,46 @@ namespace MultiClimact.Controllers
                 _logger.LogWarning("Parametri mancanti: bbox, x, y, width, height e layer sono richiesti.");
                 return BadRequest("Parametri mancanti: bbox, x, y, width, height e layer sono richiesti.");
             }
-            
+
             //da rivedere (provare ad usare la getFeatureInfo di OpenLayer)
-            string wmsUrl = $"{_wmsBaseUrl}?" +
+            // _wmsBaseUrl = "http://192.168.154.23:8180/geoserver/multic/wms";
+
+            
+              string wmsUrl = $"{_wmsBaseUrl}?" +
+                             $"service=WMS&REQUEST=GetFeatureInfo&QUERY_LAYERS={layer}&" +
+                             $"VERSION=1.1.0&FORMAT=image/png&TRANSPARENT=true&LAYERS={layer}&" +
+                             $"INFO_FORMAT=text/xml&X={x}&Y={y}&WIDTH={width}&HEIGHT={height}&CRS=EPSG:3857&BBOX={bbox}";
+            
+
+            /** string wmsUrl = $"{_wmsBaseUrl}?" +
                             $"service=WMS&REQUEST=GetFeatureInfo&QUERY_LAYERS={layer}&" +
                             $"VERSION=1.3.0&FORMAT=image/png&TRANSPARENT=true&LAYERS={layer}&" +
                             $"INFO_FORMAT=text/xml&I={x}&J={y}&WIDTH={width}&HEIGHT={height}&CRS=EPSG:3857&BBOX={bbox}";
+            **/
+          //  string wmsUrl = "http://192.168.154.23:8180/geoserver/multic/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetFeatureInfo&FORMAT=image%2Fpng&TRANSPARENT=true&QUERY_LAYERS=multic%3Ariverflood_rb_view&STYLES&LAYERS=multic%3Ariverflood_rb_view&exceptions=application%2Fvnd.ogc.se_inimage&INFO_FORMAT=text%2Fxml&FEATURE_COUNT=50&X=50&Y=50&SRS=EPSG%3A4326&WIDTH=101&HEIGHT=101&BBOX=12.276306166356001%2C43.52233886714509%2C12.553710951512251%2C43.79974365230134";
 
+            Console.WriteLine(_wmsBaseUrl);
+            Console.Out.Flush();
             _logger.LogInformation("Requesting WMS URL: {wmsUrl}", wmsUrl);
 
             try
             {
+                if (_httpClient is null)
+                {
+                    _logger.LogWarning("httpClient è null!");
+                }
                 var response = await _httpClient.GetAsync(wmsUrl);
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
 
+                    _logger.LogInformation("Risposta del server: {content}", content);
                     // Rileva risposte XML/HTML e applica parsing robusto
                     if (IsXml(content))
                     {
                         var xmlDoc = new XmlDocument();
                         xmlDoc.LoadXml(content);
-
+                        _logger.LogInformation("parsing XML: {content}", content);
                         // Gestione di report di eccezione OGC
                         var rootLocal = xmlDoc.DocumentElement?.LocalName?.ToLowerInvariant();
                         if (rootLocal is "serviceexceptionreport" or "exceptionreport")
@@ -64,10 +87,14 @@ namespace MultiClimact.Controllers
                             return StatusCode(502, "OGC Service Exception nella GetFeatureInfo");
                         }
 
+                        _logger.LogInformation("rootLocal e': {rootLocal}", rootLocal);
                         var jsonResult = BuildGenericFeatureInfoJson(xmlDoc, layer);
-                        if (jsonResult is not null)
+                      //  string jsonResulta = "{\"layer\":\"multic:riverflood_rb_view\",\"properties\":{\"id\":\"9397\",\"coordinates\": \"12.414,43.663\"}}";
+                        string jsonResultB = jsonResult.ToString();
+                        if (jsonResultB is not null)
                         {
-                            return Ok(jsonResult);
+                            _logger.LogInformation("Risposta JSON: {jsonResult}", jsonResultB);
+                            return Ok(jsonResultB);
                         }
 
                         return NotFound("Nessuna informazione trovata per il punto selezionato.");
@@ -187,5 +214,25 @@ namespace MultiClimact.Controllers
 
             return result;
         }
+
+        private static bool IsValidJson(string json, out string? error)
+        {
+            try
+            {
+                using var _ = JsonDocument.Parse(json); // se non è valido lancia
+                error = null;
+                return false;
+            }
+            catch (System.Text.Json.JsonException ex)
+            {
+                error = ex.Message; // posizione errore, ecc.
+                return true;
+            }
+        }
+
+
+
     }
+
+
 }

@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.JSInterop;
 using MultiClimact.Data;
 using MultiClimact.Services;
+using Newtonsoft.Json;
 
 // Create a new builder for the web application
 var builder = WebApplication.CreateBuilder(args);

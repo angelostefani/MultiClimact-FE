@@ -204,7 +204,7 @@ function addMapClickListener(map, wmsLayer, wmsUrl) {
     });
     map.addOverlay(popupOverlay);
 
-    map.on('singleclick', function (evt) {
+    map.on('singleclick', async function (evt) {
         // Determine the target WMS layer name to query
         let layerName = null;
         try {
@@ -259,6 +259,7 @@ function addMapClickListener(map, wmsLayer, wmsUrl) {
             const ts = new Date().toISOString();
             console.info(`[${ts}] GetFeatureInfo request -> layer: ${layerName}, x: ${x}, y: ${y}, size: ${width}x${height}, bbox: ${bbox}`);
 
+            //---------------------------------------------------------------------------------------
             fetch(url)
                 .then(response => {
                     if (response.status === 404) {
@@ -268,6 +269,7 @@ function addMapClickListener(map, wmsLayer, wmsUrl) {
                     if (!response.ok) {
                         throw new Error("Errore nella richiesta al WMS: " + response.statusText);
                     }
+                    // alert(response.json());
                     return response.json();
                 })
                 .then(data => {
