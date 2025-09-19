@@ -168,4 +168,17 @@ document.addEventListener("DOMContentLoaded", function () {
     // Initialize the fourth map (C9)
     mapC9 = initWMSMatrixMap(configWMSMatrixMapC9);
         
+      configWMSMatrixMapC12 = {
+        targetHtmlMapId: 'mapC12',                 // Target HTML element ID
+        baseMapName: 'OpenStreetMap - EPSG:3857', // Base map layer name
+        centerLongitude: 13.0683,                 // Initial longitude
+        centerLatitude: 43.1357,                  // Initial latitude
+        zoomValue: 9,                            // Initial zoom level
+        layerMatrix: [                            // Array of WMS layers
+            [true, true, document.getElementById("wmsurl_lay09").dataset.value, document.getElementById("wmslayer_lay09").dataset.value, 'Buildings Extreme Precipitation']
+        ]
+    };
+
+    mapC12 = initWMSMatrixMap(configWMSMatrixMapC12);
+
 });

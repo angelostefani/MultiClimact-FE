@@ -278,7 +278,7 @@ function addMapClickListener(map, wmsLayer, wmsUrl) {
                         popupElement.style.display = 'none';
                         return;
                     }
-
+                    console.log(data);
                     // Costruzione contenuto popup: se presenti campi noti, mostriamoli; in ogni caso, aggiungiamo un riepilogo generico
                     const lines = [];
                     lines.push('<strong>Informazioni:</strong>');
@@ -291,6 +291,9 @@ function addMapClickListener(map, wmsLayer, wmsUrl) {
                         ['Regione', data.region],
                         ['Città', data.town]
                     ];
+                    
+                    console.log("stampa di properties di data", data.properties.category);
+
                     known.forEach(([label, val]) => {
                         if (val !== undefined && val !== null && String(val).trim() !== '') {
                             lines.push(`${label}: ${val}`);
