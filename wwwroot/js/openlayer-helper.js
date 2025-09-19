@@ -316,7 +316,10 @@ function addMapClickListener(map, wmsLayer, wmsUrl) {
                         }
                     }
 
-                    popupElement.innerHTML = lines.join('<br>');
+                    //popupElement.innerHTML = lines.join('<br>');
+                    let unito = lines.join();
+                    unito = unito.replaceAll(",", " ");
+                    popupElement.innerHTML = unito;
                     popupElement.style.display = 'block';
                     popupOverlay.setPosition(evt.coordinate);
                 })
