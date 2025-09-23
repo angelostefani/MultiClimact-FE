@@ -207,6 +207,7 @@ function addMapClickListener(map, wmsLayer, wmsUrl) {
     map.on('singleclick', async function (evt) {
         // Determine the target WMS layer name to query
         let layerName = null;
+        let valo = "";
         try {
             if (wmsLayer && typeof wmsLayer.getSource === 'function') {
                 const src = wmsLayer.getSource();
@@ -217,7 +218,7 @@ function addMapClickListener(map, wmsLayer, wmsUrl) {
             }
             if (!layerName && map && typeof map.getLayers === 'function') {
                 const layers = map.getLayers().getArray ? map.getLayers().getArray() : [];
-                for (let i = layers.length - 1; i >= 0; i--) {
+                for (let i = layers.length - 1; i > 0; i--) {
                     const lyr = layers[i];
                     const visible = typeof lyr.getVisible === 'function' ? lyr.getVisible() : true;
                     if (!visible) continue;
@@ -231,14 +232,18 @@ function addMapClickListener(map, wmsLayer, wmsUrl) {
                     const params = typeof src.getParams === 'function' ? src.getParams() : null;
                     if (params && params.LAYERS) {
                         layerName = (params.LAYERS + '').split(',')[0].trim();
-                        break;
+                        if (i > 1)
+                            valo = valo + params.LAYERS + ",";
+                        else
+                            valo = valo + params.LAYERS;
+                        //break;
                     }
                 }
             }
         } catch (e) {
             console.warn('Impossibile determinare il layer WMS per GetFeatureInfo:', e);
         }
-
+       
         // Early-exit: se non è stato determinato alcun layer WMS visibile, evita la fetch
         if (!layerName) {
             console.warn('Nessun layer WMS visibile selezionabile per GetFeatureInfo. Interrompo la richiesta.');
@@ -251,7 +256,7 @@ function addMapClickListener(map, wmsLayer, wmsUrl) {
         const height = mapSize[1];
         let x = Math.round(evt.pixel[0]);
         let y = Math.round(evt.pixel[1]);
-
+        layerName = valo;
         if (x >= 0 && x <= width && y >= 0 && y <= height) {
             let url = `/api/WmsProxy/GetFeatureInfo?bbox=${bbox}&x=${x}&y=${y}&width=${width}&height=${height}`;
             url += `&layer=${encodeURIComponent(layerName)}`;
@@ -269,19 +274,22 @@ function addMapClickListener(map, wmsLayer, wmsUrl) {
                     if (!response.ok) {
                         throw new Error("Errore nella richiesta al WMS: " + response.statusText);
                     }
-                    // alert(response.json());
-                    return response.json();
+                    //alert(response.json());
+                    return response.text();
                 })
-                .then(data => {
-                    if (!data) {
+                .then(html => {
+                    if (!html) {
                         // Caso 404 gestito sopra: nessun popup
                         popupElement.style.display = 'none';
                         return;
                     }
-                    console.log(data);
+                    
                     // Costruzione contenuto popup: se presenti campi noti, mostriamoli; in ogni caso, aggiungiamo un riepilogo generico
+                    popupElement.innerHTML = html;
+                  /** 
                     const lines = [];
                     lines.push('<strong>Informazioni:</strong>');
+                  
                     const known = [
                         ['Latitudine', data.lat],
                         ['Longitudine', data.lon],
@@ -291,7 +299,7 @@ function addMapClickListener(map, wmsLayer, wmsUrl) {
                         ['Regione', data.region],
                         ['Città', data.town]
                     ];
-                    
+                
                     console.log("stampa di properties di data", data.properties.category);
 
                     known.forEach(([label, val]) => {
@@ -318,11 +326,11 @@ function addMapClickListener(map, wmsLayer, wmsUrl) {
                             lines.push('</table>');
                         }
                     }
-
+                   **/
                     //popupElement.innerHTML = lines.join('<br>');
-                    let unito = lines.join();
-                    unito = unito.replaceAll(",", " ");
-                    popupElement.innerHTML = unito;
+                    //let unito = lines.join();
+                    //unito = unito.replaceAll(",", " ");
+                  //  popupElement.innerHTML = unito;
                     popupElement.style.display = 'block';
                     popupOverlay.setPosition(evt.coordinate);
                 })

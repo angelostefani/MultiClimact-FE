@@ -47,8 +47,8 @@ namespace MultiClimact.Controllers
             
               string wmsUrl = $"{_wmsBaseUrl}?" +
                              $"service=WMS&REQUEST=GetFeatureInfo&QUERY_LAYERS={layer}&" +
-                             $"VERSION=1.1.0&FORMAT=image/png&TRANSPARENT=true&LAYERS={layer}&" +
-                             $"INFO_FORMAT=text/xml&X={x}&Y={y}&WIDTH={width}&HEIGHT={height}&CRS=EPSG:3857&BBOX={bbox}";
+                             $"VERSION=1.1.1&FORMAT=image/png&TRANSPARENT=true&LAYERS={layer}&" +
+                             $"INFO_FORMAT=text/html&FEATURE_COUNT=5&X={x}&Y={y}&WIDTH={width}&HEIGHT={height}&CRS=EPSG:3857&BBOX={bbox}";
             
 
             /** string wmsUrl = $"{_wmsBaseUrl}?" +
@@ -56,8 +56,8 @@ namespace MultiClimact.Controllers
                             $"VERSION=1.3.0&FORMAT=image/png&TRANSPARENT=true&LAYERS={layer}&" +
                             $"INFO_FORMAT=text/xml&I={x}&J={y}&WIDTH={width}&HEIGHT={height}&CRS=EPSG:3857&BBOX={bbox}";
             **/
-          //  string wmsUrl = "http://192.168.154.23:8180/geoserver/multic/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetFeatureInfo&FORMAT=image%2Fpng&TRANSPARENT=true&QUERY_LAYERS=multic%3Ariverflood_rb_view&STYLES&LAYERS=multic%3Ariverflood_rb_view&exceptions=application%2Fvnd.ogc.se_inimage&INFO_FORMAT=text%2Fxml&FEATURE_COUNT=50&X=50&Y=50&SRS=EPSG%3A4326&WIDTH=101&HEIGHT=101&BBOX=12.276306166356001%2C43.52233886714509%2C12.553710951512251%2C43.79974365230134";
-
+           // string wmsUrl = "http://192.168.154.23:8180/geoserver/multic/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetFeatureInfo&FORMAT=image%2Fpng&TRANSPARENT=true&QUERY_LAYERS=multic%3Aearth_real_view%2Cmultic%3Ashakemap&STYLES&LAYERS=multic%3Aearth_real_view%2Cmultic%3Ashakemap&exceptions=application%2Fvnd.ogc.se_inimage&INFO_FORMAT=text%2Fhtml&FEATURE_COUNT=50&X=50&Y=50&SRS=EPSG%3A4326&WIDTH=101&HEIGHT=101&BBOX=13.060913092943625%2C42.87643429777443%2C13.19961548552175%2C43.015136690352556";
+            
             Console.WriteLine(_wmsBaseUrl);
             Console.Out.Flush();
             _logger.LogInformation("Requesting WMS URL: {wmsUrl}", wmsUrl);
@@ -72,7 +72,7 @@ namespace MultiClimact.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
-
+                    return Ok(content);
                     _logger.LogInformation("Risposta del server: {content}", content);
                     // Rileva risposte XML/HTML e applica parsing robusto
                     if (IsXml(content))
