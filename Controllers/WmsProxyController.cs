@@ -72,8 +72,8 @@ namespace MultiClimact.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
-                    return Ok(content);
                     _logger.LogInformation("Risposta del server: {content}", content);
+                    return Ok(content);
                     // Rileva risposte XML/HTML e applica parsing robusto
                     if (IsXml(content))
                     {

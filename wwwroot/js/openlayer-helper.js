@@ -243,7 +243,7 @@ function addMapClickListener(map, wmsLayer, wmsUrl) {
         } catch (e) {
             console.warn('Impossibile determinare il layer WMS per GetFeatureInfo:', e);
         }
-       
+
         // Early-exit: se non è stato determinato alcun layer WMS visibile, evita la fetch
         if (!layerName) {
             console.warn('Nessun layer WMS visibile selezionabile per GetFeatureInfo. Interrompo la richiesta.');
@@ -283,56 +283,187 @@ function addMapClickListener(map, wmsLayer, wmsUrl) {
                         popupElement.style.display = 'none';
                         return;
                     }
+
+                    /** 
+                      const lines = [];
+                      lines.push('<strong>Informazioni:</strong>');
                     
-                    // Costruzione contenuto popup: se presenti campi noti, mostriamoli; in ogni caso, aggiungiamo un riepilogo generico
-                    popupElement.innerHTML = html;
-                  /** 
-                    const lines = [];
-                    lines.push('<strong>Informazioni:</strong>');
+                      const known = [
+                          ['Latitudine', data.lat],
+                          ['Longitudine', data.lon],
+                          ['Abitanti', data.residents],
+                          ['Seismic V', data.seismic_v],
+                          ['Vs30', data.vs30],
+                          ['Regione', data.region],
+                          ['Città', data.town]
+                      ];
                   
-                    const known = [
-                        ['Latitudine', data.lat],
-                        ['Longitudine', data.lon],
-                        ['Abitanti', data.residents],
-                        ['Seismic V', data.seismic_v],
-                        ['Vs30', data.vs30],
-                        ['Regione', data.region],
-                        ['Città', data.town]
-                    ];
-                
-                    console.log("stampa di properties di data", data.properties.category);
-
-                    known.forEach(([label, val]) => {
-                        if (val !== undefined && val !== null && String(val).trim() !== '') {
-                            lines.push(`${label}: ${val}`);
-                        }
-                    });
-
-                    // Riepilogo generico da data.properties (se presente)
-                    if (data.properties && typeof data.properties === 'object') {
-                        const keys = Object.keys(data.properties);
-                        if (keys.length > 0) {
-                            lines.push('<hr style="margin:4px 0;">');
-                            lines.push('<strong>Dettagli:</strong>');
-                            lines.push('<table style="font-size: 12px; border-collapse: collapse;">');
-                            keys.forEach(k => {
-                                const v = data.properties[k];
-                                if (v !== undefined && v !== null && String(v).trim() !== '') {
-                                    const escK = String(k).replace(/</g, '&lt;').replace(/>/g, '&gt;');
-                                    const escV = String(v).replace(/</g, '&lt;').replace(/>/g, '&gt;');
-                                    lines.push(`<tr><td style="padding-right:6px; vertical-align: top;"><em>${escK}</em></td><td>${escV}</td></tr>`);
-                                }
-                            });
-                            lines.push('</table>');
-                        }
-                    }
-                   **/
+                      console.log("stampa di properties di data", data.properties.category);
+  
+                      known.forEach(([label, val]) => {
+                          if (val !== undefined && val !== null && String(val).trim() !== '') {
+                              lines.push(`${label}: ${val}`);
+                          }
+                      });
+  
+                      // Riepilogo generico da data.properties (se presente)
+                      if (data.properties && typeof data.properties === 'object') {
+                          const keys = Object.keys(data.properties);
+                          if (keys.length > 0) {
+                              lines.push('<hr style="margin:4px 0;">');
+                              lines.push('<strong>Dettagli:</strong>');
+                              lines.push('<table style="font-size: 12px; border-collapse: collapse;">');
+                              keys.forEach(k => {
+                                  const v = data.properties[k];
+                                  if (v !== undefined && v !== null && String(v).trim() !== '') {
+                                      const escK = String(k).replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                                      const escV = String(v).replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                                      lines.push(`<tr><td style="padding-right:6px; vertical-align: top;"><em>${escK}</em></td><td>${escV}</td></tr>`);
+                                  }
+                              });
+                              lines.push('</table>');
+                          }
+                      }
+                     **/
                     //popupElement.innerHTML = lines.join('<br>');
                     //let unito = lines.join();
                     //unito = unito.replaceAll(",", " ");
-                  //  popupElement.innerHTML = unito;
-                    popupElement.style.display = 'block';
-                    popupOverlay.setPosition(evt.coordinate);
+                    //  popupElement.innerHTML = unito;
+
+
+                    /**
+                       * logica popup per le extreme precepitation
+                       * 1) attraverso il parsing dell html di risposta di geoserver
+                       * prendo i campi 'category' e 'layer', cosi attraverso un blocco
+                       * if-else sono sicuro che il bottone sul getFeatureInfo() è solo ed esclusivo per la extreme precipitation.
+                       * 2) mi tengo questi riferimenti a questi campi che mi saranno utili in un altro file js. 
+                       * 3) implemento le domande sul sul file js che descrivera la logica del popup.
+                       * @author Jacopo Orru'
+                       */
+
+                    const doc = new DOMParser().parseFromString(html, 'text/html');
+
+                    // 2) Prendi la (prima) tabella featureInfo
+                    const table = doc.querySelector('table.featureInfo');
+
+                    if (!table) {
+                        console.warn('Nessuna table.featureInfo trovata nel GetFeatureInfo');
+                        popupElement.style.display = 'none';
+                        return;
+                    }
+                    const styleHtml = doc.querySelector('style')?.outerHTML || `
+                    <style>
+                    table.featureInfo, table.featureInfo td, table.featureInfo th {
+                    border:1px solid #ddd; border-collapse:collapse; margin:0; padding:.2em .1em; font-size:90%;
+                    }
+                    table.featureInfo th { font-weight:bold; background:#eee; padding:.2em .2em; }
+                    table.featureInfo td { background:#fff; }
+                    table.featureInfo tr.odd td { background:#eee; }
+                    table.featureInfo caption { text-align:left; font-size:100%; font-weight:bold; padding:.2em .2em; }
+                    </style>`;
+
+                    //prendo il nome del layer 
+                    const fromCaption = table.querySelector('caption')?.textContent?.trim();
+                    let layer = fromCaption;
+                    console.log("nome del layer preso dal parsing", layer);
+
+                    // header & righe
+                    const headerTr = [...table.querySelectorAll('tr')].find(tr => tr.querySelectorAll('th').length) || null;
+                    const headers = headerTr ? [...headerTr.querySelectorAll('th')].map(th => th.textContent.trim()) : [];
+                    const rows = [...table.querySelectorAll('tr')].filter(tr => tr.querySelectorAll('td').length);
+
+                    // trova la colonna ID (fid/id/poi_id/...)
+                    const lowerHeaders = headers.map(h => h.toLowerCase());
+                    const idCandidates = ['id'];
+                    let idIdx = -1;
+                    for (const n of idCandidates) { idIdx = lowerHeaders.indexOf(n); if (idIdx !== -1) break; }
+                    const getRowId = (tr) => {
+                        const tds = [...tr.querySelectorAll('td')];
+                        const idx = idIdx >= 0 ? idIdx : 0; // fallback: prima cella
+                        return (tds[idx]?.textContent || '').trim();
+                    };
+
+                    // aggiungi colonna "Azioni" una sola volta
+                    const ensureActionsHeader = () => {
+                        if (!headerTr) return; // se non c'è header, la aggiungeremo solo come <td>
+                        const exists = [...headerTr.querySelectorAll('th')]
+                            .some(th => th.textContent.trim().toLowerCase() === 'actions');
+                        if (!exists) {
+                            const th = doc.createElement('th');
+                            th.textContent = 'actions';
+                            headerTr.appendChild(th);
+                        }
+                    };
+
+                    // mappa per i click (id -> true), serve solo per validare l'id
+                    const idSet = new Set();
+
+
+                    if (layer != null && layer.trim().toLowerCase() === "riverflood_rb_view") {
+                        ensureActionsHeader();
+                        rows.forEach((tr) => {
+                            const id = getRowId(tr);
+                            idSet.add(id);
+
+                            const td = doc.createElement('td');
+                            const btn = doc.createElement('button');
+                            btn.type = 'button';
+                            btn.textContent = 'Vulnerability';
+                            btn.setAttribute('data-id', id);
+                            btn.setAttribute('data-popup-type', 'building');
+                            btn.style.cssText = 'padding:6px 10px; font-size:90%; border:1px solid #ccc; background:#f7f7f7; border-radius:6px; cursor:pointer;';
+                            td.appendChild(btn);
+                            tr.appendChild(td);
+                        });
+                        popupElement.innerHTML = table.outerHTML + styleHtml;  // <-- QUI dentro al ramo
+                        popupElement.style.display = 'block';
+                        popupOverlay.setPosition(evt.coordinate);
+
+                    } else if (layer != null && layer.trim().toLowerCase() === "earth_real_view") {
+                        ensureActionsHeader();
+                        rows.forEach((tr) => {
+                            const id = getRowId(tr);
+                            idSet.add(id);
+
+                            const td = doc.createElement('td');
+                            const btn = doc.createElement('button');
+                            btn.type = 'button';
+                            btn.textContent = 'Vulnerability';
+                            btn.setAttribute('data-id', id);
+                            btn.setAttribute('data-popup-type', 'infrastructure');
+                            btn.style.cssText = 'padding:6px 10px; font-size:90%; border:1px solid #ccc; background:#f7f7f7; border-radius:6px; cursor:pointer;';
+                            td.appendChild(btn);
+                            tr.appendChild(td);
+                        });
+                        popupElement.innerHTML = styleHtml + table.outerHTML;  // <-- QUI dentro al ramo
+                        popupElement.style.display = 'block';
+                        popupOverlay.setPosition(evt.coordinate);
+                    } else {
+                        // Costruzione contenuto popup: se presenti campi noti, mostriamoli; in ogni caso, aggiungiamo un riepilogo generico
+                        popupElement.innerHTML = html;
+                        popupElement.style.display = 'block';
+                        popupOverlay.setPosition(evt.coordinate);
+                    }
+
+                    if (popupElement.__btnHandler__) {
+                        popupElement.removeEventListener('click', popupElement.__btnHandler__);
+                    }
+                    popupElement.__btnHandler__ = function (e) {
+                        const btn = e.target.closest('button[data-id]');
+                        if (!btn) return;
+
+                        const id = btn.getAttribute('data-id');
+                        if (!id) return;
+
+                        // category = "building" | "infrastructure" (o "building" di default)
+                        const category = (btn.getAttribute('data-popup-type') || 'building').toLowerCase();
+
+                        // Apri la pagina passando id e category
+                        const url = `/VulnerabilityForm?id=${encodeURIComponent(id)}&category=${encodeURIComponent(category)}`;
+                        window.open(url, '_blank', 'noopener,noreferrer');
+                    };
+                    popupElement.addEventListener('click', popupElement.__btnHandler__);
+
                 })
                 .catch(error => {
                     console.error('Errore nella GetFeatureInfo:', error);

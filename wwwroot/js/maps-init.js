@@ -175,7 +175,7 @@ document.addEventListener("DOMContentLoaded", function () {
         centerLatitude: 43.1357,                  // Initial latitude
         zoomValue: 9,                            // Initial zoom level
         layerMatrix: [                            // Array of WMS layers
-            [true, true, document.getElementById("wmsurl_lay09").dataset.value, document.getElementById("wmslayer_lay09").dataset.value, 'Buildings Extreme Precipitation']
+            [true, true, document.getElementById("wmsurl_lay13").dataset.value, document.getElementById("wmslayer_lay13").dataset.value, 'Buildings Extreme Precipitation']
         ]
     };
 
