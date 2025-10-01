@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -13,6 +13,8 @@
         /* Consenti la barra di scorrimento verticale quando necessario */
         body { overflow-y: auto; }
     </style>
+
+    @await RenderSectionAsync("Styles", required: false)
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
@@ -81,3 +83,4 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
