@@ -30,6 +30,10 @@ builder.Services.AddRazorPages()
 // Add support for controllers
 builder.Services.AddControllers();
 
+builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddSwaggerGen();
+
 // DATABASE: Configure Entity Framework to use a database provider based on configuration
 var databaseProvider = builder.Configuration["DatabaseProvider"] ?? "Sqlite"; // "Sqlite" or "PostgreSQL"
 if (databaseProvider.Equals("PostgreSQL", StringComparison.OrdinalIgnoreCase))
@@ -125,6 +129,10 @@ else
 app.UseHttpsRedirection();
 // Serve static files (e.g., HTML, CSS, JavaScript)
 app.UseStaticFiles();
+
+app.UseSwagger();
+
+app.UseSwaggerUI();
 
 // Enable routing
 app.UseRouting();
