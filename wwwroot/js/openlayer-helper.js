@@ -383,6 +383,13 @@ function addMapClickListener(map, wmsLayer, wmsUrl) {
                         return (tds[idx]?.textContent || '').trim();
                     };
 
+                    const categoriaIdx = lowerHeaders.indexOf('categoria');
+                    const getRowCategoria = (tr) => {
+                        if (categoriaIdx === -1) return ''; // non presente
+                        const tds = [...tr.querySelectorAll('td')];
+                        return (tds[categoriaIdx]?.textContent || '').trim();
+                    };
+
                     // aggiungi colonna "Azioni" una sola volta
                     const ensureActionsHeader = () => {
                         if (!headerTr) return; // se non c'è header, la aggiungeremo solo come <td>
@@ -399,7 +406,28 @@ function addMapClickListener(map, wmsLayer, wmsUrl) {
                     const idSet = new Set();
 
 
-                    if (layer != null && layer.trim().toLowerCase() === "riverflood_rb_view") {
+                    if (layer != null && layer.trim().toLowerCase() === "poi_prec") {
+                        ensureActionsHeader();
+                        rows.forEach((tr) => {
+                            const id = getRowId(tr);
+                            idSet.add(id);
+                            const catRaw = getRowCategoria(tr);
+
+                            const td = doc.createElement('td');
+                            const btn = doc.createElement('button');
+                            btn.type = 'button';
+                            btn.textContent = 'Vulnerability';
+                            btn.setAttribute('data-id', id);
+                            btn.setAttribute('data-popup-type', catRaw);
+                            btn.style.cssText = 'padding:6px 10px; font-size:90%; border:1px solid #ccc; background:#f7f7f7; border-radius:6px; cursor:pointer;';
+                            td.appendChild(btn);
+                            tr.appendChild(td);
+                        });
+                        popupElement.innerHTML = table.outerHTML + styleHtml;  // <-- QUI dentro al ramo
+                        popupElement.style.display = 'block';
+                        popupOverlay.setPosition(evt.coordinate);
+
+                    } else if (layer != null && layer.trim().toLowerCase() === "building") {
                         ensureActionsHeader();
                         rows.forEach((tr) => {
                             const id = getRowId(tr);
@@ -411,26 +439,6 @@ function addMapClickListener(map, wmsLayer, wmsUrl) {
                             btn.textContent = 'Vulnerability';
                             btn.setAttribute('data-id', id);
                             btn.setAttribute('data-popup-type', 'building');
-                            btn.style.cssText = 'padding:6px 10px; font-size:90%; border:1px solid #ccc; background:#f7f7f7; border-radius:6px; cursor:pointer;';
-                            td.appendChild(btn);
-                            tr.appendChild(td);
-                        });
-                        popupElement.innerHTML = table.outerHTML + styleHtml;  // <-- QUI dentro al ramo
-                        popupElement.style.display = 'block';
-                        popupOverlay.setPosition(evt.coordinate);
-
-                    } else if (layer != null && layer.trim().toLowerCase() === "earth_real_view") {
-                        ensureActionsHeader();
-                        rows.forEach((tr) => {
-                            const id = getRowId(tr);
-                            idSet.add(id);
-
-                            const td = doc.createElement('td');
-                            const btn = doc.createElement('button');
-                            btn.type = 'button';
-                            btn.textContent = 'Vulnerability';
-                            btn.setAttribute('data-id', id);
-                            btn.setAttribute('data-popup-type', 'infrastructure');
                             btn.style.cssText = 'padding:6px 10px; font-size:90%; border:1px solid #ccc; background:#f7f7f7; border-radius:6px; cursor:pointer;';
                             td.appendChild(btn);
                             tr.appendChild(td);
@@ -456,10 +464,10 @@ function addMapClickListener(map, wmsLayer, wmsUrl) {
                         if (!id) return;
 
                         // category = "building" | "infrastructure" (o "building" di default)
-                        const category = (btn.getAttribute('data-popup-type') || 'building').toLowerCase();
+                        const categoria = (btn.getAttribute('data-popup-type') || 'building').toLowerCase();
 
                         // Apri la pagina passando id e category
-                        const url = `/VulnerabilityForm?id=${encodeURIComponent(id)}&category=${encodeURIComponent(category)}`;
+                        const url = `/VulnerabilityForm?id=${encodeURIComponent(id)}&categoria=${encodeURIComponent(categoria)}`;
                         window.open(url, '_blank', 'noopener,noreferrer');
                     };
                     popupElement.addEventListener('click', popupElement.__btnHandler__);
