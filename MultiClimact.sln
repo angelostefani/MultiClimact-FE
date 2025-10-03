@@ -5,8 +5,6 @@ VisualStudioVersion = 17.8.34408.163
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiClimact", "MultiClimact.csproj", "{059A0316-2E49-461E-9CA4-9E31D655F374}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProgettoDiProva", "..\..\..\Desktop\Università\Enea-Tirocinio\ProgettoDiProva\ProgettoDiProva.csproj", "{97680128-AE9C-4455-8B8E-6B5738708CEE}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

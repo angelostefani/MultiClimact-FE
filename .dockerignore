@@ -1,0 +1,16 @@
+bin/
+obj/
+.vs/
+.vscode/
+.git/
+.gitignore
+.gitattributes
+build.log
+*.db
+*.db-*
+*.db-shm
+*.db-wal
+AGENTS.md
+Properties/PublishProfiles/
+node_modules/
+**/*.user
