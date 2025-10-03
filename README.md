@@ -29,6 +29,38 @@ ASP.NET Core web interface for the **MULTICLIMACT** project.
 
 The application will start on `https://localhost:5001` by default.
 
+## Docker
+
+Build the container image:
+
+```bash
+docker build -t multiclimact-fe .
+```
+
+Run the container:
+
+```bash
+docker run --rm -it -p 8080:8080 --name multiclimact-fe \
+  -e ASPNETCORE_ENVIRONMENT=Production \
+  -e DatabaseProvider=PostgreSQL \
+  -e ConnectionStrings__DefaultConnection="Host=<host>;Username=<user>;Password=<password>;Database=<db>" \
+  multiclimact-fe
+```
+
+The app listens on `http://localhost:8080` by default. Provide configuration through environment variables; set `DatabaseProvider=Sqlite` and mount a volume to `/app` if you prefer persisted SQLite data. Adjust `ASPNETCORE_ENVIRONMENT` as needed or mount custom `appsettings` files.
+
+### Docker Compose
+
+```bash
+# build the image and start the container
+docker compose up --build
+
+# stop and remove the container
+docker compose down
+```
+
+The Compose file mounts a named volume at `/data` so the `multiclimact.db` file survives container restarts. Adjust the environment variables in `docker-compose.yml` if you need different connection strings or ASP.NET Core settings.
+
 ## Configuration
 
 Application settings are defined in `appsettings.json`. Important options are:
