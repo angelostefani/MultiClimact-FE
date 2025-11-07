@@ -9,10 +9,12 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.Text.Json;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace MultiClimact.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ConfigVulnProxyController : ControllerBase 
@@ -30,18 +32,18 @@ namespace MultiClimact.Controllers
            }
 
            [HttpGet("ws9")]
-           public async Task<JsonResult> GetWs9(){
-                var user_id = User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier)?? User.FindFirstValue("sub") ?? User.FindFirstValue("oid");
+           public async Task<IActionResult> GetWs9(){
+               var user_id = User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier) ?? User.FindFirstValue("sub") ?? User.FindFirstValue("oid");
+                logger.LogInformation("Fetching vulnerability configs for user {user_id}", user_id);
                 var baseUrl = this.configuration["ConfigVulnService:BaseUrl"];
-                var url = $"{baseUrl.TrimEnd('/')}/users/{Uri.EscapeDataString(user_id)}/configurations";
-                 logger.LogInformation("Requesting ConfigVulnService at {url}", url);
+                var url = $"{baseUrl}/users/system/configurations";
+                logger.LogInformation("Requesting ConfigVulnService at {url}", url);
                 var response = await http.GetAsync(url);
                 response.EnsureSuccessStatusCode();
-
+                //{Uri.EscapeDataString(user_id)}
                 var content = await response.Content.ReadAsStringAsync();
-                var jsonContent = JObject.Parse(content);
-                logger.LogInformation("Received response from ConfigVulnService: {jsonContent}", jsonContent.ToString());
-                return new JsonResult(jsonContent);
+                logger.LogInformation("Received response from ConfigVulnService: {Content}", content);
+                return Content(content, "application/json");
            }
     }
 
