@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Net.Http.Json;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading;
@@ -18,6 +19,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using NuGet.Protocol;
 
 namespace MultiClimact.Areas.Identity.Pages.Account
 {
@@ -30,12 +32,13 @@ namespace MultiClimact.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
 
+        private readonly HttpClient httpClient;
         public RegisterModel(
             UserManager<IdentityUser> userManager,
             IUserStore<IdentityUser> userStore,
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender, HttpClient httpClient)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -43,6 +46,7 @@ namespace MultiClimact.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            this.httpClient = httpClient;
         }
 
         /// <summary>
@@ -121,7 +125,15 @@ namespace MultiClimact.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
-
+                    var data = new
+                    {
+                        id_user =  user.Id,
+                        username = user.UserName,
+                        name = user.Email
+                    };
+                    var response = await this.httpClient.PostAsJsonAsync($"http://192.168.154.23:8000/users", data);
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    _logger.LogInformation($"La risposta del backend per la creazione dell'utente è: {responseContent}");
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));

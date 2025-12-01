@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.JSInterop;
 using MultiClimact.Data;
 using MultiClimact.Services;
+using Newtonsoft.Json;
 
 // Create a new builder for the web application
 var builder = WebApplication.CreateBuilder(args);
@@ -28,6 +29,10 @@ builder.Services.AddRazorPages()
 
 // Add support for controllers
 builder.Services.AddControllers();
+
+builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddSwaggerGen();
 
 // DATABASE: Configure Entity Framework to use a database provider based on configuration
 var databaseProvider = builder.Configuration["DatabaseProvider"] ?? "Sqlite"; // "Sqlite" or "PostgreSQL"
@@ -124,6 +129,10 @@ else
 app.UseHttpsRedirection();
 // Serve static files (e.g., HTML, CSS, JavaScript)
 app.UseStaticFiles();
+
+app.UseSwagger();
+
+app.UseSwaggerUI();
 
 // Enable routing
 app.UseRouting();

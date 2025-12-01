@@ -16,7 +16,7 @@
 
     /* Expanded bottom bar */
     .bottom-bar.open {
-        height: 50%; /* Takes up half the viewport */
+        height: 75%; /* Takes up most of the viewport when open */
     }
 
 /* Bottom bar content */
@@ -24,4 +24,9 @@
     display: block;
     font-size: 16px;
     padding-top: 20px;
+}
+
+/* When the bottom bar is open, offset page content to keep it visible */
+body.has-bottom-bar {
+    padding-bottom: 75vh;
 }

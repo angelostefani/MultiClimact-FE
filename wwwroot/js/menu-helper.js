@@ -50,7 +50,7 @@ function getMapFromActiveTab(activeTab) {
         'tabB17-tab': mapB17, 'tabB18-tab': mapB18, 
         'tabC1-tab': mapC1, 'tabC2-tab': mapC2, 'tabC3-tab': mapC3, 'tabC4-tab': mapC4, 
         'tabC5-tab': mapC5, 'tabC6-tab': mapC6, 'tabC7-tab': mapC7, 'tabC8-tab': mapC8, 
-        'tabC9-tab': mapC9, 'tabC10-tab': mapC10, 'tabC11-tab': mapC11, 
+        'tabC9-tab': mapC9, 'tabC10-tab': mapC10, 'tabC11-tab': mapC11, 'tabC12-tab': mapC12, 'tabC13-tab': mapC13,
         'tabD1-tab': mapD1, 'tabD2-tab': mapD2, 'tabD3-tab': mapD3, 'tabD4-tab': mapD4, 
         'tabD5-tab': mapD5, 'tabD6-tab': mapD6, 'tabD7-tab': mapD7, 'tabD8-tab': mapD8, 
         'tabD9-tab': mapD9, 'tabD10-tab': mapD10, 'tabD11-tab': mapD11, 'tabD12-tab': mapD12,
@@ -97,7 +97,7 @@ function initTabs() {
         '#tabB17-tab', '#tabB18-tab',
         '#tabC1-tab', '#tabC2-tab', '#tabC3-tab', '#tabC4-tab', 
         '#tabC5-tab', '#tabC6-tab', '#tabC7-tab', '#tabC8-tab', 
-        '#tabC9-tab', '#tabC10-tab', '#tabC11-tab',
+        '#tabC9-tab', '#tabC10-tab', '#tabC11-tab', '#tabC12-tab', '#tabC13-tab',
         '#tabD1-tab', '#tabD2-tab', '#tabD3-tab', '#tabD4-tab', 
         '#tabD5-tab', '#tabD6-tab', '#tabD7-tab', '#tabD8-tab',
         '#tabD9-tab', '#tabD10-tab', '#tabD11-tab', '#tabD12-tab', 
@@ -139,7 +139,7 @@ function tabManager() {
         'tabB17-tab', 'tabB18-tab',
         'tabC1-tab', 'tabC2-tab', 'tabC3-tab', 'tabC4-tab', 
         'tabC5-tab', 'tabC6-tab', 'tabC7-tab', 'tabC8-tab', 
-        'tabC9-tab', 'tabC10-tab', 'tabC11-tab',
+        'tabC9-tab', 'tabC10-tab', 'tabC11-tab', 'tabC12-tab', 'tabC13-tab',
         'tabD1-tab', 'tabD2-tab', 'tabD3-tab', 'tabD4-tab', 
         'tabD5-tab', 'tabD6-tab', 'tabD7-tab', 'tabD8-tab',
         'tabD9-tab', 'tabD10-tab', 'tabD11-tab', 'tabD12-tab', 'tabD13-tab',
@@ -329,6 +329,17 @@ function selectTab(selectedItem) {
             tabsToShow: ['tabC9-tab', 'tabC10-tab', 'tabC11-tab'],
             activeTab: 'tabC11-tab',
             activePanel: 'panelC11'
+        },
+        // Gruppo C4 (Extreme Precipitation)
+        'tabC12-tab': {
+            tabsToShow: ['tabC12-tab', 'tabC13-tab'],
+            activeTab: 'tabC12-tab',
+            activePanel: 'panelC12'
+        },
+        'tabC13-tab': {
+            tabsToShow: ['tabC12-tab', 'tabC13-tab'],
+            activeTab: 'tabC13-tab',
+            activePanel: 'panelC13'
         },
         // Gruppo D1
         'tabD1-tab': {

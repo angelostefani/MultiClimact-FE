@@ -63,8 +63,12 @@ function loadLegends(activeTab) {
         legends = configWMSMatrixMapC4.layerMatrix.map(layer => {
             return { wmsUrl: layer[2], wmsLayer: layer[3], legendTitle: layer[4] };
         });
+    } else if(activeTab === 'tabC5-tab'){
+        itemsPerRow = 5; 
+        legends = configWMSMatrixMapC4.layerMatrix.map(layer => {
+            return { wmsUrl: layer[2], wmsLayer: layer[3], legendTitle: layer[4] };
+        }); 
     }
-
     legends.forEach((legend, index) => {
         addLegendToPanel(legendContainer, legend.wmsUrl, legend.wmsLayer, legend.legendTitle, index, itemsPerRow);
     });
@@ -110,7 +114,7 @@ function addLegendToPanel(container, wmsUrl, wmsLayer, legendTitle, legendNumber
     if ((legendNumber + 1) % itemsPerRow === 0) {
         container.appendChild(document.createElement('br'));
     }
-}
+}  
 
 
 // Funzione per chiudere il pannello centrale

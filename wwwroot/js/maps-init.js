@@ -30,8 +30,8 @@ document.addEventListener("DOMContentLoaded", function () {
         centerLatitude: 39.700,                    // Initial latitude
         zoomValue: 6,                              // Initial zoom level
         layerMatrix: [                             // Array of WMS layers
-            [true, true, document.getElementById("wmsurl_lay00").dataset.value, document.getElementById("wmslayer_lay00").dataset.value, 'Latest Earthquakes'],  //  layer
-            [true, true, document.getElementById("wmsurl_lay10").dataset.value, document.getElementById("wmslayer_lay10").dataset.value, 'Shakemap']  //  layer
+            [true, true, document.getElementById("wmsurl_lay10").dataset.value, document.getElementById("wmslayer_lay10").dataset.value, 'Shakemap'],  //  layer
+            [true, true, document.getElementById("wmsurl_lay00").dataset.value, document.getElementById("wmslayer_lay00").dataset.value, 'Latest Earthquakes']  //  layer //invertiti
         ]
     };
 
@@ -135,15 +135,15 @@ document.addEventListener("DOMContentLoaded", function () {
         centerLatitude: 43.1357,                  // Initial latitude
         zoomValue: 9,                            // Initial zoom level
         layerMatrix: [                            // Array of WMS layers
-           [true, true, document.getElementById("wmsurl_lay13").dataset.value, document.getElementById("wmslayer_lay13").dataset.value,'Residentials buildings','myrt:rt10'],
-           [true, true, document.getElementById("wmsurl_lay13").dataset.value, document.getElementById("wmslayer_lay13").dataset.value,'Residentials buildings','myrt:rt20'],
-           [true, true, document.getElementById("wmsurl_lay13").dataset.value, document.getElementById("wmslayer_lay13").dataset.value,'Residentials buildings','myrt:rt30'],
-           [true, true, document.getElementById("wmsurl_lay13").dataset.value, document.getElementById("wmslayer_lay13").dataset.value,'Residentials buildings','myrt:rt40'],
-           [true, true, document.getElementById("wmsurl_lay13").dataset.value, document.getElementById("wmslayer_lay13").dataset.value,'Residentials buildings','myrt:rt50'],
-           [true, true, document.getElementById("wmsurl_lay13").dataset.value, document.getElementById("wmslayer_lay13").dataset.value,'Residentials buildings','myrt:rt75'],
-           [true, true, document.getElementById("wmsurl_lay13").dataset.value, document.getElementById("wmslayer_lay13").dataset.value,'Residentials buildings','myrt:rt100'],
-           [true, true, document.getElementById("wmsurl_lay13").dataset.value, document.getElementById("wmslayer_lay13").dataset.value,'Residentials buildings','myrt:rt200'],
-           [true, true, document.getElementById("wmsurl_lay13").dataset.value, document.getElementById("wmslayer_lay13").dataset.value,'Residentials buildings','myrt:rt500']
+           [true, true, document.getElementById("wmsurl_lay13").dataset.value, document.getElementById("wmslayer_lay13").dataset.value,'Residentials buildings','myed_rt:ed_rt10'],
+           [true, true, document.getElementById("wmsurl_lay13").dataset.value, document.getElementById("wmslayer_lay13").dataset.value,'Residentials buildings','myed_rt:ed_rt20'],
+           [true, true, document.getElementById("wmsurl_lay13").dataset.value, document.getElementById("wmslayer_lay13").dataset.value,'Residentials buildings','myed_rt:ed_rt30'],
+           [true, true, document.getElementById("wmsurl_lay13").dataset.value, document.getElementById("wmslayer_lay13").dataset.value,'Residentials buildings','myed_rt:ed_rt40'],
+           [true, true, document.getElementById("wmsurl_lay13").dataset.value, document.getElementById("wmslayer_lay13").dataset.value,'Residentials buildings','myed_rt:ed_rt50'],
+           [true, true, document.getElementById("wmsurl_lay13").dataset.value, document.getElementById("wmslayer_lay13").dataset.value,'Residentials buildings','myed_rt:ed_rt75'],
+           [true, true, document.getElementById("wmsurl_lay13").dataset.value, document.getElementById("wmslayer_lay13").dataset.value,'Residentials buildings','myed_rt:ed_rt100'],
+           [true, true, document.getElementById("wmsurl_lay13").dataset.value, document.getElementById("wmslayer_lay13").dataset.value,'Residentials buildings','myed_rt:ed_rt200'],
+           [true, true, document.getElementById("wmsurl_lay13").dataset.value, document.getElementById("wmslayer_lay13").dataset.value,'Residentials buildings','myed_rt:ed_rt500']
         ]
     };
 
@@ -168,4 +168,20 @@ document.addEventListener("DOMContentLoaded", function () {
     // Initialize the fourth map (C9)
     mapC9 = initWMSMatrixMap(configWMSMatrixMapC9);
         
+      configWMSMatrixMapC12 = {
+        targetHtmlMapId: 'mapC12',                 // Target HTML element ID
+        baseMapName: 'OpenStreetMap - EPSG:3857', // Base map layer name
+        centerLongitude: 13.0683,                 // Initial longitude
+        centerLatitude: 43.1357,                  // Initial latitude
+        zoomValue: 9,                            // Initial zoom level
+        layerMatrix: [                            // Array of WMS layers
+            [true, true, document.getElementById("wmsurl_lay14").dataset.value, document.getElementById("wmslayer_lay14").dataset.value, 'Buildings of Marche region Extreme Precipitation'],
+            [true, true, document.getElementById("wmsurl_lay15").dataset.value, document.getElementById("wmslayer_lay15").dataset.value, 'Buildings of Camerino Extreme Precipitation']
+        ]
+    };
+
+    mapC12 = initWMSMatrixMap(configWMSMatrixMapC12);
+
+    
+
 });

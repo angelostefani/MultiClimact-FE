@@ -148,7 +148,9 @@ namespace MultiClimact.Pages
                 new { Key = "wmsurl_lay10", Description = "Shakemap" },
                 new { Key = "wmsurl_lay11", Description = "Temperature above ground" },
                 new { Key = "wmsurl_lay12", Description = "Flood precipitation rate" },
-                new { Key = "wmsurl_lay13", Description = "River Floods risk analisys" }
+                new { Key = "wmsurl_lay13", Description = "River Floods risk analisys" },
+                new { Key = "wmsurl_lay14", Description = "POI buildings of Marche region" },
+                new { Key = "wmsurl_lay15", Description = "POI buildings of Camerino" }
             };
 
             // Loop through WMS layers and store them in ViewData dynamically

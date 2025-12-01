@@ -33,7 +33,7 @@ else
     <body>
 
         <!-- Space added to create separation between the layout menu and the page content -->
-        <div id="space" style="width: 100%; height: 70px;"></div>
+      <!--  <div id="space" style="width: 100%; height: 70px;"></div> -->
 
         <!-- PAGE MENU: A partial view for easy navigation -->
         @await Html.PartialAsync("_PageMenu")
@@ -116,7 +116,7 @@ else
         <span id="idRunLastEarthquake" data-value="@(ViewData["idRunLastEarthquake"] ?? "undefined")"></span>
 
         @* Dynamic WMS layers data *@
-        @for (int i = 0; i <= 14; i++)
+        @for (int i = 0; i <= 16; i++)
         {
             string layerIndex = i.ToString("D2"); // Ensures two-digit formatting for numbers below 10
             <span id="wmsurl_lay@(layerIndex)" data-value="@ViewData[$"wmsurl_lay{layerIndex}"]"></span>
@@ -131,6 +131,7 @@ else
             let configWMSMatrixMapC3;
             let configWMSMatrixMapC4;
             let configWMSMatrixMapC5;
+            let configWMSMatrixMapC12;
         </script>
       
         <script src="~/js/site.js" asp-append-version="true"></script>

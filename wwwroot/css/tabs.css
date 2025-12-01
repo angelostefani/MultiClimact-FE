@@ -1,4 +1,4 @@
-﻿/* ========== TABS ========== */
+/* ========== TABS ========== */
 
 /* Common styles for tabs */
 .tab {
@@ -36,3 +36,17 @@
     transform: translateX(-50%);
     padding: 2px 20px;
 }
+
+/* Allow many tabs to scroll horizontally on narrower desktop windows */
+.nav-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+}
+.nav-tabs .nav-link {
+    white-space: nowrap;
+}
+
+
+
+
