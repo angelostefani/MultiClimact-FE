@@ -37,7 +37,7 @@ namespace MultiClimact.Controllers
             var user_id = User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier) ?? User.FindFirstValue("sub") ?? User.FindFirstValue("oid");
             logger.LogInformation("Fetching vulnerability configs for user {user_id}", user_id);
             var baseUrl = this.configuration["ConfigVulnService:BaseUrl"];
-            var url = $"{baseUrl}/users/system/configurations";
+            var url = $"{baseUrl}/users/{Uri.EscapeDataString(user_id)}/configurations";
             logger.LogInformation("Requesting ConfigVulnService at {url}", url);
             var response = await http.GetAsync(url);
             response.EnsureSuccessStatusCode();
@@ -55,7 +55,7 @@ namespace MultiClimact.Controllers
             var user_id = User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier) ?? User.FindFirstValue("sub") ?? User.FindFirstValue("oid");
             logger.LogInformation("Updating vulnerability configs for user {user_id}", user_id);
             var baseUrl = this.configuration["ConfigVulnService:BaseUrl"];
-            var url = $"{baseUrl}/users/system/configurations/default";
+            var url = $"{baseUrl}/users/{Uri.EscapeDataString(user_id)}/configurations/default";
             //{Uri.EscapeDataString(user_id)}
             logger.LogInformation("Sending update to ConfigVulnService at {url}", url);
             var jsonString = configData.GetRawText();
