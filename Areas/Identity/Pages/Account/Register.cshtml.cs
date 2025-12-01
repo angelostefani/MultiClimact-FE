@@ -127,11 +127,11 @@ namespace MultiClimact.Areas.Identity.Pages.Account
                     _logger.LogInformation("User created a new account with password.");
                     var data = new
                     {
-                        Id =  user.Id,
-                        Username = user.UserName,
-                        Email = user.Email
+                        id_user =  user.Id,
+                        username = user.UserName,
+                        name = user.Email
                     };
-                    var response = await this.httpClient.PostAsJsonAsync($"http://192.168.154.23/users", data);
+                    var response = await this.httpClient.PostAsJsonAsync($"http://192.168.154.23:8000/users", data);
                     var responseContent = await response.Content.ReadAsStringAsync();
                     _logger.LogInformation($"La risposta del backend per la creazione dell'utente è: {responseContent}");
                     var userId = await _userManager.GetUserIdAsync(user);
