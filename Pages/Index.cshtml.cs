@@ -153,7 +153,9 @@ namespace MultiClimact.Pages
                 new { Key = "wmsurl_lay15", Description = "POI buildings of Camerino" },
                 new { Key = "wmsurl_lay16", Description = "River Floods House View" },
                 new { Key = "wmsurl_lay17", Description = "Extreme Precipitation Hazard index 6 classes" },
-                new { Key = "wmsurl_lay18", Description = "Extreme Precipitation Hazard index 3 classes" }
+                new { Key = "wmsurl_lay18", Description = "Extreme Precipitation Hazard index 3 classes" },
+                new { Key = "wmsurl_lay19", Description = "Extreme Precipitation POI Vulnerability" },
+                new { Key = "wmsurl_lay20", Description = "Extreme Precipitation POI Risk" }
             };
 
             // Loop through WMS layers and store them in ViewData dynamically

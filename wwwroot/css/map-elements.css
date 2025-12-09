@@ -115,7 +115,7 @@
 /* Improve size and spacing of side checkboxes */
 .checkbox-container label {
     display: inline-flex;
-    align-items: center;
+    align-items: flex-start;
     gap: .5rem;
     margin-right: 1rem;
     margin-bottom: .5rem;
@@ -127,6 +127,12 @@
 .checkbox-container input[type="checkbox"] {
     inline-size: 1.15em;
     block-size: 1.15em;
+    width: 18px;
+    height: 18px;
+    min-width: 18px;
+    min-height: 18px;
+    flex-shrink: 0;
+    align-self: flex-start;
     accent-color: #0d6efd; /* Bootstrap primary color */
 }
 
