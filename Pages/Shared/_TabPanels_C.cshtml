@@ -188,19 +188,30 @@
 
 
 <div class="tab-pane fade" id="panelC12" role="tabpanel" aria-labelledby="tabC12-tab">
-     <div class="map-radio-container">
+    <div class="map-radio-container">
         <div id="mapC12" class="map-container-85"></div>
         <!-- Checkbox accanto alla mappa -->
         <div class="checkbox-container">
-            <label>
+            <label class="layer-toggle">
                 <input type="checkbox" id="checkboxC12_1" checked
-                    onclick="toggleLayerBlock(configWMSMatrixMapC12, 0, mapC12, 1)"> Residential buildings of Marche
-                Region
+                    onclick="toggleLayerBlock(configWMSMatrixMapC12, 0, mapC12, 1)">
+                <span class="layer-label">Residential buildings of Marche Region</span>
             </label><br>
-            <label>
+            <label class="layer-toggle">
                 <input type="checkbox" id="checkboxC12_2" checked
-                    onclick="toggleLayerBlock(configWMSMatrixMapC12, 1, mapC12, 1)"> Camerino buildings
+                    onclick="toggleLayerBlock(configWMSMatrixMapC12, 1, mapC12, 1)">
+                <span class="layer-label">Camerino buildings</span>
             </label><br>
+            <label class="layer-toggle">
+                <input type="checkbox" id="checkboxC12_3" checked
+                    onclick="toggleLayerBlock(configWMSMatrixMapC12, 2, mapC12, 1)">
+                <span class="layer-label">Hazard index 6 classes</span>
+            </label>
+            <label class="layer-toggle">
+                <input type="checkbox" id="checkboxC12_4" checked
+                    onclick="toggleLayerBlock(configWMSMatrixMapC12, 3, mapC12, 1)">
+                <span class="layer-label">Hazard index 3 classes</span>
+            </label>
         </div>
     </div>
 </div>

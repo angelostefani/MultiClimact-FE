@@ -130,6 +130,24 @@
     accent-color: #0d6efd; /* Bootstrap primary color */
 }
 
+/* Extreme precipitation layer toggles: keep text size consistent */
+#panelC12 .checkbox-container label {
+    font-size: 1.05rem;
+    font-weight: 600;
+    line-height: 1.25;
+}
+
+#panelC12 .checkbox-container .layer-label {
+    display: inline-block;
+    line-height: 1.25;
+}
+
+/* Keep all Extreme Precipitation checkboxes at the same size */
+#panelC12 .checkbox-container input[type="checkbox"] {
+    inline-size: 1.15em;
+    block-size: 1.15em;
+}
+
 /* When window is narrow (snap to half screen), stack controls below map */
 @media (max-width: 1400px) {
     .map-radio-container {
