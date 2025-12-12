@@ -155,7 +155,9 @@ namespace MultiClimact.Pages
                 new { Key = "wmsurl_lay17", Description = "Extreme Precipitation Hazard index 6 classes" },
                 new { Key = "wmsurl_lay18", Description = "Extreme Precipitation Hazard index 3 classes" },
                 new { Key = "wmsurl_lay19", Description = "Extreme Precipitation POI Vulnerability" },
-                new { Key = "wmsurl_lay20", Description = "Extreme Precipitation POI Risk" }
+                new { Key = "wmsurl_lay20", Description = "Extreme Precipitation POI Risk" },
+                new { Key = "wmsurl_lay21", Description = "Extreme Precipitation POI Risk" },
+                new { Key = "wmsurl_lay22", Description = "Extreme Precipitation Building Risk" }
             };
 
             // Loop through WMS layers and store them in ViewData dynamically

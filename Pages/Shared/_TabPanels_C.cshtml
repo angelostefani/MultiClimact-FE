@@ -188,43 +188,89 @@
 
 
 <div class="tab-pane fade" id="panelC12" role="tabpanel" aria-labelledby="tabC12-tab">
-    <div class="map-radio-container">
-        <div id="mapC12" class="map-container-85"></div>
-        <!-- Checkbox accanto alla mappa -->
-        <div class="checkbox-container">
-            <label class="layer-toggle">
-                <input type="checkbox" id="checkboxC12_1" checked
-                    onclick="toggleLayerBlock(configWMSMatrixMapC12, 0, mapC12, 1)">
-                <span class="layer-label">POI buildings</span>
-            </label><br>
-            <label class="layer-toggle">
-                <input type="checkbox" id="checkboxC12_2" checked
-                    onclick="toggleLayerBlock(configWMSMatrixMapC12, 1, mapC12, 1)">
-                <span class="layer-label">Camerino buildings</span>
-            </label><br>
-            <label class="layer-toggle">
-                <input type="checkbox" id="checkboxC12_3" checked
-                    onclick="toggleLayerBlock(configWMSMatrixMapC12, 2, mapC12, 1)">
-                <span class="layer-label">Hazard index 6 classes</span>
-            </label>
-            <label class="layer-toggle">
-                <input type="checkbox" id="checkboxC12_4" checked
-                    onclick="toggleLayerBlock(configWMSMatrixMapC12, 3, mapC12, 1)">
-                <span class="layer-label">Hazard index 3 classes</span>
-            </label>
-            <label class="layer-toggle">
-                <input type="checkbox" id="checkboxC12_5" checked
-                    onclick="toggleLayerBlock(configWMSMatrixMapC12, 4, mapC12, 1)">
-                <span class="layer-label">POI buildings vulnerability</span>
-            </label>
-            <label class="layer-toggle">
-                <input type="checkbox" id="checkboxC12_6" checked
-                    onclick="toggleLayerBlock(configWMSMatrixMapC12, 5, mapC12, 1)">
-                <span class="layer-label">POI risk</span>
-            </label>
+
+  <div class="map-checkbox-container" id="panelC12-layout">
+
+    <!-- MAPPA (85%) -->
+    <div id="mapC12" class="map-container-85"></div>
+
+    <!-- SIDEBAR (15%) -->
+    <aside class="layer-sidebar">
+      <div class="layer-controls-card layer-controls-card--sidebar">
+        <div class="layer-controls-card__header">
+          <div class="layer-controls-card__title">Layer controls</div>
         </div>
-    </div>
+
+        <div class="layer-box">
+          <div class="layer-box__title">Input</div>
+          <div class="layer-box__body">
+            <label class="layer-toggle">
+              <input type="checkbox" id="checkboxC12_1" checked
+                onclick="toggleLayerBlock(configWMSMatrixMapC12, 0, mapC12, 1)">
+              <span class="layer-label">POI buildings</span>
+            </label>
+
+            <label class="layer-toggle">
+              <input type="checkbox" id="checkboxC12_2" checked
+                onclick="toggleLayerBlock(configWMSMatrixMapC12, 1, mapC12, 1)">
+              <span class="layer-label">Camerino buildings</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="layer-box">
+          <div class="layer-box__title">Buildings output</div>
+          <div class="layer-box__body">
+            <label class="layer-toggle">
+              <input type="checkbox" id="checkboxC12_7" checked
+                onclick="toggleLayerBlock(configWMSMatrixMapC12, 6, mapC12, 1)">
+              <span class="layer-label">Camerino buildings vulnerability</span>
+            </label>
+
+            <label class="layer-toggle">
+              <input type="checkbox" id="checkboxC12_8" checked
+                onclick="toggleLayerBlock(configWMSMatrixMapC12, 7, mapC12, 1)">
+              <span class="layer-label">Camerino buildings risk</span>
+            </label>
+
+            <label class="layer-toggle">
+              <input type="checkbox" id="checkboxC12_3" checked
+                onclick="toggleLayerBlock(configWMSMatrixMapC12, 2, mapC12, 1)">
+              <span class="layer-label">Hazard index (6 classes)</span>
+            </label>
+
+            <label class="layer-toggle">
+              <input type="checkbox" id="checkboxC12_4" checked
+                onclick="toggleLayerBlock(configWMSMatrixMapC12, 3, mapC12, 1)">
+              <span class="layer-label">Hazard index (3 classes)</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="layer-box">
+          <div class="layer-box__title">POI output</div>
+          <div class="layer-box__body">
+            <label class="layer-toggle">
+              <input type="checkbox" id="checkboxC12_5" checked
+                onclick="toggleLayerBlock(configWMSMatrixMapC12, 4, mapC12, 1)">
+              <span class="layer-label">POI buildings vulnerability</span>
+            </label>
+
+            <label class="layer-toggle">
+              <input type="checkbox" id="checkboxC12_6" checked
+                onclick="toggleLayerBlock(configWMSMatrixMapC12, 5, mapC12, 1)">
+              <span class="layer-label">POI risk</span>
+            </label>
+          </div>
+        </div>
+
+      </div>
+    </aside>
+
+  </div>
 </div>
+
+
 
 
 

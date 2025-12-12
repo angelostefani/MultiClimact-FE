@@ -440,6 +440,12 @@ function selectTab(selectedItem) {
         $(`#${group.activeTab}`).addClass('show active');
         $(`#${group.activePanel}`).addClass('show active');
 
+        // Forza il resize della mappa appena mostrata (OpenLayers)
+        const mapToResize = getMapFromActiveTab(group.activeTab);
+        if (mapToResize && typeof mapToResize.updateSize === 'function') {
+            setTimeout(() => mapToResize.updateSize(), 0);
+        }
+
         disableVerticalScrollBar();
         activeTab = group.activeTab;
     }
@@ -476,5 +482,4 @@ function setupDropdownMenuHandler(dropdownItemSelector, dropdownMenuSelector) {
         $(dropdownMenuSelector).removeClass('show');
     });
 }
-
 

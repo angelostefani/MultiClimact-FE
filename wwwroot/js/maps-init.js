@@ -180,7 +180,9 @@ document.addEventListener("DOMContentLoaded", function () {
             [true, true, document.getElementById("wmsurl_lay17").dataset.value, document.getElementById("wmslayer_lay17").dataset.value, 'Hazard index 6 classes'],
             [true, true, document.getElementById("wmsurl_lay18").dataset.value, document.getElementById("wmslayer_lay18").dataset.value, 'Hazard index 3 classes'],
             [true, true, document.getElementById("wmsurl_lay19").dataset.value, document.getElementById("wmslayer_lay19").dataset.value, 'POI Vulnerability'],
-            [true, true, document.getElementById("wmsurl_lay20").dataset.value, document.getElementById("wmslayer_lay20").dataset.value, 'POI Risk']
+            [true, true, document.getElementById("wmsurl_lay20").dataset.value, document.getElementById("wmslayer_lay20").dataset.value, 'POI Risk'],
+            [true, true, document.getElementById("wmsurl_lay21").dataset.value, document.getElementById("wmslayer_lay21").dataset.value, 'Camerino Buildings vulnerability'],
+            [true, true, document.getElementById("wmsurl_lay22").dataset.value, document.getElementById("wmslayer_lay22").dataset.value, 'Camerino Buildings risk']
         ]
     };
 
