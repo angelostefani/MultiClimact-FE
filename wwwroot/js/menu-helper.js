@@ -34,30 +34,32 @@ function changeMap(baseMapName, activeTab) {
     }
 }
 
+// Mappa tab -> ID variabile della mappa per evitare ReferenceError se alcune mappe non sono definite
+const tabToMapId = {
+    'tabB1-tab': 'mapB1', 'tabB2-tab': 'mapB2', 'tabB3-tab': 'mapB3', 'tabB4-tab': 'mapB4',
+    'tabB5-tab': 'mapB5', 'tabB6-tab': 'mapB6', 'tabB7-tab': 'mapB7', 'tabB8-tab': 'mapB8',
+    'tabB9-tab': 'mapB9', 'tabB10-tab': 'mapB10', 'tabB11-tab': 'mapB11', 'tabB12-tab': 'mapB12',
+    'tabB13-tab': 'mapB13', 'tabB14-tab': 'mapB14', 'tabB15-tab': 'mapB15', 'tabB16-tab': 'mapB16',
+    'tabB17-tab': 'mapB17', 'tabB18-tab': 'mapB18',
+    'tabC1-tab': 'mapC1', 'tabC2-tab': 'mapC2', 'tabC3-tab': 'mapC3', 'tabC4-tab': 'mapC4',
+    'tabC5-tab': 'mapC5', 'tabC6-tab': 'mapC6', 'tabC7-tab': 'mapC7', 'tabC8-tab': 'mapC8',
+    'tabC9-tab': 'mapC9', 'tabC10-tab': 'mapC10', 'tabC11-tab': 'mapC11', 'tabC12-tab': 'mapC12', 'tabC13-tab': 'mapC13',
+    'tabD1-tab': 'mapD1', 'tabD2-tab': 'mapD2', 'tabD3-tab': 'mapD3', 'tabD4-tab': 'mapD4',
+    'tabD5-tab': 'mapD5', 'tabD6-tab': 'mapD6', 'tabD7-tab': 'mapD7', 'tabD8-tab': 'mapD8',
+    'tabD9-tab': 'mapD9', 'tabD10-tab': 'mapD10', 'tabD11-tab': 'mapD11', 'tabD12-tab': 'mapD12',
+    'tabD13-tab': 'mapD13'
+};
+
 /**
  * Funzione che restituisce la mappa OpenLayers associata alla scheda attiva.
  *
  * @param {string} activeTab - ID della scheda attiva.
  *
- * @returns {ol.Map} La mappa OpenLayers corrispondente alla scheda attiva.
+ * @returns {ol.Map|null} La mappa OpenLayers corrispondente alla scheda attiva.
  */
 function getMapFromActiveTab(activeTab) {
-    const mapTabs = {
-        'tabB1-tab': mapB1, 'tabB2-tab': mapB2, 'tabB3-tab': mapB3, 'tabB4-tab': mapB4, 
-        'tabB5-tab': mapB5, 'tabB6-tab': mapB6, 'tabB7-tab': mapB7, 'tabB8-tab': mapB8,
-        'tabB9-tab': mapB9, 'tabB10-tab': mapB10, 'tabB11-tab': mapB11, 'tabB12-tab': mapB12, 
-        'tabB13-tab': mapB13, 'tabB14-tab': mapB14, 'tabB15-tab': mapB15, 'tabB16-tab': mapB16,
-        'tabB17-tab': mapB17, 'tabB18-tab': mapB18, 
-        'tabC1-tab': mapC1, 'tabC2-tab': mapC2, 'tabC3-tab': mapC3, 'tabC4-tab': mapC4, 
-        'tabC5-tab': mapC5, 'tabC6-tab': mapC6, 'tabC7-tab': mapC7, 'tabC8-tab': mapC8, 
-        'tabC9-tab': mapC9, 'tabC10-tab': mapC10, 'tabC11-tab': mapC11, 'tabC12-tab': mapC12, 'tabC13-tab': mapC13,
-        'tabD1-tab': mapD1, 'tabD2-tab': mapD2, 'tabD3-tab': mapD3, 'tabD4-tab': mapD4, 
-        'tabD5-tab': mapD5, 'tabD6-tab': mapD6, 'tabD7-tab': mapD7, 'tabD8-tab': mapD8, 
-        'tabD9-tab': mapD9, 'tabD10-tab': mapD10, 'tabD11-tab': mapD11, 'tabD12-tab': mapD12,
-        'tabD13-tab': mapD13          
-    };
-
-    return mapTabs[activeTab] || mapA1;
+    const mapId = tabToMapId[activeTab] || 'mapA1';
+    return typeof window !== 'undefined' ? window[mapId] || null : null;
 }
 
 /**
@@ -482,4 +484,3 @@ function setupDropdownMenuHandler(dropdownItemSelector, dropdownMenuSelector) {
         $(dropdownMenuSelector).removeClass('show');
     });
 }
-
