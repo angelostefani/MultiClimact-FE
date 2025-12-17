@@ -195,6 +195,9 @@ function addLayerToMap(layersArray, wmsUrl, wmsLayer, env) {
 function toggleLayer(configWMSMatrixMap, layerIndex, map) {
     configWMSMatrixMap.layerMatrix[layerIndex][1] = !configWMSMatrixMap.layerMatrix[layerIndex][1];
     updateMapLayers(configWMSMatrixMap, map);
+    if (typeof refreshLegendsIfOpen === 'function') {
+        refreshLegendsIfOpen();
+    }
 }
 
 /**
@@ -221,6 +224,9 @@ function toggleLayerBlock(configWMSMatrixMap, layerBlockIndex, map, blockSize) {
 
     // Aggiorna la mappa con le nuove impostazioni di visibilità dei layers
     updateMapLayers(configWMSMatrixMap, map);
+    if (typeof refreshLegendsIfOpen === 'function') {
+        refreshLegendsIfOpen();
+    }
 }
 
 /**
@@ -244,6 +250,9 @@ function switchLayer(configWMSMatrixMap, layerIndex, map) {
 
     // Aggiorna i layer nella mappa e le legende
     updateMapLayers(configWMSMatrixMap, map);
+    if (typeof refreshLegendsIfOpen === 'function') {
+        refreshLegendsIfOpen();
+    }
 }
 
 /**
@@ -273,6 +282,9 @@ function switchLayers(configWMSMatrixMap, layersIndex, map, blockSize) {
 
     // Aggiorna la mappa con le nuove impostazioni di visibilità dei layers
     updateMapLayers(configWMSMatrixMap, map);
+    if (typeof refreshLegendsIfOpen === 'function') {
+        refreshLegendsIfOpen();
+    }
 }
 
 /**

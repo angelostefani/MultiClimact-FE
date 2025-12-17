@@ -1,4 +1,4 @@
-﻿// Funzione per gestire le icone della Fixed Sidebar (on the Right)
+// Funzione per gestire le icone della Fixed Sidebar (on the Right)
 function setupFixedSidebarIconHandler() {
     const legendIconWrapper = document.querySelector('.legend-icon-wrapper');
     const centerPanel = document.getElementById('centerPanel');
@@ -11,7 +11,7 @@ function setupFixedSidebarIconHandler() {
             // Mostra o nasconde il pannello centrale
             centerPanel.style.display = (centerPanel.style.display === 'block') ? 'none' : 'block';
 
-            // Se il pannello è visibile, carica le legende
+            // Se il pannello e' visibile, carica le legende
             if (centerPanel.style.display === 'block') {
                 loadLegends(activeTab);
             }
@@ -40,37 +40,41 @@ function setupChatIconHandler() {
 function loadLegends(activeTab) {
     let itemsPerRow;
     const legendContainer = document.getElementById('legendContainer');
+    if (!legendContainer) {
+        console.warn('legendContainer not found.');
+        return;
+    }
     legendContainer.innerHTML = '';
     let legends = [];
 
     if (activeTab === 'tabC1-tab') {
         itemsPerRow = 1;
-        legends = configWMSMatrixMapC1.layerMatrix.map(layer => {
+        legends = configWMSMatrixMapC1.layerMatrix.filter(layer => layer[0] && layer[1]).map(layer => {
             return { wmsUrl: layer[2], wmsLayer: layer[3], legendTitle: layer[4] };
         });
     } else if (activeTab === 'tabC2-tab') {
         itemsPerRow = 5;
-        legends = configWMSMatrixMapC2.layerMatrix.map(layer => {
+        legends = configWMSMatrixMapC2.layerMatrix.filter(layer => layer[0] && layer[1]).map(layer => {
             return { wmsUrl: layer[2], wmsLayer: layer[3], legendTitle: layer[4] };
         });
     } else if (activeTab === 'tabC3-tab') {
         itemsPerRow = 4;
-        legends = configWMSMatrixMapC3.layerMatrix.map(layer => {
+        legends = configWMSMatrixMapC3.layerMatrix.filter(layer => layer[0] && layer[1]).map(layer => {
             return { wmsUrl: layer[2], wmsLayer: layer[3], legendTitle: layer[4] };
         });
     } else if (activeTab === 'tabC4-tab') {
         itemsPerRow = 2;
-        legends = configWMSMatrixMapC4.layerMatrix.map(layer => {
+        legends = configWMSMatrixMapC4.layerMatrix.filter(layer => layer[0] && layer[1]).map(layer => {
             return { wmsUrl: layer[2], wmsLayer: layer[3], legendTitle: layer[4] };
         });
     } else if (activeTab === 'tabC5-tab') {
         itemsPerRow = 5;
-        legends = configWMSMatrixMapC5.layerMatrix.map(layer => {
+        legends = configWMSMatrixMapC5.layerMatrix.filter(layer => layer[0] && layer[1]).map(layer => {
             return { wmsUrl: layer[2], wmsLayer: layer[3], legendTitle: layer[4] };
         });
     } else if (activeTab === 'tabC12-tab') {
         itemsPerRow = 4;
-        legends = configWMSMatrixMapC12.layerMatrix.map(layer => {
+        legends = configWMSMatrixMapC12.layerMatrix.filter(layer => layer[0] && layer[1]).map(layer => {
             return { wmsUrl: layer[2], wmsLayer: layer[3], legendTitle: layer[4] };
         });
     }
@@ -149,3 +153,13 @@ function closeCenterPanel() {
     const centerPanel = document.getElementById('centerPanel');
     centerPanel.style.display = 'none';
 }
+
+// Ricarica le legende solo se il pannello centrale e' gia' aperto
+function refreshLegendsIfOpen() {
+    const centerPanel = document.getElementById('centerPanel');
+    if (centerPanel && centerPanel.style.display === 'block') {
+        loadLegends(activeTab);
+    }
+}
+
+
