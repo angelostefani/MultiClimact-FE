@@ -167,27 +167,51 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Initialize the fourth map (C9)
     mapC9 = initWMSMatrixMap(configWMSMatrixMapC9);
-        
-      configWMSMatrixMapC12 = {
+
+   
+       
+   
+
+    configWMSMatrixMapC12 = {
         targetHtmlMapId: 'mapC12',                 // Target HTML element ID
         baseMapName: 'OpenStreetMap - EPSG:3857', // Base map layer name
         centerLongitude: 13.0683,                 // Initial longitude
         centerLatitude: 43.1357,                  // Initial latitude
         zoomValue: 9,                            // Initial zoom level
-        layerMatrix: [                            // Array of WMS layers
-            [true, true, document.getElementById("wmsurl_lay14").dataset.value, document.getElementById("wmslayer_lay14").dataset.value, 'Buildings of Marche region Extreme Precipitation'],
-            [true, true, document.getElementById("wmsurl_lay15").dataset.value, document.getElementById("wmslayer_lay15").dataset.value, 'Buildings of Camerino Extreme Precipitation'],
-            [true, true, document.getElementById("wmsurl_lay17").dataset.value, document.getElementById("wmslayer_lay17").dataset.value, 'Hazard index 6 classes'],
-            [true, true, document.getElementById("wmsurl_lay18").dataset.value, document.getElementById("wmslayer_lay18").dataset.value, 'Hazard index 3 classes'],
-            [true, true, document.getElementById("wmsurl_lay19").dataset.value, document.getElementById("wmslayer_lay19").dataset.value, 'POI Vulnerability'],
-            [true, true, document.getElementById("wmsurl_lay20").dataset.value, document.getElementById("wmslayer_lay20").dataset.value, 'POI Risk'],
-            [true, true, document.getElementById("wmsurl_lay21").dataset.value, document.getElementById("wmslayer_lay21").dataset.value, 'Camerino Buildings vulnerability'],
-            [true, true, document.getElementById("wmsurl_lay22").dataset.value, document.getElementById("wmslayer_lay22").dataset.value, 'Camerino Buildings risk']
-        ]
+        popupContext: 'extreme-risk',
+        layerMatrix: [
+        [true, true, document.getElementById("wmsurl_lay14").dataset.value, document.getElementById("wmslayer_lay14").dataset.value, 'Buildings of Marche region Extreme Precipitation'],
+        [true, true, document.getElementById("wmsurl_lay15").dataset.value, document.getElementById("wmslayer_lay15").dataset.value, 'Buildings of Camerino Extreme Precipitation'],
+        [true, true, document.getElementById("wmsurl_lay17").dataset.value, document.getElementById("wmslayer_lay17").dataset.value, 'Hazard index 6 classes'],
+        [true, true, document.getElementById("wmsurl_lay18").dataset.value, document.getElementById("wmslayer_lay18").dataset.value, 'Hazard index 3 classes'],
+        [true, true, document.getElementById("wmsurl_lay19").dataset.value, document.getElementById("wmslayer_lay19").dataset.value, 'POI Vulnerability'],
+        [true, true, document.getElementById("wmsurl_lay20").dataset.value, document.getElementById("wmslayer_lay20").dataset.value, 'POI Risk'],
+        [true, true, document.getElementById("wmsurl_lay21").dataset.value, document.getElementById("wmslayer_lay21").dataset.value, 'Camerino Buildings vulnerability'],
+        [true, true, document.getElementById("wmsurl_lay22").dataset.value, document.getElementById("wmslayer_lay22").dataset.value, 'Camerino Buildings risk']
+    ] 
     };
 
     mapC12 = initWMSMatrixMap(configWMSMatrixMapC12);
 
-    
+    configWMSMatrixMapD5 = {
+        targetHtmlMapId: 'mapD5',                 // Target HTML element ID
+        baseMapName: 'OpenStreetMap - EPSG:3857', // Base map layer name
+        centerLongitude: 13.0683,                 // Initial longitude
+        centerLatitude: 43.1357,                  // Initial latitude
+        zoomValue: 9,                            // Initial zoom level
+        popupContext: 'extreme-sim',
+        layerMatrix: [
+        [true, true, document.getElementById("wmsurl_lay14").dataset.value, document.getElementById("wmslayer_lay14").dataset.value, 'Buildings of Marche region Extreme Precipitation'],
+        [true, true, document.getElementById("wmsurl_lay15").dataset.value, document.getElementById("wmslayer_lay15").dataset.value, 'Buildings of Camerino Extreme Precipitation'],
+        [true, true, document.getElementById("wmsurl_lay17").dataset.value, document.getElementById("wmslayer_lay17").dataset.value, 'Hazard index 6 classes'],
+        [true, true, document.getElementById("wmsurl_lay18").dataset.value, document.getElementById("wmslayer_lay18").dataset.value, 'Hazard index 3 classes'],
+        [true, true, document.getElementById("wmsurl_lay19").dataset.value, document.getElementById("wmslayer_lay19").dataset.value, 'POI Vulnerability'],
+        [true, true, document.getElementById("wmsurl_lay20").dataset.value, document.getElementById("wmslayer_lay20").dataset.value, 'POI Risk'],
+        [true, true, document.getElementById("wmsurl_lay21").dataset.value, document.getElementById("wmslayer_lay21").dataset.value, 'Camerino Buildings vulnerability'],
+        [true, true, document.getElementById("wmsurl_lay22").dataset.value, document.getElementById("wmslayer_lay22").dataset.value, 'Camerino Buildings risk']
+    ] 
+    };
+
+    mapD5 = initWMSMatrixMap(configWMSMatrixMapD5);
 
 });

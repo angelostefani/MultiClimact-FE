@@ -205,6 +205,7 @@ function addMapClickListener(map, wmsLayer, wmsUrl) {
     map.addOverlay(popupOverlay);
 
     map.on('singleclick', async function (evt) {
+        const popupContext = (map && typeof map.get === 'function') ? map.get('popupContext') : null;
         // Determine the target WMS layer name to query
         let layerName = null;
         let valo = "";
@@ -252,8 +253,8 @@ function addMapClickListener(map, wmsLayer, wmsUrl) {
         }
         let bbox = map.getView().calculateExtent();
         const mapSize = map.getSize();
-        const width = mapSize[0];
-        const height = mapSize[1];
+        const width = Math.round(mapSize[0]);
+        const height = Math.round(mapSize[1]);
         let x = Math.round(evt.pixel[0]);
         let y = Math.round(evt.pixel[1]);
         layerName = valo;
@@ -363,8 +364,34 @@ function addMapClickListener(map, wmsLayer, wmsUrl) {
                     </style>`;
 
                     //prendo il nome del layer 
+                    const normalizeBaseLayer = (name) => {
+                        const clean = (name || '').replace(/['"]/g, '').trim().toLowerCase();
+                        const base = clean.includes(':') ? clean.split(':').pop() : clean;
+                        return base;
+                    };
+                    const isPoiLayer = (base) => base === 'poi_prec' || (base.includes('poi') && base.includes('prec'));
+                    const isBuildingLayer = (base) => base === 'building';
+
                     const fromCaption = table.querySelector('caption')?.textContent?.trim();
-                    let layer = fromCaption;
+                    const captionBase = normalizeBaseLayer(fromCaption);
+
+                    const layerCandidates = (layerName || '').split(',').map(l => l.trim()).filter(Boolean);
+                    const preferred = layerCandidates.find(l => {
+                        const base = normalizeBaseLayer(l);
+                        return isPoiLayer(base) || isBuildingLayer(base);
+                    });
+
+                    let effectiveLayerName = null;
+                    if (isPoiLayer(captionBase) || isBuildingLayer(captionBase)) {
+                        effectiveLayerName = fromCaption;
+                    } else if (preferred) {
+                        effectiveLayerName = preferred;
+                    } else {
+                        effectiveLayerName = (layerName || '').split(',')[0].trim();
+                    }
+
+                    const layer = effectiveLayerName;
+                    const normalizedLayer = normalizeBaseLayer(layer);
                     console.log("nome del layer preso dal parsing", layer);
 
                     // header & righe
@@ -405,8 +432,11 @@ function addMapClickListener(map, wmsLayer, wmsUrl) {
                     // mappa per i click (id -> true), serve solo per validare l'id
                     const idSet = new Set();
 
+                    const baseLayerName = normalizedLayer;
+                    const isPoiPrec = baseLayerName === 'poi_prec';
+                    const isBuilding = baseLayerName === 'building';
 
-                    if (layer != null && layer.trim().toLowerCase() === "poi_prec") {
+                    if (isPoiPrec) {
                         ensureActionsHeader();
                         rows.forEach((tr) => {
                             const id = getRowId(tr);
@@ -427,7 +457,7 @@ function addMapClickListener(map, wmsLayer, wmsUrl) {
                         popupElement.style.display = 'block';
                         popupOverlay.setPosition(evt.coordinate);
 
-                    } else if (layer != null && layer.trim().toLowerCase() === "building") {
+                    } else if (isBuilding) {
                         ensureActionsHeader();
                         rows.forEach((tr) => {
                             const id = getRowId(tr);

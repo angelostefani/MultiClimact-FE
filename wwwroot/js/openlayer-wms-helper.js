@@ -67,6 +67,7 @@ Flusso Operativo:
  * @param {string} [config.wmsUrl] - URL del servizio WMS per i layer sovrapposti.
  * @param {string} [config.wmsLayer] - Nome del layer WMS.
  * @param {string} [config.legendTitle] - Titolo per la leggenda WMS.
+ * @param {string} [config.popupContext] - Contesto opzionale per personalizzare il popup GetFeatureInfo.
  * 
  * @returns {ol.Map} L'oggetto mappa di OpenLayers inizializzato.
  */
@@ -87,6 +88,11 @@ function initWMSMap(config) {
             zoom: config.zoomValue || 9
         })
     });
+
+    // Tagga la mappa con un contesto opzionale per i popup
+    if (config.popupContext) {
+        localMap.set('popupContext', config.popupContext);
+    }
 
     // Aggiungi il listener per il click sulla mappa
     addMapClickListener(localMap, wmsLayerObj, config.wmsUrl);
@@ -112,6 +118,7 @@ function initWMSMap(config) {
  * @param {number} config.centerLatitude - Latitudine del centro della mappa.
  * @param {number} [config.zoomValue=9] - Livello di zoom iniziale della mappa.
  * @param {Array} config.layerMatrix - Matrice che definisce i layer WMS da aggiungere.
+ * @param {string} [config.popupContext] - Contesto opzionale per personalizzare il popup GetFeatureInfo.
  * 
  * @returns {ol.Map} L'oggetto mappa di OpenLayers inizializzato.
  */
@@ -138,6 +145,11 @@ function initWMSMatrixMap(config) {
         })
     });
     
+    // Tagga la mappa con un contesto opzionale per i popup
+    if (config.popupContext) {
+        localMap.set('popupContext', config.popupContext);
+    }
+
     // Aggiungi il listener per le coordinate del mouse
     //addMouseCoordinateListener(localMap);
 
