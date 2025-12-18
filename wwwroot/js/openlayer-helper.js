@@ -346,6 +346,27 @@ function addMapClickListener(map, wmsLayer, wmsUrl) {
 
                     const doc = new DOMParser().parseFromString(html, 'text/html');
 
+                    // 2) Prendi la (prima) tabella featureInfo
+                    const table = doc.querySelector('table.featureInfo');
+
+                    if (!table) {
+                        console.warn('Nessuna table.featureInfo trovata nel GetFeatureInfo');
+                        popupElement.style.display = 'none';
+                        return;
+                    }
+                    const styleHtml = doc.querySelector('style')?.outerHTML || `
+                    <style>
+                    table.featureInfo, table.featureInfo td, table.featureInfo th {
+                    border:1px solid #ddd; border-collapse:collapse; margin:0; padding:.2em .1em; font-size:90%; 
+                    }
+                    table.featureInfo th { font-weight:bold; background:#eee; padding:.2em .2em; }
+                    table.featureInfo td { background:#fff; }
+                    table.featureInfo tr.odd td { background:#eee; }
+                    table.featureInfo caption { text-align:left; font-size:100%; font-weight:bold; padding:.2em .2em; }
+                    </style>`;
+
+
+                    //prendo il nome del layer 
                     const normalizeBaseLayer = (name) => {
                         const clean = (name || '').replace(/['"]/g, '').trim().toLowerCase();
                         const base = clean.includes(':') ? clean.split(':').pop() : clean;
@@ -354,36 +375,8 @@ function addMapClickListener(map, wmsLayer, wmsUrl) {
                     const isPoiLayer = (base) => base === 'poi_prec' || (base.includes('poi') && base.includes('prec'));
                     const isBuildingLayer = (base) => base === 'building';
 
-                    // 2) Trova le tabelle featureInfo e seleziona prima quelle con caption desiderata
-                    const featureTables = [...doc.querySelectorAll('table.featureInfo')];
-                    const preferredTable = featureTables.find(t => {
-                        const captionText = t.querySelector('caption')?.textContent?.trim() || '';
-                        const base = normalizeBaseLayer(captionText);
-                        return isPoiLayer(base) || isBuildingLayer(base);
-                    });
-                    const table = preferredTable || featureTables[0];
-
-                    if (!table) {
-                        console.warn('Nessuna table.featureInfo trovata nel GetFeatureInfo');
-                        // Fall back: mostra comunque l'HTML restituito
-                        popupElement.innerHTML = html;
-                        popupElement.style.display = 'block';
-                        popupOverlay.setPosition(evt.coordinate);
-                        return;
-                    }
-
-                    const styleHtml = doc.querySelector('style')?.outerHTML || `
-                    <style>
-                    table.featureInfo, table.featureInfo td, table.featureInfo th {
-                    border:1px solid #ddd; border-collapse:collapse; margin:0; padding:.2em .1em; font-size:90%;
-                    }
-                    table.featureInfo th { font-weight:bold; background:#eee; padding:.2em .2em; }
-                    table.featureInfo td { background:#fff; }
-                    table.featureInfo tr.odd td { background:#eee; }
-                    table.featureInfo caption { text-align:left; font-size:100%; font-weight:bold; padding:.2em .2em; }
-                    </style>`;
-
-                    const fromCaption = table.querySelector('caption')?.textContent?.trim() || '';
+                    // nome layer da caption e da parametro
+                    const fromCaption = table.querySelectorAll('caption')?.textContent?.trim() || '';
                     console.log("caption presa dal parsing", fromCaption);
                     const captionBase = normalizeBaseLayer(fromCaption);
 
