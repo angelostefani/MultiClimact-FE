@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Autore: Angelo Stefani [angelo.stefani@enea.it]
 * Data di creazione: 02/01/2024
 * Ultimo aggiornamento: 16/09/2024
@@ -131,7 +131,13 @@ function initWMSMatrixMap(config) {
     for (let i = 0; i < config.layerMatrix.length; i++) {
         let addLayer = config.layerMatrix[i][0] && config.layerMatrix[i][1]; // TRUE se entrambi sono TRUE
         if (addLayer) {
-            addLayerToMap(layersArray, config.layerMatrix[i][2], config.layerMatrix[i][3], config.layerMatrix[i][5]);
+            addLayerToMap(
+                layersArray,
+                config.layerMatrix[i][2],
+                config.layerMatrix[i][3],
+                config.layerMatrix[i][5],
+                config.layerMatrix[i][6]
+            );
         }
     }
 
@@ -170,10 +176,16 @@ function initWMSMatrixMap(config) {
  * 
  * @returns {ol.layer.Tile|null} L'oggetto del layer WMS, o null se non aggiunto.
  */
-function addLayerToMap(layersArray, wmsUrl, wmsLayer, env) {
+function addLayerToMap(layersArray, wmsUrl, wmsLayer, env, styles) {
     if (wmsUrl && wmsLayer) {
         // Configura i parametri WMS, aggiungendo 'env' se valorizzato
         let params = { 'LAYERS': wmsLayer, 'TILED': true };
+        if (styles) {
+            params.STYLES = styles;
+        }
+        if (styles) {
+            params.STYLES = styles;
+        }
         if (env) {
             params.ENV = env;
         }
@@ -326,11 +338,15 @@ function updateMapLayers(configWMSMatrixMap, map) {
         let wmsUrl = layerConfig[2]; // URL del servizio WMS (GeoServer).
         let wmsLayerName = layerConfig[3]; // Nome del layer WMS
         let legendId = layerConfig[4]; // ID della legenda corrispondente
-        let env = layerConfig[5]; // Parametro env che verrà aggiunto alla richiesta verso geoserver
+        let env = layerConfig[5]; // Parametro env che verrà aggiunto alla richiesta verso geoserver
+        let styles = layerConfig[6]; // Parametro STYLES WMS
 
         // Configura i parametri WMS, aggiungendo 'env' se valorizzato
         let params = { 'LAYERS': wmsLayerName, 'TILED': true };
 
+        if (styles) {
+            params.STYLES = styles;
+        }
         if (env) {
             params.ENV = env;
         }
@@ -359,3 +375,4 @@ function updateMapLayers(configWMSMatrixMap, map) {
         }
     });
 }
+

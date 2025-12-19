@@ -161,7 +161,7 @@ document.addEventListener("DOMContentLoaded", function () {
         centerLatitude: 43.1357,                  // Initial latitude
         zoomValue: 9,                            // Initial zoom level
         layerMatrix: [                            // Array of WMS layers
-            [true, true, document.getElementById("wmsurl_lay11").dataset.value, document.getElementById("wmslayer_lay11").dataset.value, 'Temperature above ground']
+            [true, true, document.getElementById("wmsurl_lay25").dataset.value, document.getElementById("wmslayer_lay25").dataset.value, 'Heatwave real view']
         ]
     };
 
@@ -201,8 +201,8 @@ document.addEventListener("DOMContentLoaded", function () {
         zoomValue: 9,                            // Initial zoom level
         popupContext: 'extreme-sim',
         layerMatrix: [
-        [true, true, document.getElementById("wmsurl_lay14").dataset.value, document.getElementById("wmslayer_lay14").dataset.value, 'Buildings of Marche region Extreme Precipitation'],
-        [true, true, document.getElementById("wmsurl_lay15").dataset.value, document.getElementById("wmslayer_lay15").dataset.value, 'Buildings of Camerino Extreme Precipitation'],
+        [true, true, document.getElementById("wmsurl_lay24").dataset.value, document.getElementById("wmslayer_lay24").dataset.value, 'Buildings of Marche region Extreme Precipitation'],
+        [true, true, document.getElementById("wmsurl_lay23").dataset.value, document.getElementById("wmslayer_lay23").dataset.value, 'Buildings of Camerino Extreme Precipitation'],
         [true, true, document.getElementById("wmsurl_lay17").dataset.value, document.getElementById("wmslayer_lay17").dataset.value, 'Hazard index 6 classes'],
         [true, true, document.getElementById("wmsurl_lay18").dataset.value, document.getElementById("wmslayer_lay18").dataset.value, 'Hazard index 3 classes'],
         [true, true, document.getElementById("wmsurl_lay19").dataset.value, document.getElementById("wmslayer_lay19").dataset.value, 'POI Vulnerability'],
@@ -213,5 +213,8 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     mapD5 = initWMSMatrixMap(configWMSMatrixMapD5);
+
+
+   
 
 });

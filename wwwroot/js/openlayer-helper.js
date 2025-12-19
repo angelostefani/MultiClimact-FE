@@ -372,8 +372,8 @@ function addMapClickListener(map, wmsLayer, wmsUrl) {
                         const base = clean.includes(':') ? clean.split(':').pop() : clean;
                         return base;
                     };
-                    const isPoiLayer = (base) => base === 'poi_prec' || (base.includes('poi') && base.includes('prec'));
-                    const isBuildingLayer = (base) => base === 'building';
+                    const isPoiLayer = (base) => base === 'poi_prec_sim_view' || (base.includes('poi') && base.includes('prec'));
+                    const isBuildingLayer = (base) => base === 'building_sim';
 
                     // nome layer da caption e da parametro
                     const fromCaption = table.querySelectorAll('caption')?.textContent?.trim() || '';
@@ -438,8 +438,8 @@ function addMapClickListener(map, wmsLayer, wmsUrl) {
                     const idSet = new Set();
 
                     const baseLayerName = normalizedLayer;
-                    const isPoiPrec = baseLayerName === 'poi_prec';
-                    const isBuilding = baseLayerName === 'building';
+                    const isPoiPrec = baseLayerName === 'poi_prec_sim_view';
+                    const isBuilding = baseLayerName === 'building_sim';
 
                     if (isPoiPrec) {
                         ensureActionsHeader();

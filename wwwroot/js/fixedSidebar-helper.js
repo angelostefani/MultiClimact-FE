@@ -78,6 +78,12 @@ function loadLegends(activeTab) {
             return { wmsUrl: layer[2], wmsLayer: layer[3], legendTitle: layer[4] };
         });
     }
+        else if (activeTab === 'tabC9-tab') {
+        itemsPerRow = 5;
+        legends = configWMSMatrixMapC9.layerMatrix.filter(layer => layer[0] && layer[1]).map(layer => {
+            return { wmsUrl: layer[2], wmsLayer: layer[3], legendTitle: layer[4] };
+        });
+    }
 
     if (!itemsPerRow || legends.length === 0) {
         legendContainer.innerHTML = '<p class="text-muted small mb-0">No legends available for this tab.</p>';
