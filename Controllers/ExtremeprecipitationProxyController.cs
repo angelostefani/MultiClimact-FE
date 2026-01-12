@@ -34,12 +34,8 @@ namespace MultiClimact.Controllers
         {
             var query = new Dictionary<string, string?>
             {
-                ["simulated"] = simulated.ToString().ToLower(),
-                ["status"] = "completed",
-                ["min_precipitation"] = min_precipitation,
-                ["event_date_min"] = start_date,
-                ["event_date_max"] = end_date,
-                ["run_end_max"] = "2026-12-31"
+                ["status_str"] = "completed",
+                ["haztype_id"] = "4"
             };
 
             string serviceUrl = QueryHelpers.AddQueryString("users/system/extremeprecipitations", query);

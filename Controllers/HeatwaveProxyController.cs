@@ -35,13 +35,8 @@ namespace MultiClimact.Controllers
         {
             var query = new Dictionary<string, string?>
             {
-                ["simulated"] = simulated.ToString().ToLower(),
-                ["status"] = "completed",
-                ["min_temperature"] = min_temperature,
-                ["max_temperature"] = max_temperature,
-                ["event_date_min"] = start_date,
-                ["event_date_max"] = end_date,
-                ["run_end_max"] = "2026-12-31"
+                ["status_str"] = "completed",
+                ["haztype_id"] = "2"
             };
 
             string heatwaveServiceUrl = QueryHelpers.AddQueryString("users/system/heatwaves", query);
