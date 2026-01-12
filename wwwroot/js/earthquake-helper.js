@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Author: Angelo Stefani [angelo.stefani@enea.it]
 * Creation date: 02/01/2024
 * Last update: 05/15/2024
@@ -12,47 +12,67 @@
 // Variabile per tracciare la scheda attiva
 let activeRiskRunID = '';
 
-/**
- * Populates the earthquake table with data.
- * Adds rows dynamically based on the provided earthquake data array.
- * 
- * @param {Array} data - Array of earthquake data objects.
- */
-function populateEarthquakeTable(data) {
-    const tableBody = document.getElementById('earthquakeTableBody');
+const hazardConfig = {
+    earthquake: {
+        endpoint: '/api/EarthquakeProxy/GetEarthquakes',
+        valueField: 'magnitude',
+        valueLabel: 'Magnitude'
+    },
+    heatwave: {
+        endpoint: '/api/HeatwaveProxy/GetHeatwaves',
+        valueField: 'temperature',
+        valueLabel: 'Temperature'
+    },
+    extremeprecipitation: {
+        endpoint: '/api/ExtremeprecipitationProxy/GetExtremeprecipitations',
+        valueField: 'precipitation',
+        valueLabel: 'Precipitation'
+    }
+};
+
+function formatHazardLabel(hazardKey) {
+    switch (hazardKey) {
+        case 'heatwave':
+            return 'Heatwave';
+        case 'extremeprecipitation':
+            return 'Extreme precipitation';
+        default:
+            return 'Earthquake';
+    }
+}
+
+function populateHazardTable(data, config, hazardKey) {
+    const tableBody = document.getElementById('hazardTableBody');
+    const valueHeader = document.getElementById('hazardValueHeader');
     tableBody.innerHTML = '';
+    if (valueHeader) {
+        valueHeader.textContent = config.valueLabel || 'Value';
+    }
 
     if (Array.isArray(data)) {
         data.forEach((item, index) => {
             const row = document.createElement('tr');
-            row.className = 'earthquake-row';
+            row.className = 'hazard-row';
 
-            // Add click event to highlight the row
             row.addEventListener('click', () => {
-                // Remove selection mark from all rows
-                document.querySelectorAll('.earthquake-row').forEach(r => {
+                document.querySelectorAll('.hazard-row').forEach(r => {
                     const selectCell = r.querySelector('.select-cell');
                     if (selectCell) {
                         selectCell.textContent = '';
                     }
                 });
-                // Highlight the clicked row
-                row.querySelector('.select-cell').textContent = '✓';
-
-                // Save the last selected row index in localStorage
+                row.querySelector('.select-cell').textContent = 'V';
                 localStorage.setItem('lastSelectedRowIndex', index);
-                // Simulate function invocation and display risk_run_id
                 const hiddenField = row.querySelector('.hidden-risk-run-id');
                 if (hiddenField) {
-                    activeRiskRunID =  hiddenField.value ;
+                    activeRiskRunID = hiddenField.value;
                     alert(`Risk Run ID: ${hiddenField.value}`);
                 }
             });
 
-            // Create table cells for the row
             const selectCell = document.createElement('td');
             selectCell.className = 'select-cell';
-            selectCell.textContent = ''; // Empty selection mark initially
+            selectCell.textContent = '';
 
             const dateCell = document.createElement('td');
             dateCell.textContent = item.eventDate || 'N/A';
@@ -60,55 +80,60 @@ function populateEarthquakeTable(data) {
             const descriptionCell = document.createElement('td');
             descriptionCell.textContent = item.description || 'N/A';
 
-            const magnitudeCell = document.createElement('td');
-            magnitudeCell.textContent = item.magnitude || 'N/A';
+            const valueCell = document.createElement('td');
+            const valueField = config.valueField;
+            valueCell.textContent = item[valueField] ?? 'N/A';
 
-            // Create hidden field for risk_run_id
+            const hazardCell = document.createElement('td');
+            hazardCell.textContent = formatHazardLabel(hazardKey);
+
             const hiddenField = document.createElement('input');
             hiddenField.type = 'hidden';
             hiddenField.className = 'hidden-risk-run-id';
             hiddenField.value = item.idRun || '';
 
-            // Append cells to the row
             row.appendChild(selectCell);
             row.appendChild(dateCell);
             row.appendChild(descriptionCell);
-            row.appendChild(magnitudeCell);
+            row.appendChild(valueCell);
+            row.appendChild(hazardCell);
             row.appendChild(hiddenField);
-
             tableBody.appendChild(row);
         });
     } else {
-        // Handle case where no data is available
         const row = document.createElement('tr');
         const noDataCell = document.createElement('td');
-        noDataCell.setAttribute('colspan', 4);
+        noDataCell.setAttribute('colspan', 5);
         noDataCell.textContent = 'No data available';
         row.appendChild(noDataCell);
         tableBody.appendChild(row);
     }
 }
 
-/**
- * Fetches earthquake data from the server and populates the table.
- * Uses form data as query parameters for the request.
- * 
- * @param {Event} event - The form submission event.
- */
-async function fetchEarthquakeData(event) {
+async function fetchHazardData(event) {
     event.preventDefault();
-    const form = document.getElementById('earthquakeForm');
+    const form = document.getElementById('hazardForm');
+    const hazardType = document.getElementById('hazardType').value;
+    const config = hazardConfig[hazardType];
+
+    if (!config) {
+        console.error('Unsupported hazard type:', hazardType);
+        return;
+    }
+
     const formData = new FormData(form);
+    formData.delete('hazard_type'); // evita di inviare un parametro non usato dal backend
     const params = new URLSearchParams(formData).toString();
-    const url = form.action + '?' + params;
+    const url = config.endpoint + '?' + params;
 
     try {
         const response = await fetch(url);
         if (response.ok) {
             const jsonResponse = await response.json();
-            if (jsonResponse.success && Array.isArray(jsonResponse.data)) {
-                populateEarthquakeTable(jsonResponse.data);
-                paginateTable(); // Reapply pagination after updating table data
+            const data = jsonResponse.data || jsonResponse.Data; // tollera differenze di casing
+            if (jsonResponse.success === true || Array.isArray(data)) {
+                populateHazardTable(data, config, hazardType);
+                paginateTable();
             } else {
                 console.error('Server response error:', jsonResponse);
             }
@@ -120,22 +145,13 @@ async function fetchEarthquakeData(event) {
     }
 }
 
-/**
- * Implements pagination for the earthquake table.
- * Displays rows in pages with navigation controls.
- */
 function paginateTable() {
     const rowsPerPage = 5;
-    const tableBody = document.getElementById("earthquakeTableBody");
+    const tableBody = document.getElementById("hazardTableBody");
     const rows = Array.from(tableBody.getElementsByTagName("tr"));
     const totalPages = Math.ceil(rows.length / rowsPerPage);
     let currentPage = 1;
 
-    /**
-     * Renders a specific page of table rows.
-     * 
-     * @param {number} page - The page number to render.
-     */
     function renderPage(page) {
         tableBody.innerHTML = "";
         const start = (page - 1) * rowsPerPage;
@@ -144,7 +160,6 @@ function paginateTable() {
             tableBody.appendChild(row);
         });
 
-        // Clear selection marks from rows not visible on the current page
         rows.forEach(r => {
             const selectCell = r.querySelector('.select-cell');
             if (selectCell) {
@@ -152,17 +167,15 @@ function paginateTable() {
             }
         });
 
-        // Restore selection mark for the last selected row if visible
         const lastSelectedRowIndex = parseInt(localStorage.getItem('lastSelectedRowIndex'), 10);
         if (!isNaN(lastSelectedRowIndex) && lastSelectedRowIndex >= start && lastSelectedRowIndex < end) {
             const rowToHighlight = rows[lastSelectedRowIndex];
-            rowToHighlight.querySelector('.select-cell').textContent = '✓';
+            if (rowToHighlight) {
+                rowToHighlight.querySelector('.select-cell').textContent = 'V';
+            }
         }
     }
 
-    /**
-     * Creates pagination controls for navigating table pages.
-     */
     function createPaginationControls() {
         const paginationControls = document.getElementById("paginationControls");
         paginationControls.innerHTML = "";
@@ -183,15 +196,11 @@ function paginateTable() {
         createPaginationControls();
     }
 
-    // Update selection mark on row click
-    document.querySelectorAll('.earthquake-row').forEach((row, index) => {
+    document.querySelectorAll('.hazard-row').forEach((row, index) => {
         row.addEventListener('click', () => {
-            // Clear selection marks from all rows
             document.querySelectorAll('.select-cell').forEach(cell => cell.textContent = '');
-
-            // Add selection mark to the clicked row
-            row.querySelector('.select-cell').textContent = '✓';
-            localStorage.setItem('lastSelectedRowIndex', index); // Update last selected row index
+            row.querySelector('.select-cell').textContent = 'V';
+            localStorage.setItem('lastSelectedRowIndex', index);
         });
     });
 }
