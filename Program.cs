@@ -81,6 +81,15 @@ builder.Services.AddHttpClient<HeatwaveServiceClient>(client =>
 })
     .AddHttpMessageHandler<RetryHandler>();
 
+builder.Services.AddHttpClient<ExtremeprecipitationServiceClient>(client =>
+{
+    var baseUrl = builder.Configuration["ExtremeprecipitationService:BaseUrl"];
+    if (!string.IsNullOrEmpty(baseUrl))
+        client.BaseAddress = new Uri(baseUrl);
+    client.Timeout = TimeSpan.FromSeconds(30);
+})
+    .AddHttpMessageHandler<RetryHandler>();
+
 // Default named client for internal calls
 builder.Services.AddHttpClient("Default", client =>
 {
