@@ -16,7 +16,11 @@ const hazardConfig = {
     earthquake: {
         endpoint: '/api/EarthquakeProxy/GetEarthquakes',
         valueField: 'magnitude',
-        valueLabel: 'Magnitude'
+        valueLabel: 'Magnitude',
+        extraParams: {
+            min_magnitude: '0',
+            max_magnitude: '10'
+        }
     },
     heatwave: {
         endpoint: '/api/HeatwaveProxy/GetHeatwaves',
@@ -123,6 +127,13 @@ async function fetchHazardData(event) {
 
     const formData = new FormData(form);
     formData.delete('hazard_type'); // evita di inviare un parametro non usato dal backend
+    if (config.extraParams) {
+        Object.entries(config.extraParams).forEach(([key, value]) => {
+            if (!formData.has(key)) {
+                formData.append(key, value);
+            }
+        });
+    }
     const params = new URLSearchParams(formData).toString();
     const url = config.endpoint + '?' + params;
 
