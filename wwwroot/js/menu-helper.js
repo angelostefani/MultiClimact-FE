@@ -10,7 +10,7 @@
 */
 
 // Variabile per tracciare la scheda attiva
-let activeTab = 'tabB1-tab';
+let activeTab = 'tabCHome-tab';
 
 /**
  * Funzione per cambiare il layer della mappa di base.
@@ -41,6 +41,7 @@ const tabToMapId = {
     'tabB9-tab': 'mapB9', 'tabB10-tab': 'mapB10', 'tabB11-tab': 'mapB11', 'tabB12-tab': 'mapB12',
     'tabB13-tab': 'mapB13', 'tabB14-tab': 'mapB14', 'tabB15-tab': 'mapB15', 'tabB16-tab': 'mapB16',
     'tabB17-tab': 'mapB17', 'tabB18-tab': 'mapB18',
+    'tabCHome-tab': 'mapHomeDashboard',
     'tabC1-tab': 'mapC1', 'tabC2-tab': 'mapC2', 'tabC3-tab': 'mapC3', 'tabC4-tab': 'mapC4',
     'tabC5-tab': 'mapC5', 'tabC6-tab': 'mapC6', 'tabC7-tab': 'mapC7', 'tabC8-tab': 'mapC8',
     'tabC9-tab': 'mapC9', 'tabC10-tab': 'mapC10', 'tabC11-tab': 'mapC11', 'tabC12-tab': 'mapC12', 'tabC13-tab': 'mapC13',
@@ -97,6 +98,7 @@ function initTabs() {
         '#tabB9-tab', '#tabB10-tab', '#tabB11-tab', '#tabB12-tab', 
         '#tabB13-tab', '#tabB14-tab', '#tabB15-tab', '#tabB16-tab', 
         '#tabB17-tab', '#tabB18-tab',
+        '#tabCHome-tab',
         '#tabC1-tab', '#tabC2-tab', '#tabC3-tab', '#tabC4-tab', 
         '#tabC5-tab', '#tabC6-tab', '#tabC7-tab', '#tabC8-tab', 
         '#tabC9-tab', '#tabC10-tab', '#tabC11-tab', '#tabC12-tab', '#tabC13-tab',
@@ -113,7 +115,7 @@ function initTabs() {
     });
 
     // Imposta la scheda attiva di default
-    activeTab = 'tabC1-tab';
+    activeTab = 'tabCHome-tab';
 }
 
 /**
@@ -139,6 +141,7 @@ function tabManager() {
         'tabB9-tab', 'tabB10-tab', 'tabB11-tab', 'tabB12-tab', 
         'tabB13-tab', 'tabB14-tab', 'tabB15-tab', 'tabB16-tab', 
         'tabB17-tab', 'tabB18-tab',
+        'tabCHome-tab',
         'tabC1-tab', 'tabC2-tab', 'tabC3-tab', 'tabC4-tab', 
         'tabC5-tab', 'tabC6-tab', 'tabC7-tab', 'tabC8-tab', 
         'tabC9-tab', 'tabC10-tab', 'tabC11-tab', 'tabC12-tab', 'tabC13-tab',
@@ -274,24 +277,30 @@ function selectTab(selectedItem) {
             activeTab: 'tabB18-tab',
             activePanel: 'panelB18'
         },
+        // Gruppo C0 (Dashboard)
+        'tabCHome-tab': {
+            tabsToShow: ['tabCHome-tab', 'tabC1-tab', 'tabC2-tab', 'tabC3-tab', 'tabC4-tab'],
+            activeTab: 'tabCHome-tab',
+            activePanel: 'panelCHome'
+        },
         // Gruppo C1
         'tabC1-tab': {
-            tabsToShow: ['tabC1-tab', 'tabC2-tab', 'tabC3-tab', 'tabC4-tab'],
+            tabsToShow: ['tabCHome-tab', 'tabC1-tab', 'tabC2-tab', 'tabC3-tab', 'tabC4-tab'],
             activeTab: 'tabC1-tab',
             activePanel: 'panelC1'
         },
         'tabC2-tab': {
-            tabsToShow: ['tabC1-tab', 'tabC2-tab', 'tabC3-tab', 'tabC4-tab'],
+            tabsToShow: ['tabCHome-tab', 'tabC1-tab', 'tabC2-tab', 'tabC3-tab', 'tabC4-tab'],
             activeTab: 'tabC2-tab',
             activePanel: 'panelC2'
         },
         'tabC3-tab': {
-            tabsToShow: ['tabC1-tab', 'tabC2-tab', 'tabC3-tab', 'tabC4-tab'],
+            tabsToShow: ['tabCHome-tab', 'tabC1-tab', 'tabC2-tab', 'tabC3-tab', 'tabC4-tab'],
             activeTab: 'tabC3-tab',
             activePanel: 'panelC3'
         },
         'tabC4-tab': {
-            tabsToShow: ['tabC1-tab', 'tabC2-tab', 'tabC3-tab', 'tabC4-tab'],
+            tabsToShow: ['tabCHome-tab', 'tabC1-tab', 'tabC2-tab', 'tabC3-tab', 'tabC4-tab'],
             activeTab: 'tabC4-tab',
             activePanel: 'panelC4'
         },

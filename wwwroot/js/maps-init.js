@@ -18,6 +18,24 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!activeRiskRunID) {
         activeRiskRunID = idRun;
     }
+
+    /**
+     * Home dashboard map showing DPC bulletins layers.
+     */
+    const configWMSHomeDashboard = {
+        targetHtmlMapId: 'mapHomeDashboard',
+        baseMapName: 'OpenStreetMap - EPSG:3857',
+        centerLongitude: 12.5,
+        centerLatitude: 42.5,
+        zoomValue: 6,
+        layerMatrix: [
+            [true, true, document.getElementById("wmsurl_lay28").dataset.value, document.getElementById("wmslayer_lay28").dataset.value, 'DPC hydraulic bulletins'],
+            [true, true, document.getElementById("wmsurl_lay29").dataset.value, document.getElementById("wmslayer_lay29").dataset.value, 'DPC hydrogeological bulletins'],
+            [true, true, document.getElementById("wmsurl_lay30").dataset.value, document.getElementById("wmslayer_lay30").dataset.value, 'DPC thunderstorms bulletins']
+        ]
+    };
+
+    initWMSMatrixMap(configWMSHomeDashboard);
         
     /**
      * Configuration for initializing the first WMS map instance (Map C1).
