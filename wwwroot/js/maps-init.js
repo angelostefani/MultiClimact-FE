@@ -161,7 +161,9 @@ document.addEventListener("DOMContentLoaded", function () {
         centerLatitude: 43.1357,                  // Initial latitude
         zoomValue: 9,                            // Initial zoom level
         layerMatrix: [                            // Array of WMS layers
-            [true, true, document.getElementById("wmsurl_lay25").dataset.value, document.getElementById("wmslayer_lay25").dataset.value, 'Heatwave real view']
+            [true, true, document.getElementById("wmsurl_lay25").dataset.value, document.getElementById("wmslayer_lay25").dataset.value, 'Heatwave real view'],
+            [true, true, document.getElementById("wmsurl_lay26").dataset.value, document.getElementById("wmslayer_lay26").dataset.value, 'Heatwave roadway view'],
+            [true, true, document.getElementById("wmsurl_lay27").dataset.value, document.getElementById("wmslayer_lay27").dataset.value, 'Heatwave roadway damage view']
         ]
     };
 

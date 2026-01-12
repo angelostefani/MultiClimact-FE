@@ -160,7 +160,9 @@ namespace MultiClimact.Pages
                 new { Key = "wmsurl_lay22", Description = "Extreme Precipitation Building Risk" },
                 new { Key = "wmsurl_lay23", Description = "Building Simulation Layer" },
                 new { Key = "wmsurl_lay24", Description = "POI Precipitation Simulation View" },
-                new { Key = "wmsurl_lay25", Description = "Heatwave real view" }
+                new { Key = "wmsurl_lay25", Description = "Heatwave real view" },
+                new { Key = "wmsurl_lay26", Description = "Heatwave roadway view" },
+                new { Key = "wmsurl_lay27", Description = "Heatwave roadway damage view" }
             };
 
             // Loop through WMS layers and store them in ViewData dynamically

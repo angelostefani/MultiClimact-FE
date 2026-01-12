@@ -207,30 +207,13 @@
             <label class="layer-toggle">
               <input type="checkbox" id="checkboxC12_1" checked
                 onclick="toggleLayerBlock(configWMSMatrixMapC12, 0, mapC12, 1)">
-              <span class="layer-label">POI buildings</span>
+              <span class="layer-label">POI building</span>
             </label>
 
             <label class="layer-toggle">
               <input type="checkbox" id="checkboxC12_2" checked
                 onclick="toggleLayerBlock(configWMSMatrixMapC12, 1, mapC12, 1)">
-              <span class="layer-label">Camerino buildings</span>
-            </label>
-          </div>
-        </div>
-
-        <div class="layer-box">
-          <div class="layer-box__title">Camerino buildings</div>
-          <div class="layer-box__body">
-            <label class="layer-toggle">
-              <input type="checkbox" id="checkboxC12_7" checked
-                onclick="toggleLayerBlock(configWMSMatrixMapC12, 6, mapC12, 1)">
-              <span class="layer-label">Camerino buildings vulnerability</span>
-            </label>
-
-            <label class="layer-toggle">
-              <input type="checkbox" id="checkboxC12_8" checked
-                onclick="toggleLayerBlock(configWMSMatrixMapC12, 7, mapC12, 1)">
-              <span class="layer-label">Camerino buildings risk</span>
+              <span class="layer-label">Camerino building</span>
             </label>
 
             <label class="layer-toggle">
@@ -244,6 +227,24 @@
                 onclick="toggleLayerBlock(configWMSMatrixMapC12, 3, mapC12, 1)">
               <span class="layer-label">Hazard index (3 classes)</span>
             </label>
+
+          </div>
+        </div>
+
+        <div class="layer-box">
+          <div class="layer-box__title">Camerino building</div>
+          <div class="layer-box__body">
+            <label class="layer-toggle">
+              <input type="checkbox" id="checkboxC12_7" checked
+                onclick="toggleLayerBlock(configWMSMatrixMapC12, 6, mapC12, 1)">
+              <span class="layer-label">Camerino building vulnerability</span>
+            </label>
+
+            <label class="layer-toggle">
+              <input type="checkbox" id="checkboxC12_8" checked
+                onclick="toggleLayerBlock(configWMSMatrixMapC12, 7, mapC12, 1)">
+              <span class="layer-label">Camerino building risk</span>
+            </label>
           </div>
         </div>
 
@@ -253,13 +254,13 @@
             <label class="layer-toggle">
               <input type="checkbox" id="checkboxC12_5" checked
                 onclick="toggleLayerBlock(configWMSMatrixMapC12, 4, mapC12, 1)">
-              <span class="layer-label">POI buildings vulnerability</span>
+              <span class="layer-label">POI building vulnerability</span>
             </label>
 
             <label class="layer-toggle">
               <input type="checkbox" id="checkboxC12_6" checked
                 onclick="toggleLayerBlock(configWMSMatrixMapC12, 5, mapC12, 1)">
-              <span class="layer-label">POI risk</span>
+              <span class="layer-label">POI building risk</span>
             </label>
           </div>
         </div>
@@ -303,11 +304,28 @@ Accorpati nei tab C5 e C6 sempre dopo la modifica del file Excel!
                 </div>
 
                 <div class="layer-box">
+                    <div class="layer-box__title">Input</div>
                     <div class="layer-box__body">
                         <label class="layer-toggle">
                             <input type="checkbox" id="checkboxC9_1" checked
                                 onclick="toggleLayerBlock(configWMSMatrixMapC9, 0, mapC9, 1)">
-                            <span class="layer-label">Heatwave real view</span>
+                            <span class="layer-label">Daily max temperature</span>
+                        </label>
+                        <label class="layer-toggle">
+                            <input type="checkbox" id="checkboxC9_2" checked
+                                onclick="toggleLayerBlock(configWMSMatrixMapC9, 1, mapC9, 1)">
+                            <span class="layer-label">Roadway (PG)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="layer-box">
+                    <div class="layer-box__title">Points of Interest</div>
+                    <div class="layer-box__body">
+                        <label class="layer-toggle">
+                            <input type="checkbox" id="checkboxC9_3" checked
+                                onclick="toggleLayerBlock(configWMSMatrixMapC9, 2, mapC9, 1)">
+                            <span class="layer-label">Roadway Risk (Tpav)</span>
                         </label>
                     </div>
                 </div>
