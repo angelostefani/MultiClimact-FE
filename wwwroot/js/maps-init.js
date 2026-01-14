@@ -20,22 +20,53 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     /**
-     * Home dashboard map showing DPC bulletins layers.
+     * Home dashboard maps split into four tiles.
+     * - Tile 1: Hydraulic bulletins
+     * - Tile 2: Hydrogeological bulletins
+     * - Tile 3: Thunderstorms bulletins
+     * - Tile 4: Overview (all bulletins)
      */
-    const configWMSHomeDashboard = {
-        targetHtmlMapId: 'mapHomeDashboard',
+    const dashboardBaseConfig = {
         baseMapName: 'OpenStreetMap - EPSG:3857',
         centerLongitude: 12.5,
         centerLatitude: 42.5,
-        zoomValue: 6,
-        layerMatrix: [
-            [true, true, document.getElementById("wmsurl_lay28").dataset.value, document.getElementById("wmslayer_lay28").dataset.value, 'DPC hydraulic bulletins'],
-            [true, true, document.getElementById("wmsurl_lay29").dataset.value, document.getElementById("wmslayer_lay29").dataset.value, 'DPC hydrogeological bulletins'],
-            [true, true, document.getElementById("wmsurl_lay30").dataset.value, document.getElementById("wmslayer_lay30").dataset.value, 'DPC thunderstorms bulletins']
-        ]
+        zoomValue: 6
     };
 
-    initWMSMatrixMap(configWMSHomeDashboard);
+    const dashboardConfigs = [
+        {
+            ...dashboardBaseConfig,
+            targetHtmlMapId: 'mapHomeDashboard1',
+            layerMatrix: [
+                [true, true, document.getElementById("wmsurl_lay28").dataset.value, document.getElementById("wmslayer_lay28").dataset.value, 'DPC hydraulic bulletins']
+            ]
+        },
+        {
+            ...dashboardBaseConfig,
+            targetHtmlMapId: 'mapHomeDashboard2',
+            layerMatrix: [
+                [true, true, document.getElementById("wmsurl_lay29").dataset.value, document.getElementById("wmslayer_lay29").dataset.value, 'DPC hydrogeological bulletins']
+            ]
+        },
+        {
+            ...dashboardBaseConfig,
+            targetHtmlMapId: 'mapHomeDashboard3',
+            layerMatrix: [
+                [true, true, document.getElementById("wmsurl_lay30").dataset.value, document.getElementById("wmslayer_lay30").dataset.value, 'DPC thunderstorms bulletins']
+            ]
+        },
+        {
+            ...dashboardBaseConfig,
+            targetHtmlMapId: 'mapHomeDashboard4',
+            layerMatrix: [
+                [true, true, document.getElementById("wmsurl_lay28").dataset.value, document.getElementById("wmslayer_lay28").dataset.value, 'DPC hydraulic bulletins'],
+                [true, true, document.getElementById("wmsurl_lay29").dataset.value, document.getElementById("wmslayer_lay29").dataset.value, 'DPC hydrogeological bulletins'],
+                [true, true, document.getElementById("wmsurl_lay30").dataset.value, document.getElementById("wmslayer_lay30").dataset.value, 'DPC thunderstorms bulletins']
+            ]
+        }
+    ];
+
+    [mapHomeDashboard1, mapHomeDashboard2, mapHomeDashboard3, mapHomeDashboard4] = dashboardConfigs.map(cfg => initWMSMatrixMap(cfg));
         
     /**
      * Configuration for initializing the first WMS map instance (Map C1).

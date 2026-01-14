@@ -36,7 +36,7 @@ function changeMap(baseMapName, activeTab) {
 
 // Mappa tab -> ID variabile della mappa per evitare ReferenceError se alcune mappe non sono definite
 const tabToMapId = {
-    'tabB0-tab': 'mapHomeDashboard',
+    'tabB0-tab': 'mapHomeDashboard1',
     'tabB1-tab': 'mapB1', 'tabB2-tab': 'mapB2', 'tabB3-tab': 'mapB3', 'tabB4-tab': 'mapB4',
     'tabB5-tab': 'mapB5', 'tabB6-tab': 'mapB6', 'tabB7-tab': 'mapB7', 'tabB8-tab': 'mapB8',
     'tabB9-tab': 'mapB9', 'tabB10-tab': 'mapB10', 'tabB11-tab': 'mapB11', 'tabB12-tab': 'mapB12',
@@ -456,6 +456,9 @@ function selectTab(selectedItem) {
         if (mapToResize && typeof mapToResize.updateSize === 'function') {
             setTimeout(() => mapToResize.updateSize(), 0);
         }
+        if (group.activeTab === 'tabB0-tab') {
+            updateDashboardMaps();
+        }
 
         disableVerticalScrollBar();
         activeTab = group.activeTab;
@@ -510,4 +513,16 @@ function showHomeDashboard(section, subSection) {
     } else {
         $('#breadcrumb').html('<li class="breadcrumb-item"><a href="#">Home</a></li>');
     }
+    updateDashboardMaps();
+}
+
+/**
+ * Force resize on all dashboard maps (quad view).
+ */
+function updateDashboardMaps() {
+    [mapHomeDashboard1, mapHomeDashboard2, mapHomeDashboard3, mapHomeDashboard4].forEach(mapInstance => {
+        if (mapInstance && typeof mapInstance.updateSize === 'function') {
+            setTimeout(() => mapInstance.updateSize(), 0);
+        }
+    });
 }
