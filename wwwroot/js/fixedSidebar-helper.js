@@ -1,4 +1,4 @@
-﻿// Funzione per gestire le icone della Fixed Sidebar (on the Right)
+// Funzione per gestire le icone della Fixed Sidebar (on the Right)
 function setupFixedSidebarIconHandler() {
     const legendIconWrapper = document.querySelector('.legend-icon-wrapper');
     const centerPanel = document.getElementById('centerPanel');
@@ -11,7 +11,7 @@ function setupFixedSidebarIconHandler() {
             // Mostra o nasconde il pannello centrale
             centerPanel.style.display = (centerPanel.style.display === 'block') ? 'none' : 'block';
 
-            // Se il pannello è visibile, carica le legende
+            // Se il pannello e' visibile, carica le legende
             if (centerPanel.style.display === 'block') {
                 loadLegends(activeTab);
             }
@@ -40,34 +40,54 @@ function setupChatIconHandler() {
 function loadLegends(activeTab) {
     let itemsPerRow;
     const legendContainer = document.getElementById('legendContainer');
+    if (!legendContainer) {
+        console.warn('legendContainer not found.');
+        return;
+    }
     legendContainer.innerHTML = '';
     let legends = [];
 
     if (activeTab === 'tabC1-tab') {
         itemsPerRow = 1;
-        legends = configWMSMatrixMapC1.layerMatrix.map(layer => {
+        legends = configWMSMatrixMapC1.layerMatrix.filter(layer => layer[0] && layer[1]).map(layer => {
             return { wmsUrl: layer[2], wmsLayer: layer[3], legendTitle: layer[4] };
         });
     } else if (activeTab === 'tabC2-tab') {
         itemsPerRow = 5;
-        legends = configWMSMatrixMapC2.layerMatrix.map(layer => {
+        legends = configWMSMatrixMapC2.layerMatrix.filter(layer => layer[0] && layer[1]).map(layer => {
             return { wmsUrl: layer[2], wmsLayer: layer[3], legendTitle: layer[4] };
         });
     } else if (activeTab === 'tabC3-tab') {
         itemsPerRow = 4;
-        legends = configWMSMatrixMapC3.layerMatrix.map(layer => {
+        legends = configWMSMatrixMapC3.layerMatrix.filter(layer => layer[0] && layer[1]).map(layer => {
             return { wmsUrl: layer[2], wmsLayer: layer[3], legendTitle: layer[4] };
         });
     } else if (activeTab === 'tabC4-tab') {
         itemsPerRow = 2;
-        legends = configWMSMatrixMapC4.layerMatrix.map(layer => {
+        legends = configWMSMatrixMapC4.layerMatrix.filter(layer => layer[0] && layer[1]).map(layer => {
             return { wmsUrl: layer[2], wmsLayer: layer[3], legendTitle: layer[4] };
         });
-    } else if(activeTab === 'tabC5-tab'){
-        itemsPerRow = 5; 
-        legends = configWMSMatrixMapC4.layerMatrix.map(layer => {
+    } else if (activeTab === 'tabC5-tab') {
+        itemsPerRow = 5;
+        legends = configWMSMatrixMapC5.layerMatrix.filter(layer => layer[0] && layer[1]).map(layer => {
             return { wmsUrl: layer[2], wmsLayer: layer[3], legendTitle: layer[4] };
-        }); 
+        });
+    } else if (activeTab === 'tabC12-tab') {
+        itemsPerRow = 4;
+        legends = configWMSMatrixMapC12.layerMatrix.filter(layer => layer[0] && layer[1]).map(layer => {
+            return { wmsUrl: layer[2], wmsLayer: layer[3], legendTitle: layer[4] };
+        });
+    }
+        else if (activeTab === 'tabC9-tab') {
+        itemsPerRow = 5;
+        legends = configWMSMatrixMapC9.layerMatrix.filter(layer => layer[0] && layer[1]).map(layer => {
+            return { wmsUrl: layer[2], wmsLayer: layer[3], legendTitle: layer[4] };
+        });
+    }
+
+    if (!itemsPerRow || legends.length === 0) {
+        legendContainer.innerHTML = '<p class="text-muted small mb-0">No legends available for this tab.</p>';
+        return;
     }
     legends.forEach((legend, index) => {
         addLegendToPanel(legendContainer, legend.wmsUrl, legend.wmsLayer, legend.legendTitle, index, itemsPerRow);
@@ -77,34 +97,51 @@ function loadLegends(activeTab) {
 // Funzione per aggiungere una leggenda al pannello centrale
 function addLegendToPanel(container, wmsUrl, wmsLayer, legendTitle, legendNumber, itemsPerRow) {
     let url = new URL(wmsUrl);
+    const isHazard3Classes = legendTitle && legendTitle.toLowerCase().includes('hazard index 3 classes');
+    const legendWidth = isHazard3Classes ? 32 : 20;
+    const legendHeight = isHazard3Classes ? 32 : 20;
+    const legendFontSize = isHazard3Classes ? 16 : 12;
+
     url.searchParams.set('REQUEST', 'GetLegendGraphic');
     url.searchParams.set('VERSION', '1.0.0');
     url.searchParams.set('FORMAT', 'image/png');
-    url.searchParams.set('WIDTH', '20');
-    url.searchParams.set('HEIGHT', '20');
+    url.searchParams.set('WIDTH', legendWidth.toString());
+    url.searchParams.set('HEIGHT', legendHeight.toString());
     url.searchParams.set('LAYER', wmsLayer);
+    url.searchParams.set('LEGEND_OPTIONS', `fontSize:${legendFontSize}`);
 
     let legendDiv = document.createElement('div');
     legendDiv.className = 'legend-control card shadow-sm';
     legendDiv.style.marginBottom = '8px';
     legendDiv.style.display = 'inline-block';
-    legendDiv.style.width = '14%';
+    legendDiv.style.width = isHazard3Classes ? '20%' : '14%';
+    legendDiv.style.minWidth = isHazard3Classes ? '180px' : '140px';
     legendDiv.style.padding = '6px';
     legendDiv.style.verticalAlign = 'top';
     legendDiv.style.borderRadius = '6px';
     legendDiv.style.backgroundColor = '#ffffff';
+    legendDiv.style.overflow = 'hidden';
+    legendDiv.style.wordBreak = 'break-word';
 
     let titleDiv = document.createElement('div');
     titleDiv.innerText = legendTitle;
     titleDiv.style.fontWeight = 'bold';
     titleDiv.style.marginBottom = '6px';
     titleDiv.style.textAlign = 'center';
+    titleDiv.style.fontSize = '1.1rem';
+    titleDiv.style.lineHeight = '1.3';
+    if (isHazard3Classes) {
+        titleDiv.style.fontSize = '1.25rem';
+        titleDiv.style.lineHeight = '1.35';
+    }
 
     let legendImg = document.createElement('img');
     legendImg.src = url.href;
     legendImg.alt = 'Legend';
     legendImg.style.display = 'block';
     legendImg.style.margin = '0 auto';
+    legendImg.style.maxWidth = '100%';
+    legendImg.style.height = 'auto';
 
     legendDiv.appendChild(titleDiv);
     legendDiv.appendChild(legendImg);
@@ -122,3 +159,13 @@ function closeCenterPanel() {
     const centerPanel = document.getElementById('centerPanel');
     centerPanel.style.display = 'none';
 }
+
+// Ricarica le legende solo se il pannello centrale e' gia' aperto
+function refreshLegendsIfOpen() {
+    const centerPanel = document.getElementById('centerPanel');
+    if (centerPanel && centerPanel.style.display === 'block') {
+        loadLegends(activeTab);
+    }
+}
+
+

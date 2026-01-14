@@ -18,6 +18,55 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!activeRiskRunID) {
         activeRiskRunID = idRun;
     }
+
+    /**
+     * Home dashboard maps split into four tiles.
+     * - Tile 1: Hydraulic bulletins
+     * - Tile 2: Hydrogeological bulletins
+     * - Tile 3: Thunderstorms bulletins
+     * - Tile 4: Overview (all bulletins)
+     */
+    const dashboardBaseConfig = {
+        baseMapName: 'OpenStreetMap - EPSG:3857',
+        centerLongitude: 12.5,
+        centerLatitude: 42.5,
+        zoomValue: 6
+    };
+
+    const dashboardConfigs = [
+        {
+            ...dashboardBaseConfig,
+            targetHtmlMapId: 'mapHomeDashboard1',
+            layerMatrix: [
+                [true, true, document.getElementById("wmsurl_lay28").dataset.value, document.getElementById("wmslayer_lay28").dataset.value, 'DPC hydraulic bulletins']
+            ]
+        },
+        {
+            ...dashboardBaseConfig,
+            targetHtmlMapId: 'mapHomeDashboard2',
+            layerMatrix: [
+                [true, true, document.getElementById("wmsurl_lay29").dataset.value, document.getElementById("wmslayer_lay29").dataset.value, 'DPC hydrogeological bulletins']
+            ]
+        },
+        {
+            ...dashboardBaseConfig,
+            targetHtmlMapId: 'mapHomeDashboard3',
+            layerMatrix: [
+                [true, true, document.getElementById("wmsurl_lay30").dataset.value, document.getElementById("wmslayer_lay30").dataset.value, 'DPC thunderstorms bulletins']
+            ]
+        },
+        {
+            ...dashboardBaseConfig,
+            targetHtmlMapId: 'mapHomeDashboard4',
+            layerMatrix: [
+                [true, true, document.getElementById("wmsurl_lay28").dataset.value, document.getElementById("wmslayer_lay28").dataset.value, 'DPC hydraulic bulletins'],
+                [true, true, document.getElementById("wmsurl_lay29").dataset.value, document.getElementById("wmslayer_lay29").dataset.value, 'DPC hydrogeological bulletins'],
+                [true, true, document.getElementById("wmsurl_lay30").dataset.value, document.getElementById("wmslayer_lay30").dataset.value, 'DPC thunderstorms bulletins']
+            ]
+        }
+    ];
+
+    [mapHomeDashboard1, mapHomeDashboard2, mapHomeDashboard3, mapHomeDashboard4] = dashboardConfigs.map(cfg => initWMSMatrixMap(cfg));
         
     /**
      * Configuration for initializing the first WMS map instance (Map C1).
@@ -161,27 +210,62 @@ document.addEventListener("DOMContentLoaded", function () {
         centerLatitude: 43.1357,                  // Initial latitude
         zoomValue: 9,                            // Initial zoom level
         layerMatrix: [                            // Array of WMS layers
-            [true, true, document.getElementById("wmsurl_lay11").dataset.value, document.getElementById("wmslayer_lay11").dataset.value, 'Temperature above ground']
+            [true, true, document.getElementById("wmsurl_lay25").dataset.value, document.getElementById("wmslayer_lay25").dataset.value, 'Heatwave real view'],
+            [true, true, document.getElementById("wmsurl_lay26").dataset.value, document.getElementById("wmslayer_lay26").dataset.value, 'Heatwave roadway view'],
+            [true, true, document.getElementById("wmsurl_lay27").dataset.value, document.getElementById("wmslayer_lay27").dataset.value, 'Heatwave roadway damage view']
         ]
     };
 
     // Initialize the fourth map (C9)
     mapC9 = initWMSMatrixMap(configWMSMatrixMapC9);
-        
-      configWMSMatrixMapC12 = {
+
+   
+       
+   
+
+    configWMSMatrixMapC12 = {
         targetHtmlMapId: 'mapC12',                 // Target HTML element ID
         baseMapName: 'OpenStreetMap - EPSG:3857', // Base map layer name
         centerLongitude: 13.0683,                 // Initial longitude
         centerLatitude: 43.1357,                  // Initial latitude
         zoomValue: 9,                            // Initial zoom level
-        layerMatrix: [                            // Array of WMS layers
-            [true, true, document.getElementById("wmsurl_lay14").dataset.value, document.getElementById("wmslayer_lay14").dataset.value, 'Buildings of Marche region Extreme Precipitation'],
-            [true, true, document.getElementById("wmsurl_lay15").dataset.value, document.getElementById("wmslayer_lay15").dataset.value, 'Buildings of Camerino Extreme Precipitation']
-        ]
+        popupContext: 'extreme-risk',
+        layerMatrix: [
+        [true, true, document.getElementById("wmsurl_lay14").dataset.value, document.getElementById("wmslayer_lay14").dataset.value, 'Buildings of Marche region Extreme Precipitation'],
+        [true, true, document.getElementById("wmsurl_lay15").dataset.value, document.getElementById("wmslayer_lay15").dataset.value, 'Buildings of Camerino Extreme Precipitation'],
+        [true, true, document.getElementById("wmsurl_lay17").dataset.value, document.getElementById("wmslayer_lay17").dataset.value, 'Hazard index 6 classes'],
+        [true, true, document.getElementById("wmsurl_lay18").dataset.value, document.getElementById("wmslayer_lay18").dataset.value, 'Hazard index 3 classes'],
+        [true, true, document.getElementById("wmsurl_lay19").dataset.value, document.getElementById("wmslayer_lay19").dataset.value, 'POI Vulnerability'],
+        [true, true, document.getElementById("wmsurl_lay20").dataset.value, document.getElementById("wmslayer_lay20").dataset.value, 'POI Risk'],
+        [true, true, document.getElementById("wmsurl_lay21").dataset.value, document.getElementById("wmslayer_lay21").dataset.value, 'Camerino Buildings vulnerability'],
+        [true, true, document.getElementById("wmsurl_lay22").dataset.value, document.getElementById("wmslayer_lay22").dataset.value, 'Camerino Buildings risk']
+    ] 
     };
 
     mapC12 = initWMSMatrixMap(configWMSMatrixMapC12);
 
-    
+    configWMSMatrixMapD5 = {
+        targetHtmlMapId: 'mapD5',                 // Target HTML element ID
+        baseMapName: 'OpenStreetMap - EPSG:3857', // Base map layer name
+        centerLongitude: 13.0683,                 // Initial longitude
+        centerLatitude: 43.1357,                  // Initial latitude
+        zoomValue: 9,                            // Initial zoom level
+        popupContext: 'extreme-sim',
+        layerMatrix: [
+        [true, true, document.getElementById("wmsurl_lay24").dataset.value, document.getElementById("wmslayer_lay24").dataset.value, 'Buildings of Marche region Extreme Precipitation'],
+        [true, true, document.getElementById("wmsurl_lay23").dataset.value, document.getElementById("wmslayer_lay23").dataset.value, 'Buildings of Camerino Extreme Precipitation'],
+        [true, true, document.getElementById("wmsurl_lay17").dataset.value, document.getElementById("wmslayer_lay17").dataset.value, 'Hazard index 6 classes'],
+        [true, true, document.getElementById("wmsurl_lay18").dataset.value, document.getElementById("wmslayer_lay18").dataset.value, 'Hazard index 3 classes'],
+        [true, true, document.getElementById("wmsurl_lay19").dataset.value, document.getElementById("wmslayer_lay19").dataset.value, 'POI Vulnerability'],
+        [true, true, document.getElementById("wmsurl_lay20").dataset.value, document.getElementById("wmslayer_lay20").dataset.value, 'POI Risk'],
+        [true, true, document.getElementById("wmsurl_lay21").dataset.value, document.getElementById("wmslayer_lay21").dataset.value, 'Camerino Buildings vulnerability'],
+        [true, true, document.getElementById("wmsurl_lay22").dataset.value, document.getElementById("wmslayer_lay22").dataset.value, 'Camerino Buildings risk']
+    ] 
+    };
+
+    mapD5 = initWMSMatrixMap(configWMSMatrixMapD5);
+
+
+   
 
 });

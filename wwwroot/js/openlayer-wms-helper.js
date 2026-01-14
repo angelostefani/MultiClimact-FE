@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Autore: Angelo Stefani [angelo.stefani@enea.it]
 * Data di creazione: 02/01/2024
 * Ultimo aggiornamento: 16/09/2024
@@ -67,6 +67,7 @@ Flusso Operativo:
  * @param {string} [config.wmsUrl] - URL del servizio WMS per i layer sovrapposti.
  * @param {string} [config.wmsLayer] - Nome del layer WMS.
  * @param {string} [config.legendTitle] - Titolo per la leggenda WMS.
+ * @param {string} [config.popupContext] - Contesto opzionale per personalizzare il popup GetFeatureInfo.
  * 
  * @returns {ol.Map} L'oggetto mappa di OpenLayers inizializzato.
  */
@@ -87,6 +88,11 @@ function initWMSMap(config) {
             zoom: config.zoomValue || 9
         })
     });
+
+    // Tagga la mappa con un contesto opzionale per i popup
+    if (config.popupContext) {
+        localMap.set('popupContext', config.popupContext);
+    }
 
     // Aggiungi il listener per il click sulla mappa
     addMapClickListener(localMap, wmsLayerObj, config.wmsUrl);
@@ -112,6 +118,7 @@ function initWMSMap(config) {
  * @param {number} config.centerLatitude - Latitudine del centro della mappa.
  * @param {number} [config.zoomValue=9] - Livello di zoom iniziale della mappa.
  * @param {Array} config.layerMatrix - Matrice che definisce i layer WMS da aggiungere.
+ * @param {string} [config.popupContext] - Contesto opzionale per personalizzare il popup GetFeatureInfo.
  * 
  * @returns {ol.Map} L'oggetto mappa di OpenLayers inizializzato.
  */
@@ -124,7 +131,13 @@ function initWMSMatrixMap(config) {
     for (let i = 0; i < config.layerMatrix.length; i++) {
         let addLayer = config.layerMatrix[i][0] && config.layerMatrix[i][1]; // TRUE se entrambi sono TRUE
         if (addLayer) {
-            addLayerToMap(layersArray, config.layerMatrix[i][2], config.layerMatrix[i][3], config.layerMatrix[i][5]);
+            addLayerToMap(
+                layersArray,
+                config.layerMatrix[i][2],
+                config.layerMatrix[i][3],
+                config.layerMatrix[i][5],
+                config.layerMatrix[i][6]
+            );
         }
     }
 
@@ -138,6 +151,11 @@ function initWMSMatrixMap(config) {
         })
     });
     
+    // Tagga la mappa con un contesto opzionale per i popup
+    if (config.popupContext) {
+        localMap.set('popupContext', config.popupContext);
+    }
+
     // Aggiungi il listener per le coordinate del mouse
     //addMouseCoordinateListener(localMap);
 
@@ -158,10 +176,16 @@ function initWMSMatrixMap(config) {
  * 
  * @returns {ol.layer.Tile|null} L'oggetto del layer WMS, o null se non aggiunto.
  */
-function addLayerToMap(layersArray, wmsUrl, wmsLayer, env) {
+function addLayerToMap(layersArray, wmsUrl, wmsLayer, env, styles) {
     if (wmsUrl && wmsLayer) {
         // Configura i parametri WMS, aggiungendo 'env' se valorizzato
         let params = { 'LAYERS': wmsLayer, 'TILED': true };
+        if (styles) {
+            params.STYLES = styles;
+        }
+        if (styles) {
+            params.STYLES = styles;
+        }
         if (env) {
             params.ENV = env;
         }
@@ -195,6 +219,9 @@ function addLayerToMap(layersArray, wmsUrl, wmsLayer, env) {
 function toggleLayer(configWMSMatrixMap, layerIndex, map) {
     configWMSMatrixMap.layerMatrix[layerIndex][1] = !configWMSMatrixMap.layerMatrix[layerIndex][1];
     updateMapLayers(configWMSMatrixMap, map);
+    if (typeof refreshLegendsIfOpen === 'function') {
+        refreshLegendsIfOpen();
+    }
 }
 
 /**
@@ -221,6 +248,9 @@ function toggleLayerBlock(configWMSMatrixMap, layerBlockIndex, map, blockSize) {
 
     // Aggiorna la mappa con le nuove impostazioni di visibilità dei layers
     updateMapLayers(configWMSMatrixMap, map);
+    if (typeof refreshLegendsIfOpen === 'function') {
+        refreshLegendsIfOpen();
+    }
 }
 
 /**
@@ -244,6 +274,9 @@ function switchLayer(configWMSMatrixMap, layerIndex, map) {
 
     // Aggiorna i layer nella mappa e le legende
     updateMapLayers(configWMSMatrixMap, map);
+    if (typeof refreshLegendsIfOpen === 'function') {
+        refreshLegendsIfOpen();
+    }
 }
 
 /**
@@ -273,6 +306,9 @@ function switchLayers(configWMSMatrixMap, layersIndex, map, blockSize) {
 
     // Aggiorna la mappa con le nuove impostazioni di visibilità dei layers
     updateMapLayers(configWMSMatrixMap, map);
+    if (typeof refreshLegendsIfOpen === 'function') {
+        refreshLegendsIfOpen();
+    }
 }
 
 /**
@@ -302,11 +338,15 @@ function updateMapLayers(configWMSMatrixMap, map) {
         let wmsUrl = layerConfig[2]; // URL del servizio WMS (GeoServer).
         let wmsLayerName = layerConfig[3]; // Nome del layer WMS
         let legendId = layerConfig[4]; // ID della legenda corrispondente
-        let env = layerConfig[5]; // Parametro env che verrà aggiunto alla richiesta verso geoserver
+        let env = layerConfig[5]; // Parametro env che verrà aggiunto alla richiesta verso geoserver
+        let styles = layerConfig[6]; // Parametro STYLES WMS
 
         // Configura i parametri WMS, aggiungendo 'env' se valorizzato
         let params = { 'LAYERS': wmsLayerName, 'TILED': true };
 
+        if (styles) {
+            params.STYLES = styles;
+        }
         if (env) {
             params.ENV = env;
         }
@@ -335,3 +375,4 @@ function updateMapLayers(configWMSMatrixMap, map) {
         }
     });
 }
+

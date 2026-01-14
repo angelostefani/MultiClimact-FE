@@ -115,7 +115,7 @@
 /* Improve size and spacing of side checkboxes */
 .checkbox-container label {
     display: inline-flex;
-    align-items: center;
+    align-items: flex-start;
     gap: .5rem;
     margin-right: 1rem;
     margin-bottom: .5rem;
@@ -127,7 +127,31 @@
 .checkbox-container input[type="checkbox"] {
     inline-size: 1.15em;
     block-size: 1.15em;
+    width: 18px;
+    height: 18px;
+    min-width: 18px;
+    min-height: 18px;
+    flex-shrink: 0;
+    align-self: flex-start;
     accent-color: #0d6efd; /* Bootstrap primary color */
+}
+
+/* Extreme precipitation layer toggles: keep text size consistent */
+#panelC12 .checkbox-container label {
+    font-size: 1.05rem;
+    font-weight: 600;
+    line-height: 1.25;
+}
+
+#panelC12 .checkbox-container .layer-label {
+    display: inline-block;
+    line-height: 1.25;
+}
+
+/* Keep all Extreme Precipitation checkboxes at the same size */
+#panelC12 .checkbox-container input[type="checkbox"] {
+    inline-size: 1.15em;
+    block-size: 1.15em;
 }
 
 /* When window is narrow (snap to half screen), stack controls below map */
@@ -142,5 +166,45 @@
         width: 100%;
         flex-direction: row;
         flex-wrap: wrap;
+    }
+}
+
+/* Dashboard grid: four tiles */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.dashboard-tile {
+    background: #f8f9fb;
+    border: 1px solid #e1e1e1;
+    border-radius: 8px;
+    padding: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    min-height: 260px;
+}
+
+.dashboard-tile__title {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 6px;
+    color: #1a355b;
+}
+
+.map-container-tile {
+    flex: 1;
+    min-height: 220px;
+    height: 36vh;
+    background-color: #f0f0f0;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+@media (max-width: 1200px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
     }
 }

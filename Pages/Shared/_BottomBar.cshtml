@@ -1,9 +1,8 @@
-﻿<div id="myBottomBar" class="bottom-bar">
+<div id="myBottomBar" class="bottom-bar">
     <div class="bottom-bar-content">
-        <!-- New Earthquake Form -->
-        <form id="earthquakeForm" class="p-3 ms-5" method="GET" action="http://localhost:5022/api/EarthquakeProxy/GetEarthquakes" onsubmit="fetchEarthquakeData(event)">
+        <!-- Hazard Search Form -->
+        <form id="hazardForm" class="p-3 ms-5" method="GET" onsubmit="fetchHazardData(event)">
             <input type="hidden" name="user_id" value="system">
-            <input type="hidden" name="simulated" value="false">
             <div class="form-group">
                 <label for="startDate">Start Date</label>
                 <input type="date" class="form-control" id="startDate" name="start_date" value="2024-10-01" placeholder="2024-10-01">
@@ -14,12 +13,19 @@
             </div>
             <div class="separator"></div>
             <div class="form-group">
-                <label for="minMagnitude">Minimum Magnitude</label>
-                <input type="number" step="0.1" class="form-control" id="minMagnitude" name="min_magnitude" value="1.8" placeholder="1.8">
+                <label for="hazardType">Hazard Type</label>
+                <select class="form-control" id="hazardType" name="hazard_type">
+                    <option value="earthquake" selected>Earthquake</option>
+                    <option value="heatwave">Heatwave</option>
+                    <option value="extremeprecipitation">Extreme precipitation</option>
+                </select>
             </div>
             <div class="form-group">
-                <label for="maxMagnitude">Maximum Magnitude</label>
-                <input type="number" step="0.1" class="form-control" id="maxMagnitude" name="max_magnitude" value="5.0" placeholder="5.0">
+                <label for="simulated">Tipologia evento</label>
+                <select class="form-control" id="simulated" name="simulated">
+                    <option value="false" selected>Reale</option>
+                    <option value="true">Simulazione</option>
+                </select>
             </div>
             <div class="form-group">
                 <label></label>
@@ -27,18 +33,19 @@
             </div>
         </form>
 
-        <!-- Earthquake Results Table -->
-        <div id="earthquakeResults" class="mt-4 ms-5">
+        <!-- Hazard Results Table -->
+        <div id="hazardResults" class="mt-4 ms-5">
             <table class="table table-bordered table-striped">
                 <thead>
                     <tr>
                         <th>Select</th>
                         <th>Date</th>
                         <th>Description</th>
-                        <th>Magnitude</th>
+                        <th id="hazardValueHeader">Value</th>
+                        <th>Hazard</th>
                     </tr>
                 </thead>
-                <tbody id="earthquakeTableBody">
+                <tbody id="hazardTableBody">
                     <!-- Results will be populated here -->
                 </tbody>
             </table>

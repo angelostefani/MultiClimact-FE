@@ -150,7 +150,22 @@ namespace MultiClimact.Pages
                 new { Key = "wmsurl_lay12", Description = "Flood precipitation rate" },
                 new { Key = "wmsurl_lay13", Description = "River Floods risk analisys" },
                 new { Key = "wmsurl_lay14", Description = "POI buildings of Marche region" },
-                new { Key = "wmsurl_lay15", Description = "POI buildings of Camerino" }
+                new { Key = "wmsurl_lay15", Description = "POI buildings of Camerino" },
+                new { Key = "wmsurl_lay16", Description = "River Floods House View" },
+                new { Key = "wmsurl_lay17", Description = "Extreme Precipitation Hazard index 6 classes" },
+                new { Key = "wmsurl_lay18", Description = "Extreme Precipitation Hazard index 3 classes" },
+                new { Key = "wmsurl_lay19", Description = "Extreme Precipitation POI Vulnerability" },
+                new { Key = "wmsurl_lay20", Description = "Extreme Precipitation POI Risk" },
+                new { Key = "wmsurl_lay21", Description = "Extreme Precipitation POI Risk" },
+                new { Key = "wmsurl_lay22", Description = "Extreme Precipitation Building Risk" },
+                new { Key = "wmsurl_lay23", Description = "Building Simulation Layer" },
+                new { Key = "wmsurl_lay24", Description = "POI Precipitation Simulation View" },
+                new { Key = "wmsurl_lay25", Description = "Heatwave real view" },
+                new { Key = "wmsurl_lay26", Description = "Heatwave roadway view" },
+                new { Key = "wmsurl_lay27", Description = "Heatwave roadway damage view" },
+                new { Key = "wmsurl_lay28", Description = "DPC bulletins hydraulic" },
+                new { Key = "wmsurl_lay29", Description = "DPC bulletins hydrogeological" },
+                new { Key = "wmsurl_lay30", Description = "DPC bulletins thunderstorms" }
             };
 
             // Loop through WMS layers and store them in ViewData dynamically

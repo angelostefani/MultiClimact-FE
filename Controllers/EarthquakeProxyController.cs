@@ -202,7 +202,7 @@ namespace MultiClimact.Controllers
                 ["min_magnitude"] = min_magnitude,
                 ["event_date_min"] = start_date,
                 ["event_date_max"] = end_date,
-                ["run_end_max"] = "2025-01-01"
+                ["run_end_max"] = "2026-12-31"
             };
 
             string earthquakeServiceUrl = QueryHelpers.AddQueryString("users/system/earthquakes", query);
@@ -236,7 +236,7 @@ namespace MultiClimact.Controllers
         {
             var query = new Dictionary<string, string?>
             {
-                ["status_str"] = "submitted",
+                ["status_str"] = "completed",
                 ["haztype_id"] = "1"
             };
 

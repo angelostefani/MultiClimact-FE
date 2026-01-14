@@ -11,9 +11,90 @@
 <div class="tab-pane fade" id="panelD4" role="tabpanel" aria-labelledby="tabD4-tab">
     <div id="mapD4" class="map-container"></div>
 </div>
+
 <div class="tab-pane fade" id="panelD5" role="tabpanel" aria-labelledby="tabD5-tab">
-    <div id="mapD5" class="map-container"></div>
+    <div class="map-checkbox-container" id="panelD5-layout">
+
+        <!-- MAPPA (85%) -->
+        <div id="mapD5" class="map-container-85"></div>
+
+        <!-- SIDEBAR (15%) -->
+        <aside class="layer-sidebar">
+            <div class="layer-controls-card layer-controls-card--sidebar">
+                <div class="layer-controls-card__header">
+                    <!-- titolo rimosso -->
+                </div>
+
+                <div class="layer-box">
+                    <div class="layer-box__title">Input</div>
+                    <div class="layer-box__body">
+                        <label class="layer-toggle">
+                            <input type="checkbox" id="checkboxD5_1" checked
+                                onclick="toggleLayerBlock(configWMSMatrixMapD5, 0, mapD5, 1)">
+                            <span class="layer-label">POI buildings</span>
+                        </label>
+
+                        <label class="layer-toggle">
+                            <input type="checkbox" id="checkboxD5_2" checked
+                                onclick="toggleLayerBlock(configWMSMatrixMapD5, 1, mapD5, 1)">
+                            <span class="layer-label">Camerino buildings</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="layer-box">
+                    <div class="layer-box__title">Camerino buildings</div>
+                    <div class="layer-box__body">
+                        <label class="layer-toggle">
+                            <input type="checkbox" id="checkboxD5_7" checked
+                                onclick="toggleLayerBlock(configWMSMatrixMapD5, 6, mapD5, 1)">
+                            <span class="layer-label">Camerino buildings vulnerability</span>
+                        </label>
+
+                        <label class="layer-toggle">
+                            <input type="checkbox" id="checkboxD5_8" checked
+                                onclick="toggleLayerBlock(configWMSMatrixMapD5, 7, mapD5, 1)">
+                            <span class="layer-label">Camerino buildings risk</span>
+                        </label>
+
+                        <label class="layer-toggle">
+                            <input type="checkbox" id="checkboxD5_3" checked
+                                onclick="toggleLayerBlock(configWMSMatrixMapD5, 2, mapD5, 1)">
+                            <span class="layer-label">Hazard index (6 classes)</span>
+                        </label>
+
+                        <label class="layer-toggle">
+                            <input type="checkbox" id="checkboxD5_4" checked
+                                onclick="toggleLayerBlock(configWMSMatrixMapD5, 3, mapD5, 1)">
+                            <span class="layer-label">Hazard index (3 classes)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="layer-box">
+                    <div class="layer-box__title">Points of Interest</div>
+                    <div class="layer-box__body">
+                        <label class="layer-toggle">
+                            <input type="checkbox" id="checkboxD5_5" checked
+                                onclick="toggleLayerBlock(configWMSMatrixMapD5, 4, mapD5, 1)">
+                            <span class="layer-label">POI buildings vulnerability</span>
+                        </label>
+
+                        <label class="layer-toggle">
+                            <input type="checkbox" id="checkboxD5_6" checked
+                                onclick="toggleLayerBlock(configWMSMatrixMapD5, 5, mapD5, 1)">
+                            <span class="layer-label">POI risk</span>
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+        </aside>
+
+    </div>
 </div>
+
+
 <div class="tab-pane fade" id="panelD6" role="tabpanel" aria-labelledby="tabD6-tab">
     <div id="mapD6" class="map-container"></div>
 </div>

@@ -205,6 +205,7 @@ function addMapClickListener(map, wmsLayer, wmsUrl) {
     map.addOverlay(popupOverlay);
 
     map.on('singleclick', async function (evt) {
+        const popupContext = (map && typeof map.get === 'function') ? map.get('popupContext') : null;
         // Determine the target WMS layer name to query
         let layerName = null;
         let valo = "";
@@ -252,8 +253,8 @@ function addMapClickListener(map, wmsLayer, wmsUrl) {
         }
         let bbox = map.getView().calculateExtent();
         const mapSize = map.getSize();
-        const width = mapSize[0];
-        const height = mapSize[1];
+        const width = Math.round(mapSize[0]);
+        const height = Math.round(mapSize[1]);
         let x = Math.round(evt.pixel[0]);
         let y = Math.round(evt.pixel[1]);
         layerName = valo;
@@ -341,6 +342,8 @@ function addMapClickListener(map, wmsLayer, wmsUrl) {
                        * @author Jacopo Orru'
                        */
 
+                   // parsingHtmlGetFeatureInfo(html);
+
                     const doc = new DOMParser().parseFromString(html, 'text/html');
 
                     // 2) Prendi la (prima) tabella featureInfo
@@ -354,7 +357,7 @@ function addMapClickListener(map, wmsLayer, wmsUrl) {
                     const styleHtml = doc.querySelector('style')?.outerHTML || `
                     <style>
                     table.featureInfo, table.featureInfo td, table.featureInfo th {
-                    border:1px solid #ddd; border-collapse:collapse; margin:0; padding:.2em .1em; font-size:90%;
+                    border:1px solid #ddd; border-collapse:collapse; margin:0; padding:.2em .1em; font-size:90%; 
                     }
                     table.featureInfo th { font-weight:bold; background:#eee; padding:.2em .2em; }
                     table.featureInfo td { background:#fff; }
@@ -362,9 +365,38 @@ function addMapClickListener(map, wmsLayer, wmsUrl) {
                     table.featureInfo caption { text-align:left; font-size:100%; font-weight:bold; padding:.2em .2em; }
                     </style>`;
 
+
                     //prendo il nome del layer 
-                    const fromCaption = table.querySelector('caption')?.textContent?.trim();
-                    let layer = fromCaption;
+                    const normalizeBaseLayer = (name) => {
+                        const clean = (name || '').replace(/['"]/g, '').trim().toLowerCase();
+                        const base = clean.includes(':') ? clean.split(':').pop() : clean;
+                        return base;
+                    };
+                    const isPoiLayer = (base) => base === 'poi_prec_sim_view' || (base.includes('poi') && base.includes('prec'));
+                    const isBuildingLayer = (base) => base === 'building_sim';
+
+                    // nome layer da caption e da parametro
+                    const fromCaption = table.querySelectorAll('caption')?.textContent?.trim() || '';
+                    console.log("caption presa dal parsing", fromCaption);
+                    const captionBase = normalizeBaseLayer(fromCaption);
+
+                    const layerCandidates = (layerName || '').split(',').map(l => l.trim()).filter(Boolean);
+                    const preferred = layerCandidates.find(l => {
+                        const base = normalizeBaseLayer(l);
+                        return isPoiLayer(base) || isBuildingLayer(base);
+                    });
+
+                    let effectiveLayerName = null;
+                    if (isPoiLayer(captionBase) || isBuildingLayer(captionBase)) {
+                        effectiveLayerName = fromCaption;
+                    } else if (preferred) {
+                        effectiveLayerName = preferred;
+                    } else {
+                        effectiveLayerName = (layerName || '').split(',')[0].trim();
+                    }
+
+                    const layer = effectiveLayerName;
+                    const normalizedLayer = normalizeBaseLayer(layer);
                     console.log("nome del layer preso dal parsing", layer);
 
                     // header & righe
@@ -405,8 +437,11 @@ function addMapClickListener(map, wmsLayer, wmsUrl) {
                     // mappa per i click (id -> true), serve solo per validare l'id
                     const idSet = new Set();
 
+                    const baseLayerName = normalizedLayer;
+                    const isPoiPrec = baseLayerName === 'poi_prec_sim_view';
+                    const isBuilding = baseLayerName === 'building_sim';
 
-                    if (layer != null && layer.trim().toLowerCase() === "poi_prec") {
+                    if (isPoiPrec) {
                         ensureActionsHeader();
                         rows.forEach((tr) => {
                             const id = getRowId(tr);
@@ -427,7 +462,7 @@ function addMapClickListener(map, wmsLayer, wmsUrl) {
                         popupElement.style.display = 'block';
                         popupOverlay.setPosition(evt.coordinate);
 
-                    } else if (layer != null && layer.trim().toLowerCase() === "building") {
+                    } else if (isBuilding) {
                         ensureActionsHeader();
                         rows.forEach((tr) => {
                             const id = getRowId(tr);
@@ -481,4 +516,56 @@ function addMapClickListener(map, wmsLayer, wmsUrl) {
             console.error("Le coordinate del punto cliccato sono fuori dal range accettabile.");
         }
     });
+
+/** 
+    function parsingHtmlGetFeatureInfo(html) {
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        // 1) parole chiave ammesse (caption)
+        const allowedExact = new Set(["poi_prec", "poi prec"]); // gestisco anche eventuale spazio
+        const allowedContains = ["building"]; // se vuoi "building" come "contiene"
+
+        // 2) prendo tutte le tabelle featureInfo e filtro per caption
+        const targetTables = Array.from(document.querySelectorAll("table.featureInfo"))
+            .filter(table => {
+                const caption = table.querySelector("caption")?.textContent?.trim().toLowerCase() ?? "";
+                const isExact = allowedExact.has(caption);
+                const isContains = allowedContains.some(k => caption.includes(k));
+                return isExact || isContains;
+            });
+   
+
+        // 3) per ogni tabella target aggiungo colonna + bottone in ogni riga dati
+        for (const table of targetTables) {
+            // aggiungo un header "Azione" (opzionale)
+            const headerRow = table.querySelector("tr");
+            if (headerRow && headerRow.querySelectorAll("th").length > 0) {
+                const th = document.createElement("th");
+                th.textContent = "Azione";
+                headerRow.appendChild(th);
+            }
+
+            // righe dati: quelle con almeno un <td>
+            const dataRows = Array.from(table.querySelectorAll("tr"))
+                .filter(tr => tr.querySelectorAll("td").length > 0);
+
+            for (const tr of dataRows) {
+                const td = document.createElement("td");
+                const btn = document.createElement("button");
+                btn.type = "button";
+                btn.textContent = "Dettagli";
+
+                // esempio: recupero il fid della riga (prima cella)
+                btn.addEventListener("click", () => {
+                    const fid = tr.querySelector("td")?.textContent?.trim();
+                    console.log("Clicked row fid:", fid);
+                    // qui fai quello che ti serve (aprire modal, chiamare API, ecc.)
+                });
+
+                td.appendChild(btn);
+                tr.appendChild(td);
+            }
+        }
+        console.log("Html dopo il parsing per GetFeatureInfo:", doc.documentElement.outerHTML);
+    }
+   */
 }

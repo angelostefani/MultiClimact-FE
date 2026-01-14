@@ -1,9 +1,9 @@
-﻿<!-- TAB PANELS GROUP MENU C -->
+<!-- TAB PANELS GROUP MENU C -->
 <div class="tab-pane fade" id="panelC1" role="tabpanel" aria-labelledby="tabC1-tab">
     <div id="mapC1" class="map-container"></div>
 </div>
 <div class="tab-pane fade" id="panelC2" role="tabpanel" aria-labelledby="tabC2-tab">
-    <div class="map-radio-container">
+    <div class="map-radio-container" id="panelC9-layout">
         <!-- Mappa -->
         <div id="mapC2" class="map-container-85"></div>
 
@@ -188,21 +188,87 @@
 
 
 <div class="tab-pane fade" id="panelC12" role="tabpanel" aria-labelledby="tabC12-tab">
-     <div class="map-radio-container">
-        <div id="mapC12" class="map-container-85"></div>
-        <!-- Checkbox accanto alla mappa -->
-        <div class="checkbox-container">
-            <label>
-                <input type="checkbox" id="checkboxC12_1" checked
-                    onclick="toggleLayerBlock(configWMSMatrixMapC12, 0, mapC12, 1)"> Residential buildings of Marche
-                Region
-            </label><br>
-            <label>
-                <input type="checkbox" id="checkboxC12_2" checked
-                    onclick="toggleLayerBlock(configWMSMatrixMapC12, 1, mapC12, 1)"> Camerino buildings
-            </label><br>
+
+  <div class="map-checkbox-container" id="panelC12-layout">
+
+    <!-- MAPPA (85%) -->
+    <div id="mapC12" class="map-container-85"></div>
+
+    <!-- SIDEBAR (15%) -->
+    <aside class="layer-sidebar">
+      <div class="layer-controls-card layer-controls-card--sidebar">
+        <div class="layer-controls-card__header">
+          <!-- titolo rimosso -->
         </div>
-    </div>
+
+        <div class="layer-box">
+          <div class="layer-box__title">Input</div>
+          <div class="layer-box__body">
+            <label class="layer-toggle">
+              <input type="checkbox" id="checkboxC12_1" checked
+                onclick="toggleLayerBlock(configWMSMatrixMapC12, 0, mapC12, 1)">
+              <span class="layer-label">POI building</span>
+            </label>
+
+            <label class="layer-toggle">
+              <input type="checkbox" id="checkboxC12_2" checked
+                onclick="toggleLayerBlock(configWMSMatrixMapC12, 1, mapC12, 1)">
+              <span class="layer-label">Camerino building</span>
+            </label>
+
+            <label class="layer-toggle">
+              <input type="checkbox" id="checkboxC12_3" checked
+                onclick="toggleLayerBlock(configWMSMatrixMapC12, 2, mapC12, 1)">
+              <span class="layer-label">Hazard index (6 classes)</span>
+            </label>
+
+            <label class="layer-toggle">
+              <input type="checkbox" id="checkboxC12_4" checked
+                onclick="toggleLayerBlock(configWMSMatrixMapC12, 3, mapC12, 1)">
+              <span class="layer-label">Hazard index (3 classes)</span>
+            </label>
+
+          </div>
+        </div>
+
+        <div class="layer-box">
+          <div class="layer-box__title">Camerino building</div>
+          <div class="layer-box__body">
+            <label class="layer-toggle">
+              <input type="checkbox" id="checkboxC12_7" checked
+                onclick="toggleLayerBlock(configWMSMatrixMapC12, 6, mapC12, 1)">
+              <span class="layer-label">Camerino building vulnerability</span>
+            </label>
+
+            <label class="layer-toggle">
+              <input type="checkbox" id="checkboxC12_8" checked
+                onclick="toggleLayerBlock(configWMSMatrixMapC12, 7, mapC12, 1)">
+              <span class="layer-label">Camerino building risk</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="layer-box">
+          <div class="layer-box__title">Points of Interest</div>
+          <div class="layer-box__body">
+            <label class="layer-toggle">
+              <input type="checkbox" id="checkboxC12_5" checked
+                onclick="toggleLayerBlock(configWMSMatrixMapC12, 4, mapC12, 1)">
+              <span class="layer-label">POI building vulnerability</span>
+            </label>
+
+            <label class="layer-toggle">
+              <input type="checkbox" id="checkboxC12_6" checked
+                onclick="toggleLayerBlock(configWMSMatrixMapC12, 5, mapC12, 1)">
+              <span class="layer-label">POI building risk</span>
+            </label>
+          </div>
+        </div>
+
+      </div>
+    </aside>
+
+  </div>
 </div>
 
 
@@ -221,11 +287,51 @@ Accorpati nei tab C5 e C6 sempre dopo la modifica del file Excel!
 <div class="tab-pane fade" id="panelC8" role="tabpanel" aria-labelledby="tabC8-tab">
     <div id="mapC8" class="map-container"></div>
 </div>
---->
+-->
 
 
 <div class="tab-pane fade" id="panelC9" role="tabpanel" aria-labelledby="tabC9-tab">
-    <div id="mapC9" class="map-container"></div>
+    <div class="map-checkbox-container" id="panelC9-layout">
+
+        <!-- MAPPA (85%) -->
+        <div id="mapC9" class="map-container-85"></div>
+
+        <!-- SIDEBAR (15%) -->
+        <aside class="layer-sidebar">
+            <div class="layer-controls-card layer-controls-card--sidebar">
+                <div class="layer-controls-card__header">
+                    <!-- titolo rimosso -->
+                </div>
+
+                <div class="layer-box">
+                    <div class="layer-box__title">Input</div>
+                    <div class="layer-box__body">
+                        <label class="layer-toggle">
+                            <input type="checkbox" id="checkboxC9_1" checked
+                                onclick="toggleLayerBlock(configWMSMatrixMapC9, 0, mapC9, 1)">
+                            <span class="layer-label">Daily max temperature</span>
+                        </label>
+                        <label class="layer-toggle">
+                            <input type="checkbox" id="checkboxC9_2" checked
+                                onclick="toggleLayerBlock(configWMSMatrixMapC9, 1, mapC9, 1)">
+                            <span class="layer-label">Roadway (PG)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="layer-box">
+                    <div class="layer-box__title">Points of Interest</div>
+                    <div class="layer-box__body">
+                        <label class="layer-toggle">
+                            <input type="checkbox" id="checkboxC9_3" checked
+                                onclick="toggleLayerBlock(configWMSMatrixMapC9, 2, mapC9, 1)">
+                            <span class="layer-label">Roadway Risk (Tpav)</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
 </div>
 <!--
 <div class="tab-pane fade" id="panelC10" role="tabpanel" aria-labelledby="tabC10-tab">
@@ -234,4 +340,4 @@ Accorpati nei tab C5 e C6 sempre dopo la modifica del file Excel!
 <div class="tab-pane fade" id="panelC11" role="tabpanel" aria-labelledby="tabC11-tab">
     <div id="mapC11" class="map-container"></div>
 </div>
---->
+-->

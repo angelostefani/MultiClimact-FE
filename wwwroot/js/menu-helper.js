@@ -10,7 +10,7 @@
 */
 
 // Variabile per tracciare la scheda attiva
-let activeTab = 'tabB1-tab';
+let activeTab = 'tabB0-tab';
 
 /**
  * Funzione per cambiare il layer della mappa di base.
@@ -34,30 +34,33 @@ function changeMap(baseMapName, activeTab) {
     }
 }
 
+// Mappa tab -> ID variabile della mappa per evitare ReferenceError se alcune mappe non sono definite
+const tabToMapId = {
+    'tabB0-tab': 'mapHomeDashboard1',
+    'tabB1-tab': 'mapB1', 'tabB2-tab': 'mapB2', 'tabB3-tab': 'mapB3', 'tabB4-tab': 'mapB4',
+    'tabB5-tab': 'mapB5', 'tabB6-tab': 'mapB6', 'tabB7-tab': 'mapB7', 'tabB8-tab': 'mapB8',
+    'tabB9-tab': 'mapB9', 'tabB10-tab': 'mapB10', 'tabB11-tab': 'mapB11', 'tabB12-tab': 'mapB12',
+    'tabB13-tab': 'mapB13', 'tabB14-tab': 'mapB14', 'tabB15-tab': 'mapB15', 'tabB16-tab': 'mapB16',
+    'tabB17-tab': 'mapB17', 'tabB18-tab': 'mapB18',
+    'tabC1-tab': 'mapC1', 'tabC2-tab': 'mapC2', 'tabC3-tab': 'mapC3', 'tabC4-tab': 'mapC4',
+    'tabC5-tab': 'mapC5', 'tabC6-tab': 'mapC6', 'tabC7-tab': 'mapC7', 'tabC8-tab': 'mapC8',
+    'tabC9-tab': 'mapC9', 'tabC10-tab': 'mapC10', 'tabC11-tab': 'mapC11', 'tabC12-tab': 'mapC12', 'tabC13-tab': 'mapC13',
+    'tabD1-tab': 'mapD1', 'tabD2-tab': 'mapD2', 'tabD3-tab': 'mapD3', 'tabD4-tab': 'mapD4',
+    'tabD5-tab': 'mapD5', 'tabD6-tab': 'mapD6', 'tabD7-tab': 'mapD7', 'tabD8-tab': 'mapD8',
+    'tabD9-tab': 'mapD9', 'tabD10-tab': 'mapD10', 'tabD11-tab': 'mapD11', 'tabD12-tab': 'mapD12',
+    'tabD13-tab': 'mapD13'
+};
+
 /**
  * Funzione che restituisce la mappa OpenLayers associata alla scheda attiva.
  *
  * @param {string} activeTab - ID della scheda attiva.
  *
- * @returns {ol.Map} La mappa OpenLayers corrispondente alla scheda attiva.
+ * @returns {ol.Map|null} La mappa OpenLayers corrispondente alla scheda attiva.
  */
 function getMapFromActiveTab(activeTab) {
-    const mapTabs = {
-        'tabB1-tab': mapB1, 'tabB2-tab': mapB2, 'tabB3-tab': mapB3, 'tabB4-tab': mapB4, 
-        'tabB5-tab': mapB5, 'tabB6-tab': mapB6, 'tabB7-tab': mapB7, 'tabB8-tab': mapB8,
-        'tabB9-tab': mapB9, 'tabB10-tab': mapB10, 'tabB11-tab': mapB11, 'tabB12-tab': mapB12, 
-        'tabB13-tab': mapB13, 'tabB14-tab': mapB14, 'tabB15-tab': mapB15, 'tabB16-tab': mapB16,
-        'tabB17-tab': mapB17, 'tabB18-tab': mapB18, 
-        'tabC1-tab': mapC1, 'tabC2-tab': mapC2, 'tabC3-tab': mapC3, 'tabC4-tab': mapC4, 
-        'tabC5-tab': mapC5, 'tabC6-tab': mapC6, 'tabC7-tab': mapC7, 'tabC8-tab': mapC8, 
-        'tabC9-tab': mapC9, 'tabC10-tab': mapC10, 'tabC11-tab': mapC11, 'tabC12-tab': mapC12, 'tabC13-tab': mapC13,
-        'tabD1-tab': mapD1, 'tabD2-tab': mapD2, 'tabD3-tab': mapD3, 'tabD4-tab': mapD4, 
-        'tabD5-tab': mapD5, 'tabD6-tab': mapD6, 'tabD7-tab': mapD7, 'tabD8-tab': mapD8, 
-        'tabD9-tab': mapD9, 'tabD10-tab': mapD10, 'tabD11-tab': mapD11, 'tabD12-tab': mapD12,
-        'tabD13-tab': mapD13          
-    };
-
-    return mapTabs[activeTab] || mapA1;
+    const mapId = tabToMapId[activeTab] || 'mapA1';
+    return typeof window !== 'undefined' ? window[mapId] || null : null;
 }
 
 /**
@@ -90,6 +93,7 @@ function initTabs() {
     // Array di tutti gli ID delle schede
     const tabIds = [
         '#tabA1-tab',  
+        '#tabB0-tab',
         '#tabB1-tab', '#tabB2-tab', '#tabB3-tab', '#tabB4-tab', 
         '#tabB5-tab', '#tabB6-tab', '#tabB7-tab', '#tabB8-tab', 
         '#tabB9-tab', '#tabB10-tab', '#tabB11-tab', '#tabB12-tab', 
@@ -111,7 +115,7 @@ function initTabs() {
     });
 
     // Imposta la scheda attiva di default
-    activeTab = 'tabC1-tab';
+    activeTab = 'tabB0-tab';
 }
 
 /**
@@ -132,6 +136,7 @@ function tabManager() {
     // Definisce un array di ID delle schede per l'iterazione
     const tabIds = [
         'tabA1-tab', 
+        'tabB0-tab',
         'tabB1-tab', 'tabB2-tab', 'tabB3-tab', 'tabB4-tab', 
         'tabB5-tab', 'tabB6-tab', 'tabB7-tab', 'tabB8-tab', 
         'tabB9-tab', 'tabB10-tab', 'tabB11-tab', 'tabB12-tab', 
@@ -177,98 +182,104 @@ function selectTab(selectedItem) {
             activeTab: 'tabA1-tab',
             activePanel: 'panelA1'
         },
+        // Dashboard (B0)
+        'tabB0-tab': {
+            tabsToShow: ['tabB0-tab', 'tabB1-tab', 'tabB2-tab', 'tabB3-tab', 'tabB4-tab'],
+            activeTab: 'tabB0-tab',
+            activePanel: 'panelB0'
+        },
         // Gruppo B1
         'tabB1-tab': {
-            tabsToShow: ['tabB1-tab', 'tabB2-tab', 'tabB3-tab', 'tabB4-tab'],
+            tabsToShow: ['tabB0-tab', 'tabB1-tab', 'tabB2-tab', 'tabB3-tab', 'tabB4-tab'],
             activeTab: 'tabB1-tab',
             activePanel: 'panelB1'
         },
         'tabB2-tab': {
-            tabsToShow: ['tabB1-tab', 'tabB2-tab', 'tabB3-tab', 'tabB4-tab'],
+            tabsToShow: ['tabB0-tab', 'tabB1-tab', 'tabB2-tab', 'tabB3-tab', 'tabB4-tab'],
             activeTab: 'tabB2-tab',
             activePanel: 'panelB2'
         },
         'tabB3-tab': {
-            tabsToShow: ['tabB1-tab', 'tabB2-tab', 'tabB3-tab', 'tabB4-tab'],
+            tabsToShow: ['tabB0-tab', 'tabB1-tab', 'tabB2-tab', 'tabB3-tab', 'tabB4-tab'],
             activeTab: 'tabB3-tab',
             activePanel: 'panelB3'
         },
         'tabB4-tab': {
-            tabsToShow: ['tabB1-tab', 'tabB2-tab', 'tabB3-tab', 'tabB4-tab'],
+            tabsToShow: ['tabB0-tab', 'tabB1-tab', 'tabB2-tab', 'tabB3-tab', 'tabB4-tab'],
             activeTab: 'tabB4-tab',
             activePanel: 'panelB4'
         },
         // Gruppo B2
         'tabB5-tab': {
-            tabsToShow: ['tabB5-tab', 'tabB6-tab', 'tabB7-tab', 'tabB8-tab'],
+            tabsToShow: ['tabB0-tab', 'tabB5-tab', 'tabB6-tab', 'tabB7-tab', 'tabB8-tab'],
             activeTab: 'tabB5-tab',
             activePanel: 'panelB5'
         },
         'tabB6-tab': {
-            tabsToShow: ['tabB5-tab', 'tabB6-tab', 'tabB7-tab', 'tabB8-tab'],
+            tabsToShow: ['tabB0-tab', 'tabB5-tab', 'tabB6-tab', 'tabB7-tab', 'tabB8-tab'],
             activeTab: 'tabB6-tab',
             activePanel: 'panelB6'
         },
         'tabB7-tab': {
-            tabsToShow: ['tabB5-tab', 'tabB6-tab', 'tabB7-tab', 'tabB8-tab'],
+            tabsToShow: ['tabB0-tab', 'tabB5-tab', 'tabB6-tab', 'tabB7-tab', 'tabB8-tab'],
             activeTab: 'tabB7-tab',
             activePanel: 'panelB7'
         },
         'tabB8-tab': {
-            tabsToShow: ['tabB5-tab', 'tabB6-tab', 'tabB7-tab', 'tabB8-tab'],
+            tabsToShow: ['tabB0-tab', 'tabB5-tab', 'tabB6-tab', 'tabB7-tab', 'tabB8-tab'],
             activeTab: 'tabB8-tab',
             activePanel: 'panelB8'
         },
         // Gruppo B3
         'tabB9-tab': {
-            tabsToShow: ['tabB9-tab', 'tabB10-tab', 'tabB11-tab'],
+            tabsToShow: ['tabB0-tab', 'tabB9-tab', 'tabB10-tab', 'tabB11-tab'],
             activeTab: 'tabB9-tab',
             activePanel: 'panelB9'
         },
         'tabB10-tab': {
-            tabsToShow: ['tabB9-tab', 'tabB10-tab', 'tabB11-tab'],
+            tabsToShow: ['tabB0-tab', 'tabB9-tab', 'tabB10-tab', 'tabB11-tab'],
             activeTab: 'tabB10-tab',
             activePanel: 'panelB10'
         },
         'tabB11-tab': {
-            tabsToShow: ['tabB9-tab', 'tabB10-tab', 'tabB11-tab'],
+            tabsToShow: ['tabB0-tab', 'tabB9-tab', 'tabB10-tab', 'tabB11-tab'],
             activeTab: 'tabB11-tab',
             activePanel: 'panelB11'
         },
         // Gruppo B4
         'tabB12-tab': {
-            tabsToShow: ['tabB12-tab', 'tabB13-tab', 'tabB14-tab', 'tabB15-tab', 'tabB16-tab'],
+            tabsToShow: ['tabB0-tab', 'tabB12-tab', 'tabB13-tab', 'tabB14-tab', 'tabB15-tab', 'tabB16-tab'],
             activeTab: 'tabB12-tab',
             activePanel: 'panelB12'
         },
         'tabB13-tab': {
-            tabsToShow: ['tabB12-tab', 'tabB13-tab', 'tabB14-tab', 'tabB15-tab', 'tabB16-tab'],
+            tabsToShow: ['tabB0-tab', 'tabB12-tab', 'tabB13-tab', 'tabB14-tab', 'tabB15-tab', 'tabB16-tab'],
             activeTab: 'tabB13-tab',
             activePanel: 'panelB13'
         },
         'tabB14-tab': {
-            tabsToShow: ['tabB12-tab', 'tabB13-tab', 'tabB14-tab', 'tabB15-tab', 'tabB16-tab'],
+            tabsToShow: ['tabB0-tab', 'tabB12-tab', 'tabB13-tab', 'tabB14-tab', 'tabB15-tab', 'tabB16-tab'],
             activeTab: 'tabB14-tab',
             activePanel: 'panelB14'
         },
         'tabB15-tab': {
-            tabsToShow: ['tabB12-tab', 'tabB13-tab', 'tabB14-tab', 'tabB15-tab', 'tabB16-tab'],
+            tabsToShow: ['tabB0-tab', 'tabB12-tab', 'tabB13-tab', 'tabB14-tab', 'tabB15-tab', 'tabB16-tab'],
             activeTab: 'tabB15-tab',
             activePanel: 'panelB15'
         },
         'tabB16-tab': {
-            tabsToShow: ['tabB12-tab', 'tabB13-tab', 'tabB14-tab', 'tabB15-tab', 'tabB16-tab'],
+            tabsToShow: ['tabB0-tab', 'tabB12-tab', 'tabB13-tab', 'tabB14-tab', 'tabB15-tab', 'tabB16-tab'],
             activeTab: 'tabB16-tab',
             activePanel: 'panelB16'
         },
         // Gruppo B5
         'tabB17-tab': {
-            tabsToShow: ['tabB17-tab', 'tabB18-tab'],
+            tabsToShow: ['tabB0-tab', 'tabB17-tab', 'tabB18-tab'],
             activeTab: 'tabB17-tab',
             activePanel: 'panelB17'
         },
         'tabB18-tab': {
-            tabsToShow: ['tabB17-tab', 'tabB18-tab'],
+            tabsToShow: ['tabB0-tab', 'tabB17-tab', 'tabB18-tab'],
             activeTab: 'tabB18-tab',
             activePanel: 'panelB18'
         },
@@ -440,6 +451,15 @@ function selectTab(selectedItem) {
         $(`#${group.activeTab}`).addClass('show active');
         $(`#${group.activePanel}`).addClass('show active');
 
+        // Forza il resize della mappa appena mostrata (OpenLayers)
+        const mapToResize = getMapFromActiveTab(group.activeTab);
+        if (mapToResize && typeof mapToResize.updateSize === 'function') {
+            setTimeout(() => mapToResize.updateSize(), 0);
+        }
+        if (group.activeTab === 'tabB0-tab') {
+            updateDashboardMaps();
+        }
+
         disableVerticalScrollBar();
         activeTab = group.activeTab;
     }
@@ -477,4 +497,32 @@ function setupDropdownMenuHandler(dropdownItemSelector, dropdownMenuSelector) {
     });
 }
 
+/**
+ * Show the dashboard tab and set breadcrumb (defaults to Home).
+ * @param {string} [section] Optional section name to show in breadcrumb.
+ * @param {string} [subSection] Optional sub section name to show in breadcrumb.
+ */
+function showHomeDashboard(section, subSection) {
+    selectTab('tabB0-tab');
+    if (section && subSection) {
+        $('#breadcrumb').html(`
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item"><a href="#">${section}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">${subSection}</li>
+        `);
+    } else {
+        $('#breadcrumb').html('<li class="breadcrumb-item"><a href="#">Home</a></li>');
+    }
+    updateDashboardMaps();
+}
 
+/**
+ * Force resize on all dashboard maps (quad view).
+ */
+function updateDashboardMaps() {
+    [mapHomeDashboard1, mapHomeDashboard2, mapHomeDashboard3, mapHomeDashboard4].forEach(mapInstance => {
+        if (mapInstance && typeof mapInstance.updateSize === 'function') {
+            setTimeout(() => mapInstance.updateSize(), 0);
+        }
+    });
+}
