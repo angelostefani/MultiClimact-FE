@@ -15,8 +15,6 @@ let activeRiskRunID = '';
 const hazardConfig = {
     earthquake: {
         endpoint: '/api/EarthquakeProxy/GetEarthquakes',
-        valueField: 'magnitude',
-        valueLabel: 'Magnitude',
         extraParams: {
             min_magnitude: '0',
             max_magnitude: '10'
@@ -24,13 +22,9 @@ const hazardConfig = {
     },
     heatwave: {
         endpoint: '/api/HeatwaveProxy/GetHeatwaves',
-        valueField: 'temperature',
-        valueLabel: 'Temperature'
     },
     extremeprecipitation: {
-        endpoint: '/api/ExtremeprecipitationProxy/GetExtremeprecipitations',
-        valueField: 'precipitation',
-        valueLabel: 'Precipitation'
+        endpoint: '/api/ExtremeprecipitationProxy/GetExtremeprecipitations'
     }
 };
 
@@ -47,11 +41,7 @@ function formatHazardLabel(hazardKey) {
 
 function populateHazardTable(data, config, hazardKey) {
     const tableBody = document.getElementById('hazardTableBody');
-    const valueHeader = document.getElementById('hazardValueHeader');
     tableBody.innerHTML = '';
-    if (valueHeader) {
-        valueHeader.textContent = config.valueLabel || 'Value';
-    }
 
     if (Array.isArray(data)) {
         data.forEach((item, index) => {
@@ -84,10 +74,6 @@ function populateHazardTable(data, config, hazardKey) {
             const descriptionCell = document.createElement('td');
             descriptionCell.textContent = item.description || 'N/A';
 
-            const valueCell = document.createElement('td');
-            const valueField = config.valueField;
-            valueCell.textContent = item[valueField] ?? 'N/A';
-
             const hazardCell = document.createElement('td');
             hazardCell.textContent = formatHazardLabel(hazardKey);
 
@@ -99,7 +85,6 @@ function populateHazardTable(data, config, hazardKey) {
             row.appendChild(selectCell);
             row.appendChild(dateCell);
             row.appendChild(descriptionCell);
-            row.appendChild(valueCell);
             row.appendChild(hazardCell);
             row.appendChild(hiddenField);
             tableBody.appendChild(row);
@@ -107,7 +92,7 @@ function populateHazardTable(data, config, hazardKey) {
     } else {
         const row = document.createElement('tr');
         const noDataCell = document.createElement('td');
-        noDataCell.setAttribute('colspan', 5);
+        noDataCell.setAttribute('colspan', 4);
         noDataCell.textContent = 'No data available';
         row.appendChild(noDataCell);
         tableBody.appendChild(row);

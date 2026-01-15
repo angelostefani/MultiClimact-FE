@@ -9,11 +9,11 @@
             </div>
             <div class="form-group">
                 <label for="endDate">End Date</label>
-                <input type="date" class="form-control" id="endDate" name="end_date" value="2025-10-01" placeholder="2025-10-01">
+                <input type="date" class="form-control" id="endDate" name="end_date" value="2026-01-15" placeholder="2026-01-15">
             </div>
             <div class="separator"></div>
             <div class="form-group">
-                <label for="hazardType">Hazard Type</label>
+                <label for="hazardType">Hazard</label>
                 <select class="form-control" id="hazardType" name="hazard_type">
                     <option value="earthquake" selected>Earthquake</option>
                     <option value="heatwave">Heatwave</option>
@@ -21,10 +21,10 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="simulated">Tipologia evento</label>
+                <label for="simulated">Event source</label>
                 <select class="form-control" id="simulated" name="simulated">
-                    <option value="false" selected>Reale</option>
-                    <option value="true">Simulazione</option>
+                    <option value="false" selected>Observed</option>
+                    <option value="true">Simulated</option>
                 </select>
             </div>
             <div class="form-group">
@@ -39,9 +39,8 @@
                 <thead>
                     <tr>
                         <th>Select</th>
-                        <th>Date</th>
+                        <th>Occurrence Time</th>
                         <th>Description</th>
-                        <th id="hazardValueHeader">Value</th>
                         <th>Hazard</th>
                     </tr>
                 </thead>

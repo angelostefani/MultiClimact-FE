@@ -28,17 +28,17 @@ namespace MultiClimact.Controllers
             [FromQuery] string user_id,
             [FromQuery] string start_date,
             [FromQuery] string end_date,
-            [FromQuery] string min_precipitation,
-            [FromQuery] string max_precipitation,
             [FromQuery] bool simulated)
         {
             var query = new Dictionary<string, string?>
             {
-                ["status_str"] = "completed",
-                ["haztype_id"] = "4"
+                ["start_date"] = start_date,
+                ["end_date"] = end_date,
+                ["haztype_id"] = "4",
+                ["simulated"] = simulated.ToString().ToLower()
             };
 
-            string serviceUrl = QueryHelpers.AddQueryString("users/system/extremeprecipitations", query);
+            string serviceUrl = QueryHelpers.AddQueryString("users/system/runs", query);
 
             _logger.LogInformation("Requesting Extremeprecipitation Service URL: {serviceUrl}", serviceUrl);
 

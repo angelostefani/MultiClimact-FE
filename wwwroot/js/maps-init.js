@@ -59,9 +59,7 @@ document.addEventListener("DOMContentLoaded", function () {
             ...dashboardBaseConfig,
             targetHtmlMapId: 'mapHomeDashboard4',
             layerMatrix: [
-                [true, true, document.getElementById("wmsurl_lay28").dataset.value, document.getElementById("wmslayer_lay28").dataset.value, 'DPC hydraulic bulletins'],
-                [true, true, document.getElementById("wmsurl_lay29").dataset.value, document.getElementById("wmslayer_lay29").dataset.value, 'DPC hydrogeological bulletins'],
-                [true, true, document.getElementById("wmsurl_lay30").dataset.value, document.getElementById("wmslayer_lay30").dataset.value, 'DPC thunderstorms bulletins']
+                [true, true, document.getElementById("wmsurl_lay00").dataset.value, document.getElementById("wmslayer_lay00").dataset.value, 'Latest Earthquakes']
             ]
         }
     ];
