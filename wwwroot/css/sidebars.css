@@ -28,10 +28,11 @@
 /* Fixed sidebar style */
 .fixed-sidebar {
     position: fixed;
-    top: 0;
+    top: var(--mc-header-h);
+    bottom: auto;
     right: 0;
-    width: 40px;
-    height: 100%;
+    width: 12px;
+    height: calc(100vh - var(--mc-header-h) - var(--mc-footer-h));
     background-color: #f8f9fa;
     box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
     z-index: 1000;
@@ -39,7 +40,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background-color 0.3s, box-shadow 0.3s;
+    transition: width 0.2s ease, background-color 0.3s, box-shadow 0.3s;
 }
 
     /* Highlighted state for fixed sidebar */
@@ -50,6 +51,22 @@
 
 /* Respect fixed header space and avoid overflow */
 .fixed-sidebar {
-    padding-top: var(--mc-header-h);
-    max-height: calc(100vh - var(--mc-header-h));
+    padding-top: 0;
+    max-height: none;
+}
+
+/* Hover expand: keep it minimal until the user wants it */
+.fixed-sidebar:hover {
+    width: 40px;
+}
+
+.fixed-sidebar .icon-container {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+}
+
+.fixed-sidebar:hover .icon-container {
+    opacity: 1;
+    pointer-events: auto;
 }

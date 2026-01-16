@@ -46,6 +46,12 @@
                                 onclick="toggleLayerBlock(configWMSMatrixMapC2, 3, mapC2, 5)">
                             <span class="layer-label">Damage Probability</span>
                         </label>
+
+                        <label class="layer-toggle">
+                            <input type="checkbox" id="checkboxC2_5" checked
+                                onclick="toggleLayerBlock(configWMSMatrixMapC2, 4, mapC2, 5)">
+                            <span class="layer-label">Shakemap</span>
+                        </label>
                     </div>
                 </div>
             </div>
@@ -77,29 +83,47 @@
 </div>
 
 <div class="tab-pane fade" id="panelC3" role="tabpanel" aria-labelledby="tabC3-tab">
-    <div class="map-radio-container">
-        <!-- Mappa -->
+    <div class="map-checkbox-container" id="panelC3-layout">
+        <!-- MAPPA (85%) -->
         <div id="mapC3" class="map-container-85"></div>
 
-        <!-- Checkbox accanto alla mappa -->
-        <div class="checkbox-container">
-            <label>
-                <input type="checkbox" id="checkboxC3_1" checked
-                    onclick="toggleLayerBlock(configWMSMatrixMapC3, 0, mapC3, 4)"> Electric substation *
-            </label><br>
-            <label>
-                <input type="checkbox" id="checkboxC3_2" checked
-                    onclick="toggleLayerBlock(configWMSMatrixMapC3, 1, mapC3, 4)"> Water tower
-            </label><br>
-            <label>
-                <input type="checkbox" id="checkboxC3_3" checked
-                    onclick="toggleLayerBlock(configWMSMatrixMapC3, 2, mapC3, 4)"> Water well
-            </label>
-            <label>
-                <input type="checkbox" id="checkboxC3_4" checked
-                    onclick="toggleLayerBlock(configWMSMatrixMapC3, 3, mapC3, 4)"> Wastewater plant
-            </label>
-        </div>
+        <!-- SIDEBAR (15%) -->
+        <aside class="layer-sidebar">
+            <div class="layer-controls-card layer-controls-card--sidebar">
+                <div class="layer-controls-card__header">
+                    <!-- titolo rimosso -->
+                </div>
+
+                <div class="layer-box">
+                    <div class="layer-box__title">Input</div>
+                    <div class="layer-box__body">
+                        <label class="layer-toggle">
+                            <input type="checkbox" id="checkboxC3_1" checked
+                                onclick="toggleLayerBlock(configWMSMatrixMapC3, 0, mapC3, 4)">
+                            <span class="layer-label">Electric substation *</span>
+                        </label>
+
+                        <label class="layer-toggle">
+                            <input type="checkbox" id="checkboxC3_2" checked
+                                onclick="toggleLayerBlock(configWMSMatrixMapC3, 1, mapC3, 4)">
+                            <span class="layer-label">Water tower</span>
+                        </label>
+
+                        <label class="layer-toggle">
+                            <input type="checkbox" id="checkboxC3_3" checked
+                                onclick="toggleLayerBlock(configWMSMatrixMapC3, 2, mapC3, 4)">
+                            <span class="layer-label">Water well</span>
+                        </label>
+
+                        <label class="layer-toggle">
+                            <input type="checkbox" id="checkboxC3_4" checked
+                                onclick="toggleLayerBlock(configWMSMatrixMapC3, 3, mapC3, 4)">
+                            <span class="layer-label">Wastewater plant</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </aside>
     </div>
     <!-- Radio button sotto alla mappa -->
     <div class="radio-container">
@@ -122,22 +146,7 @@
     </div>
 </div>
 
-<div class="tab-pane fade" id="panelC4" role="tabpanel" aria-labelledby="tabC4-tab">
-    <div class="map-radio-container">
-        <div id="mapC4" class="map-container-85"></div>
-        <!-- Checkbox sopra ai radio button -->
-        <div class="checkbox-container">
-            <label>
-                <input type="checkbox" id="checkboxC4_1" checked
-                    onclick="toggleLayerBlock(configWMSMatrixMapC4, 0, mapC4, 1)"> Risk paths
-            </label><br>
-            <label>
-                <input type="checkbox" id="checkboxC4_2" checked
-                    onclick="toggleLayerBlock(configWMSMatrixMapC4, 1, mapC4, 1)"> Water tower
-            </label><br>
-        </div>
-    </div>
-</div>
+
 
 <!-- Codice prima dell'aggiunta delle checkbox e dei radio batton
 <div class="tab-pane fade" id="panelC5" role="tabpanel" aria-labelledby="tabC5-tab">

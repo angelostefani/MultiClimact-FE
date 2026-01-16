@@ -166,7 +166,8 @@ namespace MultiClimact.Pages
                 new { Key = "wmsurl_lay28", Description = "DPC bulletins hydraulic" },
                 new { Key = "wmsurl_lay29", Description = "DPC bulletins hydrogeological" },
                 new { Key = "wmsurl_lay30", Description = "DPC bulletins thunderstorms" },
-                new { Key = "wmsurl_lay31", Description = "Earthquake building damage view" }
+                new { Key = "wmsurl_lay31", Description = "Earthquake building damage view" },
+                new { Key = "wmsurl_lay32", Description = "Earthquake shakemap view" }
             };
 
             // Loop through WMS layers and store them in ViewData dynamically
