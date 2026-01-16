@@ -90,10 +90,35 @@
 
 .radio-container {
     position: sticky;
-    bottom: 0;
+    bottom: var(--mc-footer-h);
     z-index: 10;
     flex-wrap: wrap;
     gap: 2rem; /* Spazio tra le label dei radio */
+}
+
+/* C2: barra switchLayer agganciata al footer con stile coerente */
+#panelC2 .radio-container {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: var(--mc-footer-h);
+    z-index: 950;
+    background-color: #dfe5ec;
+    border-top: 1px solid #c2c9d2;
+    box-shadow: 0 -8px 18px rgba(0, 0, 0, 0.18);
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    padding: 10px 18px;
+    justify-content: center;
+}
+
+#panelC2 .radio-container label {
+    color: #1f2a37;
+    font-weight: 600;
+}
+
+#panelC2 .radio-container input[type="radio"] {
+    accent-color: #185ba1;
 }
 
 @media (max-height: 900px) {

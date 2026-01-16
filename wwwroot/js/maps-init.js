@@ -111,6 +111,11 @@ document.addEventListener("DOMContentLoaded", function () {
             [true, false, document.getElementById("wmsurl_lay01").dataset.value, document.getElementById("wmslayer_lay01").dataset.value, 'Lay01_PD3', 'mypd:pd3'],  //  layer
             [true, false, document.getElementById("wmsurl_lay01").dataset.value, document.getElementById("wmslayer_lay01").dataset.value, 'Lay01_PD4', 'mypd:pd4'],  //  layer
             [true, false, document.getElementById("wmsurl_lay01").dataset.value, document.getElementById("wmslayer_lay01").dataset.value, 'Lay01_PD5', 'mypd:pd5'],  //  layer
+            [true, true, document.getElementById("wmsurl_lay31").dataset.value, document.getElementById("wmslayer_lay31").dataset.value, 'Lay31_PD1', 'mypd:pd1'],  //  layer
+            [true, false, document.getElementById("wmsurl_lay31").dataset.value, document.getElementById("wmslayer_lay31").dataset.value, 'Lay31_PD2', 'mypd:pd2'],  //  layer
+            [true, false, document.getElementById("wmsurl_lay31").dataset.value, document.getElementById("wmslayer_lay31").dataset.value, 'Lay31_PD3', 'mypd:pd3'],  //  layer
+            [true, false, document.getElementById("wmsurl_lay31").dataset.value, document.getElementById("wmslayer_lay31").dataset.value, 'Lay31_PD4', 'mypd:pd4'],  //  layer
+            [true, false, document.getElementById("wmsurl_lay31").dataset.value, document.getElementById("wmslayer_lay31").dataset.value, 'Lay31_PD5', 'mypd:pd5'],
             [true, true, document.getElementById("wmsurl_lay10").dataset.value, document.getElementById("wmslayer_lay10").dataset.value, 'Shakemap']  //  layer  
         ]
     };

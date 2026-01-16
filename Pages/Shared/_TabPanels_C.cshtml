@@ -1,27 +1,55 @@
-<!-- TAB PANELS GROUP MENU C -->
+﻿<!-- TAB PANELS GROUP MENU C -->
 <div class="tab-pane fade" id="panelC1" role="tabpanel" aria-labelledby="tabC1-tab">
     <div id="mapC1" class="map-container"></div>
 </div>
 <div class="tab-pane fade" id="panelC2" role="tabpanel" aria-labelledby="tabC2-tab">
-    <div class="map-radio-container" id="panelC9-layout">
-        <!-- Mappa -->
+    <div class="map-checkbox-container" id="panelC2-layout">
+
+        <!-- MAPPA (85%) -->
         <div id="mapC2" class="map-container-85"></div>
 
-        <!-- Checkbox accanto alla mappa -->
-        <div class="checkbox-container">
-            <label>
-                <input type="checkbox" id="checkboxC2_1" checked
-                    onclick="toggleLayerBlock(configWMSMatrixMapC2, 0, mapC2, 5)"> Fazzini Building damage risk
-            </label><br>
-            <label>
-                <input type="checkbox" id="checkboxC2_2" checked
-                    onclick="toggleLayerBlock(configWMSMatrixMapC2, 1, mapC2, 5)"> Camerino Building damage risk
-            </label><br>
-            <label>
-                <input type="checkbox" id="checkboxC2_3" checked
-                    onclick="toggleLayerBlock(configWMSMatrixMapC2, 2, mapC2, 5)"> Regional Building damage Risk
-            </label>
-        </div>
+        <!-- SIDEBAR (15%) -->
+        <aside class="layer-sidebar">
+            <div class="layer-controls-card layer-controls-card--sidebar">
+                <div class="layer-controls-card__header">
+                    <!-- titolo rimosso -->
+                </div>
+
+                <div class="layer-box">
+                    <div class="layer-box__title">Input</div>
+                    <div class="layer-box__body">
+                        <label class="layer-toggle">
+                            <input type="checkbox" id="checkboxC2_1" checked
+                                onclick="toggleLayerBlock(configWMSMatrixMapC2, 0, mapC2, 5)">
+                            <span class="layer-label">Fazzini Building damage risk</span>
+                        </label>
+
+                        <label class="layer-toggle">
+                            <input type="checkbox" id="checkboxC2_3" checked
+                                onclick="toggleLayerBlock(configWMSMatrixMapC2, 2, mapC2, 5)">
+                            <span class="layer-label">Regional Building damage Risk</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="layer-box">
+                    <div class="layer-box__title">Camerino Building</div>
+                    <div class="layer-box__body">
+                        <label class="layer-toggle">
+                            <input type="checkbox" id="checkboxC2_2" checked
+                                onclick="toggleLayerBlock(configWMSMatrixMapC2, 1, mapC2, 5)">
+                            <span class="layer-label">vulnerability</span>
+                        </label>
+
+                        <label class="layer-toggle">
+                            <input type="checkbox" id="checkboxC2_4" checked
+                                onclick="toggleLayerBlock(configWMSMatrixMapC2, 3, mapC2, 5)">
+                            <span class="layer-label">Damage Probability</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </aside>
     </div>
     <!-- Radio button sotto alla mappa -->
     <div class="radio-container">

@@ -7,7 +7,8 @@
 /* Layout a 2 colonne attaccate */
 #panelC12 #panelC12-layout,
 #panelD5 #panelD5-layout,
-#panelC9 #panelC9-layout{
+#panelC9 #panelC9-layout,
+#panelC2 #panelC2-layout{
   display: flex !important;
   gap: 0 !important;
   align-items: stretch !important;
@@ -17,9 +18,11 @@
 #panelC12 #mapC12,
 #panelD5 #mapD5,
 #panelC9 #mapC9,
+#panelC2 #mapC2,
 #panelC12 .layer-sidebar,
 #panelD5 .layer-sidebar,
-#panelC9 .layer-sidebar{
+#panelC9 .layer-sidebar,
+#panelC2 .layer-sidebar{
   height: calc(100vh - var(--mc-header-h) - var(--mc-footer-h)) !important;
   min-height: clamp(320px, 55dvh, 820px);
 }
@@ -27,7 +30,8 @@
 /* MAPPA 85% */
 #panelC12 #mapC12,
 #panelD5 #mapD5,
-#panelC9 #mapC9{
+#panelC9 #mapC9,
+#panelC2 #mapC2{
   width: 85% !important;
   flex: 0 0 85% !important;
   max-width: 85% !important;
@@ -41,7 +45,8 @@
 /* SIDEBAR 15% */
 #panelC12 .layer-sidebar,
 #panelD5 .layer-sidebar,
-#panelC9 .layer-sidebar{
+#panelC9 .layer-sidebar,
+#panelC2 .layer-sidebar{
   width: 15% !important;
   flex: 0 0 15% !important;
   max-width: 15% !important;
@@ -61,7 +66,8 @@
 */
 #panelC12 .layer-controls-card.layer-controls-card--sidebar,
 #panelD5 .layer-controls-card.layer-controls-card--sidebar,
-#panelC9 .layer-controls-card.layer-controls-card--sidebar{
+#panelC9 .layer-controls-card.layer-controls-card--sidebar,
+#panelC2 .layer-controls-card.layer-controls-card--sidebar{
   position: static !important;
   top: auto !important;
   right: auto !important;
@@ -81,7 +87,8 @@
 /* CARD: estetica uguale a prima */
 #panelC12 .layer-controls-card--sidebar,
 #panelD5 .layer-controls-card--sidebar,
-#panelC9 .layer-controls-card--sidebar{
+#panelC9 .layer-controls-card--sidebar,
+#panelC2 .layer-controls-card--sidebar{
   background: #fff;
   border: 1px solid #cfcfcf;
   border-left: 0; /* evita doppio bordo al centro */
@@ -95,10 +102,12 @@
 /* Header */
 #panelC12 .layer-controls-card__header,
 #panelD5 .layer-controls-card__header,
-#panelC9 .layer-controls-card__header{ margin-bottom: 10px; }
+#panelC9 .layer-controls-card__header,
+#panelC2 .layer-controls-card__header{ margin-bottom: 10px; }
 #panelC12 .layer-controls-card__title,
 #panelD5 .layer-controls-card__title,
-#panelC9 .layer-controls-card__title{
+#panelC9 .layer-controls-card__title,
+#panelC2 .layer-controls-card__title{
   font-weight: 700;
   font-size: 18px;
   line-height: 1.1;
@@ -107,7 +116,8 @@
 /* Box gruppi */
 #panelC12 .layer-box,
 #panelD5 .layer-box,
-#panelC9 .layer-box{
+#panelC9 .layer-box,
+#panelC2 .layer-box{
   border: 1px solid #d6d6d6;
   border-radius: 10px;
   padding: 10px 10px 8px;
@@ -116,7 +126,8 @@
 }
 #panelC12 .layer-box__title,
 #panelD5 .layer-box__title,
-#panelC9 .layer-box__title{
+#panelC9 .layer-box__title,
+#panelC2 .layer-box__title{
   font-weight: 700;
   font-size: 16px;
   margin-bottom: 6px;
@@ -125,7 +136,8 @@
 /* Toggle righe */
 #panelC12 .layer-toggle,
 #panelD5 .layer-toggle,
-#panelC9 .layer-toggle{
+#panelC9 .layer-toggle,
+#panelC2 .layer-toggle{
   display: flex;
   align-items: center;
   gap: 10px;
@@ -135,27 +147,31 @@
 }
 #panelC12 .layer-toggle input[type="checkbox"],
 #panelD5 .layer-toggle input[type="checkbox"],
-#panelC9 .layer-toggle input[type="checkbox"]{
+#panelC9 .layer-toggle input[type="checkbox"],
+#panelC2 .layer-toggle input[type="checkbox"]{
   width: 16px;
   height: 16px;
   cursor: pointer;
 }
 #panelC12 .layer-label,
 #panelD5 .layer-label,
-#panelC9 .layer-label{ cursor: pointer; }
+#panelC9 .layer-label,
+#panelC2 .layer-label{ cursor: pointer; }
 
 /* RESPONSIVE: sotto la mappa quando finestra stretta */
 @media (max-width: 1400px){
   #panelC12 #panelC12-layout,
   #panelD5 #panelD5-layout,
-  #panelC9 #panelC9-layout{
+  #panelC9 #panelC9-layout,
+  #panelC2 #panelC2-layout{
     flex-direction: column !important;
   }
 
   /* in mobile/half-screen la mappa torna full width */
   #panelC12 #mapC12,
   #panelD5 #mapD5,
-  #panelC9 #mapC9{
+  #panelC9 #mapC9,
+  #panelC2 #mapC2{
     width: 100% !important;
     flex: 0 0 auto !important;
     max-width: 100% !important;
@@ -170,7 +186,8 @@
 
   #panelC12 .layer-sidebar,
   #panelD5 .layer-sidebar,
-  #panelC9 .layer-sidebar{
+  #panelC9 .layer-sidebar,
+  #panelC2 .layer-sidebar{
     width: 100% !important;
     flex: 0 0 auto !important;
     max-width: 100% !important;
@@ -181,14 +198,16 @@
 
   #panelC12 .layer-controls-card.layer-controls-card--sidebar,
   #panelD5 .layer-controls-card.layer-controls-card--sidebar,
-  #panelC9 .layer-controls-card.layer-controls-card--sidebar{
+  #panelC9 .layer-controls-card.layer-controls-card--sidebar,
+  #panelC2 .layer-controls-card.layer-controls-card--sidebar{
     height: auto !important;
     max-height: 55vh !important;
   }
 
   #panelC12 .layer-controls-card--sidebar,
   #panelD5 .layer-controls-card--sidebar,
-  #panelC9 .layer-controls-card--sidebar{
+  #panelC9 .layer-controls-card--sidebar,
+  #panelC2 .layer-controls-card--sidebar{
     border-left: 1px solid #cfcfcf;
     border-top-left-radius: 14px;
     border-bottom-left-radius: 14px;
