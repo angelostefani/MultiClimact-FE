@@ -251,17 +251,72 @@ function paginateTable() {
     function createPaginationControls() {
         const paginationControls = document.getElementById("paginationControls");
         paginationControls.innerHTML = "";
-        for (let i = 1; i <= totalPages; i++) {
-            const button = document.createElement("button");
-            button.textContent = i;
-            button.className = "btn btn-secondary m-1";
-            button.type = "button";
-            button.addEventListener("click", () => {
-                currentPage = i;
-                renderPage(currentPage);
-            });
-            paginationControls.appendChild(button);
+        if (totalPages <= 1) {
+            return;
         }
+
+        const wrapper = document.createElement("div");
+        wrapper.className = "d-flex align-items-center flex-wrap";
+
+        const prevBtn = document.createElement("button");
+        prevBtn.textContent = "Prev";
+        prevBtn.className = "btn btn-secondary m-1";
+        prevBtn.type = "button";
+
+        const nextBtn = document.createElement("button");
+        nextBtn.textContent = "Next";
+        nextBtn.className = "btn btn-secondary m-1";
+        nextBtn.type = "button";
+
+        const pageInfo = document.createElement("span");
+        pageInfo.className = "mx-2";
+
+        const pageInput = document.createElement("input");
+        pageInput.type = "number";
+        pageInput.min = "1";
+        pageInput.max = totalPages.toString();
+        pageInput.value = currentPage;
+        pageInput.className = "form-control m-1";
+        pageInput.style.width = "100px";
+
+        function updateControls() {
+            prevBtn.disabled = currentPage === 1;
+            nextBtn.disabled = currentPage === totalPages;
+            pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+            pageInput.value = currentPage;
+        }
+
+        prevBtn.addEventListener("click", () => {
+            if (currentPage > 1) {
+                currentPage -= 1;
+                renderPage(currentPage);
+                updateControls();
+            }
+        });
+
+        nextBtn.addEventListener("click", () => {
+            if (currentPage < totalPages) {
+                currentPage += 1;
+                renderPage(currentPage);
+                updateControls();
+            }
+        });
+
+        pageInput.addEventListener("change", () => {
+            const target = parseInt(pageInput.value, 10);
+            if (!isNaN(target) && target >= 1 && target <= totalPages) {
+                currentPage = target;
+                renderPage(currentPage);
+            }
+            updateControls();
+        });
+
+        wrapper.appendChild(prevBtn);
+        wrapper.appendChild(nextBtn);
+        wrapper.appendChild(pageInfo);
+        wrapper.appendChild(pageInput);
+        paginationControls.appendChild(wrapper);
+        updateControls();
     }
 
     if (rows.length > 0) {

@@ -49,8 +49,9 @@ namespace MultiClimact.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
-                    var jsonResponse = JsonConvert.DeserializeObject<HeatwaveResponse>(content);
-                    return Ok(jsonResponse);
+                    _logger.LogInformation("Heatwave service response: {responseContent}", content);
+                    // Ritorna il payload del servizio così com'è per preservare i nomi dei campi
+                    return Content(content, "application/json");
                 }
 
                 _logger.LogError("Errore Heatwave Service: {statusCode}", response.StatusCode);
@@ -82,8 +83,8 @@ namespace MultiClimact.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
-                    var jsonResponse = JsonConvert.DeserializeObject<LastHeatwaveResponse>(content);
-                    return Ok(jsonResponse);
+                    _logger.LogInformation("Last heatwave service response: {responseContent}", content);
+                    return Content(content, "application/json");
                 }
                 else
                 {
