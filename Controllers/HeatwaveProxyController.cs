@@ -29,23 +29,23 @@ namespace MultiClimact.Controllers
             [FromQuery] string user_id,
             [FromQuery] string start_date,
             [FromQuery] string end_date,
-            [FromQuery] string? min_temperature,
-            [FromQuery] string? max_temperature,
             [FromQuery] bool simulated)
         {
             var query = new Dictionary<string, string?>
             {
-                ["status_str"] = "completed",
-                ["haztype_id"] = "2"
+                ["start_date"] = start_date,
+                ["end_date"] = end_date,
+                ["haztype_id"] = "2",
+                ["simulated"] = simulated.ToString().ToLower()
             };
 
-            string heatwaveServiceUrl = QueryHelpers.AddQueryString("users/system/heatwaves", query);
+            string serviceUrl = QueryHelpers.AddQueryString("users/system/runs", query);
 
-            _logger.LogInformation("Requesting Heatwave Service URL: {heatwaveServiceUrl}", heatwaveServiceUrl);
+            _logger.LogInformation("Requesting Extremeprecipitation Service URL: {serviceUrl}", serviceUrl);
 
             try
             {
-                var response = await _httpClient.GetAsync(heatwaveServiceUrl);
+                var response = await _httpClient.GetAsync(serviceUrl);
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();

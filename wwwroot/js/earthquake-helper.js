@@ -39,12 +39,79 @@ function formatHazardLabel(hazardKey) {
     }
 }
 
+function normalizeHazardItem(raw) {
+    const getFirstDefined = (...values) => values.find(v => v !== undefined && v !== null && v !== '');
+
+    const eventDateRaw = getFirstDefined(
+        raw.eventDate,
+        raw.event_date,
+        raw.EventDate,
+        raw.event_date_time,
+        raw.acq_date,
+        raw.occurrence_time,
+        raw.occurrence_time_local,
+        raw.time
+    );
+
+    const description = getFirstDefined(
+        raw.description,
+        raw.Description,
+        raw.desc,
+        raw.name,
+        raw.title,
+        raw.hazard_str,
+        raw.status_str,
+        raw.impact_conf,
+        raw.damage_conf,
+        'N/A'
+    );
+
+    const idRun = getFirstDefined(
+        raw.idRun,
+        raw.id_run,
+        raw.IdRun,
+        raw.run_id,
+        raw.id,
+        ''
+    );
+
+    const formatDate = (value) => {
+        if (!value) return 'N/A';
+        const parseNumberDate = (num) => {
+            if (num <= 0) return null;
+            // Heuristic: seconds vs milliseconds
+            return num < 1e12 ? new Date(num * 1000) : new Date(num);
+        };
+
+        let parsed;
+        if (typeof value === 'number') {
+            parsed = parseNumberDate(value);
+        } else if (typeof value === 'string' && /^\d+$/.test(value)) {
+            parsed = parseNumberDate(Number(value));
+        } else {
+            parsed = new Date(value);
+        }
+
+        if (isNaN(parsed)) {
+            return typeof value === 'string' ? value : 'N/A';
+        }
+        return parsed.toISOString().replace('T', ' ').substring(0, 19);
+    };
+
+    return {
+        eventDate: formatDate(eventDateRaw),
+        description,
+        idRun
+    };
+}
+
 function populateHazardTable(data, config, hazardKey) {
     const tableBody = document.getElementById('hazardTableBody');
     tableBody.innerHTML = '';
 
     if (Array.isArray(data)) {
         data.forEach((item, index) => {
+            const normalized = normalizeHazardItem(item);
             const row = document.createElement('tr');
             row.className = 'hazard-row';
 
@@ -69,10 +136,10 @@ function populateHazardTable(data, config, hazardKey) {
             selectCell.textContent = '';
 
             const dateCell = document.createElement('td');
-            dateCell.textContent = item.eventDate || 'N/A';
+            dateCell.textContent = normalized.eventDate;
 
             const descriptionCell = document.createElement('td');
-            descriptionCell.textContent = item.description || 'N/A';
+            descriptionCell.textContent = normalized.description;
 
             const hazardCell = document.createElement('td');
             hazardCell.textContent = formatHazardLabel(hazardKey);
@@ -80,7 +147,7 @@ function populateHazardTable(data, config, hazardKey) {
             const hiddenField = document.createElement('input');
             hiddenField.type = 'hidden';
             hiddenField.className = 'hidden-risk-run-id';
-            hiddenField.value = item.idRun || '';
+            hiddenField.value = normalized.idRun || '';
 
             row.appendChild(selectCell);
             row.appendChild(dateCell);
@@ -126,7 +193,16 @@ async function fetchHazardData(event) {
         const response = await fetch(url);
         if (response.ok) {
             const jsonResponse = await response.json();
-            const data = jsonResponse.data || jsonResponse.Data; // tollera differenze di casing
+            let data = jsonResponse.data || jsonResponse.Data;
+            if (!data && Array.isArray(jsonResponse)) {
+                data = jsonResponse;
+            } else if (!data && jsonResponse.results) {
+                data = jsonResponse.results;
+            } else if (!data && jsonResponse.items) {
+                data = jsonResponse.items;
+            } else if (!data && jsonResponse.runs) {
+                data = jsonResponse.runs;
+            }
             if (jsonResponse.success === true || Array.isArray(data)) {
                 populateHazardTable(data, config, hazardType);
                 paginateTable();
@@ -179,6 +255,7 @@ function paginateTable() {
             const button = document.createElement("button");
             button.textContent = i;
             button.className = "btn btn-secondary m-1";
+            button.type = "button";
             button.addEventListener("click", () => {
                 currentPage = i;
                 renderPage(currentPage);
