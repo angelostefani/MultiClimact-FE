@@ -26,6 +26,34 @@ const activeRiskRunIdByHazard = {
     extremeprecipitation: ''
 };
 
+// Richiama l'aggiornamento dei layer WMS per riflettere il nuovo activeRiskRunID
+function refreshMapsForActiveRiskRunId() {
+    if (typeof updateMapLayers !== 'function') {
+        return;
+    }
+
+    const mapPairs = [
+        { config: typeof configWMSMatrixMapC1 !== 'undefined' ? configWMSMatrixMapC1 : null, map: typeof mapC1 !== 'undefined' ? mapC1 : null },
+        { config: typeof configWMSMatrixMapC2 !== 'undefined' ? configWMSMatrixMapC2 : null, map: typeof mapC2 !== 'undefined' ? mapC2 : null },
+        { config: typeof configWMSMatrixMapC3 !== 'undefined' ? configWMSMatrixMapC3 : null, map: typeof mapC3 !== 'undefined' ? mapC3 : null },
+        { config: typeof configWMSMatrixMapC4 !== 'undefined' ? configWMSMatrixMapC4 : null, map: typeof mapC4 !== 'undefined' ? mapC4 : null },
+        { config: typeof configWMSMatrixMapC5 !== 'undefined' ? configWMSMatrixMapC5 : null, map: typeof mapC5 !== 'undefined' ? mapC5 : null },
+        { config: typeof configWMSMatrixMapC9 !== 'undefined' ? configWMSMatrixMapC9 : null, map: typeof mapC9 !== 'undefined' ? mapC9 : null },
+        { config: typeof configWMSMatrixMapC12 !== 'undefined' ? configWMSMatrixMapC12 : null, map: typeof mapC12 !== 'undefined' ? mapC12 : null },
+        { config: typeof configWMSMatrixMapD5 !== 'undefined' ? configWMSMatrixMapD5 : null, map: typeof mapD5 !== 'undefined' ? mapD5 : null },
+        { config: typeof configWMSMatrixMapHomeDashboard1 !== 'undefined' ? configWMSMatrixMapHomeDashboard1 : null, map: typeof mapHomeDashboard1 !== 'undefined' ? mapHomeDashboard1 : null },
+        { config: typeof configWMSMatrixMapHomeDashboard2 !== 'undefined' ? configWMSMatrixMapHomeDashboard2 : null, map: typeof mapHomeDashboard2 !== 'undefined' ? mapHomeDashboard2 : null },
+        { config: typeof configWMSMatrixMapHomeDashboard3 !== 'undefined' ? configWMSMatrixMapHomeDashboard3 : null, map: typeof mapHomeDashboard3 !== 'undefined' ? mapHomeDashboard3 : null },
+        { config: typeof configWMSMatrixMapHomeDashboard4 !== 'undefined' ? configWMSMatrixMapHomeDashboard4 : null, map: typeof mapHomeDashboard4 !== 'undefined' ? mapHomeDashboard4 : null },
+    ];
+
+    mapPairs.forEach(pair => {
+        if (pair.config && pair.map) {
+            updateMapLayers(pair.config, pair.map);
+        }
+    });
+}
+
 const hazardConfig = {
     earthquake: {
         endpoint: '/api/EarthquakeProxy/GetEarthquakes',
@@ -147,6 +175,7 @@ function populateHazardTable(data, config, hazardKey) {
                     if (DEBUG_HAZARD) {
                         console.log('[hazard click]', { hazardKey, index, selectedRowIndexByHazard, activeRiskRunIdByHazard, activeRiskRunID });
                     }
+                    refreshMapsForActiveRiskRunId();
                 }
             });
 
@@ -369,6 +398,7 @@ function paginateTable() {
             if (DEBUG_HAZARD) {
                 console.log('[hazard click - paginated]', { hazardType, index, selectedRowIndexByHazard, activeRiskRunIdByHazard, activeRiskRunID });
             }
+            refreshMapsForActiveRiskRunId();
         });
     });
 }
@@ -384,6 +414,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (DEBUG_HAZARD) {
             console.log('[hazard sync]', { hazard, storedId, activeRiskRunID, selectedRowIndexByHazard, activeRiskRunIdByHazard });
         }
+        refreshMapsForActiveRiskRunId();
     };
 
     syncActiveRiskRunId(hazardSelect.value);
