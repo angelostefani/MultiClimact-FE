@@ -40,6 +40,8 @@ namespace MultiClimact.Pages
         public async Task OnGetAsync()
         {
             await GetLastEarthquakeIdRun();
+            await GetLastHeatwaveIdRun();
+            await GetLastExtremePrecipitationIdRun();
 
             ConfigurationToViewDataMapping();
         }
@@ -123,6 +125,39 @@ namespace MultiClimact.Pages
                 // Log the exception and store an error message in ViewData
                 _logger.LogError(ex, "An error occurred while calling the HeatwaveProxy service.");
                 ViewData["idRunLastHeatwave"] = $"Exception: {ex.Message}";
+            }
+        }
+
+        /// <summary>
+        /// Fetches the latest extreme precipitation ID run from an external REST API.
+        /// The retrieved ID is stored in ViewData["idRunLastExtremePrecipitation"] for use in the Razor view.
+        /// </summary>
+        /// <returns>An asynchronous Task.</returns>
+        private async Task GetLastExtremePrecipitationIdRun()
+        {
+            var baseUrl = $"{Request.Scheme}://{Request.Host}";
+            var serviceUrl = $"{baseUrl}/api/ExtremeprecipitationProxy/GetLastExtremeprecipitation";
+
+            try
+            {
+                var client = _httpClientFactory.CreateClient("Default");
+                var response = await client.GetAsync(serviceUrl);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseBody = await response.Content.ReadAsStringAsync();
+                    var data = JsonSerializer.Deserialize<LastExtremeprecipitationResponse>(responseBody);
+                    ViewData["idRunLastExtremePrecipitation"] = data?.id_run ?? "idRun not available in the response";
+                }
+                else
+                {
+                    ViewData["idRunLastExtremePrecipitation"] = $"Error calling the service: {response.StatusCode}";
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while calling the ExtremeprecipitationProxy service.");
+                ViewData["idRunLastExtremePrecipitation"] = $"Exception: {ex.Message}";
             }
         }
 

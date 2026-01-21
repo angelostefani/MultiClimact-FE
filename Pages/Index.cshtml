@@ -115,6 +115,8 @@ else
         <!-- These elements store server-side values in data-* attributes, which JavaScript can later retrieve -->
 
         <span id="idRunLastEarthquake" data-value="@(ViewData["idRunLastEarthquake"] ?? "undefined")"></span>
+        <span id="idRunLastHeatwave" data-value="@(ViewData["idRunLastHeatwave"] ?? "undefined")"></span>
+        <span id="idRunLastExtremePrecipitation" data-value="@(ViewData["idRunLastExtremePrecipitation"] ?? "undefined")"></span>
 
         @* Dynamic WMS layers data *@
         @for (int i = 0; i <= 32; i++)

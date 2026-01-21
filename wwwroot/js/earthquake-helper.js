@@ -11,6 +11,20 @@
 
 // Variabile per tracciare la scheda attiva
 let activeRiskRunID = '';
+// Flag di debug per log mirati
+const DEBUG_HAZARD = true;
+// Stati per indice selezionato per hazard
+const selectedRowIndexByHazard = {
+    earthquake: null,
+    heatwave: null,
+    extremeprecipitation: null
+};
+// Stati per risk run id per hazard
+const activeRiskRunIdByHazard = {
+    earthquake: '',
+    heatwave: '',
+    extremeprecipitation: ''
+};
 
 const hazardConfig = {
     earthquake: {
@@ -123,11 +137,16 @@ function populateHazardTable(data, config, hazardKey) {
                     }
                 });
                 row.querySelector('.select-cell').textContent = 'V';
-                localStorage.setItem('lastSelectedRowIndex', index);
+                selectedRowIndexByHazard[hazardKey] = index;
                 const hiddenField = row.querySelector('.hidden-risk-run-id');
                 if (hiddenField) {
-                    activeRiskRunID = hiddenField.value;
-                    alert(`Risk Run ID: ${hiddenField.value}`);
+                    const idValue = hiddenField.value;
+                    activeRiskRunIdByHazard[hazardKey] = idValue;
+                    activeRiskRunID = idValue;
+                    localStorage.setItem('lastSelectedRowIndex_' + hazardKey, index);
+                    if (DEBUG_HAZARD) {
+                        console.log('[hazard click]', { hazardKey, index, selectedRowIndexByHazard, activeRiskRunIdByHazard, activeRiskRunID });
+                    }
                 }
             });
 
@@ -205,6 +224,12 @@ async function fetchHazardData(event) {
             }
             if (jsonResponse.success === true || Array.isArray(data)) {
                 populateHazardTable(data, config, hazardType);
+                // ripristina eventuale risk run id selezionato per l'hazard corrente
+                if (activeRiskRunIdByHazard[hazardType]) {
+                    activeRiskRunID = activeRiskRunIdByHazard[hazardType];
+                } else {
+                    activeRiskRunID = '';
+                }
                 paginateTable();
             } else {
                 console.error('Server response error:', jsonResponse);
@@ -223,6 +248,7 @@ function paginateTable() {
     const rows = Array.from(tableBody.getElementsByTagName("tr"));
     const totalPages = Math.ceil(rows.length / rowsPerPage);
     let currentPage = 1;
+    const hazardType = document.getElementById('hazardType') ? document.getElementById('hazardType').value : 'earthquake';
 
     function renderPage(page) {
         tableBody.innerHTML = "";
@@ -239,11 +265,15 @@ function paginateTable() {
             }
         });
 
-        const lastSelectedRowIndex = parseInt(localStorage.getItem('lastSelectedRowIndex'), 10);
+        const storedKey = 'lastSelectedRowIndex_' + hazardType;
+        const lastSelectedRowIndex = parseInt(localStorage.getItem(storedKey), 10);
         if (!isNaN(lastSelectedRowIndex) && lastSelectedRowIndex >= start && lastSelectedRowIndex < end) {
             const rowToHighlight = rows[lastSelectedRowIndex];
             if (rowToHighlight) {
                 rowToHighlight.querySelector('.select-cell').textContent = 'V';
+            }
+            if (DEBUG_HAZARD) {
+                console.log('[hazard paginate restore]', { hazardType, lastSelectedRowIndex, start, end });
             }
         }
     }
@@ -328,7 +358,37 @@ function paginateTable() {
         row.addEventListener('click', () => {
             document.querySelectorAll('.select-cell').forEach(cell => cell.textContent = '');
             row.querySelector('.select-cell').textContent = 'V';
-            localStorage.setItem('lastSelectedRowIndex', index);
+            selectedRowIndexByHazard[hazardType] = index;
+            const hiddenField = row.querySelector('.hidden-risk-run-id');
+            if (hiddenField) {
+                const idValue = hiddenField.value;
+                activeRiskRunIdByHazard[hazardType] = idValue;
+                activeRiskRunID = idValue;
+            }
+            localStorage.setItem('lastSelectedRowIndex_' + hazardType, index);
+            if (DEBUG_HAZARD) {
+                console.log('[hazard click - paginated]', { hazardType, index, selectedRowIndexByHazard, activeRiskRunIdByHazard, activeRiskRunID });
+            }
         });
     });
 }
+
+// Aggiorna il risk run id globale quando cambia l'hazard selezionato
+document.addEventListener('DOMContentLoaded', () => {
+    const hazardSelect = document.getElementById('hazardType');
+    if (!hazardSelect) return;
+
+    const syncActiveRiskRunId = (hazard) => {
+        const storedId = activeRiskRunIdByHazard[hazard] || '';
+        activeRiskRunID = storedId;
+        if (DEBUG_HAZARD) {
+            console.log('[hazard sync]', { hazard, storedId, activeRiskRunID, selectedRowIndexByHazard, activeRiskRunIdByHazard });
+        }
+    };
+
+    syncActiveRiskRunId(hazardSelect.value);
+
+    hazardSelect.addEventListener('change', () => {
+        syncActiveRiskRunId(hazardSelect.value);
+    });
+});
