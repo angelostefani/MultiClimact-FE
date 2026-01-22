@@ -20,37 +20,54 @@
                     <div class="layer-box__body">
                         <label class="layer-toggle">
                             <input type="checkbox" id="checkboxC2_1" checked
-                                onclick="toggleLayerBlock(configWMSMatrixMapC2, 0, mapC2, 5)">
-                            <span class="layer-label">Fazzini Building damage risk</span>
+                                onclick="toggleLayer(configWMSMatrixMapC2, 0, mapC2, this.checked)">
+                            <span class="layer-label">Camerino Buildings</span>
                         </label>
 
                         <label class="layer-toggle">
                             <input type="checkbox" id="checkboxC2_3" checked
-                                onclick="toggleLayerBlock(configWMSMatrixMapC2, 2, mapC2, 5)">
-                            <span class="layer-label">Regional Building damage Risk</span>
+                                onclick="toggleLayerBlock(configWMSMatrixMapC2, 5, mapC2, 5, 1, this.checked)">
+                            <span class="layer-label">Marche Buildings</span>
                         </label>
                     </div>
                 </div>
 
                 <div class="layer-box">
-                    <div class="layer-box__title">Camerino Building</div>
+                    <div class="layer-box__title">Camerino Buildings</div>
                     <div class="layer-box__body">
                         <label class="layer-toggle">
                             <input type="checkbox" id="checkboxC2_2" checked
-                                onclick="toggleLayerBlock(configWMSMatrixMapC2, 1, mapC2, 5)">
-                            <span class="layer-label">vulnerability</span>
+                                onclick="toggleLayerBlock(configWMSMatrixMapC2, 0, mapC2, 5, 1, this.checked)">
+                            <span class="layer-label">Seismic Vulnerabilty</span>
                         </label>
 
                         <label class="layer-toggle">
                             <input type="checkbox" id="checkboxC2_4" checked
-                                onclick="toggleLayerBlock(configWMSMatrixMapC2, 3, mapC2, 5)">
-                            <span class="layer-label">Damage Probability</span>
+                                onclick="toggleLayerBlock(configWMSMatrixMapC2, 2, mapC2, 5, 1, this.checked)">
+                            <span class="layer-label">Damage State Probabilty</span>
                         </label>
 
                         <label class="layer-toggle">
                             <input type="checkbox" id="checkboxC2_5" checked
-                                onclick="toggleLayerBlock(configWMSMatrixMapC2, 4, mapC2, 5)">
+                                onclick="toggleLayerBlock(configWMSMatrixMapC2, 3, mapC2, 5, 1, this.checked)">
                             <span class="layer-label">Shakemap</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="layer-box">
+                    <div class="layer-box__title">Marche Region Building</div>
+                    <div class="layer-box__body">
+                        <label class="layer-toggle">
+                            <input type="checkbox" id="checkboxC2_7" checked
+                                onclick="toggleLayerBlock(configWMSMatrixMapC2, 1, mapC2, 5, 1, this.checked)">
+                            <span class="layer-label">Seismic Vulnerability</span>
+                        </label>
+
+                        <label class="layer-toggle">
+                            <input type="checkbox" id="checkboxC2_8" checked
+                                onclick="toggleLayerBlock(configWMSMatrixMapC2, 4, mapC2, 5, 1, this.checked)">
+                            <span class="layer-label">Damage State Probability</span>
                         </label>
                     </div>
                 </div>
@@ -61,22 +78,22 @@
     <div class="radio-container">
         <label>
             <input type="radio" name="layerC2" id="layerC2_1" checked
-                onclick="switchLayers(configWMSMatrixMapC2, 0, mapC2, 5)"> Pd1
+                onclick="switchLayers(configWMSMatrixMapC2, 0, mapC2, 5, 1)"> Pd1
         </label>
         <label>
-            <input type="radio" name="layerC2" id="layerC2_2" onclick="switchLayers(configWMSMatrixMapC2, 1, mapC2, 5)">
+            <input type="radio" name="layerC2" id="layerC2_2" onclick="switchLayers(configWMSMatrixMapC2, 1, mapC2, 5, 1)">
             Pd2
         </label>
         <label>
-            <input type="radio" name="layerC2" id="layerC2_3" onclick="switchLayers(configWMSMatrixMapC2, 2, mapC2, 5)">
+            <input type="radio" name="layerC2" id="layerC2_3" onclick="switchLayers(configWMSMatrixMapC2, 2, mapC2, 5, 1)">
             Pd3
         </label>
         <label>
-            <input type="radio" name="layerC2" id="layerC2_4" onclick="switchLayers(configWMSMatrixMapC2, 3, mapC2, 5)">
+            <input type="radio" name="layerC2" id="layerC2_4" onclick="switchLayers(configWMSMatrixMapC2, 3, mapC2, 5, 1)">
             Pd4
         </label>
         <label>
-            <input type="radio" name="layerC2" id="layerC2_5" onclick="switchLayers(configWMSMatrixMapC2, 4, mapC2, 5)">
+            <input type="radio" name="layerC2" id="layerC2_5" onclick="switchLayers(configWMSMatrixMapC2, 4, mapC2, 5, 1)">
             Pd5
         </label>
     </div>
@@ -153,33 +170,53 @@
     <div id="mapC5" class="map-container"></div>
 -->
 <div class="tab-pane fade" id="panelC5" role="tabpanel" aria-labelledby="tabC5-tab">
-    <div class="map-radio-container">
-        <!-- Mappa -->
+    <div class="map-checkbox-container" id="panelC5-layout">
+        <!-- MAPPA (85%) -->
         <div id="mapC5" class="map-container-85"></div>
 
-        <!-- Checkbox accanto alla mappa -->
-        <div class="checkbox-container">
-            <label>
-                <input type="checkbox" id="checkboxC5_1" checked
-                    onclick="toggleLayerBlock(configWMSMatrixMapC5, 0, mapC5, 9)"> Residential buildings
-            </label><br>
-            <label>
-                <input type="checkbox" id="checkboxC5_2" checked
-                    onclick="toggleLayerBlock(configWMSMatrixMapC5, 1, mapC5, 9)"> Commercial buildings
-            </label><br>
-            <label>
-                <input type="checkbox" id="checkboxC5_3" checked
-                    onclick="toggleLayerBlock(configWMSMatrixMapC5, 2, mapC5, 9)"> Industrial buildings
-            </label><br>
-            <label>
-                <input type="checkbox" id="checkboxC5_4" checked
-                    onclick="toggleLayerBlock(configWMSMatrixMapC5, 3, mapC5, 9)"> Infrastructure (roads)
-            </label><br>
-            <label>
-                <input type="checkbox" id="checkboxC5_5" checked
-                    onclick="toggleLayerBlock(configWMSMatrixMapC5, 4, mapC5, 9)"> Energy (substation)
-            </label>
-        </div>
+        <!-- SIDEBAR (15%) -->
+        <aside class="layer-sidebar">
+            <div class="layer-controls-card layer-controls-card--sidebar">
+                <div class="layer-controls-card__header">
+                    <!-- titolo rimosso -->
+                </div>
+
+                <div class="layer-box">
+                    <div class="layer-box__title">Input</div>
+                    <div class="layer-box__body">
+                        <label class="layer-toggle">
+                            <input type="checkbox" id="checkboxC5_1" checked
+                                onclick="toggleLayerBlock(configWMSMatrixMapC5, 0, mapC5, 9)">
+                            <span class="layer-label">Residential buildings</span>
+                        </label>
+
+                        <label class="layer-toggle">
+                            <input type="checkbox" id="checkboxC5_2" checked
+                                onclick="toggleLayerBlock(configWMSMatrixMapC5, 1, mapC5, 9)">
+                            <span class="layer-label">Commercial buildings</span>
+                        </label>
+
+                        <label class="layer-toggle">
+                            <input type="checkbox" id="checkboxC5_3" checked
+                                onclick="toggleLayerBlock(configWMSMatrixMapC5, 2, mapC5, 9)">
+                            <span class="layer-label">Industrial buildings</span>
+                        </label>
+
+                        <label class="layer-toggle">
+                            <input type="checkbox" id="checkboxC5_4" checked
+                                onclick="toggleLayerBlock(configWMSMatrixMapC5, 3, mapC5, 9)">
+                            <span class="layer-label">Infrastructure (roads)</span>
+                        </label>
+
+                        <label class="layer-toggle">
+                            <input type="checkbox" id="checkboxC5_5" checked
+                                onclick="toggleLayerBlock(configWMSMatrixMapC5, 4, mapC5, 9)">
+                            <span class="layer-label">Energy (substation)</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </aside>
     </div>
 
     <!-- Radio button sotto la mappa -->

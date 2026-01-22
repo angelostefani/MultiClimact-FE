@@ -216,8 +216,12 @@ function addLayerToMap(layersArray, wmsUrl, wmsLayer, env, styles) {
  * @param {number} layerIndex - L'indice del layer da modificare.
  * @param {Object} map - L'oggetto mappa di OpenLayers.
  */
-function toggleLayer(configWMSMatrixMap, layerIndex, map) {
-    configWMSMatrixMap.layerMatrix[layerIndex][1] = !configWMSMatrixMap.layerMatrix[layerIndex][1];
+function toggleLayer(configWMSMatrixMap, layerIndex, map, desiredState) {
+    if (typeof desiredState === 'boolean') {
+        configWMSMatrixMap.layerMatrix[layerIndex][1] = desiredState;
+    } else {
+        configWMSMatrixMap.layerMatrix[layerIndex][1] = !configWMSMatrixMap.layerMatrix[layerIndex][1];
+    }
     updateMapLayers(configWMSMatrixMap, map);
     if (typeof refreshLegendsIfOpen === 'function') {
         refreshLegendsIfOpen();
@@ -232,14 +236,19 @@ function toggleLayer(configWMSMatrixMap, layerIndex, map) {
  * @param {Object} map - L'oggetto mappa di OpenLayers.
  * @param {number} blockSize - L'ampiezza del blocco di layers.
  */
-function toggleLayerBlock(configWMSMatrixMap, layerBlockIndex, map, blockSize) {
+function toggleLayerBlock(configWMSMatrixMap, layerBlockIndex, map, blockSize, blockStartIndex, desiredState) {
+    const startOffset = Number.isInteger(blockStartIndex) ? blockStartIndex : 0;
+
     // Calcola gli indici di inizio e fine del blocco
-    const startIndex = layerBlockIndex * blockSize;
+    const startIndex = startOffset + (layerBlockIndex * blockSize);
     const endIndex = Math.min(startIndex + blockSize, configWMSMatrixMap.layerMatrix.length);
+    if (startIndex >= configWMSMatrixMap.layerMatrix.length) {
+        return;
+    }
 
     // Determina il nuovo stato del blocco di layers
     const currentBlockState = configWMSMatrixMap.layerMatrix[startIndex][0];
-    const newBlockState = !currentBlockState;
+    const newBlockState = typeof desiredState === 'boolean' ? desiredState : !currentBlockState;
 
     // Applica il nuovo stato a tutti i layers nel blocco
     for (let i = startIndex; i < endIndex; i++) {
@@ -287,11 +296,13 @@ function switchLayer(configWMSMatrixMap, layerIndex, map) {
  * @param {Object} map - L'oggetto mappa di OpenLayers.
  * @param {number} blockSize - L'ampiezza del blocco di layers.
  */
-function switchLayers(configWMSMatrixMap, layersIndex, map, blockSize) {
+function switchLayers(configWMSMatrixMap, layersIndex, map, blockSize, blockStartIndex) {
+    const startOffset = Number.isInteger(blockStartIndex) ? blockStartIndex : 0;
+
     // Itera su tutti i blocchi di layer
-    for (let blockIndex = 0; blockIndex * blockSize < configWMSMatrixMap.layerMatrix.length; blockIndex++) {
+    for (let blockIndex = 0; startOffset + (blockIndex * blockSize) < configWMSMatrixMap.layerMatrix.length; blockIndex++) {
         // Calcola gli indici di inizio e fine del blocco
-        const startIndex = blockIndex * blockSize;
+        const startIndex = startOffset + (blockIndex * blockSize);
         const endIndex = Math.min(startIndex + blockSize, configWMSMatrixMap.layerMatrix.length);
 
         // Attiva solo il layer specificato nel blocco e disattiva tutti gli altri
