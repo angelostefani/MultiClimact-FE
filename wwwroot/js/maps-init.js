@@ -160,7 +160,12 @@ document.addEventListener("DOMContentLoaded", function () {
             [true, false, document.getElementById("wmsurl_lay07").dataset.value, document.getElementById("wmslayer_lay07").dataset.value, 'Lay07_PD2', 'mypd:pd2'],  //  layer
             [true, false, document.getElementById("wmsurl_lay07").dataset.value, document.getElementById("wmslayer_lay07").dataset.value, 'Lay07_PD3', 'mypd:pd3'],  //  layer
             [true, false, document.getElementById("wmsurl_lay07").dataset.value, document.getElementById("wmslayer_lay07").dataset.value, 'Lay07_PD4', 'mypd:pd4'],  //  layer
-            [true, true, document.getElementById("wmsurl_lay10").dataset.value, document.getElementById("wmslayer_lay10").dataset.value, 'Shakemap']  //  layer
+            [true, true, document.getElementById("wmsurl_lay36").dataset.value, document.getElementById("wmslayer_lay36").dataset.value, 'Lay36_PD1', 'mypd:pd1'],  //  layer
+            [true, false, document.getElementById("wmsurl_lay36").dataset.value, document.getElementById("wmslayer_lay36").dataset.value, 'Lay36_PD2', 'mypd:pd2'],  //  layer
+            [true, false, document.getElementById("wmsurl_lay36").dataset.value, document.getElementById("wmslayer_lay36").dataset.value, 'Lay36_PD3', 'mypd:pd3'],  //  layer
+            [true, false, document.getElementById("wmsurl_lay36").dataset.value, document.getElementById("wmslayer_lay36").dataset.value, 'Lay36_PD4', 'mypd:pd4'],  //  layer
+         
+            [true, true, document.getElementById("wmsurl_lay32").dataset.value, document.getElementById("wmslayer_lay32").dataset.value, 'Shakemap']  //  layer
         ]
     };
 

@@ -115,28 +115,69 @@
                     <div class="layer-box__title">Input</div>
                     <div class="layer-box__body">
                         <label class="layer-toggle">
-                            <input type="checkbox" id="checkboxC3_1" checked
-                                onclick="toggleLayerBlock(configWMSMatrixMapC3, 0, mapC3, 4)">
-                            <span class="layer-label">Electric substation *</span>
-                        </label>
-
-                        <label class="layer-toggle">
                             <input type="checkbox" id="checkboxC3_2" checked
-                                onclick="toggleLayerBlock(configWMSMatrixMapC3, 1, mapC3, 4)">
+                                onclick="toggleLayerBlock(configWMSMatrixMapC3, 1, mapC3, 4, 0, this.checked)">
                             <span class="layer-label">Water tower</span>
                         </label>
 
                         <label class="layer-toggle">
                             <input type="checkbox" id="checkboxC3_3" checked
-                                onclick="toggleLayerBlock(configWMSMatrixMapC3, 2, mapC3, 4)">
+                                onclick="toggleLayerBlock(configWMSMatrixMapC3, 2, mapC3, 4, 0, this.checked)">
                             <span class="layer-label">Water well</span>
                         </label>
 
                         <label class="layer-toggle">
                             <input type="checkbox" id="checkboxC3_4" checked
-                                onclick="toggleLayerBlock(configWMSMatrixMapC3, 3, mapC3, 4)">
+                                onclick="toggleLayerBlock(configWMSMatrixMapC3, 3, mapC3, 4, 0, this.checked)">
                             <span class="layer-label">Wastewater plant</span>
                         </label>
+
+                        <label class="layer-toggle">
+                            <input type="checkbox" id="checkboxC3_5" checked
+                                onclick="toggleLayerBlock(configWMSMatrixMapC3, 4, mapC3, 4, 0, this.checked)">
+                            <span class="layer-label">Electric substation</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="layer-box">
+                    <div class="layer-box__title">Marche Infrastructure</div>
+                    <div class="layer-box__body">
+                        <label class="layer-toggle">
+                            <input type="checkbox" id="checkboxC3_1" checked
+                                onclick="toggleLayerBlock(configWMSMatrixMapC3, 0, mapC3, 4, 0, this.checked)">
+                            <span class="layer-label">Electric substation vulnerability</span>
+                        </label>
+
+                        <label class="layer-toggle">
+                            <input type="checkbox" id="checkboxC3_11">
+                            <span class="layer-label">Electric substation risk</span>
+                        </label>
+
+                        <label class="layer-toggle">
+                            <input type="checkbox" id="checkboxC3_6" checked
+                                onclick="toggleLayerBlock(configWMSMatrixMapC3, 5, mapC3, 4, 0, this.checked)">
+                            <span class="layer-label">Shakemap</span>
+                        </label>
+
+                        <label class="layer-toggle">
+                            <input type="checkbox" id="checkboxC3_7" checked
+                                onclick="toggleLayerBlock(configWMSMatrixMapC3, 1, mapC3, 4, 0, this.checked)">
+                            <span class="layer-label">Water tower</span>
+                        </label>
+
+                        <label class="layer-toggle">
+                            <input type="checkbox" id="checkboxC3_8" checked
+                                onclick="toggleLayerBlock(configWMSMatrixMapC3, 2, mapC3, 4, 0, this.checked)">
+                            <span class="layer-label">Water well</span>
+                        </label>
+
+                        <label class="layer-toggle">
+                            <input type="checkbox" id="checkboxC3_9" checked
+                                onclick="toggleLayerBlock(configWMSMatrixMapC3, 3, mapC3, 4, 0, this.checked)">
+                            <span class="layer-label">Wastewater plant</span>
+                        </label>
+
                     </div>
                 </div>
             </div>
