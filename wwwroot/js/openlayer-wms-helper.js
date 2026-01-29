@@ -1,7 +1,7 @@
 /*
 * Autore: Angelo Stefani [angelo.stefani@enea.it]
 * Data di creazione: 02/01/2024
-* Ultimo aggiornamento: 16/09/2024
+ * Ultimo aggiornamento: 29/01/2026
 * 
 * Libreria JavaScript per le applicazioni GIS di ENEA.
 * Framework utilizzati:
@@ -41,6 +41,28 @@ Ogni riga di layerMatrix è un array con struttura:
 - [3] wmsLayerName: nome del layer WMS.
 - [4] legendId: id dell’elemento HTML della legenda da mostrare/nascondere.
 - [5] env: stringa opzionale da passare come ENV` al WMS.
+- [6] styles: eventuale valore STYLES da inviare al WMS.
+- [7] applyRiskRunFilter: boolean opzionale; se true aggiunge CQL_FILTER con activeRiskRunID (default: true se non valorizzato).
+
+Esempio di riga in `layerMatrix` con disattivazione del filtro:
+```
+[true, true, 'https://geo.example/wms', 'layer_name', 'legendDivId', 'param1:value1', 'styleA', false]
+//                              indices:   0      1          2                3             4              5              6       7
+```
+
+Esempio di uso singolo layer in `initWMSMap` senza filtro:
+```
+initWMSMap({
+    targetHtmlMapId: 'map',
+    centerLongitude: 12.5,
+    centerLatitude: 41.9,
+    wmsUrl: 'https://geo.example/wms',
+    wmsLayer: 'layer_name',
+    env: 'param1:value1',
+    styles: 'styleA',
+    applyRiskRunFilter: false
+});
+```
 
 Un layer viene renderizzato se e solo se enabled && visible è vero.
 
@@ -77,7 +99,14 @@ function initWMSMap(config) {
     let layersArray = [baseMapLayer];
 
     // Aggiungi il layer WMS se fornito
-    let wmsLayerObj = addLayerToMap(layersArray, config.wmsUrl, config.wmsLayer, config.env);
+    let wmsLayerObj = addLayerToMap(
+        layersArray,
+        config.wmsUrl,
+        config.wmsLayer,
+        config.env,
+        config.styles,
+        config.applyRiskRunFilter
+    );
 
     // Crea la mappa OpenLayers
     let localMap = new ol.Map({
@@ -136,7 +165,8 @@ function initWMSMatrixMap(config) {
                 config.layerMatrix[i][2],
                 config.layerMatrix[i][3],
                 config.layerMatrix[i][5],
-                config.layerMatrix[i][6]
+                config.layerMatrix[i][6],
+                config.layerMatrix[i][7]
             );
         }
     }
@@ -173,10 +203,11 @@ function initWMSMatrixMap(config) {
  * @param {string} wmsLayer - Nome del layer WMS.
  * @param {string} wmsLegend - Nome della legenda.
  * @param {string} [env] - Parametro opzionale per specificare l'ambiente WMS.
+ * @param {boolean} [applyRiskRunFilter=true] - Se true aggiunge CQL_FILTER con activeRiskRunID.
  * 
  * @returns {ol.layer.Tile|null} L'oggetto del layer WMS, o null se non aggiunto.
  */
-function addLayerToMap(layersArray, wmsUrl, wmsLayer, env, styles) {
+function addLayerToMap(layersArray, wmsUrl, wmsLayer, env, styles, applyRiskRunFilter) {
     if (wmsUrl && wmsLayer) {
         // Configura i parametri WMS, aggiungendo 'env' se valorizzato
         let params = { 'LAYERS': wmsLayer, 'TILED': true };
@@ -190,8 +221,9 @@ function addLayerToMap(layersArray, wmsUrl, wmsLayer, env, styles) {
             params.ENV = env;
         }
 
-        // Aggiungi filtro CQL id_run se definito globalmente
-        if (activeRiskRunID && activeRiskRunID.trim() !== '') {
+        // Aggiungi filtro CQL id_run se definito globalmente e abilitato per il layer
+        const shouldApplyRiskRunFilter = (applyRiskRunFilter === undefined) ? true : !!applyRiskRunFilter;
+        if (shouldApplyRiskRunFilter && activeRiskRunID && activeRiskRunID.trim() !== '') {
             const runFilter = `id_run=${activeRiskRunID}`;
             params.CQL_FILTER = params.CQL_FILTER
                 ? `${params.CQL_FILTER} AND ${runFilter}`
@@ -352,8 +384,10 @@ function updateMapLayers(configWMSMatrixMap, map) {
         let wmsUrl = layerConfig[2]; // URL del servizio WMS (GeoServer).
         let wmsLayerName = layerConfig[3]; // Nome del layer WMS
         let legendId = layerConfig[4]; // ID della legenda corrispondente
-        let env = layerConfig[5]; // Parametro env che verrà aggiunto alla richiesta verso geoserver
+        let env = layerConfig[5]; // Parametro env che verrà aggiunto alla richiesta verso geoserver
+
         let styles = layerConfig[6]; // Parametro STYLES WMS
+        let applyRiskRunFilter = layerConfig[7]; // Flag booleano: se true applica CQL_FILTER per activeRiskRunID
 
         // Configura i parametri WMS, aggiungendo 'env' se valorizzato
         let params = { 'LAYERS': wmsLayerName, 'TILED': true };
@@ -365,8 +399,9 @@ function updateMapLayers(configWMSMatrixMap, map) {
             params.ENV = env;
         }
 
-        // Aggiungi filtro CQL id_run se definito globalmente
-        if (activeRiskRunID && activeRiskRunID.trim() !== '') {
+        // Aggiungi filtro CQL id_run se definito globalmente e abilitato per il layer
+        const shouldApplyRiskRunFilter = (applyRiskRunFilter === undefined) ? true : !!applyRiskRunFilter;
+        if (shouldApplyRiskRunFilter && activeRiskRunID && activeRiskRunID.trim() !== '') {
             const runFilter = `id_run=${activeRiskRunID}`;
             params.CQL_FILTER = params.CQL_FILTER
                 ? `${params.CQL_FILTER} AND ${runFilter}`
