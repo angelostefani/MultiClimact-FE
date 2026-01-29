@@ -191,7 +191,7 @@ namespace MultiClimact.Pages
                 new { Key = "wmsurl_lay18", Description = "Extreme Precipitation Hazard index 3 classes" },
                 new { Key = "wmsurl_lay19", Description = "Extreme Precipitation POI Vulnerability" },
                 new { Key = "wmsurl_lay20", Description = "Extreme Precipitation POI Risk" },
-                new { Key = "wmsurl_lay21", Description = "Extreme Precipitation POI Risk" },
+                new { Key = "wmsurl_lay21", Description = "Building Vulnerability" },
                 new { Key = "wmsurl_lay22", Description = "Extreme Precipitation Building Risk" },
                 new { Key = "wmsurl_lay23", Description = "Building Simulation Layer" },
                 new { Key = "wmsurl_lay24", Description = "POI Precipitation Simulation View" },

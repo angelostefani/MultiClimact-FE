@@ -190,9 +190,12 @@ function addLayerToMap(layersArray, wmsUrl, wmsLayer, env, styles) {
             params.ENV = env;
         }
 
-        // Aggiungi il parametro risk_run_id se definito globalmente
+        // Aggiungi filtro CQL id_run se definito globalmente
         if (activeRiskRunID && activeRiskRunID.trim() !== '') {
-            params.risk_run_id = activeRiskRunID;
+            const runFilter = `id_run=${activeRiskRunID}`;
+            params.CQL_FILTER = params.CQL_FILTER
+                ? `${params.CQL_FILTER} AND ${runFilter}`
+                : runFilter;
         }
 
         // Crea il layer WMS
@@ -362,9 +365,12 @@ function updateMapLayers(configWMSMatrixMap, map) {
             params.ENV = env;
         }
 
-        // Aggiungi il parametro risk_run_id se definito globalmente
+        // Aggiungi filtro CQL id_run se definito globalmente
         if (activeRiskRunID && activeRiskRunID.trim() !== '') {
-            params.risk_run_id = activeRiskRunID;
+            const runFilter = `id_run=${activeRiskRunID}`;
+            params.CQL_FILTER = params.CQL_FILTER
+                ? `${params.CQL_FILTER} AND ${runFilter}`
+                : runFilter;
         }
 
         // Aggiungi il layer WMS se è visibile
