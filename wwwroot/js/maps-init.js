@@ -174,6 +174,16 @@ document.addEventListener("DOMContentLoaded", function () {
             [true, false, document.getElementById("wmsurl_lay37").dataset.value, document.getElementById("wmslayer_lay37").dataset.value, 'Lay37_PD3', 'mypd:pd3',null,false],  //  layer input
             [true, false, document.getElementById("wmsurl_lay37").dataset.value, document.getElementById("wmslayer_lay37").dataset.value, 'Lay37_PD4', 'mypd:pd4',null,false],  //  layer input
 
+            [true, true, document.getElementById("wmsurl_lay38").dataset.value, document.getElementById("wmslayer_lay38").dataset.value, 'Lay38_PD1', 'mypd:pd1',null,false],  //  layer  input
+            [true, false, document.getElementById("wmsurl_lay38").dataset.value, document.getElementById("wmslayer_lay38").dataset.value, 'Lay38_PD2', 'mypd:pd2',null,false],  //  layer input
+            [true, false, document.getElementById("wmsurl_lay38").dataset.value, document.getElementById("wmslayer_lay38").dataset.value, 'Lay38_PD3', 'mypd:pd3',null,false],  //  layer input
+            [true, false, document.getElementById("wmsurl_lay38").dataset.value, document.getElementById("wmslayer_lay38").dataset.value, 'Lay38_PD4', 'mypd:pd4',null,false],  //  layer input
+
+            [true, true, document.getElementById("wmsurl_lay39").dataset.value, document.getElementById("wmslayer_lay39").dataset.value, 'Lay39_PD1', 'mypd:pd1',null,false],  //  layer  input
+            [true, false, document.getElementById("wmsurl_lay39").dataset.value, document.getElementById("wmslayer_lay39").dataset.value, 'Lay39_PD2', 'mypd:pd2',null,false],  //  layer input
+            [true, false, document.getElementById("wmsurl_lay39").dataset.value, document.getElementById("wmslayer_lay39").dataset.value, 'Lay39_PD3', 'mypd:pd3',null,false],  //  layer input
+            [true, false, document.getElementById("wmsurl_lay39").dataset.value, document.getElementById("wmslayer_lay39").dataset.value, 'Lay39_PD4', 'mypd:pd4',null,false],  //  layer input
+
             [true, true, document.getElementById("wmsurl_lay32").dataset.value, document.getElementById("wmslayer_lay32").dataset.value, 'Shakemap']  //  layer
         ]
     };

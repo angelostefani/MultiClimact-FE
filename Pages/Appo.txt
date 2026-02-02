@@ -4,3 +4,8 @@ http://192.168.154.23:8180/geoserver/multic/ows?service=WFS&version=1.1.0&reques
 
 
 http://192.168.154.23:8180/geoserver/multic/ows?service=WFS&version=1.1.0&request=GetFeature&typeName=multic:extprec_3_classes_view&cql_filter=id_run=1405&resultType=hits
+
+
+Casi di test:
+Earthquahe 10/02/2025 simulated
+

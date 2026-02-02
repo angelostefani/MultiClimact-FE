@@ -207,7 +207,9 @@ namespace MultiClimact.Pages
                 new { Key = "wmsurl_lay34", Description = "Earthquake POI building vulnerability view" },
                 new { Key = "wmsurl_lay35", Description = "Earthquake POI building view" },
                 new { Key = "wmsurl_lay36", Description = "Earthquake Substation view" },
-                new { Key = "wmsurl_lay37", Description = "Earthquake Substation Damage view" }
+                new { Key = "wmsurl_lay37", Description = "Earthquake Substation damage view" },
+                new { Key = "wmsurl_lay38", Description = "Earthquake Water Tower vulnerability view" },
+                new { Key = "wmsurl_lay39", Description = "Earthquake Water Tower damage view" }
             };
 
             // Loop through WMS layers and store them in ViewData dynamically
