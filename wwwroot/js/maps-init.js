@@ -144,26 +144,26 @@ document.addEventListener("DOMContentLoaded", function () {
         centerLatitude: 43.1357,                  // Initial latitude
         zoomValue: 14,                            // Initial zoom level
         layerMatrix: [                            // Array of WMS layers
-            [true, true, document.getElementById("wmsurl_lay04").dataset.value, document.getElementById("wmslayer_lay04").dataset.value, 'Lay04_PD1', 'mypd:pd1'],  //  layer
+            [true, true, document.getElementById("wmsurl_lay04").dataset.value, document.getElementById("wmslayer_lay04").dataset.value, 'Lay04_PD1', 'mypd:pd1'],  //  layer output
             [true, false, document.getElementById("wmsurl_lay04").dataset.value, document.getElementById("wmslayer_lay04").dataset.value, 'Lay04_PD2', 'mypd:pd2'],  //  layer
             [true, false, document.getElementById("wmsurl_lay04").dataset.value, document.getElementById("wmslayer_lay04").dataset.value, 'Lay04_PD3', 'mypd:pd3'],  //  layer
             [true, false, document.getElementById("wmsurl_lay04").dataset.value, document.getElementById("wmslayer_lay04").dataset.value, 'Lay04_PD4', 'mypd:pd4'],  //  layer
-            [true, true, document.getElementById("wmsurl_lay05").dataset.value,  document.getElementById("wmslayer_lay05").dataset.value, 'Lay05_PD1', 'mypd:pd1'],  //  layer
-            [true, false, document.getElementById("wmsurl_lay05").dataset.value, document.getElementById("wmslayer_lay05").dataset.value, 'Lay05_PD2', 'mypd:pd2'],  //  layer
-            [true, false, document.getElementById("wmsurl_lay05").dataset.value, document.getElementById("wmslayer_lay05").dataset.value, 'Lay05_PD3', 'mypd:pd3'],  //  layer
-            [true, false, document.getElementById("wmsurl_lay05").dataset.value, document.getElementById("wmslayer_lay05").dataset.value, 'Lay05_PD4', 'mypd:pd4'],  //  layer
-            [true, true, document.getElementById("wmsurl_lay06").dataset.value, document.getElementById("wmslayer_lay06").dataset.value, 'Lay06_PD1', 'mypd:pd1'],  //  layer
-            [true, false, document.getElementById("wmsurl_lay06").dataset.value, document.getElementById("wmslayer_lay06").dataset.value, 'Lay06_PD2', 'mypd:pd2'],  //  layer
-            [true, false, document.getElementById("wmsurl_lay06").dataset.value, document.getElementById("wmslayer_lay06").dataset.value, 'Lay06_PD3', 'mypd:pd3'],  //  layer
-            [true, false, document.getElementById("wmsurl_lay06").dataset.value, document.getElementById("wmslayer_lay06").dataset.value, 'Lay06_PD4', 'mypd:pd4'],  //  layer
-            [true, true, document.getElementById("wmsurl_lay07").dataset.value, document.getElementById("wmslayer_lay07").dataset.value, 'Lay07_PD1', 'mypd:pd1'],  //  layer
-            [true, false, document.getElementById("wmsurl_lay07").dataset.value, document.getElementById("wmslayer_lay07").dataset.value, 'Lay07_PD2', 'mypd:pd2'],  //  layer
-            [true, false, document.getElementById("wmsurl_lay07").dataset.value, document.getElementById("wmslayer_lay07").dataset.value, 'Lay07_PD3', 'mypd:pd3'],  //  layer
-            [true, false, document.getElementById("wmsurl_lay07").dataset.value, document.getElementById("wmslayer_lay07").dataset.value, 'Lay07_PD4', 'mypd:pd4'],  //  layer
-            [true, true, document.getElementById("wmsurl_lay36").dataset.value, document.getElementById("wmslayer_lay36").dataset.value, 'Lay36_PD1', 'mypd:pd1'],  //  layer
-            [true, false, document.getElementById("wmsurl_lay36").dataset.value, document.getElementById("wmslayer_lay36").dataset.value, 'Lay36_PD2', 'mypd:pd2'],  //  layer
-            [true, false, document.getElementById("wmsurl_lay36").dataset.value, document.getElementById("wmslayer_lay36").dataset.value, 'Lay36_PD3', 'mypd:pd3'],  //  layer
-            [true, false, document.getElementById("wmsurl_lay36").dataset.value, document.getElementById("wmslayer_lay36").dataset.value, 'Lay36_PD4', 'mypd:pd4'],  //  layer
+            [true, true, document.getElementById("wmsurl_lay05").dataset.value,  document.getElementById("wmslayer_lay05").dataset.value, 'Lay05_PD1', 'mypd:pd1',null,false],  //  layer input 
+            [true, false, document.getElementById("wmsurl_lay05").dataset.value, document.getElementById("wmslayer_lay05").dataset.value, 'Lay05_PD2', 'mypd:pd2',null,false],  //  layer input
+            [true, false, document.getElementById("wmsurl_lay05").dataset.value, document.getElementById("wmslayer_lay05").dataset.value, 'Lay05_PD3', 'mypd:pd3',null,false],  //  layer input
+            [true, false, document.getElementById("wmsurl_lay05").dataset.value, document.getElementById("wmslayer_lay05").dataset.value, 'Lay05_PD4', 'mypd:pd4',null,false],  //  layer input
+            [true, true, document.getElementById("wmsurl_lay06").dataset.value, document.getElementById("wmslayer_lay06").dataset.value, 'Lay06_PD1', 'mypd:pd1',null,false],  //  layer input
+            [true, false, document.getElementById("wmsurl_lay06").dataset.value, document.getElementById("wmslayer_lay06").dataset.value, 'Lay06_PD2', 'mypd:pd2',null,false],  //  layer input
+            [true, false, document.getElementById("wmsurl_lay06").dataset.value, document.getElementById("wmslayer_lay06").dataset.value, 'Lay06_PD3', 'mypd:pd3',null,false],  //  layer input
+            [true, false, document.getElementById("wmsurl_lay06").dataset.value, document.getElementById("wmslayer_lay06").dataset.value, 'Lay06_PD4', 'mypd:pd4',null,false],  //  layer input
+            [true, true, document.getElementById("wmsurl_lay07").dataset.value, document.getElementById("wmslayer_lay07").dataset.value, 'Lay07_PD1', 'mypd:pd1',null,false],  //  layer input
+            [true, false, document.getElementById("wmsurl_lay07").dataset.value, document.getElementById("wmslayer_lay07").dataset.value, 'Lay07_PD2', 'mypd:pd2',null,false],  //  layer input
+            [true, false, document.getElementById("wmsurl_lay07").dataset.value, document.getElementById("wmslayer_lay07").dataset.value, 'Lay07_PD3', 'mypd:pd3',null,false],  //  layer input
+            [true, false, document.getElementById("wmsurl_lay07").dataset.value, document.getElementById("wmslayer_lay07").dataset.value, 'Lay07_PD4', 'mypd:pd4',null,false],  //  layer input
+            [true, true, document.getElementById("wmsurl_lay36").dataset.value, document.getElementById("wmslayer_lay36").dataset.value, 'Lay36_PD1', 'mypd:pd1',null,false],  //  layer  input
+            [true, false, document.getElementById("wmsurl_lay36").dataset.value, document.getElementById("wmslayer_lay36").dataset.value, 'Lay36_PD2', 'mypd:pd2',null,false],  //  layer input
+            [true, false, document.getElementById("wmsurl_lay36").dataset.value, document.getElementById("wmslayer_lay36").dataset.value, 'Lay36_PD3', 'mypd:pd3',null,false],  //  layer input
+            [true, false, document.getElementById("wmsurl_lay36").dataset.value, document.getElementById("wmslayer_lay36").dataset.value, 'Lay36_PD4', 'mypd:pd4',null,false],  //  layer input
          
             [true, true, document.getElementById("wmsurl_lay32").dataset.value, document.getElementById("wmslayer_lay32").dataset.value, 'Shakemap']  //  layer
         ]
@@ -270,8 +270,8 @@ document.addEventListener("DOMContentLoaded", function () {
         zoomValue: 9,                            // Initial zoom level
         popupContext: 'extreme-sim',
         layerMatrix: [
-        [true, true, document.getElementById("wmsurl_lay24").dataset.value, document.getElementById("wmslayer_lay24").dataset.value, 'Buildings of Marche region Extreme Precipitation'],
-        [true, true, document.getElementById("wmsurl_lay23").dataset.value, document.getElementById("wmslayer_lay23").dataset.value, 'Buildings of Camerino Extreme Precipitation'],
+        [true, true, document.getElementById("wmsurl_lay24").dataset.value, document.getElementById("wmslayer_lay24").dataset.value, 'Buildings of Marche region Extreme Precipitation', null, null, false],
+        [true, true, document.getElementById("wmsurl_lay23").dataset.value, document.getElementById("wmslayer_lay23").dataset.value, 'Buildings of Camerino Extreme Precipitation', null, null,false],
         [true, true, document.getElementById("wmsurl_lay17").dataset.value, document.getElementById("wmslayer_lay17").dataset.value, 'Hazard index 6 classes'],
         [true, true, document.getElementById("wmsurl_lay18").dataset.value, document.getElementById("wmslayer_lay18").dataset.value, 'Hazard index 3 classes'],
         [true, true, document.getElementById("wmsurl_lay19").dataset.value, document.getElementById("wmslayer_lay19").dataset.value, 'POI Vulnerability'],
