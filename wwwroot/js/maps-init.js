@@ -148,23 +148,32 @@ document.addEventListener("DOMContentLoaded", function () {
             [true, false, document.getElementById("wmsurl_lay04").dataset.value, document.getElementById("wmslayer_lay04").dataset.value, 'Lay04_PD2', 'mypd:pd2'],  //  layer
             [true, false, document.getElementById("wmsurl_lay04").dataset.value, document.getElementById("wmslayer_lay04").dataset.value, 'Lay04_PD3', 'mypd:pd3'],  //  layer
             [true, false, document.getElementById("wmsurl_lay04").dataset.value, document.getElementById("wmslayer_lay04").dataset.value, 'Lay04_PD4', 'mypd:pd4'],  //  layer
+            
             [true, true, document.getElementById("wmsurl_lay05").dataset.value,  document.getElementById("wmslayer_lay05").dataset.value, 'Lay05_PD1', 'mypd:pd1',null,false],  //  layer input 
             [true, false, document.getElementById("wmsurl_lay05").dataset.value, document.getElementById("wmslayer_lay05").dataset.value, 'Lay05_PD2', 'mypd:pd2',null,false],  //  layer input
             [true, false, document.getElementById("wmsurl_lay05").dataset.value, document.getElementById("wmslayer_lay05").dataset.value, 'Lay05_PD3', 'mypd:pd3',null,false],  //  layer input
             [true, false, document.getElementById("wmsurl_lay05").dataset.value, document.getElementById("wmslayer_lay05").dataset.value, 'Lay05_PD4', 'mypd:pd4',null,false],  //  layer input
+            
             [true, true, document.getElementById("wmsurl_lay06").dataset.value, document.getElementById("wmslayer_lay06").dataset.value, 'Lay06_PD1', 'mypd:pd1',null,false],  //  layer input
             [true, false, document.getElementById("wmsurl_lay06").dataset.value, document.getElementById("wmslayer_lay06").dataset.value, 'Lay06_PD2', 'mypd:pd2',null,false],  //  layer input
             [true, false, document.getElementById("wmsurl_lay06").dataset.value, document.getElementById("wmslayer_lay06").dataset.value, 'Lay06_PD3', 'mypd:pd3',null,false],  //  layer input
             [true, false, document.getElementById("wmsurl_lay06").dataset.value, document.getElementById("wmslayer_lay06").dataset.value, 'Lay06_PD4', 'mypd:pd4',null,false],  //  layer input
+            
             [true, true, document.getElementById("wmsurl_lay07").dataset.value, document.getElementById("wmslayer_lay07").dataset.value, 'Lay07_PD1', 'mypd:pd1',null,false],  //  layer input
             [true, false, document.getElementById("wmsurl_lay07").dataset.value, document.getElementById("wmslayer_lay07").dataset.value, 'Lay07_PD2', 'mypd:pd2',null,false],  //  layer input
             [true, false, document.getElementById("wmsurl_lay07").dataset.value, document.getElementById("wmslayer_lay07").dataset.value, 'Lay07_PD3', 'mypd:pd3',null,false],  //  layer input
             [true, false, document.getElementById("wmsurl_lay07").dataset.value, document.getElementById("wmslayer_lay07").dataset.value, 'Lay07_PD4', 'mypd:pd4',null,false],  //  layer input
+            
             [true, true, document.getElementById("wmsurl_lay36").dataset.value, document.getElementById("wmslayer_lay36").dataset.value, 'Lay36_PD1', 'mypd:pd1',null,false],  //  layer  input
             [true, false, document.getElementById("wmsurl_lay36").dataset.value, document.getElementById("wmslayer_lay36").dataset.value, 'Lay36_PD2', 'mypd:pd2',null,false],  //  layer input
             [true, false, document.getElementById("wmsurl_lay36").dataset.value, document.getElementById("wmslayer_lay36").dataset.value, 'Lay36_PD3', 'mypd:pd3',null,false],  //  layer input
             [true, false, document.getElementById("wmsurl_lay36").dataset.value, document.getElementById("wmslayer_lay36").dataset.value, 'Lay36_PD4', 'mypd:pd4',null,false],  //  layer input
          
+            [true, true, document.getElementById("wmsurl_lay37").dataset.value, document.getElementById("wmslayer_lay37").dataset.value, 'Lay37_PD1', 'mypd:pd1',null,false],  //  layer  input
+            [true, false, document.getElementById("wmsurl_lay37").dataset.value, document.getElementById("wmslayer_lay37").dataset.value, 'Lay37_PD2', 'mypd:pd2',null,false],  //  layer input
+            [true, false, document.getElementById("wmsurl_lay37").dataset.value, document.getElementById("wmslayer_lay37").dataset.value, 'Lay37_PD3', 'mypd:pd3',null,false],  //  layer input
+            [true, false, document.getElementById("wmsurl_lay37").dataset.value, document.getElementById("wmslayer_lay37").dataset.value, 'Lay37_PD4', 'mypd:pd4',null,false],  //  layer input
+
             [true, true, document.getElementById("wmsurl_lay32").dataset.value, document.getElementById("wmslayer_lay32").dataset.value, 'Shakemap']  //  layer
         ]
     };
