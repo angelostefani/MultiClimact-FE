@@ -212,7 +212,11 @@ namespace MultiClimact.Pages
                 "wmslayer_earth_water_tower_vuln_view",
                 "wmslayer_earth_water_tower_damage_view",
                 "wmslayer_earth_substation_vuln_view",
-                "wmslayer_earth_substation_damage_view"
+                "wmslayer_earth_substation_damage_view",
+                "wmslayer_earth_waste_water_vuln_view",
+                "wmslayer_earth_waste_water_damage_view",
+                "wmslayer_earth_water_well_vuln_view",
+                "wmslayer_earth_water_well_damage_view",
             };
 
             var wmsLayerKeyList = new List<string>();
