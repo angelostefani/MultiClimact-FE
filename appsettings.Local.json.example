@@ -12,6 +12,6 @@
     "BaseUrl": "http://localhost:8000"
   },
   "wms": {
-    "wmsurl_lay00": "http://localhost:8180/geoserver/multic/wms"
+    "wmsurl_baseurl": "http://localhost:8180/geoserver/multic/wms"
   }
 }

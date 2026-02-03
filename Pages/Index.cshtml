@@ -119,11 +119,13 @@ else
         <span id="idRunLastExtremePrecipitation" data-value="@(ViewData["idRunLastExtremePrecipitation"] ?? "undefined")"></span>
 
         @* Dynamic WMS layers data *@
-        @for (int i = 0; i <= 40; i++)
+        @{
+            var wmsLayerKeys = (IEnumerable<string>)(ViewData["wmsLayerKeys"] ?? Array.Empty<string>());
+        }
+        <span id="wmsurl_baseurl" data-value="@(ViewData["wmsurl_baseurl"] ?? "undefined")"></span>
+        @foreach (var layerKey in wmsLayerKeys)
         {
-            string layerIndex = i.ToString("D2"); // Ensures two-digit formatting for numbers below 10
-            <span id="wmsurl_lay@(layerIndex)" data-value="@ViewData[$"wmsurl_lay{layerIndex}"]"></span>
-            <span id="wmslayer_lay@(layerIndex)" data-value="@ViewData[$"wmslayer_lay{layerIndex}"]"></span>
+            <span id="@layerKey" data-value="@ViewData[layerKey]"></span>
         }
 
         <!-- JavaScript Initialization -->

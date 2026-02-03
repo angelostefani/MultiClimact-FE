@@ -83,14 +83,14 @@ Environment specific files such as `appsettings.Development.json` can override t
 - WMS endpoint: use the bare service endpoint (no query). Example check: `curl -I "http://<geoserver>/geoserver/multic/wms?service=WMS&request=GetCapabilities"`.
 - App start: run `dotnet run` and open the homepage; check map layers toggle and GetFeatureInfo.
 
-Note: In `appsettings.json`, prefer `wms:wmsurl_lay00` without query parameters (e.g., `http://<geoserver>/geoserver/multic/wms`). The app appends required `service`, `request`, etc.
+Note: In `appsettings.json`, prefer `wms:wmsurl_earth_real_view` without query parameters (e.g., `http://<geoserver>/geoserver/multic/wms`). The app appends required `service`, `request`, etc.
 
 ## Environment Overrides
 
 - For local tweaks without committing secrets, create a local override from the example:
 
   - Copy `appsettings.Local.json.example` to `appsettings.Development.json` (or use environment variables/user-secrets).
-  - Set `DatabaseProvider`, `ConnectionStrings:DefaultConnection` or `ConnectionStrings:SqliteConnection`, `EarthquakeService:BaseUrl`, `HeatwaveService:BaseUrl`, and `wms:wmsurl_lay00`.
+  - Set `DatabaseProvider`, `ConnectionStrings:DefaultConnection` or `ConnectionStrings:SqliteConnection`, `EarthquakeService:BaseUrl`, `HeatwaveService:BaseUrl`, and `wms:wmsurl_earth_real_view`.
 
 ## Database Providers
 
@@ -112,7 +112,7 @@ Il pannello `_TabPanels_C.cshtml` contiene i controlli (checkbox e radio) che ri
 ### Aggiungere una nuova mappa o layer WMS
 
 1. **Configurazione**  
-   - Aggiungere in `appsettings.json` i nuovi campi `wmsurl_layXX` e `wmslayer_layXX`.  
+  - Aggiungere in `appsettings.json` i nuovi campi `wmsurl_<layer_name>` e `wmslayer_<layer_name>`.  
    - Inserire la nuova coppia nell'array `wmsLayers` di `ConfigurationToViewDataMapping`.
 
 2. **View e inizializzazione JS**  

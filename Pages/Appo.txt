@@ -9,3 +9,9 @@ http://192.168.154.23:8180/geoserver/multic/ows?service=WFS&version=1.1.0&reques
 Casi di test:
 Earthquahe 10/02/2025 simulated
 
+Nel file appsettings.json, index.cshtml.cs, maps-init.js, _TabPanels_C.cshtml sostituire la nomenclatura con numeri (es: wmsurl_lay00, wmslayer_lay00) con una nomenclatura "parlante" prendendo
+il nome del rispettivo layer (es: earth_real_view).
+Quindi wmsurl_lay01 diventa wmsurl_poibui_damage_view, wmslayer_lay01 diventa wmslayer_poibui_damage_view, etc.
+
+Nel file appsettings.json, dato che tutti i wmsurl_ puntano alla stessa url, utilizziamo una soltanto "wmsurl_baseurl": "http://192.168.154.23:8180/geoserver/multic/wms".
+Elimina quindi i vari wmsurl_earth_real_view, wmsurl_poibui_damage_view, etc. e fai le opportune sostituzioni nei files index.cshtml.cs, maps-init.js, _TabPanels_C.cshtml.

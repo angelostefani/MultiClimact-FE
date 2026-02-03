@@ -19,7 +19,7 @@ namespace MultiClimact.Controllers
         private readonly HttpClient _httpClient = httpClient;
 
         private readonly ILogger<WmsProxyController> _logger = logger;
-        private string _wmsBaseUrl = configuration["wms:wmsurl_lay00"];
+        private string _wmsBaseUrl = configuration["wms:wmsurl_earth_real_view"];
 
         public string WmsBaseUrl => _wmsBaseUrl;
 
