@@ -1,4 +1,4 @@
-/**
+﻿/**
  * This script initializes multiple WMS (Web Map Service) maps with various layers.
  * It also sets up user interface elements and manages tab interactions.
  */
@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
      * - Tile 1: Hydraulic bulletins
      * - Tile 2: Hydrogeological bulletins
      * - Tile 3: Thunderstorms bulletins
-     * - Tile 4: Overview (all bulletins)
+     * - Tile 4: Latest Earthquakes
      */
     const dashboardBaseConfig = {
         baseMapName: 'OpenStreetMap - EPSG:3857',
@@ -39,28 +39,28 @@ document.addEventListener("DOMContentLoaded", function () {
             ...dashboardBaseConfig,
             targetHtmlMapId: 'mapHomeDashboard1',
             layerMatrix: [
-                [true, true, wmsBaseUrl, document.getElementById("wmslayer_dpc_bulletins_hydraulic_view").dataset.value, 'DPC hydraulic bulletins']
+                [true, true, wmsBaseUrl, document.getElementById("wmslayer_dpc_bulletins_hydraulic_view").dataset.value, 'DPC hydraulic bulletins', null, null, false]
             ]
         },
         {
             ...dashboardBaseConfig,
             targetHtmlMapId: 'mapHomeDashboard2',
             layerMatrix: [
-                [true, true, wmsBaseUrl, document.getElementById("wmslayer_dpc_bulletins_hydrogeological_view").dataset.value, 'DPC hydrogeological bulletins']
+                [true, true, wmsBaseUrl, document.getElementById("wmslayer_dpc_bulletins_hydrogeological_view").dataset.value, 'DPC hydrogeological bulletins', null, null, false]
             ]
         },
         {
             ...dashboardBaseConfig,
             targetHtmlMapId: 'mapHomeDashboard3',
             layerMatrix: [
-                [true, true, wmsBaseUrl, document.getElementById("wmslayer_dpc_bulletins_thunderstorms_view").dataset.value, 'DPC thunderstorms bulletins']
+                [true, true, wmsBaseUrl, document.getElementById("wmslayer_dpc_bulletins_thunderstorms_view").dataset.value, 'DPC thunderstorms bulletins', null, null, false]
             ]
         },
         {
             ...dashboardBaseConfig,
             targetHtmlMapId: 'mapHomeDashboard4',
             layerMatrix: [
-                [true, true, wmsBaseUrl, document.getElementById("wmslayer_earth_real_view").dataset.value, 'Latest Earthquakes']
+                [true, true, wmsBaseUrl, document.getElementById("wmslayer_earth_real_view").dataset.value, 'Latest Earthquakes', null, null, false]
             ]
         }
     ];
@@ -70,6 +70,7 @@ document.addEventListener("DOMContentLoaded", function () {
     /**
      * Configuration for initializing the first WMS map instance (Map C1).
      * This map displays real-time earthquake data.
+     * "Risk Analysis -> Earthquakes -> Latest Earthquakes"
      */
     configWMSMatrixMapC1 = {
         targetHtmlMapId: 'mapC1',                  // Target HTML element ID
@@ -78,17 +79,19 @@ document.addEventListener("DOMContentLoaded", function () {
         centerLatitude: 39.700,                    // Initial latitude
         zoomValue: 6,                              // Initial zoom level
         layerMatrix: [                             // Array of WMS layers
-            [true, true, wmsBaseUrl, document.getElementById("wmslayer_shakemap").dataset.value, 'Shakemap'],  //  layer
-            [true, true, wmsBaseUrl, document.getElementById("wmslayer_earth_real_view").dataset.value, 'Latest Earthquakes']  //  layer //invertiti
+            [true, true, wmsBaseUrl, document.getElementById("wmslayer_shakemap").dataset.value, 'Shakemap', null, null, false],  //  layer
+            [true, true, wmsBaseUrl, document.getElementById("wmslayer_earth_real_view").dataset.value, 'Latest Earthquakes', null, null, false]  //  layer //invertiti
         ]
     };
 
     // Initialize the map (C1)
     mapC1 = initWMSMatrixMap(configWMSMatrixMapC1);
 
+
     /**
      * Configuration for the second WMS map instance (Map C2).
      * This map contains infrastructure-related layers.
+     * "Risk Analysis -> Earthquakes -> Building Damage Risk"
      */
     configWMSMatrixMapC2 = {
         targetHtmlMapId: 'mapC2',                 // Target HTML element ID
@@ -97,46 +100,48 @@ document.addEventListener("DOMContentLoaded", function () {
         centerLatitude: 43.1357,                  // Initial latitude
         zoomValue: 14,                            // Initial zoom level
         layerMatrix: [                            // Array of WMS layers
-            [true, true, wmsBaseUrl, document.getElementById("wmslayer_building").dataset.value, 'Buildings of Camerino earthquake'],  //  layer
-            [true, true, wmsBaseUrl, document.getElementById("wmslayer_earth_building_vuln_view").dataset.value, 'Lay02_PD1', 'mypd:pd1'],  //  layer
-            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_building_vuln_view").dataset.value, 'Lay02_PD2', 'mypd:pd2'],  //  layer
-            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_building_vuln_view").dataset.value, 'Lay02_PD3', 'mypd:pd3'],  //  layer
-            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_building_vuln_view").dataset.value, 'Lay02_PD4', 'mypd:pd4'],  //  layer
-            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_building_vuln_view").dataset.value, 'Lay02_PD5', 'mypd:pd5'],  //  layer
-            [true, true, wmsBaseUrl, document.getElementById("wmslayer_earth_poibui_vuln_view").dataset.value, 'Lay34_PD1', 'mypd:pd1'],  //  layer
-            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_poibui_vuln_view").dataset.value, 'Lay34_PD2', 'mypd:pd2'],  //  layer
-            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_poibui_vuln_view").dataset.value, 'Lay34_PD3', 'mypd:pd3'],  //  layer
-            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_poibui_vuln_view").dataset.value, 'Lay34_PD4', 'mypd:pd4'],  //  layer
-            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_poibui_vuln_view").dataset.value, 'Lay34_PD5', 'mypd:pd5'],  //  layer
-            [true, true, wmsBaseUrl, document.getElementById("wmslayer_earth_building_damage_view").dataset.value, 'Lay31_PD1', 'mypd:pd1'],  //  layer
-            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_building_damage_view").dataset.value, 'Lay31_PD2', 'mypd:pd2'],  //  layer
-            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_building_damage_view").dataset.value, 'Lay31_PD3', 'mypd:pd3'],  //  layer
-            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_building_damage_view").dataset.value, 'Lay31_PD4', 'mypd:pd4'],  //  layer
-            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_building_damage_view").dataset.value, 'Lay31_PD5', 'mypd:pd5'],
-            [true, true, wmsBaseUrl, document.getElementById("wmslayer_earth_shakemap_view").dataset.value, 'Lay32_PD1', 'mypd:pd1'],  //  layer
-            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_shakemap_view").dataset.value, 'Lay32_PD2', 'mypd:pd2'],  //  layer
-            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_shakemap_view").dataset.value, 'Lay32_PD3', 'mypd:pd3'],  //  layer
-            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_shakemap_view").dataset.value, 'Lay32_PD4', 'mypd:pd4'],  //  layer
-            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_shakemap_view").dataset.value, 'Lay32_PD5', 'mypd:pd5'],
-            [true, true, wmsBaseUrl, document.getElementById("wmslayer_earth_poibui_damage_view").dataset.value, 'Lay33_PD1', 'mypd:pd1'],  //  layer
-            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_poibui_damage_view").dataset.value, 'Lay33_PD2', 'mypd:pd2'],  //  layer
-            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_poibui_damage_view").dataset.value, 'Lay33_PD3', 'mypd:pd3'],  //  layer
-            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_poibui_damage_view").dataset.value, 'Lay33_PD4', 'mypd:pd4'],  //  layer
-            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_poibui_damage_view").dataset.value, 'Lay33_PD5', 'mypd:pd5'],
-            [true, true, wmsBaseUrl, document.getElementById("wmslayer_earth_poibui_view").dataset.value, 'Lay35_PD1', 'mypd:pd1'],  //  layer
-            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_poibui_view").dataset.value, 'Lay35_PD2', 'mypd:pd2'],  //  layer
-            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_poibui_view").dataset.value, 'Lay35_PD3', 'mypd:pd3'],  //  layer
-            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_poibui_view").dataset.value, 'Lay35_PD4', 'mypd:pd4'],  //  layer
-            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_poibui_view").dataset.value, 'Lay35_PD5', 'mypd:pd5']
+            [true, true, wmsBaseUrl, document.getElementById("wmslayer_building").dataset.value, 'Buildings of Camerino earthquake', null, null, false],  //  layer
+            [true, true, wmsBaseUrl, document.getElementById("wmslayer_earth_building_vuln_view").dataset.value, 'earth_building_vuln_PD1', 'mypd:pd1', null, false],  //  layer
+            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_building_vuln_view").dataset.value, 'earth_building_vuln_PD2', 'mypd:pd2', null, false],  //  layer
+            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_building_vuln_view").dataset.value, 'earth_building_vuln_PD3', 'mypd:pd3', null, false],  //  layer
+            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_building_vuln_view").dataset.value, 'earth_building_vuln_PD4', 'mypd:pd4', null, false],  //  layer
+            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_building_vuln_view").dataset.value, 'earth_building_vuln_PD5', 'mypd:pd5', null, false],  //  layer
+            [true, true, wmsBaseUrl, document.getElementById("wmslayer_earth_poibui_vuln_view").dataset.value, 'earth_poibui_vuln_PD1', 'mypd:pd1', null, false],  //  layer
+            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_poibui_vuln_view").dataset.value, 'earth_poibui_vuln_PD2', 'mypd:pd2', null, false],  //  layer
+            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_poibui_vuln_view").dataset.value, 'earth_poibui_vuln_PD3', 'mypd:pd3', null, false],  //  layer
+            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_poibui_vuln_view").dataset.value, 'earth_poibui_vuln_PD4', 'mypd:pd4', null, false],  //  layer
+            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_poibui_vuln_view").dataset.value, 'earth_poibui_vuln_PD5', 'mypd:pd5', null, false],  //  layer
+            [true, true, wmsBaseUrl, document.getElementById("wmslayer_earth_building_damage_view").dataset.value, 'earth_building_damage_PD1', 'mypd:pd1', null, false],  //  layer
+            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_building_damage_view").dataset.value, 'earth_building_damage_PD2', 'mypd:pd2', null, false],  //  layer
+            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_building_damage_view").dataset.value, 'earth_building_damage_PD3', 'mypd:pd3', null, false],  //  layer
+            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_building_damage_view").dataset.value, 'earth_building_damage_PD4', 'mypd:pd4', null, false],  //  layer
+            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_building_damage_view").dataset.value, 'earth_building_damage_PD5', 'mypd:pd5', null, false],  //  layer
+            [true, true, wmsBaseUrl, document.getElementById("wmslayer_earth_shakemap_view").dataset.value, 'earth_shakemap_PD1', 'mypd:pd1', null, false],  //  layer
+            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_shakemap_view").dataset.value, 'earth_shakemap_PD2', 'mypd:pd2', null, false],  //  layer
+            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_shakemap_view").dataset.value, 'earth_shakemap_PD3', 'mypd:pd3', null, false],  //  layer
+            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_shakemap_view").dataset.value, 'earth_shakemap_PD4', 'mypd:pd4', null, false],  //  layer
+            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_shakemap_view").dataset.value, 'earth_shakemap_PD5', 'mypd:pd5', null, false],
+            [true, true, wmsBaseUrl, document.getElementById("wmslayer_earth_poibui_damage_view").dataset.value, 'earth_poibui_damage_PD1', 'mypd:pd1', null, false],  //  layer
+            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_poibui_damage_view").dataset.value, 'earth_poibui_damage_PD2', 'mypd:pd2', null, false],  //  layer
+            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_poibui_damage_view").dataset.value, 'earth_poibui_damage_PD3', 'mypd:pd3', null, false],  //  layer
+            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_poibui_damage_view").dataset.value, 'earth_poibui_damage_PD4', 'mypd:pd4', null, false],  //  layer
+            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_poibui_damage_view").dataset.value, 'earth_poibui_damage_PD5', 'mypd:pd5', null, false],
+            [true, true, wmsBaseUrl, document.getElementById("wmslayer_earth_poibui_view").dataset.value, 'earth_poibui_PD1', 'mypd:pd1', null, false],  //  layer
+            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_poibui_view").dataset.value, 'earth_poibui_PD2', 'mypd:pd2', null, false],  //  layer
+            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_poibui_view").dataset.value, 'earth_poibui_PD3', 'mypd:pd3', null, false],  //  layer
+            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_poibui_view").dataset.value, 'earth_poibui_PD4', 'mypd:pd4', null, false],  //  layer
+            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_poibui_view").dataset.value, 'earth_poibui_PD5', 'mypd:pd5', null, false]
         ]
     };
 
     // Initialize the map (C2)
     mapC2 = initWMSMatrixMap(configWMSMatrixMapC2);
 
+
     /**
      * Configuration for the third WMS map instance (Map C3).
      * This map displays various utility networks like electricity and water.
+     * "Risk Analysis -> Earthquakes -> Infrastructure Damage Risk"
      */
     configWMSMatrixMapC3 = {
         targetHtmlMapId: 'mapC3',                 // Target HTML element ID
@@ -146,35 +151,34 @@ document.addEventListener("DOMContentLoaded", function () {
         zoomValue: 14,                            // Initial zoom level
         layerMatrix: [                            // Array of WMS layers
                        
-            [true, true, wmsBaseUrl,  document.getElementById("wmslayer_earth_water_tower_view").dataset.value, 'Lay05_PD1', 'mypd:pd1',null,false],  //  layer input 
-            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_water_tower_view").dataset.value, 'Lay05_PD2', 'mypd:pd2',null,false],  //  layer input
-            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_water_tower_view").dataset.value, 'Lay05_PD3', 'mypd:pd3',null,false],  //  layer input
-            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_water_tower_view").dataset.value, 'Lay05_PD4', 'mypd:pd4',null,false],  //  layer input
+            [true, true, wmsBaseUrl,  document.getElementById("wmslayer_earth_water_tower_view").dataset.value, 'earth_water_tower_PD1', 'mypd:pd1',null,false],  //  layer input 
+            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_water_tower_view").dataset.value, 'earth_water_tower_PD2', 'mypd:pd2',null,false],  //  layer input
+            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_water_tower_view").dataset.value, 'earth_water_tower_PD3', 'mypd:pd3',null,false],  //  layer input
+            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_water_tower_view").dataset.value, 'earth_water_tower_PD4', 'mypd:pd4',null,false],  //  layer input
             
-            [true, true, wmsBaseUrl, document.getElementById("wmslayer_earth_water_well_view").dataset.value, 'Lay06_PD1', 'mypd:pd1',null,false],  //  layer input
-            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_water_well_view").dataset.value, 'Lay06_PD2', 'mypd:pd2',null,false],  //  layer input
-            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_water_well_view").dataset.value, 'Lay06_PD3', 'mypd:pd3',null,false],  //  layer input
-            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_water_well_view").dataset.value, 'Lay06_PD4', 'mypd:pd4',null,false],  //  layer input
+            [true, true, wmsBaseUrl, document.getElementById("wmslayer_earth_water_well_view").dataset.value, 'earth_water_well_PD1', 'mypd:pd1',null,false],  //  layer input
+            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_water_well_view").dataset.value, 'earth_water_well_PD2', 'mypd:pd2',null,false],  //  layer input
+            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_water_well_view").dataset.value, 'earth_water_well_PD3', 'mypd:pd3',null,false],  //  layer input
+            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_water_well_view").dataset.value, 'earth_water_well_PD4', 'mypd:pd4',null,false],  //  layer input
             
-            [true, true, wmsBaseUrl, document.getElementById("wmslayer_earth_waste_water_view").dataset.value, 'Lay07_PD1', 'mypd:pd1',null,false],  //  layer input
-            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_waste_water_view").dataset.value, 'Lay07_PD2', 'mypd:pd2',null,false],  //  layer input
-            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_waste_water_view").dataset.value, 'Lay07_PD3', 'mypd:pd3',null,false],  //  layer input
-            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_waste_water_view").dataset.value, 'Lay07_PD4', 'mypd:pd4',null,false],  //  layer input
+            [true, true, wmsBaseUrl, document.getElementById("wmslayer_earth_waste_water_view").dataset.value, 'earth_waste_water_PD1', 'mypd:pd1',null,false],  //  layer input
+            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_waste_water_view").dataset.value, 'earth_waste_water_PD2', 'mypd:pd2',null,false],  //  layer input
+            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_waste_water_view").dataset.value, 'earth_waste_water_PD3', 'mypd:pd3',null,false],  //  layer input
+            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_waste_water_view").dataset.value, 'earth_waste_water_PD4', 'mypd:pd4',null,false],  //  layer input
             
-            [true, true, wmsBaseUrl, document.getElementById("wmslayer_earth_substation_view").dataset.value, 'Lay04_PD1', 'mypd:pd1',null,false],  //  layer  input
-            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_substation_view").dataset.value, 'Lay04_PD2', 'mypd:pd2',null,false],  //  layer input
-            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_substation_view").dataset.value, 'Lay04_PD3', 'mypd:pd3',null,false],  //  layer input
-            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_substation_view").dataset.value, 'Lay04_PD4', 'mypd:pd4',null,false],  //  layer input
+            [true, true, wmsBaseUrl, document.getElementById("wmslayer_earth_substation_view").dataset.value, 'earth_substation_PD1', 'mypd:pd1',null,false],  //  layer  input
+            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_substation_view").dataset.value, 'earth_substation_PD2', 'mypd:pd2',null,false],  //  layer input
+            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_substation_view").dataset.value, 'earth_substation_PD3', 'mypd:pd3',null,false],  //  layer input
+            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_substation_view").dataset.value, 'earth_substation_PD4', 'mypd:pd4',null,false],  //  layer input
 
-            [true, true, wmsBaseUrl, document.getElementById("wmslayer_earth_water_tower_vuln_view").dataset.value, 'Lay36_PD1', 'mypd:pd1',null,false],  //  layer  output
-            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_water_tower_vuln_view").dataset.value, 'Lay36_PD2', 'mypd:pd2',null,false],  //  layer output
-            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_water_tower_vuln_view").dataset.value, 'Lay36_PD3', 'mypd:pd3',null,false],  //  layer output
-            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_water_tower_vuln_view").dataset.value, 'Lay36_PD4', 'mypd:pd4',null,false],  //  layer output
-            [true, true, wmsBaseUrl, document.getElementById("wmslayer_earth_water_tower_damage_view").dataset.value, 'Lay37_PD1', 'mypd:pd1',null,false],  //  layer  output
-            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_water_tower_damage_view").dataset.value, 'Lay37_PD2', 'mypd:pd2',null,false],  //  layer output
-            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_water_tower_damage_view").dataset.value, 'Lay37_PD3', 'mypd:pd3',null,false],  //  layer output
-            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_water_tower_damage_view").dataset.value, 'Lay37_PD4', 'mypd:pd4',null,false],  //  layer output
-
+            [true, true, wmsBaseUrl, document.getElementById("wmslayer_earth_water_tower_vuln_view").dataset.value, 'earth_water_tower_vuln_PD1', 'mypd:pd1',null,false],  //  layer  output
+            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_water_tower_vuln_view").dataset.value, 'earth_water_tower_vuln_PD2', 'mypd:pd2',null,false],  //  layer output
+            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_water_tower_vuln_view").dataset.value, 'earth_water_tower_vuln_PD3', 'mypd:pd3',null,false],  //  layer output
+            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_water_tower_vuln_view").dataset.value, 'earth_water_tower_vuln_PD4', 'mypd:pd4',null,false],  //  layer output
+            [true, true, wmsBaseUrl, document.getElementById("wmslayer_earth_water_tower_damage_view").dataset.value, 'earth_water_tower_damage_PD1', 'mypd:pd1',null,false],  //  layer  output
+            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_water_tower_damage_view").dataset.value, 'earth_water_tower_damage_PD2', 'mypd:pd2',null,false],  //  layer output
+            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_water_tower_damage_view").dataset.value, 'earth_water_tower_damage_PD3', 'mypd:pd3',null,false],  //  layer output
+            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_water_tower_damage_view").dataset.value, 'earth_water_tower_damage_PD4', 'mypd:pd4',null,false],  //  layer output
             [true, true, wmsBaseUrl, document.getElementById("wmslayer_earth_water_well_vuln_view").dataset.value, 'earth_water_well_vuln_PD1', 'mypd:pd1',null,false],  //  layer input
             [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_water_well_vuln_view").dataset.value, 'earth_water_well_vuln_PD2', 'mypd:pd2',null,false],  //  layer input
             [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_water_well_vuln_view").dataset.value, 'earth_water_well_vuln_PD3', 'mypd:pd3',null,false],  //  layer input
@@ -193,14 +197,14 @@ document.addEventListener("DOMContentLoaded", function () {
             [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_waste_water_damage_view").dataset.value, 'earth_waste_water_damage_PD3', 'mypd:pd3',null,false],  //  layer input
             [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_waste_water_damage_view").dataset.value, 'earth_waste_water_damage_PD4', 'mypd:pd4',null,false],  //  layer input
  
-            [true, true, wmsBaseUrl, document.getElementById("wmslayer_earth_substation_vuln_view").dataset.value, 'Lay38_PD1', 'mypd:pd1',null,false],  //  layer  output
-            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_substation_vuln_view").dataset.value, 'Lay38_PD2', 'mypd:pd2',null,false],  //  layer output
-            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_substation_vuln_view").dataset.value, 'Lay38_PD3', 'mypd:pd3',null,false],  //  layer output
-            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_substation_vuln_view").dataset.value, 'Lay38_PD4', 'mypd:pd4',null,false],  //  layer output
-            [true, true, wmsBaseUrl, document.getElementById("wmslayer_earth_substation_damage_view").dataset.value, 'Lay39_PD1', 'mypd:pd1',null,false],  //  layer  output
-            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_substation_damage_view").dataset.value, 'Lay39_PD2', 'mypd:pd2',null,false],  //  layer output
-            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_substation_damage_view").dataset.value, 'Lay39_PD3', 'mypd:pd3',null,false],  //  layer output
-            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_substation_damage_view").dataset.value, 'Lay39_PD4', 'mypd:pd4',null,false],  //  layer output
+            [true, true, wmsBaseUrl, document.getElementById("wmslayer_earth_substation_vuln_view").dataset.value, 'earth_substation_vuln_PD1', 'mypd:pd1',null,false],  //  layer  output
+            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_substation_vuln_view").dataset.value, 'earth_substation_vuln_PD2', 'mypd:pd2',null,false],  //  layer output
+            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_substation_vuln_view").dataset.value, 'earth_substation_vuln_PD3', 'mypd:pd3',null,false],  //  layer output
+            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_substation_vuln_view").dataset.value, 'earth_substation_vuln_PD4', 'mypd:pd4',null,false],  //  layer output
+            [true, true, wmsBaseUrl, document.getElementById("wmslayer_earth_substation_damage_view").dataset.value, 'earth_substation_damage_PD1', 'mypd:pd1',null,false],  //  layer  output
+            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_substation_damage_view").dataset.value, 'earth_substation_damage_PD2', 'mypd:pd2',null,false],  //  layer output
+            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_substation_damage_view").dataset.value, 'earth_substation_damage_PD3', 'mypd:pd3',null,false],  //  layer output
+            [true, false, wmsBaseUrl, document.getElementById("wmslayer_earth_substation_damage_view").dataset.value, 'earth_substation_damage_PD4', 'mypd:pd4',null,false],  //  layer output
 
             [true, true, wmsBaseUrl, document.getElementById("wmslayer_earth_shakemap_view").dataset.value, 'Shakemap']  //  layer
         ]
@@ -208,6 +212,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Initialize the map (C3)
     mapC3 = initWMSMatrixMap(configWMSMatrixMapC3);
+
 
     /**
      * Configuration for the fourth WMS map instance (Map C4).
@@ -231,6 +236,7 @@ document.addEventListener("DOMContentLoaded", function () {
     /**
      * Configuration for the fourth WMS map instance (Map C5).
      * This map highlights risk and failure scenarios.
+     * "Risk Analysis -> River floods -> Buildings and infrastructures Damage Risk"
      */
     configWMSMatrixMapC5 = {
         targetHtmlMapId: 'mapC5',                 // Target HTML element ID
@@ -239,15 +245,15 @@ document.addEventListener("DOMContentLoaded", function () {
         centerLatitude: 43.1357,                  // Initial latitude
         zoomValue: 9,                            // Initial zoom level
         layerMatrix: [                            // Array of WMS layers
-           [true, true, wmsBaseUrl, document.getElementById("wmslayer_riverflood_housenew_view").dataset.value,'Residentials buildings','myed_rt:ed_rt10'],
-           [true, true, wmsBaseUrl, document.getElementById("wmslayer_riverflood_housenew_view").dataset.value,'Residentials buildings','myed_rt:ed_rt20'],
-           [true, true, wmsBaseUrl, document.getElementById("wmslayer_riverflood_housenew_view").dataset.value,'Residentials buildings','myed_rt:ed_rt30'],
-           [true, true, wmsBaseUrl, document.getElementById("wmslayer_riverflood_housenew_view").dataset.value,'Residentials buildings','myed_rt:ed_rt40'],
-           [true, true, wmsBaseUrl, document.getElementById("wmslayer_riverflood_housenew_view").dataset.value,'Residentials buildings','myed_rt:ed_rt50'],
-           [true, true, wmsBaseUrl, document.getElementById("wmslayer_riverflood_housenew_view").dataset.value,'Residentials buildings','myed_rt:ed_rt75'],
-           [true, true, wmsBaseUrl, document.getElementById("wmslayer_riverflood_housenew_view").dataset.value,'Residentials buildings','myed_rt:ed_rt100'],
-           [true, true, wmsBaseUrl, document.getElementById("wmslayer_riverflood_housenew_view").dataset.value,'Residentials buildings','myed_rt:ed_rt200'],
-           [true, true, wmsBaseUrl, document.getElementById("wmslayer_riverflood_housenew_view").dataset.value,'Residentials buildings','myed_rt:ed_rt500']
+           [true, true, wmsBaseUrl, document.getElementById("wmslayer_riverflood_housenew_view").dataset.value,'Residentials buildings','myed_rt:ed_rt10',null,false],
+           [true, true, wmsBaseUrl, document.getElementById("wmslayer_riverflood_housenew_view").dataset.value,'Residentials buildings','myed_rt:ed_rt20',null,false],
+           [true, true, wmsBaseUrl, document.getElementById("wmslayer_riverflood_housenew_view").dataset.value,'Residentials buildings','myed_rt:ed_rt30',null,false],
+           [true, true, wmsBaseUrl, document.getElementById("wmslayer_riverflood_housenew_view").dataset.value,'Residentials buildings','myed_rt:ed_rt40',null,false],
+           [true, true, wmsBaseUrl, document.getElementById("wmslayer_riverflood_housenew_view").dataset.value,'Residentials buildings','myed_rt:ed_rt50',null,false],
+           [true, true, wmsBaseUrl, document.getElementById("wmslayer_riverflood_housenew_view").dataset.value,'Residentials buildings','myed_rt:ed_rt75',null,false],
+           [true, true, wmsBaseUrl, document.getElementById("wmslayer_riverflood_housenew_view").dataset.value,'Residentials buildings','myed_rt:ed_rt100',null,false],
+           [true, true, wmsBaseUrl, document.getElementById("wmslayer_riverflood_housenew_view").dataset.value,'Residentials buildings','myed_rt:ed_rt200',null,false],
+           [true, true, wmsBaseUrl, document.getElementById("wmslayer_riverflood_housenew_view").dataset.value,'Residentials buildings','myed_rt:ed_rt500',null,false]
         ]
     };
 
@@ -255,8 +261,9 @@ document.addEventListener("DOMContentLoaded", function () {
     mapC5 = initWMSMatrixMap(configWMSMatrixMapC5);
 
     /**
-     * Configuration for the fourth WMS map instance (Map C5).
+     * Configuration for the fourth WMS map instance (Map C9).
      * This map highlights risk and failure scenarios.
+     * "Risk Analysis -> Heat Waves -> Latest Temperatures"
      */
     configWMSMatrixMapC9 = {
         targetHtmlMapId: 'mapC9',                 // Target HTML element ID
@@ -265,19 +272,21 @@ document.addEventListener("DOMContentLoaded", function () {
         centerLatitude: 43.1357,                  // Initial latitude
         zoomValue: 9,                            // Initial zoom level
         layerMatrix: [                            // Array of WMS layers
-            [true, true, wmsBaseUrl, document.getElementById("wmslayer_heatwave_real_view").dataset.value, 'Heatwave real view'],
-            [true, true, wmsBaseUrl, document.getElementById("wmslayer_heatwave_roadway_view").dataset.value, 'Heatwave roadway view'],
-            [true, true, wmsBaseUrl, document.getElementById("wmslayer_heatwave_roadway_damage_view").dataset.value, 'Heatwave roadway damage view']
+            [true, true, wmsBaseUrl, document.getElementById("wmslayer_heatwave_real_view").dataset.value, 'Heatwave real view',null,null,false],
+            [true, true, wmsBaseUrl, document.getElementById("wmslayer_heatwave_roadway_view").dataset.value, 'Heatwave roadway view',null,null,false],
+            [true, true, wmsBaseUrl, document.getElementById("wmslayer_heatwave_roadway_damage_view").dataset.value, 'Heatwave roadway damage view',null,null,false]
         ]
     };
 
     // Initialize the fourth map (C9)
-    mapC9 = initWMSMatrixMap(configWMSMatrixMapC9);
+    mapC9 = initWMSMatrixMap(configWMSMatrixMapC9);   
 
-   
-       
-   
 
+    /**
+     * Configuration for the fourth WMS map instance (Map C12).
+     * This map highlights xxx.
+     * "Risk Analysis -> Extreme Precipitations -> Buildings Vulnerability Analisys"
+     */
     configWMSMatrixMapC12 = {
         targetHtmlMapId: 'mapC12',                 // Target HTML element ID
         baseMapName: 'OpenStreetMap - EPSG:3857', // Base map layer name
@@ -318,10 +327,7 @@ document.addEventListener("DOMContentLoaded", function () {
     ] 
     };
 
-    mapD5 = initWMSMatrixMap(configWMSMatrixMapD5);
-
-
-   
+    mapD5 = initWMSMatrixMap(configWMSMatrixMapD5);   
 
 });
 
