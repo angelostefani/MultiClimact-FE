@@ -48,7 +48,8 @@ const tabToMapId = {
     'tabD1-tab': 'mapD1', 'tabD2-tab': 'mapD2', 'tabD3-tab': 'mapD3', 'tabD4-tab': 'mapD4',
     'tabD5-tab': 'mapD5', 'tabD6-tab': 'mapD6', 'tabD7-tab': 'mapD7', 'tabD8-tab': 'mapD8',
     'tabD9-tab': 'mapD9', 'tabD10-tab': 'mapD10', 'tabD11-tab': 'mapD11', 'tabD12-tab': 'mapD12',
-    'tabD13-tab': 'mapD13'
+    'tabD13-tab': 'mapD13', 'tabD14-tab': 'mapD14', 'tabD15-tab': 'mapD15', 'tabD16-tab': 'mapD16',
+    'tabD17-tab': 'mapD17'
 };
 
 /**
@@ -105,7 +106,7 @@ function initTabs() {
         '#tabD1-tab', '#tabD2-tab', '#tabD3-tab', '#tabD4-tab', 
         '#tabD5-tab', '#tabD6-tab', '#tabD7-tab', '#tabD8-tab',
         '#tabD9-tab', '#tabD10-tab', '#tabD11-tab', '#tabD12-tab', 
-        '#tabD13-tab', 
+        '#tabD13-tab', '#tabD14-tab', '#tabD15-tab', '#tabD16-tab', '#tabD17-tab',
         '#tabE1-tab', '#tabE2-tab', '#tabE3-tab'
     ];
 
@@ -148,6 +149,7 @@ function tabManager() {
         'tabD1-tab', 'tabD2-tab', 'tabD3-tab', 'tabD4-tab', 
         'tabD5-tab', 'tabD6-tab', 'tabD7-tab', 'tabD8-tab',
         'tabD9-tab', 'tabD10-tab', 'tabD11-tab', 'tabD12-tab', 'tabD13-tab',
+        'tabD14-tab', 'tabD15-tab', 'tabD16-tab', 'tabD17-tab',
         'tabE1-tab', 'tabE2-tab', 'tabE3-tab'
     ];
 
@@ -412,14 +414,35 @@ function selectTab(selectedItem) {
         },
         // Gruppo D4
         'tabD12-tab': {
-            tabsToShow: ['tabD12-tab', 'tabD13-tab'],
+            tabsToShow: ['tabD12-tab'],
             activeTab: 'tabD12-tab',
             activePanel: 'panelD12'
         },
+        // Gruppo D5 (Resilience Assessment)
         'tabD13-tab': {
-            tabsToShow: ['tabD12-tab', 'tabD13-tab'],
+            tabsToShow: ['tabD13-tab', 'tabD14-tab', 'tabD15-tab', 'tabD16-tab', 'tabD17-tab'],
             activeTab: 'tabD13-tab',
             activePanel: 'panelD13'
+        },
+        'tabD14-tab': {
+            tabsToShow: ['tabD13-tab', 'tabD14-tab', 'tabD15-tab', 'tabD16-tab', 'tabD17-tab'],
+            activeTab: 'tabD14-tab',
+            activePanel: 'panelD14'
+        },
+        'tabD15-tab': {
+            tabsToShow: ['tabD13-tab', 'tabD14-tab', 'tabD15-tab', 'tabD16-tab', 'tabD17-tab'],
+            activeTab: 'tabD15-tab',
+            activePanel: 'panelD15'
+        },
+        'tabD16-tab': {
+            tabsToShow: ['tabD13-tab', 'tabD14-tab', 'tabD15-tab', 'tabD16-tab', 'tabD17-tab'],
+            activeTab: 'tabD16-tab',
+            activePanel: 'panelD16'
+        },
+        'tabD17-tab': {
+            tabsToShow: ['tabD13-tab', 'tabD14-tab', 'tabD15-tab', 'tabD16-tab', 'tabD17-tab'],
+            activeTab: 'tabD17-tab',
+            activePanel: 'panelD17'
         },
         // Gruppo E
         'tabE1-tab': {
