@@ -203,7 +203,7 @@ namespace MultiClimact.Controllers
 
             string serviceUrl = QueryHelpers.AddQueryString("users/system/runs", query);
 
-            _logger.LogInformation("Requesting Extremeprecipitation Service URL: {serviceUrl}", serviceUrl);
+            _logger.LogInformation("Requesting Earthquake Service URL: {serviceUrl}", serviceUrl);
 
             try
             {

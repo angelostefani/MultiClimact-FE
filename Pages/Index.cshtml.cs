@@ -113,7 +113,7 @@ namespace MultiClimact.Pages
                         var data = JsonSerializer.Deserialize<LastHeatwaveResponse>(responseBody);
 
                         // Store the retrieved earthquake ID in ViewData
-                        ViewData["idRunLastHeatwave"] = data?.id_run ?? "idRun not available in the response";
+                        ViewData["idRunLastHeatwave"] = data?.id_run?.ToString() ?? "idRun not available in the response";
                     }
                     else
                     {
@@ -148,7 +148,7 @@ namespace MultiClimact.Pages
                 {
                     var responseBody = await response.Content.ReadAsStringAsync();
                     var data = JsonSerializer.Deserialize<LastExtremeprecipitationResponse>(responseBody);
-                    ViewData["idRunLastExtremePrecipitation"] = data?.id_run ?? "idRun not available in the response";
+                    ViewData["idRunLastExtremePrecipitation"] = data?.id_run?.ToString() ?? "idRun not available in the response";
                 }
                 else
                 {
