@@ -183,6 +183,9 @@ function populateHazardTable(data, config, hazardKey) {
             selectCell.className = 'select-cell';
             selectCell.textContent = '';
 
+            const idRunCell = document.createElement('td');
+            idRunCell.textContent = normalized.idRun || 'N/A';
+
             const dateCell = document.createElement('td');
             dateCell.textContent = normalized.eventDate;
 
@@ -198,6 +201,7 @@ function populateHazardTable(data, config, hazardKey) {
             hiddenField.value = normalized.idRun || '';
 
             row.appendChild(selectCell);
+            row.appendChild(idRunCell);
             row.appendChild(dateCell);
             row.appendChild(descriptionCell);
             row.appendChild(hazardCell);
@@ -207,7 +211,7 @@ function populateHazardTable(data, config, hazardKey) {
     } else {
         const row = document.createElement('tr');
         const noDataCell = document.createElement('td');
-        noDataCell.setAttribute('colspan', 4);
+        noDataCell.setAttribute('colspan', 5);
         noDataCell.textContent = 'No data available';
         row.appendChild(noDataCell);
         tableBody.appendChild(row);

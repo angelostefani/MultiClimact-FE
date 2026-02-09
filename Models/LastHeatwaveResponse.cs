@@ -6,7 +6,7 @@ namespace MultiClimact.Models
     public class LastHeatwaveResponse
     {
         //[JsonProperty("id_run")]
-        public string? id_run { get; set; }
+        public int? id_run { get; set; }
     }
 }
 

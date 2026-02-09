@@ -69,7 +69,7 @@ namespace MultiClimact.Controllers
         {
             var query = new Dictionary<string, string?>
             {
-                ["status_str"] = "submitted",
+                ["status_str"] = "completed",
                 ["haztype_id"] = "2"
             };
 
