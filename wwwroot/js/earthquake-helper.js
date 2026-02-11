@@ -26,6 +26,57 @@ const activeRiskRunIdByHazard = {
     extremeprecipitation: ''
 };
 
+// Mappa tab -> hazard di pertinenza per sincronizzare activeRiskRunID al cambio pagina
+const hazardByTab = {
+    // Earthquake (Risk Analysis + Scenario simulation)
+    'tabC1-tab': 'earthquake',
+    'tabC2-tab': 'earthquake',
+    'tabC3-tab': 'earthquake',
+    'tabC4-tab': 'earthquake',
+    'tabD1-tab': 'earthquake',
+    'tabD2-tab': 'earthquake',
+    'tabD3-tab': 'earthquake',
+    'tabD4-tab': 'earthquake',
+
+    // Heatwave (Risk Analysis + Scenario simulation)
+    'tabC9-tab': 'heatwave',
+    'tabC10-tab': 'heatwave',
+    'tabC11-tab': 'heatwave',
+    'tabD9-tab': 'heatwave',
+    'tabD10-tab': 'heatwave',
+    'tabD11-tab': 'heatwave',
+
+    // Extreme precipitation (Risk Analysis + Scenario simulation)
+    'tabC12-tab': 'extremeprecipitation',
+    'tabC13-tab': 'extremeprecipitation',
+    'tabD5-tab': 'extremeprecipitation',
+    'tabD6-tab': 'extremeprecipitation',
+    'tabD7-tab': 'extremeprecipitation',
+    'tabD8-tab': 'extremeprecipitation'
+};
+
+function getHazardFromTab(tabId) {
+    return hazardByTab[tabId] || null;
+}
+
+function syncActiveRiskRunIdFromTab(tabId) {
+    const hazard = getHazardFromTab(tabId);
+    if (!hazard) {
+        return;
+    }
+
+    activeRiskRunID = activeRiskRunIdByHazard[hazard] || '';
+    if (DEBUG_HAZARD) {
+        console.log('[hazard tab sync]', { tabId, hazard, activeRiskRunID, activeRiskRunIdByHazard });
+    }
+    refreshMapsForActiveRiskRunId();
+}
+
+// Espone la funzione per il cambio tab gestito in menu-helper.js
+if (typeof window !== 'undefined') {
+    window.syncActiveRiskRunIdFromTab = syncActiveRiskRunIdFromTab;
+}
+
 // Richiama l'aggiornamento dei layer WMS per riflettere il nuovo activeRiskRunID
 function refreshMapsForActiveRiskRunId() {
     if (typeof updateMapLayers !== 'function') {
@@ -410,6 +461,21 @@ function paginateTable() {
 // Aggiorna il risk run id globale quando cambia l'hazard selezionato
 document.addEventListener('DOMContentLoaded', () => {
     const hazardSelect = document.getElementById('hazardType');
+    const idRunLastEarthquake = document.getElementById('idRunLastEarthquake')?.dataset?.value || '';
+    const idRunLastHeatwave = document.getElementById('idRunLastHeatwave')?.dataset?.value || '';
+    const idRunLastExtremePrecipitation = document.getElementById('idRunLastExtremePrecipitation')?.dataset?.value || '';
+
+    // Inizializza gli id_run per hazard dalle info server-side, senza sovrascrivere eventuali selezioni utente già presenti
+    if (!activeRiskRunIdByHazard.earthquake && idRunLastEarthquake && !idRunLastEarthquake.startsWith('Error') && !idRunLastEarthquake.startsWith('Exception')) {
+        activeRiskRunIdByHazard.earthquake = idRunLastEarthquake;
+    }
+    if (!activeRiskRunIdByHazard.heatwave && idRunLastHeatwave && !idRunLastHeatwave.startsWith('Error') && !idRunLastHeatwave.startsWith('Exception')) {
+        activeRiskRunIdByHazard.heatwave = idRunLastHeatwave;
+    }
+    if (!activeRiskRunIdByHazard.extremeprecipitation && idRunLastExtremePrecipitation && !idRunLastExtremePrecipitation.startsWith('Error') && !idRunLastExtremePrecipitation.startsWith('Exception')) {
+        activeRiskRunIdByHazard.extremeprecipitation = idRunLastExtremePrecipitation;
+    }
+
     if (!hazardSelect) return;
 
     const syncActiveRiskRunId = (hazard) => {
