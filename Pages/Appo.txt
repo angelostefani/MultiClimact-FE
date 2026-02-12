@@ -7,7 +7,7 @@ http://192.168.154.23:8180/geoserver/multic/ows?service=WFS&version=1.1.0&reques
 
 
 Casi di test:
-Earthquahe 10/02/2025 simulated
+Earthquahe 10/02/2025 simulated id_run=1221
 
 Extre prec: --> id_run  1255 data: 11-10-2025
 
@@ -22,3 +22,6 @@ Elimina quindi i vari wmsurl_earth_real_view, wmsurl_poibui_damage_view, etc. e 
 Nella BottomBar.cshtml, nella tabella con il risultato della ricerca, tra i campi Select e  Occurrence Time aggiungere un campo per mostrare l'id_run.
 
 Nella BottomBar.cshtml, il filtro di ricerca End Date deve essere impostato come default alla data odierna.
+
+Analogamente a quanto fatto per i wms, aggiungendo il filtro CQL id_run se definito globalmente e abilitato per il layer,
+devo applicare il meccanismo anche alla GetFeatureInfo.

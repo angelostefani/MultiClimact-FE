@@ -485,6 +485,11 @@ function selectTab(selectedItem) {
 
         disableVerticalScrollBar();
         activeTab = group.activeTab;
+
+        // Sincronizza l'id_run attivo con l'hazard della pagina visualizzata
+        if (typeof window !== 'undefined' && typeof window.syncActiveRiskRunIdFromTab === 'function') {
+            window.syncActiveRiskRunIdFromTab(activeTab);
+        }
     }
 }
 

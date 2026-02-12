@@ -209,16 +209,21 @@ function addMapClickListener(map, wmsLayer, wmsUrl) {
         // Determine the target WMS layer name to query
         let layerName = null;
         let valo = "";
+        let cqlFilter = "";
         try {
             if (wmsLayer && typeof wmsLayer.getSource === 'function') {
                 const src = wmsLayer.getSource();
                 const params = src && typeof src.getParams === 'function' ? src.getParams() : null;
                 if (params && params.LAYERS) {
                     layerName = (params.LAYERS + '').split(',')[0].trim();
+                    valo = params.LAYERS;
+                    cqlFilter = params.CQL_FILTER ? String(params.CQL_FILTER) : "INCLUDE";
                 }
             }
             if (!layerName && map && typeof map.getLayers === 'function') {
                 const layers = map.getLayers().getArray ? map.getLayers().getArray() : [];
+                const layerNames = [];
+                const cqlFilters = [];
                 for (let i = layers.length - 1; i > 0; i--) {
                     const lyr = layers[i];
                     const visible = typeof lyr.getVisible === 'function' ? lyr.getVisible() : true;
@@ -233,13 +238,12 @@ function addMapClickListener(map, wmsLayer, wmsUrl) {
                     const params = typeof src.getParams === 'function' ? src.getParams() : null;
                     if (params && params.LAYERS) {
                         layerName = (params.LAYERS + '').split(',')[0].trim();
-                        if (i > 1)
-                            valo = valo + params.LAYERS + ",";
-                        else
-                            valo = valo + params.LAYERS;
-                        //break;
+                        layerNames.push(params.LAYERS);
+                        cqlFilters.push(params.CQL_FILTER ? String(params.CQL_FILTER) : "INCLUDE");
                     }
                 }
+                valo = layerNames.join(',');
+                cqlFilter = cqlFilters.join(';');
             }
         } catch (e) {
             console.warn('Impossibile determinare il layer WMS per GetFeatureInfo:', e);
@@ -257,10 +261,13 @@ function addMapClickListener(map, wmsLayer, wmsUrl) {
         const height = Math.round(mapSize[1]);
         let x = Math.round(evt.pixel[0]);
         let y = Math.round(evt.pixel[1]);
-        layerName = valo;
+        layerName = valo || layerName;
         if (x >= 0 && x <= width && y >= 0 && y <= height) {
             let url = `/api/WmsProxy/GetFeatureInfo?bbox=${bbox}&x=${x}&y=${y}&width=${width}&height=${height}`;
             url += `&layer=${encodeURIComponent(layerName)}`;
+            if (cqlFilter && cqlFilter.trim() !== '') {
+                url += `&cqlFilter=${encodeURIComponent(cqlFilter)}`;
+            }
 
             const ts = new Date().toISOString();
             console.info(`[${ts}] GetFeatureInfo request -> layer: ${layerName}, x: ${x}, y: ${y}, size: ${width}x${height}, bbox: ${bbox}`);
