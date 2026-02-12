@@ -329,5 +329,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
     mapD5 = initWMSMatrixMap(configWMSMatrixMapD5);   
 
+    configWMSMapD13 = {
+        targetHtmlMapId: 'mapD13',
+        baseMapName: 'OpenStreetMap - EPSG:3857',
+        centerLongitude: 12.5,
+        centerLatitude: 42.5,
+        zoomValue: 6
+    };
+
+    mapD13 = initWMSMap(configWMSMapD13);
+
 });
 

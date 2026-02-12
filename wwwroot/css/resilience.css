@@ -42,6 +42,16 @@
   overflow-y: auto !important;
 }
 
+/* Hide scrollbar for 1.a panel while keeping scroll */
+#panelD13 .ra-left-sidebar .layer-controls-card--sidebar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+#panelD13 .ra-left-sidebar .layer-controls-card--sidebar::-webkit-scrollbar {
+  display: none;
+}
+
 /* Graph placeholder */
 #panelD13 .ra-graph-placeholder {
   width: min(90%, 980px);
