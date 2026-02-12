@@ -124,18 +124,18 @@
                 <div class="layer-controls-card__header"></div>
 
                 <div class="layer-box ra-box--left">
-                    <div class="layer-box__title">1.a) User properties</div>
+                    <div class="layer-box__title">User properties</div>
                     <div class="ra-field">
                         <label class="ra-label" for="ra-latitude">Latitude</label>
-                        <input id="ra-latitude" class="form-control form-control-sm" type="text" placeholder="e.g. 42.3456" />
+                        <input id="ra-latitude" class="form-control form-control-sm" type="text" placeholder="42.3456" />
                     </div>
                     <div class="ra-field">
                         <label class="ra-label" for="ra-longitude">Longitude</label>
-                        <input id="ra-longitude" class="form-control form-control-sm" type="text" placeholder="e.g. 13.1234" />
+                        <input id="ra-longitude" class="form-control form-control-sm" type="text" placeholder="13.1234" />
                     </div>
                     <div class="ra-field">
                         <label class="ra-label" for="ra-radius">Radius (km)</label>
-                        <input id="ra-radius" class="form-control form-control-sm" type="number" min="0" step="1" placeholder="e.g. 25" />
+                        <input id="ra-radius" class="form-control form-control-sm" type="number" min="0" step="1" placeholder="25" />
                     </div>
 
                     <div class="ra-divider"></div>
@@ -150,19 +150,13 @@
                         <label class="layer-toggle"><input type="checkbox" disabled /> Finance</label>
                         <label class="layer-toggle"><input type="checkbox" disabled /> Education</label>
                         <label class="layer-toggle"><input type="checkbox" checked disabled /> Emergency</label>
-                        <label class="layer-toggle"><input type="checkbox" disabled /> Industry</label>
                     </div>
                 </div>
             </div>
         </aside>
 
         <!-- CENTER GRAPH AREA -->
-        <div id="mapD13" class="map-container-85">
-            <div class="ra-graph-placeholder">
-                <div class="ra-graph-title">Graph area</div>
-                <div class="ra-graph-subtitle">Space reserved for the resilience graph</div>
-            </div>
-        </div>
+        <div id="mapD13" class="map-container-85"></div>
 
         <!-- RIGHT PANEL: 1.b + 1.c -->
         <aside class="layer-sidebar ra-right-sidebar">
@@ -171,7 +165,7 @@
 
                 <div class="ra-col-right">
                     <div class="layer-box ra-box--right">
-                        <div class="layer-box__title">1.b) User actions</div>
+                        <div class="layer-box__title">User actions</div>
                         <button class="btn btn-primary btn-sm ra-action" type="button" data-bs-toggle="modal" data-bs-target="#scenarioConfigModal">
                             Create Graph
                         </button>
@@ -179,7 +173,7 @@
                     </div>
 
                     <div class="layer-box ra-box--right">
-                        <div class="layer-box__title">1.c) Visual output</div>
+                        <div class="layer-box__title">Graph Properties</div>
                         <div class="ra-info-box">
                             <div class="ra-info-title">Graph size preview</div>
                             <div class="ra-info-row">Nodes: 124</div>
@@ -196,22 +190,22 @@
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="scenarioConfigModalLabel">Scenario Configuration</h5>
+                    <h5 class="modal-title" id="scenarioConfigModalLabel">Graph Configuration</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="row g-3">
                         <div class="col-md-4">
                             <label class="form-label" for="ra-modal-latitude">Latitude</label>
-                            <input id="ra-modal-latitude" class="form-control form-control-sm" type="text" placeholder="e.g. 42.3456" />
+                            <input id="ra-modal-latitude" class="form-control form-control-sm" type="text" placeholder="42.3456" />
                         </div>
                         <div class="col-md-4">
                             <label class="form-label" for="ra-modal-longitude">Longitude</label>
-                            <input id="ra-modal-longitude" class="form-control form-control-sm" type="text" placeholder="e.g. 13.1234" />
+                            <input id="ra-modal-longitude" class="form-control form-control-sm" type="text" placeholder="13.1234" />
                         </div>
                         <div class="col-md-4">
                             <label class="form-label" for="ra-modal-radius">Radius (km)</label>
-                            <input id="ra-modal-radius" class="form-control form-control-sm" type="number" min="0" step="1" placeholder="e.g. 25" />
+                            <input id="ra-modal-radius" class="form-control form-control-sm" type="number" min="0" step="1" placeholder="25" />
                         </div>
                         <div class="col-12">
                             <label class="form-label">Infrastructure sectors</label>
@@ -225,7 +219,6 @@
                                 <label class="layer-toggle"><input type="checkbox" /> Finance</label>
                                 <label class="layer-toggle"><input type="checkbox" /> Education</label>
                                 <label class="layer-toggle"><input type="checkbox" /> Emergency</label>
-                                <label class="layer-toggle"><input type="checkbox" /> Industry</label>
                             </div>
                         </div>
                     </div>
