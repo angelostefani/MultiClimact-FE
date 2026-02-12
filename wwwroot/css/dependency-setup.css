@@ -1,0 +1,316 @@
+/* =========================
+   D14 - Dependency Setup
+   ========================= */
+#panelD14 {
+  height: calc(100vh - var(--mc-header-h) - var(--mc-footer-h) - 130px) !important;
+  min-height: 560px !important;
+  overflow: hidden !important;
+  display: block !important;
+  position: relative !important;
+  width: 100% !important;
+  margin-top: -8px !important;
+}
+
+#panelD14-layout,
+#panelD14 #panelD14-layout {
+  display: grid !important;
+  grid-template-columns: 260px minmax(420px, 1.2fr) minmax(360px, 1fr);
+  grid-template-rows: 1fr;
+  align-items: stretch !important;
+  gap: 0 !important;
+  padding: 0 !important;
+  background: #eef2f7;
+  height: 100% !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  max-width: 100vw;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+#panelD14 .dep-setup-menu {
+  width: 260px !important;
+  background: #f8f9fa;
+  border-right: 1px solid #e1e5ec !important;
+  border-radius: 0 !important;
+  padding: 16px 12px;
+  height: 100% !important;
+  overflow-x: visible !important;
+  overflow-y: auto !important;
+  white-space: normal !important;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  margin: 0 !important;
+}
+
+#panelD14 .dep-subtabs {
+  gap: 6px;
+  margin: 0;
+}
+
+#panelD14 .dep-subtabs .nav-link {
+  text-align: left;
+  white-space: normal;
+  line-height: 1.2;
+  width: 100%;
+  justify-content: flex-start;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: #ffffff;
+  border: 1px solid #e1e5ec;
+  font-weight: 600;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
+#panelD14 .dep-subtabs .nav-link.active {
+  background: #0d6efd;
+  color: #ffffff;
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 1px rgba(13, 110, 253, 0.35);
+}
+
+#panelD14 .dep-setup-editor {
+  min-width: 0 !important;
+  position: relative !important;
+  display: block !important;
+  height: 100% !important;
+  width: 100%;
+  padding: 0 !important;
+  overflow: hidden;
+  align-self: stretch;
+  border-right: 1px solid #e6eaf1;
+  background: #ffffff;
+}
+
+#panelD14 .dep-setup-map {
+  width: 100% !important;
+  display: flex;
+  align-items: stretch;
+  height: 100% !important;
+  min-width: 300px;
+  border-left: 0 !important;
+  align-self: stretch;
+  min-height: 0;
+  justify-self: stretch;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+#panelD14 #mapD14.dep-map {
+  width: 100%;
+  height: 100% !important;
+  flex: 1 1 auto;
+  border: 0 !important;
+  border-radius: 0 !important;
+  overflow: hidden;
+  background: #f0f0f0;
+  position: relative;
+}
+
+#panelD14 .dep-tab-content {
+  height: 100% !important;
+  display: block !important;
+  min-height: 0 !important;
+  overflow: hidden;
+}
+
+#panelD14 .dep-tab-content .tab-pane {
+  height: 100% !important;
+  min-height: 0 !important;
+  overflow: hidden;
+  position: relative;
+}
+
+#panelD14 .dep-tab-content .tab-pane:not(.active) {
+  display: none !important;
+}
+
+#panelD14 .dep-tab-content .tab-pane.active {
+  display: block !important;
+  height: 100% !important;
+}
+
+#panelD14 .dep-editor-card {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  background: #ffffff;
+  border: 0 !important;
+  border-radius: 0 !important;
+  padding: 0;
+  gap: 0;
+  width: 100%;
+  height: 100% !important;
+  margin: 0 !important;
+  min-height: 0 !important;
+  box-shadow: none !important;
+}
+
+#panelD14 .dep-editor-header,
+#panelD14 .dep-actions {
+  position: relative;
+  z-index: 3;
+  background: #ffffff;
+}
+
+#panelD14 .dep-editor-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  flex-wrap: wrap;
+  border-bottom: 1px solid #eee;
+}
+
+#panelD14 .dep-load-example {
+  margin-left: auto;
+  margin-right: 4px;
+  flex: 0 0 auto;
+}
+
+#panelD14 .dep-editor-title {
+  font-weight: 700;
+  font-size: 15px;
+  flex: 1 1 auto;
+}
+
+#panelD14 .dep-json-editor-container {
+  position: relative !important;
+  flex: 1 !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 0 !important;
+}
+
+#panelD14 .dep-json-editor {
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 100%;
+  border: 0;
+  border-radius: 0;
+  resize: none;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+#panelD14 .dep-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border-top: 1px solid #eee;
+  margin-top: auto;
+  padding: 10px 12px;
+}
+
+#panelD14 .dep-action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#panelD14 .dep-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 12px;
+  color: #4b5563;
+}
+
+#panelD14 .dep-status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+}
+
+#panelD14 .dep-status-dot--valid {
+  background: #22c55e;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+}
+
+#panelD14 .dep-status-text--valid {
+  color: #15803d;
+}
+
+#panelD14 .dep-status-text--invalid {
+  color: #b91c1c;
+}
+
+/* CodeMirror adjustments for D14 */
+#panelD14 .CodeMirror {
+  position: relative !important;
+  height: 100% !important;
+  flex: 1 1 auto;
+  min-height: 0;
+  border: 0 !important;
+  border-radius: 0 !important;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  margin: 0 !important;
+}
+
+#panelD14 .CodeMirror-scroll {
+  height: 100% !important;
+  min-height: 0 !important;
+}
+
+#panelD14 .CodeMirror-gutters {
+  background: #f7f8fb;
+  border-right: 1px solid #e1e5ec;
+  min-width: 36px;
+}
+
+#panelD14 .CodeMirror-lines {
+  padding: 8px 0;
+}
+
+#panelD14 .CodeMirror pre,
+#panelD14 .CodeMirror-linenumber {
+  font-family: Consolas, "Courier New", monospace;
+}
+
+#panelD14 .CodeMirror-linenumber {
+  padding: 0 6px;
+}
+
+@media (max-width: 1400px) {
+  #panelD14 #panelD14-layout {
+    display: flex !important;
+    flex-direction: column;
+  }
+
+  #panelD14 .dep-setup-menu {
+    width: 100%;
+    border-right: 0;
+    border-radius: 0;
+  }
+
+  #panelD14 .dep-subtabs {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  #panelD14 .dep-subtabs .nav-link {
+    white-space: normal;
+  }
+
+  #panelD14 .dep-setup-map {
+    max-width: 100%;
+    width: 100%;
+    min-width: 0;
+  }
+}

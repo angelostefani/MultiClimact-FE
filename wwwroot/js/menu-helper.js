@@ -483,7 +483,11 @@ function selectTab(selectedItem) {
             updateDashboardMaps();
         }
 
-        disableVerticalScrollBar();
+        if (group.activeTab === 'tabD14-tab') {
+            document.body.style.overflowY = 'hidden';
+        } else {
+            disableVerticalScrollBar();
+        }
         activeTab = group.activeTab;
 
         // Sincronizza l'id_run attivo con l'hazard della pagina visualizzata

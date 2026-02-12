@@ -94,7 +94,6 @@
     </div>
 </div>
 
-
 <div class="tab-pane fade" id="panelD6" role="tabpanel" aria-labelledby="tabD6-tab">
     <div id="mapD6" class="map-container"></div>
 </div>
@@ -124,7 +123,7 @@
                 <div class="layer-controls-card__header"></div>
 
                 <div class="layer-box ra-box--left">
-                    <div class="layer-box__title">User properties</div>
+                    <div class="layer-box__title">Dependency Graph propertiess</div>
                     <div class="ra-field">
                         <label class="ra-label" for="ra-latitude">Latitude</label>
                         <input id="ra-latitude" class="form-control form-control-sm" type="text" placeholder="42.3456" />
@@ -141,15 +140,16 @@
                     <div class="ra-divider"></div>
                     <div class="ra-subtitle">Infrastructure sectors (read-only)</div>
                     <div class="ra-checkbox-grid">
-                        <label class="layer-toggle"><input type="checkbox" checked disabled /> Government</label>
-                        <label class="layer-toggle"><input type="checkbox" checked disabled /> Healthcare</label>
                         <label class="layer-toggle"><input type="checkbox" checked disabled /> Energy</label>
-                        <label class="layer-toggle"><input type="checkbox" disabled /> Transport</label>
-                        <label class="layer-toggle"><input type="checkbox" disabled /> Water</label>
-                        <label class="layer-toggle"><input type="checkbox" checked disabled /> Telecom</label>
-                        <label class="layer-toggle"><input type="checkbox" disabled /> Finance</label>
-                        <label class="layer-toggle"><input type="checkbox" disabled /> Education</label>
-                        <label class="layer-toggle"><input type="checkbox" checked disabled /> Emergency</label>
+                        <label class="layer-toggle"><input type="checkbox" disabled /> transport</label>
+                        <label class="layer-toggle"><input type="checkbox" disabled /> Banking</label>
+                        <label class="layer-toggle"><input type="checkbox" disabled /> Financial Market Infrastructure</label>
+                        <label class="layer-toggle"><input type="checkbox" disabled /> Health</label>
+                        <label class="layer-toggle"><input type="checkbox" disabled /> Drinking Water</label>
+                        <label class="layer-toggle"><input type="checkbox" disabled /> Waste Water</label>
+                        <label class="layer-toggle"><input type="checkbox" disabled /> Digital Infrastructure</label>
+                        <label class="layer-toggle"><input type="checkbox" disabled /> Public Administration</label>
+                        <label class="layer-toggle"><input type="checkbox" disabled /> Food</label>
                     </div>
                 </div>
             </div>
@@ -178,6 +178,13 @@
                             <div class="ra-info-title">Graph size preview</div>
                             <div class="ra-info-row">Nodes: 124</div>
                             <div class="ra-info-row">Edges: 356</div>
+                        </div>
+                    </div>
+
+                    <div class="layer-box ra-box--right">
+                        <div class="layer-box__title">Map Layers Preview</div>
+                        <div class="ra-info-box">
+                            <div class="ra-info-row">Layer: graph nodes</div>
                         </div>
                     </div>
                 </div>
@@ -210,15 +217,16 @@
                         <div class="col-12">
                             <label class="form-label">Infrastructure sectors</label>
                             <div class="ra-checkbox-grid ra-checkbox-grid--modal">
-                                <label class="layer-toggle"><input type="checkbox" /> Government</label>
-                                <label class="layer-toggle"><input type="checkbox" /> Healthcare</label>
                                 <label class="layer-toggle"><input type="checkbox" /> Energy</label>
-                                <label class="layer-toggle"><input type="checkbox" /> Transport</label>
-                                <label class="layer-toggle"><input type="checkbox" /> Water</label>
-                                <label class="layer-toggle"><input type="checkbox" /> Telecom</label>
-                                <label class="layer-toggle"><input type="checkbox" /> Finance</label>
-                                <label class="layer-toggle"><input type="checkbox" /> Education</label>
-                                <label class="layer-toggle"><input type="checkbox" /> Emergency</label>
+                                <label class="layer-toggle"><input type="checkbox" /> transport</label>
+                                <label class="layer-toggle"><input type="checkbox" /> Banking</label>
+                                <label class="layer-toggle"><input type="checkbox" /> Financial Market Infrastructure</label>
+                                <label class="layer-toggle"><input type="checkbox" /> Health</label>
+                                <label class="layer-toggle"><input type="checkbox" /> Drinking Water</label>
+                                <label class="layer-toggle"><input type="checkbox" /> Waste Water</label>
+                                <label class="layer-toggle"><input type="checkbox" /> Digital Infrastructure</label>
+                                <label class="layer-toggle"><input type="checkbox" /> Public Administration</label>
+                                <label class="layer-toggle"><input type="checkbox" /> Food</label>
                             </div>
                         </div>
                     </div>
@@ -231,9 +239,193 @@
         </div>
     </div>
 </div>
+
+
 <div class="tab-pane fade" id="panelD14" role="tabpanel" aria-labelledby="tabD14-tab">
-    <div id="mapD14" class="map-container"></div>
+    <div class="dep-setup-layout" id="panelD14-layout">
+        <nav class="dep-setup-menu" aria-label="Dependency setup subsections">
+            <ul class="nav nav-pills flex-column dep-subtabs" id="depSubtabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="dep-subsec-tab" data-bs-toggle="tab" data-bs-target="#dep-subsec" type="button" role="tab" aria-controls="dep-subsec" aria-selected="true">
+                        Subsector Dependencies
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="dep-poi-tab" data-bs-toggle="tab" data-bs-target="#dep-poi" type="button" role="tab" aria-controls="dep-poi" aria-selected="false">
+                        POI Dependencies
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="dep-default-prob-tab" data-bs-toggle="tab" data-bs-target="#dep-default-prob" type="button" role="tab" aria-controls="dep-default-prob" aria-selected="false">
+                        Default Probabilities
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="dep-subsec-prob-tab" data-bs-toggle="tab" data-bs-target="#dep-subsec-prob" type="button" role="tab" aria-controls="dep-subsec-prob" aria-selected="false">
+                        Subsector Probability Overrides
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="dep-poi-prob-tab" data-bs-toggle="tab" data-bs-target="#dep-poi-prob" type="button" role="tab" aria-controls="dep-poi-prob" aria-selected="false">
+                        POI Probability Overrides
+                    </button>
+                </li>
+            </ul>
+        </nav>
+
+        <section class="dep-setup-editor">
+
+            <div class="tab-content dep-tab-content" id="depSubtabsContent">
+                <div class="tab-pane fade show active" id="dep-subsec" role="tabpanel" aria-labelledby="dep-subsec-tab">
+                    <div class="dep-editor-card">
+                        <div class="dep-editor-header">
+                            <div class="dep-editor-title">Subsector Dependencies Configuration</div>
+                            <button class="btn btn-outline-primary btn-sm dep-load-example" type="button" data-example-target="example-subsec">Load Example Template</button>
+                        </div>
+                        <div class="dep-json-editor-container">
+                            <textarea id="subsec_dep" class="form-control form-control-sm dep-json-editor" rows="12" spellcheck="false" data-status-id="status-subsec"></textarea>
+                        </div>
+                        <div class="dep-actions">
+                            <div class="dep-status" id="status-subsec">
+                                <span class="dep-status-dot dep-status-dot--invalid"></span>
+                                <span class="dep-status-text">Syntax Error</span>
+                            </div>
+                            <div class="dep-action-buttons">
+                                <button class="btn btn-outline-secondary btn-sm dep-clear" type="button">Clear</button>
+                                <button class="btn btn-outline-primary btn-sm dep-validate" type="button">Validate</button>
+                                <button class="btn btn-success btn-sm dep-save" type="button">Save</button>
+                            </div>
+                        </div>
+                        <script type="application/json" id="example-subsec">[
+  {"src":["6430","2952","2961"], "targ":"2005"},
+  {"src":["2956","6430"],       "targ":"2006"}
+]</script>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="dep-poi" role="tabpanel" aria-labelledby="dep-poi-tab">
+                    <div class="dep-editor-card">
+                        <div class="dep-editor-header">
+                            <div class="dep-editor-title">POI Dependencies Configuration</div>
+                            <button class="btn btn-outline-primary btn-sm dep-load-example" type="button" data-example-target="example-poi">Load Example Template</button>
+                        </div>
+                        <div class="dep-json-editor-container">
+                            <textarea id="poi_dep" class="form-control form-control-sm dep-json-editor" rows="12" spellcheck="false" data-status-id="status-poi"></textarea>
+                        </div>
+                        <div class="dep-actions">
+                            <div class="dep-status" id="status-poi">
+                                <span class="dep-status-dot dep-status-dot--invalid"></span>
+                                <span class="dep-status-text">Syntax Error</span>
+                            </div>
+                            <div class="dep-action-buttons">
+                                <button class="btn btn-outline-secondary btn-sm dep-clear" type="button">Clear</button>
+                                <button class="btn btn-outline-primary btn-sm dep-validate" type="button">Validate</button>
+                                <button class="btn btn-success btn-sm dep-save" type="button">Save</button>
+                            </div>
+                        </div>
+                        <script type="application/json" id="example-poi">[
+  {"src":"efG112ahhYYYYY", "targ":"FAWW112233"},
+  {"src":"1DAJERTTG123",   "targ":"EAQWEER305"}
+]</script>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="dep-default-prob" role="tabpanel" aria-labelledby="dep-default-prob-tab">
+                    <div class="dep-editor-card">
+                        <div class="dep-editor-header">
+                            <div class="dep-editor-title">Default Probabilities Configuration</div>
+                            <button class="btn btn-outline-primary btn-sm dep-load-example" type="button" data-example-target="example-default-prob">Load Example Template</button>
+                        </div>
+                        <div class="dep-json-editor-container">
+                            <textarea id="all_dep_prob" class="form-control form-control-sm dep-json-editor" rows="12" spellcheck="false" data-status-id="status-default-prob"></textarea>
+                        </div>
+                        <div class="dep-actions">
+                            <div class="dep-status" id="status-default-prob">
+                                <span class="dep-status-dot dep-status-dot--invalid"></span>
+                                <span class="dep-status-text">Syntax Error</span>
+                            </div>
+                            <div class="dep-action-buttons">
+                                <button class="btn btn-outline-secondary btn-sm dep-clear" type="button">Clear</button>
+                                <button class="btn btn-outline-primary btn-sm dep-validate" type="button">Validate</button>
+                                <button class="btn btn-success btn-sm dep-save" type="button">Save</button>
+                            </div>
+                        </div>
+                        <script type="application/json" id="example-default-prob">{
+  "f_prob":{"ref":"prob","val":[25,45,20,10]},
+  "r_prob":{"ref":"prob","val":[35,40,15,10]}
+}</script>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="dep-subsec-prob" role="tabpanel" aria-labelledby="dep-subsec-prob-tab">
+                    <div class="dep-editor-card">
+                        <div class="dep-editor-header">
+                            <div class="dep-editor-title">Subsector Probability Overrides Configuration</div>
+                            <button class="btn btn-outline-primary btn-sm dep-load-example" type="button" data-example-target="example-subsec-prob">Load Example Template</button>
+                        </div>
+                        <div class="dep-json-editor-container">
+                            <textarea id="subsec_dep_prob" class="form-control form-control-sm dep-json-editor" rows="12" spellcheck="false" data-status-id="status-subsec-prob"></textarea>
+                        </div>
+                        <div class="dep-actions">
+                            <div class="dep-status" id="status-subsec-prob">
+                                <span class="dep-status-dot dep-status-dot--invalid"></span>
+                                <span class="dep-status-text">Syntax Error</span>
+                            </div>
+                            <div class="dep-action-buttons">
+                                <button class="btn btn-outline-secondary btn-sm dep-clear" type="button">Clear</button>
+                                <button class="btn btn-outline-primary btn-sm dep-validate" type="button">Validate</button>
+                                <button class="btn btn-success btn-sm dep-save" type="button">Save</button>
+                            </div>
+                        </div>
+                        <script type="application/json" id="example-subsec-prob">[
+  {
+    "src":"1187","targ":"2005",
+    "f_prob":{"ref":"prob","val":[25,45,20,10]},
+    "r_prob":{"ref":"prob","val":[35,40,15,10]}
+  }
+]</script>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="dep-poi-prob" role="tabpanel" aria-labelledby="dep-poi-prob-tab">
+                    <div class="dep-editor-card">
+                        <div class="dep-editor-header">
+                            <div class="dep-editor-title">POI Probability Overrides Configuration</div>
+                            <button class="btn btn-outline-primary btn-sm dep-load-example" type="button" data-example-target="example-poi-prob">Load Example Template</button>
+                        </div>
+                        <div class="dep-json-editor-container">
+                            <textarea id="poi_dep_prob" class="form-control form-control-sm dep-json-editor" rows="12" spellcheck="false" data-status-id="status-poi-prob"></textarea>
+                        </div>
+                        <div class="dep-actions">
+                            <div class="dep-status" id="status-poi-prob">
+                                <span class="dep-status-dot dep-status-dot--invalid"></span>
+                                <span class="dep-status-text">Syntax Error</span>
+                            </div>
+                            <div class="dep-action-buttons">
+                                <button class="btn btn-outline-secondary btn-sm dep-clear" type="button">Clear</button>
+                                <button class="btn btn-outline-primary btn-sm dep-validate" type="button">Validate</button>
+                                <button class="btn btn-success btn-sm dep-save" type="button">Save</button>
+                            </div>
+                        </div>
+                        <script type="application/json" id="example-poi-prob">[
+  {
+    "src":"efG112ahhYYYYY","targ":"FAWW112233",
+    "f_prob":{"ref":"prob","val":[20,50,20,10]},
+    "r_prob":{"ref":"prob","val":[40,40,15,5]}
+  }
+]</script>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <aside class="dep-setup-map">
+            <div id="mapD14" class="map-container dep-map"></div>
+        </aside>
+    </div>
 </div>
+
+
 <div class="tab-pane fade" id="panelD15" role="tabpanel" aria-labelledby="tabD15-tab">
     <div id="mapD15" class="map-container"></div>
 </div>

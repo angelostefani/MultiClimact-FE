@@ -25,6 +25,9 @@ else
         <link rel="stylesheet" href="~/lib/openlayers/ol.css" type="text/css" />
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
         <link rel="stylesheet" href="~/lib/bootstrap-icons/font/bootstrap-icons.css" />
+        <link rel="stylesheet" href="~/css/dependency-setup.css" asp-append-version="true" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/lint/lint.min.css" />
 
         <!-- Linking necessary scripts for jQuery and OpenLayers functionality -->
         <script src="~/lib/jquery/dist/jquery.min.js"></script>
@@ -152,8 +155,14 @@ else
         <script src="~/js/menu-helper.js" asp-append-version="true"></script>
         <!-- External JavaScript file containing logic for map interactions and UI behavior -->
         <script src="~/js/maps-init.js" asp-append-version="true"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/lint/lint.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jsonlint/1.6.0/jsonlint.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/lint/json-lint.min.js"></script>
         <script src="~/js/fixedSidebar-helper.js" asp-append-version="true"></script>
         <script src="~/js/chat.js" asp-append-version="true"></script>
+        <script src="~/js/dependency-setup.js" asp-append-version="true"></script>
 
         <script type="text/javascript">
                 /**
