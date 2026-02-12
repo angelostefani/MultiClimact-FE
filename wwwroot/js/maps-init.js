@@ -79,8 +79,8 @@ document.addEventListener("DOMContentLoaded", function () {
         centerLatitude: 39.700,                    // Initial latitude
         zoomValue: 6,                              // Initial zoom level
         layerMatrix: [                             // Array of WMS layers
-            [true, true, wmsBaseUrl, document.getElementById("wmslayer_shakemap").dataset.value, 'Shakemap', null, null, false],  //  layer
-            [true, true, wmsBaseUrl, document.getElementById("wmslayer_earth_real_view").dataset.value, 'Latest Earthquakes', null, null, false]  //  layer //invertiti
+            [true, true, wmsBaseUrl, document.getElementById("wmslayer_shakemap").dataset.value, 'Shakemap', null, null, true],  //  layer NO CQL_FILTER 
+            [true, true, wmsBaseUrl, document.getElementById("wmslayer_earth_real_view").dataset.value, 'Latest Earthquakes', null, null, false]  //  layer NO CQL_FILTER 
         ]
     };
 
