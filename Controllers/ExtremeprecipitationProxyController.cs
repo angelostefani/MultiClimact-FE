@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.WebUtilities;
@@ -51,6 +52,12 @@ namespace MultiClimact.Controllers
                     _logger.LogInformation("Extremeprecipitation service response: {responseContent}", content);
                     // Ritorna il payload del servizio così com'è per preservare i nomi dei campi
                     return Content(content, "application/json");
+                }
+
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    _logger.LogWarning("Extremeprecipitation service returned 404 (no runs found) for requested filters.");
+                    return Content("{\"success\":true,\"data\":[]}", "application/json");
                 }
 
                 _logger.LogError("Errore Extremeprecipitation Service: {statusCode}", response.StatusCode);

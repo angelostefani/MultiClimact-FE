@@ -134,8 +134,13 @@ else
     app.UseHsts();
 }
 
-// Redirect HTTP requests to HTTPS
-app.UseHttpsRedirection();
+// Redirect HTTP requests to HTTPS outside local development.
+// In dev this app is often launched on HTTP only, which would otherwise log:
+// "Failed to determine the https port for redirect."
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 // Serve static files (e.g., HTML, CSS, JavaScript)
 app.UseStaticFiles();
 

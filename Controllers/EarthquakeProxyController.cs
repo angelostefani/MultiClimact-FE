@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Net.Http;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.WebUtilities;
 using MultiClimact.Services;
@@ -215,11 +216,15 @@ namespace MultiClimact.Controllers
                     // Ritorna il payload del servizio così com'è per preservare i nomi dei campi
                     return Content(content, "application/json");
                 }
-                else
+
+                if (response.StatusCode == HttpStatusCode.NotFound)
                 {
-                    _logger.LogError("Errore Earthquake Service: {statusCode}", response.StatusCode);
-                    return StatusCode((int)response.StatusCode, "Errore nella richiesta al servizio terremoti");
+                    _logger.LogWarning("Earthquake service returned 404 (no runs found) for requested filters.");
+                    return Content("{\"success\":true,\"data\":[]}", "application/json");
                 }
+
+                _logger.LogError("Errore Earthquake Service: {statusCode}", response.StatusCode);
+                return StatusCode((int)response.StatusCode, "Errore nella richiesta al servizio terremoti");
             }
             catch (HttpRequestException e)
             {
