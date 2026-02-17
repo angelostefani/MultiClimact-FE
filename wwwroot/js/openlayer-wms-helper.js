@@ -367,14 +367,29 @@ function switchLayers(configWMSMatrixMap, layersIndex, map, blockSize, blockStar
  * @param {Object} map - L'oggetto mappa di OpenLayers.
  */
 function updateMapLayers(configWMSMatrixMap, map) {
-    // Rimuovi tutti i layer esistenti dalla mappa
-    map.getLayers().clear();
+    // Mantieni la basemap esistente e rimuovi solo i layer WMS
+    const layers = map.getLayers();
+    const layersToRemove = [];
+    let hasBaseLayer = false;
 
-    // Aggiungi i layer di base
-    let baseLayer = new ol.layer.Tile({
-        source: new ol.source.OSM()
+    layers.forEach(function (layer) {
+        if (layer && typeof layer.get === 'function' && layer.get('name') === 'baseMap') {
+            hasBaseLayer = true;
+        } else {
+            layersToRemove.push(layer);
+        }
     });
-    map.addLayer(baseLayer);
+
+    layersToRemove.forEach(function (layer) {
+        layers.remove(layer);
+    });
+
+    // Fallback difensivo: se manca la basemap, la ripristina
+    if (!hasBaseLayer) {
+        let baseLayer = getBaseMapLayer(configWMSMatrixMap.baseMapName || 'default');
+        baseLayer.set('name', 'baseMap');
+        map.addLayer(baseLayer);
+    }
 
     // Cicla attraverso la layerMatrix e aggiungi i layer visibili
     configWMSMatrixMap.layerMatrix.forEach(function (layerConfig, index) {

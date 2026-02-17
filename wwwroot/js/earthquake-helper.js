@@ -11,6 +11,7 @@
 
 // Variabile per tracciare la scheda attiva
 let activeRiskRunID = '';
+let lastAppliedRiskRunID = null;
 // Flag di debug per log mirati
 const DEBUG_HAZARD = true;
 // Stati per indice selezionato per hazard
@@ -83,6 +84,10 @@ function refreshMapsForActiveRiskRunId() {
         return;
     }
 
+    if (activeRiskRunID === lastAppliedRiskRunID) {
+        return;
+    }
+
     const mapPairs = [
         { config: typeof configWMSMatrixMapC1 !== 'undefined' ? configWMSMatrixMapC1 : null, map: typeof mapC1 !== 'undefined' ? mapC1 : null },
         { config: typeof configWMSMatrixMapC2 !== 'undefined' ? configWMSMatrixMapC2 : null, map: typeof mapC2 !== 'undefined' ? mapC2 : null },
@@ -103,6 +108,8 @@ function refreshMapsForActiveRiskRunId() {
             updateMapLayers(pair.config, pair.map);
         }
     });
+
+    lastAppliedRiskRunID = activeRiskRunID;
 }
 
 const hazardConfig = {
@@ -225,6 +232,7 @@ function populateHazardTable(data, config, hazardKey) {
                     localStorage.setItem('lastSelectedRowIndex_' + hazardKey, index);
                     if (DEBUG_HAZARD) {
                         console.log('[hazard click]', { hazardKey, index, selectedRowIndexByHazard, activeRiskRunIdByHazard, activeRiskRunID });
+                        console.log('[hazard click - paginated]', { hazardType: hazardKey, index, selectedRowIndexByHazard, activeRiskRunIdByHazard, activeRiskRunID });
                     }
                     refreshMapsForActiveRiskRunId();
                 }
@@ -438,24 +446,6 @@ function paginateTable() {
         createPaginationControls();
     }
 
-    document.querySelectorAll('.hazard-row').forEach((row, index) => {
-        row.addEventListener('click', () => {
-            document.querySelectorAll('.select-cell').forEach(cell => cell.textContent = '');
-            row.querySelector('.select-cell').textContent = 'V';
-            selectedRowIndexByHazard[hazardType] = index;
-            const hiddenField = row.querySelector('.hidden-risk-run-id');
-            if (hiddenField) {
-                const idValue = hiddenField.value;
-                activeRiskRunIdByHazard[hazardType] = idValue;
-                activeRiskRunID = idValue;
-            }
-            localStorage.setItem('lastSelectedRowIndex_' + hazardType, index);
-            if (DEBUG_HAZARD) {
-                console.log('[hazard click - paginated]', { hazardType, index, selectedRowIndexByHazard, activeRiskRunIdByHazard, activeRiskRunID });
-            }
-            refreshMapsForActiveRiskRunId();
-        });
-    });
 }
 
 // Aggiorna il risk run id globale quando cambia l'hazard selezionato
