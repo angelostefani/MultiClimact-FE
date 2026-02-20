@@ -1,0 +1,129 @@
+/* =========================
+   D15 - Failure Setup
+   ========================= */
+
+
+#panelD15 #panelD15-layout {
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+}
+
+#panelD15 .fs-column {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+#panelD15 .fs-column--left {
+  width: 38%;
+  flex: 0 0 38%;
+  max-width: 38%;
+  height: calc(100vh - var(--mc-header-h) - var(--mc-footer-h));
+  min-height: clamp(320px, 55dvh, 820px);
+  overflow-y: auto;
+}
+
+#panelD15 .fs-column--right {
+  width: 62%;
+  flex: 0 0 62%;
+  max-width: 62%;
+  height: calc(100vh - var(--mc-header-h) - var(--mc-footer-h));
+  min-height: clamp(260px, 42dvh, 680px);
+}
+
+#panelD15 .fs-card {
+  background: #ffffff;
+  border: 1px solid #d6d6d6;
+  border-radius: 12px;
+  padding: 14px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+}
+
+#panelD15 .fs-card__title {
+  font-weight: 700;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+#panelD15 .fs-field {
+  margin-bottom: 10px;
+}
+
+#panelD15 .fs-field--preview {
+  margin-top: 10px;
+}
+
+#panelD15 .fs-label {
+  display: block;
+  font-weight: 600;
+  font-size: 13px;
+  margin-bottom: 6px;
+  color: #1f2a37;
+}
+
+#panelD15 .fs-textarea {
+  resize: vertical;
+}
+
+#panelD15 .fs-hint {
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 6px;
+}
+
+#panelD15 .fs-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+#panelD15 .fs-status {
+  margin-top: 10px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+#panelD15 .fs-load {
+  width: 100%;
+}
+
+#panelD15 .fs-map-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 14px 14px 10px;
+}
+
+#panelD15 #mapD15.fs-map {
+  flex: 1 1 auto;
+  height: 100% !important;
+  min-height: 200px;
+  border: 1px solid #cfcfcf;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+#panelD15 .fs-map-legend {
+  margin-top: 10px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid #d6d6d6;
+  background: #f6f9ff;
+  font-size: 13px;
+  color: #1f2a37;
+}
+
+@media (max-width: 1400px) {
+  #panelD15 #panelD15-layout {
+    flex-direction: column;
+  }
+
+  #panelD15 .fs-column--left,
+  #panelD15 .fs-column--right {
+    width: 100%;
+    flex: 0 0 auto;
+    max-width: 100%;
+    height: auto;
+  }
+}

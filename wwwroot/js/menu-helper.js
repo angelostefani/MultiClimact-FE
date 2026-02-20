@@ -470,6 +470,11 @@ function selectTab(selectedItem) {
             $(`#${tabId}`).removeClass('visually-hidden');
         });
 
+        // Forza la disattivazione di D14 quando entri in D15
+        if (group.activePanel === 'panelD15') {
+            $('#panelD14').removeClass('show active').addClass('fade').css('display', 'none');
+        }
+
         // Attiva la scheda e il pannello corrispondente
         $(`#${group.activeTab}`).addClass('show active');
         $(`#${group.activePanel}`).addClass('show active');

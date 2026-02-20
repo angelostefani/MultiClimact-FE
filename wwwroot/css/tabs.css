@@ -47,6 +47,14 @@
     white-space: nowrap;
 }
 
+/* Ensure only the active tab panel is visible */
+#myTabContent > .tab-pane {
+    display: none !important;
+}
+#myTabContent > .tab-pane.show.active {
+    display: block !important;
+}
+
 
 
 

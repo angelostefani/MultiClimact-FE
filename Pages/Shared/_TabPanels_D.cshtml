@@ -124,6 +124,10 @@
 
                 <div class="layer-box ra-box--left">
                     <div class="layer-box__title">Dependency Graph propertiess</div>
+                     <div class="ra-field">
+                        <label class="ra-label" for="ra-name">Name</label>
+                        <input id="ra-name" class="form-control form-control-sm" type="text" placeholder="name" />
+                    </div>
                     <div class="ra-field">
                         <label class="ra-label" for="ra-latitude">Latitude</label>
                         <input id="ra-latitude" class="form-control form-control-sm" type="text" placeholder="42.3456" />
@@ -141,7 +145,7 @@
                     <div class="ra-subtitle">Infrastructure sectors (read-only)</div>
                     <div class="ra-checkbox-grid">
                         <label class="layer-toggle"><input type="checkbox" checked disabled /> Energy</label>
-                        <label class="layer-toggle"><input type="checkbox" disabled /> transport</label>
+                        <label class="layer-toggle"><input type="checkbox" disabled /> Transport</label>
                         <label class="layer-toggle"><input type="checkbox" disabled /> Banking</label>
                         <label class="layer-toggle"><input type="checkbox" disabled /> Financial Market Infrastructure</label>
                         <label class="layer-toggle"><input type="checkbox" disabled /> Health</label>
@@ -203,6 +207,10 @@
                 <div class="modal-body">
                     <div class="row g-3">
                         <div class="col-md-4">
+                            <label class="form-label" for="ra-modal-name">Name</label>
+                            <input id="ra-modal-name" class="form-control form-control-sm" type="text" placeholder="name" />
+                        </div>
+                        <div class="col-md-4">
                             <label class="form-label" for="ra-modal-latitude">Latitude</label>
                             <input id="ra-modal-latitude" class="form-control form-control-sm" type="text" placeholder="42.3456" />
                         </div>
@@ -218,7 +226,7 @@
                             <label class="form-label">Infrastructure sectors</label>
                             <div class="ra-checkbox-grid ra-checkbox-grid--modal">
                                 <label class="layer-toggle"><input type="checkbox" /> Energy</label>
-                                <label class="layer-toggle"><input type="checkbox" /> transport</label>
+                                <label class="layer-toggle"><input type="checkbox" /> Transport</label>
                                 <label class="layer-toggle"><input type="checkbox" /> Banking</label>
                                 <label class="layer-toggle"><input type="checkbox" /> Financial Market Infrastructure</label>
                                 <label class="layer-toggle"><input type="checkbox" /> Health</label>
@@ -280,7 +288,7 @@
                     <div class="dep-editor-card">
                         <div class="dep-editor-header">
                             <div class="dep-editor-title">Subsector Dependencies Configuration</div>
-                            <button class="btn btn-outline-primary btn-sm dep-load-example" type="button" data-example-target="example-subsec">Load Example Template</button>
+                            <button class="btn btn-outline-primary btn-sm dep-load-example" type="button" data-example-target="example-subsec">Load Default data</button>
                         </div>
                         <div class="dep-json-editor-container">
                             <textarea id="subsec_dep" class="form-control form-control-sm dep-json-editor" rows="12" spellcheck="false" data-status-id="status-subsec"></textarea>
@@ -307,7 +315,7 @@
                     <div class="dep-editor-card">
                         <div class="dep-editor-header">
                             <div class="dep-editor-title">POI Dependencies Configuration</div>
-                            <button class="btn btn-outline-primary btn-sm dep-load-example" type="button" data-example-target="example-poi">Load Example Template</button>
+                            <button class="btn btn-outline-primary btn-sm dep-load-example" type="button" data-example-target="example-poi">Load Default data</button>
                         </div>
                         <div class="dep-json-editor-container">
                             <textarea id="poi_dep" class="form-control form-control-sm dep-json-editor" rows="12" spellcheck="false" data-status-id="status-poi"></textarea>
@@ -334,7 +342,7 @@
                     <div class="dep-editor-card">
                         <div class="dep-editor-header">
                             <div class="dep-editor-title">Default Probabilities Configuration</div>
-                            <button class="btn btn-outline-primary btn-sm dep-load-example" type="button" data-example-target="example-default-prob">Load Example Template</button>
+                            <button class="btn btn-outline-primary btn-sm dep-load-example" type="button" data-example-target="example-default-prob">Load Default data</button>
                         </div>
                         <div class="dep-json-editor-container">
                             <textarea id="all_dep_prob" class="form-control form-control-sm dep-json-editor" rows="12" spellcheck="false" data-status-id="status-default-prob"></textarea>
@@ -361,7 +369,7 @@
                     <div class="dep-editor-card">
                         <div class="dep-editor-header">
                             <div class="dep-editor-title">Subsector Probability Overrides Configuration</div>
-                            <button class="btn btn-outline-primary btn-sm dep-load-example" type="button" data-example-target="example-subsec-prob">Load Example Template</button>
+                            <button class="btn btn-outline-primary btn-sm dep-load-example" type="button" data-example-target="example-subsec-prob">Load Default data</button>
                         </div>
                         <div class="dep-json-editor-container">
                             <textarea id="subsec_dep_prob" class="form-control form-control-sm dep-json-editor" rows="12" spellcheck="false" data-status-id="status-subsec-prob"></textarea>
@@ -391,7 +399,7 @@
                     <div class="dep-editor-card">
                         <div class="dep-editor-header">
                             <div class="dep-editor-title">POI Probability Overrides Configuration</div>
-                            <button class="btn btn-outline-primary btn-sm dep-load-example" type="button" data-example-target="example-poi-prob">Load Example Template</button>
+                            <button class="btn btn-outline-primary btn-sm dep-load-example" type="button" data-example-target="example-poi-prob">Load Default data</button>
                         </div>
                         <div class="dep-json-editor-container">
                             <textarea id="poi_dep_prob" class="form-control form-control-sm dep-json-editor" rows="12" spellcheck="false" data-status-id="status-poi-prob"></textarea>
@@ -427,8 +435,43 @@
 
 
 <div class="tab-pane fade" id="panelD15" role="tabpanel" aria-labelledby="tabD15-tab">
-    <div id="mapD15" class="map-container"></div>
+    <div class="fs-layout" id="panelD15-layout">
+        <aside class="fs-column fs-column--left">
+            <div class="fs-card">
+                <div class="fs-card__title">User inputs</div>
+                <div class="fs-field">
+                    <label class="fs-label" for="failure-poi-list">Failed POIs list</label>
+                    <textarea id="failure-poi-list" class="form-control form-control-sm fs-textarea" rows="7" placeholder="11360212181; 8035257826; 10914539925"></textarea>
+                    <div class="fs-hint">Example: "11360212181; 8035257826; 10914539925"</div>
+                </div>
+                <div class="fs-actions">
+                    <button class="btn btn-outline-primary btn-sm" type="button">Validate</button>
+                    <button class="btn btn-outline-secondary btn-sm" type="button">Clear</button>
+                    <button class="btn btn-success btn-sm" type="button">Save</button>
+                </div>
+                <div class="fs-status">Status / feedback</div>
+            </div>
+
+            <div class="fs-card">
+                <div class="fs-card__title">User actions</div>
+                <button class="btn btn-primary btn-sm fs-load" type="button">Load from Damage Assessment</button>
+                <div class="fs-hint">Restores preset/precompiled values into the textarea.</div>
+                <div class="fs-field fs-field--preview">
+                    <label class="fs-label" for="failure-poi-preview">Preset preview (read-only)</label>
+                    <textarea id="failure-poi-preview" class="form-control form-control-sm fs-textarea" rows="5" readonly>11360212181; 8035257826; 10914539925</textarea>
+                </div>
+            </div>
+        </aside>
+
+        <section class="fs-column fs-column--right">
+            <div class="fs-card fs-map-card">
+                <div class="fs-card__title">Visual output</div>
+                <div id="mapD15" class="map-container fs-map"></div>
+            </div>
+        </section>
+    </div>
 </div>
+
 <div class="tab-pane fade" id="panelD16" role="tabpanel" aria-labelledby="tabD16-tab">
     <div id="mapD16" class="map-container"></div>
 </div>
