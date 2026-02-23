@@ -440,34 +440,26 @@
             <div class="fs-card">
                 <div class="fs-card__title">User inputs</div>
                 <div class="fs-field">
-                    <label class="fs-label" for="failure-poi-list">Failed POIs list</label>
-                    <textarea id="failure-poi-list" class="form-control form-control-sm fs-textarea" rows="7" placeholder="11360212181; 8035257826; 10914539925"></textarea>
+                    <div class="fs-field__header">
+                        <label class="fs-label" for="failure-poi-list">Failed POIs list</label>
+                        <button class="btn btn-primary btn-sm fs-load" type="button">Load from Damage Assessment</button>
+                    </div>
+                    <textarea id="failure-poi-list" class="form-control form-control-sm fs-textarea" placeholder="11360212181; 8035257826; 10914539925" data-default="11360212181; 8035257826; 10914539925">11360212181; 8035257826; 10914539925</textarea>
                     <div class="fs-hint">Example: "11360212181; 8035257826; 10914539925"</div>
                 </div>
-                <div class="fs-actions">
-                    <button class="btn btn-outline-primary btn-sm" type="button">Validate</button>
-                    <button class="btn btn-outline-secondary btn-sm" type="button">Clear</button>
-                    <button class="btn btn-success btn-sm" type="button">Save</button>
-                </div>
-                <div class="fs-status">Status / feedback</div>
-            </div>
-
-            <div class="fs-card">
-                <div class="fs-card__title">User actions</div>
-                <button class="btn btn-primary btn-sm fs-load" type="button">Load from Damage Assessment</button>
-                <div class="fs-hint">Restores preset/precompiled values into the textarea.</div>
-                <div class="fs-field fs-field--preview">
-                    <label class="fs-label" for="failure-poi-preview">Preset preview (read-only)</label>
-                    <textarea id="failure-poi-preview" class="form-control form-control-sm fs-textarea" rows="5" readonly>11360212181; 8035257826; 10914539925</textarea>
+                <div class="fs-footer">
+                    <div class="fs-actions">
+                        <button class="btn btn-outline-primary btn-sm" type="button">Validate</button>
+                        <button class="btn btn-outline-secondary btn-sm" type="button">Clear</button>
+                        <button class="btn btn-success btn-sm" type="button">Save</button>
+                    </div>
+                    <div class="fs-status">Status / feedback</div>
                 </div>
             </div>
         </aside>
 
         <section class="fs-column fs-column--right">
-            <div class="fs-card fs-map-card">
-                <div class="fs-card__title">Visual output</div>
-                <div id="mapD15" class="map-container fs-map"></div>
-            </div>
+            <div id="mapD15" class="map-container fs-map fs-map--full"></div>
         </section>
     </div>
 </div>
