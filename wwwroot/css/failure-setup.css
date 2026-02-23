@@ -67,10 +67,10 @@
 }
 
 #panelD15 .fs-field {
-  margin-bottom: 10px;
+  margin-bottom: 6px;
   display: flex;
   flex-direction: column;
-  flex: 1 1 auto;
+  flex: 0 0 auto;
   min-height: 0;
 }
 
@@ -90,9 +90,10 @@
 
 #panelD15 .fs-textarea {
   resize: vertical;
-  flex: 1 1 auto;
-  height: 100%;
-  min-height: 0;
+  flex: 0 0 auto;
+  height: 220px;
+  min-height: 140px;
+  max-height: 320px;
 }
 
 #panelD15 .fs-hint {
@@ -118,7 +119,7 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
-  margin-top: auto;
+  margin-top: 0;
 }
 
 #panelD15 .fs-load {

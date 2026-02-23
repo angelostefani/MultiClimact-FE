@@ -449,9 +449,9 @@
                 </div>
                 <div class="fs-footer">
                     <div class="fs-actions">
-                        <button class="btn btn-outline-primary btn-sm" type="button">Validate</button>
-                        <button class="btn btn-outline-secondary btn-sm" type="button">Clear</button>
-                        <button class="btn btn-success btn-sm" type="button">Save</button>
+                        <button class="btn btn-outline-primary btn-sm fs-validate" type="button">Validate</button>
+                        <button class="btn btn-outline-secondary btn-sm fs-clear" type="button">Clear</button>
+                        <button class="btn btn-success btn-sm fs-save" type="button">Save</button>
                     </div>
                     <div class="fs-status">Status / feedback</div>
                 </div>
@@ -465,7 +465,204 @@
 </div>
 
 <div class="tab-pane fade" id="panelD16" role="tabpanel" aria-labelledby="tabD16-tab">
-    <div id="mapD16" class="map-container"></div>
+    <div class="impact-layout" id="panelD16-layout">
+        <aside class="impact-column impact-column--left">
+            <div class="impact-card">
+                <div class="impact-card__header">
+                    <div class="impact-title">User inputs (Impact Properties)</div>
+                    <div class="impact-field">
+                        <label class="impact-label" for="impact-type">Impact Type</label>
+                        <select id="impact-type" class="form-select form-select-sm impact-select">
+                            <option selected>Social Impact</option>
+                            <option>Economic Impact</option>
+                            <option>Environmental Impact</option>
+                        </select>
+                    </div>
+                    <ul class="nav nav-tabs impact-subtabs" id="impactSubtabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="impact-distributions-tab" data-bs-toggle="tab" data-bs-target="#impact-distributions" type="button" role="tab" aria-controls="impact-distributions" aria-selected="true">
+                                Distributions
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="impact-sector-tab" data-bs-toggle="tab" data-bs-target="#impact-sector" type="button" role="tab" aria-controls="impact-sector" aria-selected="false">
+                                Sectors
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="impact-subsector-tab" data-bs-toggle="tab" data-bs-target="#impact-subsector" type="button" role="tab" aria-controls="impact-subsector" aria-selected="false">
+                                Subsectors
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="impact-poi-tab" data-bs-toggle="tab" data-bs-target="#impact-poi" type="button" role="tab" aria-controls="impact-poi" aria-selected="false">
+                                Nodes
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="impact-mc-tab" data-bs-toggle="tab" data-bs-target="#impact-mc" type="button" role="tab" aria-controls="impact-mc" aria-selected="false">
+                                Monte Carlo properties
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="tab-content impact-tab-content" id="impactSubtabsContent">
+                    <div class="tab-pane fade show active" id="impact-distributions" role="tabpanel" aria-labelledby="impact-distributions-tab">
+                        <div class="impact-editor-card impact-editor-card--auto">
+                            <div class="impact-editor-title">Distributions</div>
+                            <div class="impact-json-editor-container">
+                                <textarea id="impact-distributions-editor" class="form-control form-control-sm impact-json-editor" rows="12" spellcheck="false" data-status-id="impact-status-distributions">{
+  "dist_imp_max": "Beta(a,b), Poisson(λ), Negative_Binomial(r,p), Binomial(n,p), Lognormal(μ,σ)",
+  "dist_imp_grow": "Categorical [slow, linear, fast]",
+  "dist_imp_time": "Lognormal(μ,σ)"
+}</textarea>
+                            </div>
+                            <div class="impact-actions">
+                                <div class="impact-status" id="impact-status-distributions">
+                                    <span class="impact-status-dot"></span>
+                                    <span class="impact-status-text">Syntax Error</span>
+                                </div>
+                                <div class="impact-buttons">
+                                    <button class="btn btn-outline-primary btn-sm impact-validate" type="button">Validate</button>
+                                    <button class="btn btn-outline-secondary btn-sm impact-clear" type="button">Clear</button>
+                                    <button class="btn btn-success btn-sm impact-save" type="button">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="impact-sector" role="tabpanel" aria-labelledby="impact-sector-tab">
+                        <div class="impact-editor-card impact-editor-card--auto">
+                            <div class="impact-editor-title">Sector Properties</div>
+                            <div class="impact-json-editor-container">
+                                <textarea id="impact-sector-editor" class="form-control form-control-sm impact-json-editor" rows="12" spellcheck="false" data-status-id="impact-status-sector">{
+  "sector_id": "sys2",
+  "sector_name": "Healthcare",
+  "imp_max": { "ref": "Negative_Binomial", "params": { "r": 4, "p": 0.35 } },
+  "imp_time": { "ref": "Lognormal", "params": [3.9, 1.0] }
+}</textarea>
+                            </div>
+                            <div class="impact-actions">
+                                <div class="impact-status" id="impact-status-sector">
+                                    <span class="impact-status-dot"></span>
+                                    <span class="impact-status-text">Syntax Error</span>
+                                </div>
+                                <div class="impact-buttons">
+                                    <button class="btn btn-outline-primary btn-sm impact-validate" type="button">Validate</button>
+                                    <button class="btn btn-outline-secondary btn-sm impact-clear" type="button">Clear</button>
+                                    <button class="btn btn-success btn-sm impact-save" type="button">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="impact-subsector" role="tabpanel" aria-labelledby="impact-subsector-tab">
+                        <div class="impact-editor-card impact-editor-card--auto">
+                            <div class="impact-editor-title">Subsector Properties</div>
+                            <div class="impact-json-editor-container">
+                                <textarea id="impact-subsector-editor" class="form-control form-control-sm impact-json-editor" rows="12" spellcheck="false" data-status-id="impact-status-subsector">{
+  "subsector_id": "6430",
+  "subsector_name": "Substation",
+  "imp_max": {
+    "ref": "Binomial",
+    "params": { "n": 900, "p": 0.15 }
+  },
+  "imp_time": {
+    "ref": "Lognormal",
+    "params": [3.0, 0.7]
+  }
+}</textarea>
+                            </div>
+                            <div class="impact-actions">
+                                <div class="impact-status" id="impact-status-subsector">
+                                    <span class="impact-status-dot"></span>
+                                    <span class="impact-status-text">Syntax Error</span>
+                                </div>
+                                <div class="impact-buttons">
+                                    <button class="btn btn-outline-primary btn-sm impact-validate" type="button">Validate</button>
+                                    <button class="btn btn-outline-secondary btn-sm impact-clear" type="button">Clear</button>
+                                    <button class="btn btn-success btn-sm impact-save" type="button">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="impact-poi" role="tabpanel" aria-labelledby="impact-poi-tab">
+                        <div class="impact-editor-card impact-editor-card--auto">
+                            <div class="impact-editor-title">POI Properties</div>
+                            <div class="impact-json-editor-container">
+                                <textarea id="impact-poi-editor" class="form-control form-control-sm impact-json-editor" rows="12" spellcheck="false" data-status-id="impact-status-poi">{
+  "poi_id": "1101941554",
+  "poi_name": "Student Housing",
+  "imp_max": { "ref": "Beta", "params": { "a": 2, "b": 5 } },
+  "imp_time": { "ref": "Lognormal", "params": [4.2, 0.7] }
+}</textarea>
+                            </div>
+                            <div class="impact-actions">
+                                <div class="impact-status" id="impact-status-poi">
+                                    <span class="impact-status-dot"></span>
+                                    <span class="impact-status-text">Syntax Error</span>
+                                </div>
+                                <div class="impact-buttons">
+                                    <button class="btn btn-outline-primary btn-sm impact-validate" type="button">Validate</button>
+                                    <button class="btn btn-outline-secondary btn-sm impact-clear" type="button">Clear</button>
+                                    <button class="btn btn-success btn-sm impact-save" type="button">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="impact-mc" role="tabpanel" aria-labelledby="impact-mc-tab">
+                        <div class="impact-mc-card impact-editor-card--auto">
+                            <div class="impact-editor-title">Monte Carlo Simulation</div>
+                            <div class="impact-mc-fields">
+                                <div class="impact-field">
+                                    <label class="impact-label" for="impact-mc-iterations">Number of iterations</label>
+                                    <input id="impact-mc-iterations" class="form-control form-control-sm impact-input" type="number" min="1" step="1" value="1000" />
+                                </div>
+                                <div class="impact-field">
+                                    <label class="impact-label" for="impact-mc-max-path">Max path length</label>
+                                    <input id="impact-mc-max-path" class="form-control form-control-sm impact-input" type="number" min="1" step="1" value="50" />
+                                </div>
+                                <div class="impact-field">
+                                    <label class="impact-label" for="impact-mc-max-chains">Max number of chains</label>
+                                    <input id="impact-mc-max-chains" class="form-control form-control-sm impact-input" type="number" min="1" step="1" value="10" />
+                                </div>
+                            </div>
+                            <div class="impact-actions">
+                                <div class="impact-status" id="impact-status-mc">
+                                    <span class="impact-status-dot"></span>
+                                    <span class="impact-status-text">Ready</span>
+                                </div>
+                                <div class="impact-buttons">
+                                    <button class="btn btn-outline-primary btn-sm impact-validate" type="button">Validate</button>
+                                    <button class="btn btn-outline-secondary btn-sm impact-clear" type="button">Clear</button>
+                                    <button class="btn btn-success btn-sm impact-save" type="button">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <section class="impact-column impact-column--right">
+            <div id="mapD16" class="map-container impact-map"></div>
+        </section>
+        <aside class="impact-column impact-column--layers">
+            <div class="layer-controls-card layer-controls-card--sidebar">
+                <div class="layer-controls-card__header">
+                    <div class="layer-box__title">Map Layers</div>
+                </div>
+                <div class="layer-box">
+                    <div class="layer-box__body">
+                        <!-- Placeholder: layer toggles go here -->
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
 </div>
 <div class="tab-pane fade" id="panelD17" role="tabpanel" aria-labelledby="tabD17-tab">
     <div id="mapD17" class="map-container"></div>
