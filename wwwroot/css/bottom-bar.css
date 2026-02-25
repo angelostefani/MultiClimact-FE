@@ -30,3 +30,15 @@
 body.has-bottom-bar {
     padding-bottom: 75vh;
 }
+
+/* Highlight rows on hover for both bottom-bar tables */
+#hazardTableBody tr,
+#graphTableBody tr {
+    transition: background-color 0.15s ease-in-out;
+}
+
+#hazardTableBody tr:hover > td,
+#graphTableBody tr:hover > td {
+    background-color: #d9e8ff !important;
+    cursor: pointer;
+}
