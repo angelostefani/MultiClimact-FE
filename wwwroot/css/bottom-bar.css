@@ -33,6 +33,15 @@
     box-shadow: none;
 }
 
+.bottom-bar-search-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #17335f;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #dbe4f0;
+}
+
 .bottom-bar-search-card .form-label {
     font-weight: 600;
     font-size: 14px;
@@ -71,12 +80,24 @@
     box-shadow: 0 4px 10px rgba(24, 91, 161, 0.25);
 }
 
+.bottom-bar-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+@media (max-width: 768px) {
+    .bottom-bar-actions {
+        justify-content: center;
+    }
+}
+
 #hazardResults thead th,
 #graphResults thead th {
-    background-color: #253b59;
-    color: #ffffff;
+    background-color: #eef2f7;
+    color: #243449;
     font-weight: 700;
-    border-color: #1d2f46;
+    border-color: #d7e0ec;
+    border-bottom: 3px solid #2f6fec;
 }
 
 #hazardTableBody .select-cell,
@@ -86,6 +107,34 @@
     font-size: 16px;
     font-weight: 700;
     color: #1e3a8a;
+}
+
+.hazard-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.2;
+    border: 1px solid transparent;
+}
+
+.hazard-badge-earthquake {
+    background-color: #fbe7e9;
+    color: #9b1c1c;
+    border-color: #f3c7cb;
+}
+
+.hazard-badge-heatwave {
+    background-color: #fff4db;
+    color: #8a4a00;
+    border-color: #ffe0a6;
+}
+
+.hazard-badge-extremeprecipitation {
+    background-color: #e5f1ff;
+    color: #1e4e8c;
+    border-color: #c7defa;
 }
 
 /* When the bottom bar is open, offset page content to keep it visible */

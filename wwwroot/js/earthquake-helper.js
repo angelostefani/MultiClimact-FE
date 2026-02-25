@@ -254,7 +254,10 @@ function populateHazardTable(data, config, hazardKey) {
             descriptionCell.textContent = normalized.description;
 
             const hazardCell = document.createElement('td');
-            hazardCell.textContent = formatHazardLabel(hazardKey);
+            const hazardBadge = document.createElement('span');
+            hazardBadge.className = `hazard-badge hazard-badge-${hazardKey}`;
+            hazardBadge.textContent = formatHazardLabel(hazardKey);
+            hazardCell.appendChild(hazardBadge);
 
             const hiddenField = document.createElement('input');
             hiddenField.type = 'hidden';

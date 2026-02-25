@@ -52,6 +52,17 @@
     left: 62%;
 }
 
+.tab.bottom-toggle-active {
+    background-color: #1f6feb;
+    border-color: #b9d4ff;
+    box-shadow: 0 0 0 2px rgba(185, 212, 255, 0.35), 0 4px 12px rgba(12, 46, 99, 0.45);
+}
+
+.tab.bottom-toggle-active i,
+.tab.bottom-toggle-active span {
+    color: #ffffff;
+}
+
 @media (max-width: 900px) {
     .tab-bottom {
         left: 34%;

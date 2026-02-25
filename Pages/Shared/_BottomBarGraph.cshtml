@@ -3,6 +3,7 @@
         <div class="bottom-bar-search-wrap mx-4">
             <form id="graphForm" class="bottom-bar-search-card p-3" method="GET" onsubmit="fetchGraphData(event)">
                 <input type="hidden" name="user_id" value="system">
+                <div class="bottom-bar-search-title">🔎 Graph Search Filters</div>
 
                 <div class="row g-3">
                     <div class="col-12 col-md-6">
@@ -21,7 +22,7 @@
                         <label for="graphIdConf" class="form-label">id_conf</label>
                         <input type="number" min="1" class="form-control" id="graphIdConf" name="id_conf" placeholder="Exact id_conf">
                     </div>
-                    <div class="col-12">
+                    <div class="col-12 bottom-bar-actions">
                         <button type="submit" class="btn btn-primary bottom-bar-search-btn">
                             <i class="bi bi-search"></i>
                             <span>Search</span>

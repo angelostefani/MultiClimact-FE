@@ -4,6 +4,7 @@
         <div class="bottom-bar-search-wrap mx-4">
             <form id="hazardForm" class="bottom-bar-search-card p-3" method="GET" onsubmit="fetchHazardData(event)">
                 <input type="hidden" name="user_id" value="system">
+                <div class="bottom-bar-search-title">🔎 Hazard Search Filters</div>
 
                 <div class="row g-3">
                     <div class="col-12 col-md-6">
@@ -29,7 +30,7 @@
                             <option value="true">Simulated</option>
                         </select>
                     </div>
-                    <div class="col-12">
+                    <div class="col-12 bottom-bar-actions">
                         <button type="submit" class="btn btn-primary bottom-bar-search-btn">
                             <i class="bi bi-search"></i>
                             <span>Search</span>
