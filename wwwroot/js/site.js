@@ -27,14 +27,42 @@ function toggleSidebarLeft() {
  * If the bottom bar is open, it will collapse and hide its content; otherwise, it will expand and show its content.
  */
 function toggleBottomBar() {
-    let bottomBar = document.getElementById("myBottomBar");
-    let content = document.querySelector(".bottom-bar-content");
-    if (bottomBar.style.height === "75%") {
-        bottomBar.style.height = "0";
-        content.style.display = "none";
-    } else {
-        bottomBar.style.height = "75%";
-        content.style.display = "block";
+    toggleBottomBarById("myBottomBar", "myGraphBottomBar");
+}
+
+function toggleGraphBottomBar() {
+    toggleBottomBarById("myGraphBottomBar", "myBottomBar");
+}
+
+function toggleBottomBarById(targetBarId, otherBarId) {
+    const targetBar = document.getElementById(targetBarId);
+    const otherBar = document.getElementById(otherBarId);
+    if (!targetBar) {
+        return;
+    }
+
+    const targetContent = targetBar.querySelector(".bottom-bar-content");
+    const otherContent = otherBar ? otherBar.querySelector(".bottom-bar-content") : null;
+    const targetIsOpen = targetBar.style.height === "75%";
+
+    if (otherBar) {
+        otherBar.style.height = "0";
+    }
+    if (otherContent) {
+        otherContent.style.display = "none";
+    }
+
+    if (targetIsOpen) {
+        targetBar.style.height = "0";
+        if (targetContent) {
+            targetContent.style.display = "none";
+        }
+        return;
+    }
+
+    targetBar.style.height = "75%";
+    if (targetContent) {
+        targetContent.style.display = "block";
     }
 }
 

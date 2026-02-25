@@ -3,17 +3,21 @@
 /* Common styles for tabs */
 .tab {
     position: fixed;
-    background-color: #cfc3c3;
+    background-color: #4f5d75;
     color: white;
-    font-size: 12px;
+    font-size: 14px;
+    font-weight: 600;
     cursor: pointer;
     z-index: 1001;
     text-align: center;
-    transition: background-color 0.3s;
+    border: 1px solid #ffffff;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.3s, transform 0.2s;
 }
 
     .tab:hover {
-        background-color: #575757;
+        background-color: #2f3b52;
     }
 
 /* Specific tab placements */
@@ -31,10 +35,31 @@
 }
 
 .tab-bottom {
-    left: 50%;
+    left: 38%;
     bottom: 30px;
     transform: translateX(-50%);
-    padding: 2px 20px;
+    padding: 8px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-width: 170px;
+    min-height: 38px;
+    white-space: nowrap;
+}
+
+.tab-bottom-graph {
+    left: 62%;
+}
+
+@media (max-width: 900px) {
+    .tab-bottom {
+        left: 34%;
+    }
+
+    .tab-bottom-graph {
+        left: 66%;
+    }
 }
 
 /* Allow many tabs to scroll horizontally on narrower desktop windows */

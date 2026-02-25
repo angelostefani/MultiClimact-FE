@@ -80,10 +80,18 @@ else
 
         <!-- Collapsible Bottom Bar -->
         @await Html.PartialAsync("_BottomBar")
+        @await Html.PartialAsync("_BottomBarGraph")
 
         <!-- Sidebar and bottom tabs for toggling different UI sections -->
         @*  <div class="tab tab-left" onclick="toggleSidebarLeft()"><i class="bi bi-arrow-right"></i></div> *@
-        <div class="tab tab-bottom" onclick="toggleBottomBar()"><i class="bi bi-arrow-up"></i></div>
+        <div class="tab tab-bottom" onclick="toggleBottomBar()">
+            <i class="bi bi-arrow-up"></i>
+            <span>Hazard Selector</span>
+        </div>
+        <div class="tab tab-bottom tab-bottom-graph" onclick="toggleGraphBottomBar()">
+            <i class="bi bi-arrow-up"></i>
+            <span>Graph Selector</span>
+        </div>
 
         <!-- TAB PANELS: Container for different tab views -->
         <div class="tab-content" id="myTabContent">
@@ -165,6 +173,7 @@ else
         <script src="~/js/dependency-setup.js" asp-append-version="true"></script>
         <script src="~/js/failure-setup.js" asp-append-version="true"></script>
         <script src="~/js/impact-properties.js" asp-append-version="true"></script>
+        <script src="~/js/graph-helper.js" asp-append-version="true"></script>
 
         <script type="text/javascript">
                 /**

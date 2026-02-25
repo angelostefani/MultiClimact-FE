@@ -1,0 +1,47 @@
+<div id="myGraphBottomBar" class="bottom-bar">
+    <div class="bottom-bar-content" style="display:none;">
+        <form id="graphForm" class="p-3 ms-5" method="GET" onsubmit="fetchGraphData(event)">
+            <input type="hidden" name="user_id" value="system">
+
+            <div class="form-group">
+                <label for="graphStartDate">Start Date</label>
+                <input type="date" class="form-control" id="graphStartDate" name="start_date" value="@DateTime.Today.AddMonths(-1).ToString("yyyy-MM-dd")">
+            </div>
+            <div class="form-group">
+                <label for="graphEndDate">End Date</label>
+                <input type="date" class="form-control" id="graphEndDate" name="end_date" value="@DateTime.Today.ToString("yyyy-MM-dd")">
+            </div>
+            <div class="separator"></div>
+            <div class="form-group">
+                <label for="graphName">Graph Name</label>
+                <input type="text" class="form-control" id="graphName" name="name" placeholder="Contains text">
+            </div>
+            <div class="form-group">
+                <label for="graphIdConf">id_conf</label>
+                <input type="number" min="1" class="form-control" id="graphIdConf" name="id_conf" placeholder="Exact id_conf">
+            </div>
+            <div class="form-group">
+                <label></label>
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+        </form>
+
+        <div id="graphResults" class="mt-4 ms-5">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Select</th>
+                        <th>id_conf</th>
+                        <th>Graph Name</th>
+                        <th>Date</th>
+                        <th>Monte Carlo It.</th>
+                        <th>Path Length</th>
+                    </tr>
+                </thead>
+                <tbody id="graphTableBody">
+                </tbody>
+            </table>
+            <div id="graphPaginationControls" class="mt-3"></div>
+        </div>
+    </div>
+</div>
