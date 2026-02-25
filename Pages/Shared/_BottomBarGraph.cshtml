@@ -1,32 +1,37 @@
 <div id="myGraphBottomBar" class="bottom-bar">
     <div class="bottom-bar-content" style="display:none;">
-        <form id="graphForm" class="p-3 ms-5" method="GET" onsubmit="fetchGraphData(event)">
-            <input type="hidden" name="user_id" value="system">
+        <div class="bottom-bar-search-wrap mx-4">
+            <form id="graphForm" class="bottom-bar-search-card p-3" method="GET" onsubmit="fetchGraphData(event)">
+                <input type="hidden" name="user_id" value="system">
 
-            <div class="form-group">
-                <label for="graphStartDate">Start Date</label>
-                <input type="date" class="form-control" id="graphStartDate" name="start_date" value="@DateTime.Today.AddMonths(-1).ToString("yyyy-MM-dd")">
-            </div>
-            <div class="form-group">
-                <label for="graphEndDate">End Date</label>
-                <input type="date" class="form-control" id="graphEndDate" name="end_date" value="@DateTime.Today.ToString("yyyy-MM-dd")">
-            </div>
-            <div class="separator"></div>
-            <div class="form-group">
-                <label for="graphName">Graph Name</label>
-                <input type="text" class="form-control" id="graphName" name="name" placeholder="Contains text">
-            </div>
-            <div class="form-group">
-                <label for="graphIdConf">id_conf</label>
-                <input type="number" min="1" class="form-control" id="graphIdConf" name="id_conf" placeholder="Exact id_conf">
-            </div>
-            <div class="form-group">
-                <label></label>
-                <button type="submit" class="btn btn-primary">Search</button>
-            </div>
-        </form>
+                <div class="row g-3">
+                    <div class="col-12 col-md-6">
+                        <label for="graphStartDate" class="form-label">Start Date</label>
+                        <input type="date" class="form-control" id="graphStartDate" name="start_date" value="@DateTime.Today.AddMonths(-1).ToString("yyyy-MM-dd")">
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label for="graphEndDate" class="form-label">End Date</label>
+                        <input type="date" class="form-control" id="graphEndDate" name="end_date" value="@DateTime.Today.ToString("yyyy-MM-dd")">
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label for="graphName" class="form-label">Graph Name</label>
+                        <input type="text" class="form-control" id="graphName" name="name" placeholder="Contains text">
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label for="graphIdConf" class="form-label">id_conf</label>
+                        <input type="number" min="1" class="form-control" id="graphIdConf" name="id_conf" placeholder="Exact id_conf">
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary bottom-bar-search-btn">
+                            <i class="bi bi-search"></i>
+                            <span>Search</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
 
-        <div id="graphResults" class="mt-4 ms-5">
+        <div id="graphResults" class="mt-4 mx-4">
             <table class="table table-bordered table-striped">
                 <thead>
                     <tr>

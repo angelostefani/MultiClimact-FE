@@ -55,13 +55,18 @@ function populateGraphTable(data) {
         row.className = "graph-row";
 
         row.addEventListener("click", () => {
-            document.querySelectorAll(".graph-row .select-cell").forEach(cell => {
-                cell.textContent = "";
+            document.querySelectorAll(".graph-row").forEach(r => {
+                r.classList.remove("graph-row-selected");
+                const cell = r.querySelector(".select-cell");
+                if (cell) {
+                    cell.textContent = "";
+                }
             });
             const selectCell = row.querySelector(".select-cell");
             if (selectCell) {
-                selectCell.textContent = "V";
+                selectCell.textContent = "✔";
             }
+            row.classList.add("graph-row-selected");
 
             selectedGraphIdConf = normalized.idConf?.toString() ?? "";
             selectedGraphRowIndex = index;
@@ -166,6 +171,7 @@ function paginateGraphTable() {
         rows.slice(start, end).forEach(row => tableBody.appendChild(row));
 
         rows.forEach(r => {
+            r.classList.remove("graph-row-selected");
             const selectCell = r.querySelector(".select-cell");
             if (selectCell) {
                 selectCell.textContent = "";
@@ -180,7 +186,8 @@ function paginateGraphTable() {
             const rowByIndex = rows[selectedIndex];
             const cell = rowByIndex?.querySelector(".select-cell");
             if (cell) {
-                cell.textContent = "V";
+                cell.textContent = "✔";
+                rowByIndex.classList.add("graph-row-selected");
                 return;
             }
         }
@@ -190,7 +197,8 @@ function paginateGraphTable() {
                 const idCell = row.children[1];
                 const selectCell = row.querySelector(".select-cell");
                 if (idCell && selectCell && idCell.textContent?.trim() === selectedId) {
-                    selectCell.textContent = "V";
+                    selectCell.textContent = "✔";
+                    row.classList.add("graph-row-selected");
                     break;
                 }
             }
@@ -204,16 +212,16 @@ function paginateGraphTable() {
         }
 
         const wrapper = document.createElement("div");
-        wrapper.className = "d-flex align-items-center flex-wrap";
+        wrapper.className = "bottom-bar-pagination d-flex align-items-center flex-wrap";
 
         const prevBtn = document.createElement("button");
         prevBtn.textContent = "Prev";
-        prevBtn.className = "btn btn-secondary m-1";
+        prevBtn.className = "btn btn-outline-primary bottom-bar-page-btn";
         prevBtn.type = "button";
 
         const nextBtn = document.createElement("button");
         nextBtn.textContent = "Next";
-        nextBtn.className = "btn btn-secondary m-1";
+        nextBtn.className = "btn btn-outline-primary bottom-bar-page-btn";
         nextBtn.type = "button";
 
         const pageInfo = document.createElement("span");
@@ -224,8 +232,7 @@ function paginateGraphTable() {
         pageInput.min = "1";
         pageInput.max = totalPages.toString();
         pageInput.value = currentPage.toString();
-        pageInput.className = "form-control m-1";
-        pageInput.style.width = "100px";
+        pageInput.className = "form-control bottom-bar-page-input";
 
         function updateControls() {
             prevBtn.disabled = currentPage === 1;

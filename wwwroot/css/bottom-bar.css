@@ -26,6 +26,68 @@
     padding-top: 20px;
 }
 
+.bottom-bar-search-card {
+    background: #ffffff;
+    border: 1px solid #d8dee9;
+    border-radius: 12px;
+    box-shadow: none;
+}
+
+.bottom-bar-search-card .form-label {
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 6px;
+    color: #344054;
+}
+
+.bottom-bar-search-card .row {
+    row-gap: 6px;
+}
+
+.bottom-bar-search-card .form-control {
+    background-color: #f7f9fc;
+    border: 1px solid #c9d3e0;
+    border-radius: 8px;
+    padding: 10px 12px;
+    min-height: 44px;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, background-color 0.15s ease-in-out;
+}
+
+.bottom-bar-search-card .form-control:focus {
+    border-color: #2f6fec;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 0.2rem rgba(47, 111, 236, 0.2);
+}
+
+.bottom-bar-search-btn {
+    min-width: 140px;
+    min-height: 44px;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 10px rgba(24, 91, 161, 0.25);
+}
+
+#hazardResults thead th,
+#graphResults thead th {
+    background-color: #253b59;
+    color: #ffffff;
+    font-weight: 700;
+    border-color: #1d2f46;
+}
+
+#hazardTableBody .select-cell,
+#graphTableBody .select-cell {
+    width: 70px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 700;
+    color: #1e3a8a;
+}
+
 /* When the bottom bar is open, offset page content to keep it visible */
 body.has-bottom-bar {
     padding-bottom: 75vh;
@@ -41,4 +103,47 @@ body.has-bottom-bar {
 #graphTableBody tr:hover > td {
     background-color: #d9e8ff !important;
     cursor: pointer;
+}
+
+#hazardTableBody tr.hazard-row-selected > td,
+#graphTableBody tr.graph-row-selected > td {
+    background-color: #c6ddff !important;
+}
+
+.bottom-bar-pagination {
+    gap: 8px;
+}
+
+.bottom-bar-page-btn {
+    min-width: 82px;
+    min-height: 40px;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+.bottom-bar-page-input {
+    width: 84px !important;
+    min-height: 40px;
+    text-align: center;
+    border-radius: 10px;
+    border: 1px solid #0d6efd;
+    background-color: #ffffff;
+    font-weight: 600;
+    padding: 0 8px;
+    box-shadow: none;
+}
+
+.bottom-bar-page-input:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+}
+
+.bottom-bar-page-input::-webkit-outer-spin-button,
+.bottom-bar-page-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.bottom-bar-page-input[type=number] {
+    -moz-appearance: textfield;
 }

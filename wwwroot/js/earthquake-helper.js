@@ -217,12 +217,14 @@ function populateHazardTable(data, config, hazardKey) {
 
             row.addEventListener('click', () => {
                 document.querySelectorAll('.hazard-row').forEach(r => {
+                    r.classList.remove('hazard-row-selected');
                     const selectCell = r.querySelector('.select-cell');
                     if (selectCell) {
                         selectCell.textContent = '';
                     }
                 });
-                row.querySelector('.select-cell').textContent = 'V';
+                row.classList.add('hazard-row-selected');
+                row.querySelector('.select-cell').textContent = '✔';
                 selectedRowIndexByHazard[hazardKey] = index;
                 const hiddenField = row.querySelector('.hidden-risk-run-id');
                 if (hiddenField) {
@@ -351,6 +353,7 @@ function paginateTable() {
         });
 
         rows.forEach(r => {
+            r.classList.remove('hazard-row-selected');
             const selectCell = r.querySelector('.select-cell');
             if (selectCell) {
                 selectCell.textContent = '';
@@ -362,7 +365,8 @@ function paginateTable() {
         if (!isNaN(lastSelectedRowIndex) && lastSelectedRowIndex >= start && lastSelectedRowIndex < end) {
             const rowToHighlight = rows[lastSelectedRowIndex];
             if (rowToHighlight) {
-                rowToHighlight.querySelector('.select-cell').textContent = 'V';
+                rowToHighlight.classList.add('hazard-row-selected');
+                rowToHighlight.querySelector('.select-cell').textContent = '✔';
             }
             if (DEBUG_HAZARD) {
                 console.log('[hazard paginate restore]', { hazardType, lastSelectedRowIndex, start, end });
@@ -378,16 +382,16 @@ function paginateTable() {
         }
 
         const wrapper = document.createElement("div");
-        wrapper.className = "d-flex align-items-center flex-wrap";
+        wrapper.className = "bottom-bar-pagination d-flex align-items-center flex-wrap";
 
         const prevBtn = document.createElement("button");
         prevBtn.textContent = "Prev";
-        prevBtn.className = "btn btn-secondary m-1";
+        prevBtn.className = "btn btn-outline-primary bottom-bar-page-btn";
         prevBtn.type = "button";
 
         const nextBtn = document.createElement("button");
         nextBtn.textContent = "Next";
-        nextBtn.className = "btn btn-secondary m-1";
+        nextBtn.className = "btn btn-outline-primary bottom-bar-page-btn";
         nextBtn.type = "button";
 
         const pageInfo = document.createElement("span");
@@ -398,8 +402,7 @@ function paginateTable() {
         pageInput.min = "1";
         pageInput.max = totalPages.toString();
         pageInput.value = currentPage;
-        pageInput.className = "form-control m-1";
-        pageInput.style.width = "100px";
+        pageInput.className = "form-control bottom-bar-page-input";
 
         function updateControls() {
             prevBtn.disabled = currentPage === 1;
