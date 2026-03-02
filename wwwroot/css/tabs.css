@@ -35,9 +35,11 @@
 }
 
 .tab-bottom {
-    left: 38%;
-    bottom: 30px;
-    transform: translateX(-50%);
+    right: 460px;
+    top: 140px;
+    bottom: auto;
+    left: auto;
+    transform: none;
     padding: 8px 22px;
     display: flex;
     align-items: center;
@@ -49,7 +51,10 @@
 }
 
 .tab-bottom-graph {
-    left: 62%;
+    right: 280px;
+    top: 140px;
+    bottom: auto;
+    left: auto;
 }
 
 .tab.bottom-toggle-active {
@@ -65,11 +70,11 @@
 
 @media (max-width: 900px) {
     .tab-bottom {
-        left: 34%;
+        right: 290px;
     }
 
     .tab-bottom-graph {
-        left: 66%;
+        right: 110px;
     }
 }
 
