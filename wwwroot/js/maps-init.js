@@ -282,9 +282,14 @@ document.addEventListener("DOMContentLoaded", function () {
         centerLatitude: 43.1357,                  // Initial latitude
         zoomValue: 9,                            // Initial zoom level
         layerMatrix: [                            // Array of WMS layers
-            [true, true, wmsBaseUrl, document.getElementById("wmslayer_heatwave_real_view").dataset.value, 'Heatwave real view',null,null,false],
-            [true, true, wmsBaseUrl, document.getElementById("wmslayer_heatwave_roadway_view").dataset.value, 'Heatwave roadway view',null,null,false],
-            [true, true, wmsBaseUrl, document.getElementById("wmslayer_heatwave_roadway_damage_view").dataset.value, 'Heatwave roadway damage view',null,null,false]
+            [true, true, wmsBaseUrl, document.getElementById("wmslayer_heatwave_real_view").dataset.value, 'Max Air Temperature',null,null,false],
+            [true, true, wmsBaseUrl, document.getElementById("wmslayer_roadway").dataset.value, 'Roadway (crossing)',null,null,false],
+            [true, true, wmsBaseUrl, document.getElementById("wmslayer_railway").dataset.value, 'Railway stations',null,null,false],
+            [true, true, wmsBaseUrl, document.getElementById("wmslayer_heatwave_roadway_vuln_view").dataset.value, ' Roadway vulnerability (Performance grade)',null,null,false],
+            [true, true, wmsBaseUrl, document.getElementById("wmslayer_heatwave_roadway_damage_view").dataset.value, 'Pavement Temperature (t_pav)',null,null,false],
+            [true, true, wmsBaseUrl, document.getElementById("wmslayer_heatwave_roadway_threshold_view").dataset.value, 'Temperature Exceedance',null,null,false],
+            [true, true, wmsBaseUrl, document.getElementById("wmslayer_heatwave_railway_vuln_view").dataset.value, 'Railway vulnerability',null,null,false],
+            [true, true, wmsBaseUrl, document.getElementById("wmslayer_heatwave_railway_damage_view").dataset.value, 'Buckling Probability',null,null,false]
         ]
     };
 

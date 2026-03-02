@@ -440,26 +440,58 @@ Accorpati nei tab C5 e C6 sempre dopo la modifica del file Excel!
                         <label class="layer-toggle">
                             <input type="checkbox" id="checkboxC9_1" checked
                                 onclick="toggleLayerBlock(configWMSMatrixMapC9, 0, mapC9, 1)">
-                            <span class="layer-label">Daily max temperature</span>
+                            <span class="layer-label">Max Air Temperature</span>
                         </label>
                         <label class="layer-toggle">
                             <input type="checkbox" id="checkboxC9_2" checked
                                 onclick="toggleLayerBlock(configWMSMatrixMapC9, 1, mapC9, 1)">
-                            <span class="layer-label">Roadway (PG)</span>
+                            <span class="layer-label">Roadway (crossing)</span>
                         </label>
+                        <label class="layer-toggle">
+                            <input type="checkbox" id="checkboxC9_3" checked
+                                onclick="toggleLayerBlock(configWMSMatrixMapC9, 2, mapC9, 1)">
+                            <span class="layer-label">Railway stations</span>
+                        </label> 
                     </div>
                 </div>
 
                 <div class="layer-box">
-                    <div class="layer-box__title">Points of Interest</div>
+                    <div class="layer-box__title">Roadway</div>
                     <div class="layer-box__body">
                         <label class="layer-toggle">
-                            <input type="checkbox" id="checkboxC9_3" checked
-                                onclick="toggleLayerBlock(configWMSMatrixMapC9, 2, mapC9, 1)">
-                            <span class="layer-label">Roadway Risk (Tpav)</span>
+                            <input type="checkbox" id="checkboxC9_4" checked
+                                onclick="toggleLayerBlock(configWMSMatrixMapC9, 3, mapC9, 1)">
+                            <span class="layer-label">Roadway vulnerability (Performance grade)</span>
                         </label>
+                        <label class="layer-toggle">
+                            <input type="checkbox" id="checkboxC9_5" checked
+                                onclick="toggleLayerBlock(configWMSMatrixMapC9, 4, mapC9, 1)">
+                            <span class="layer-label">Pavement Temperature (t_pav)</span>
+                        </label>
+                        <label class="layer-toggle">
+                            <input type="checkbox" id="checkboxC9_6" checked
+                                onclick="toggleLayerBlock(configWMSMatrixMapC9, 5, mapC9, 1)">
+                            <span class="layer-label">Temperature Exceedance</span>
+                        </label>                            
                     </div>
                 </div>
+
+                <div class="layer-box">
+                    <div class="layer-box__title">Railway</div>
+                    <div class="layer-box__body">
+                        <label class="layer-toggle">
+                            <input type="checkbox" id="checkboxC9_7" checked
+                                onclick="toggleLayerBlock(configWMSMatrixMapC9, 6, mapC9, 1)">
+                            <span class="layer-label">Railway vulnerability</span>
+                        </label>
+                        <label class="layer-toggle">
+                            <input type="checkbox" id="checkboxC9_8" checked
+                                onclick="toggleLayerBlock(configWMSMatrixMapC9, 7, mapC9, 1)">
+                            <span class="layer-label">Buckling Probability</span>
+                        </label>
+                    </div>
+                </div>    
+                
             </div>
         </aside>
     </div>
