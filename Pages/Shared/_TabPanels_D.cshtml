@@ -124,10 +124,6 @@
 
                 <div class="layer-box ra-box--left">
                     <div class="layer-box__title">Dependency Graph propertiess</div>
-                     <div class="ra-field">
-                        <label class="ra-label" for="ra-name">Name</label>
-                        <input id="ra-name" class="form-control form-control-sm" type="text" placeholder="name" />
-                    </div>
                     <div class="ra-field">
                         <label class="ra-label" for="ra-latitude">Latitude</label>
                         <input id="ra-latitude" class="form-control form-control-sm" type="text" placeholder="42.3456" />
@@ -142,18 +138,18 @@
                     </div>
 
                     <div class="ra-divider"></div>
-                    <div class="ra-subtitle">Infrastructure sectors (read-only)</div>
+                    <div class="ra-subtitle">Infrastructure sectors</div>
                     <div class="ra-checkbox-grid">
-                        <label class="layer-toggle"><input type="checkbox" checked disabled /> Energy</label>
-                        <label class="layer-toggle"><input type="checkbox" disabled /> Transport</label>
-                        <label class="layer-toggle"><input type="checkbox" disabled /> Banking</label>
-                        <label class="layer-toggle"><input type="checkbox" disabled /> Financial Market Infrastructure</label>
-                        <label class="layer-toggle"><input type="checkbox" disabled /> Health</label>
-                        <label class="layer-toggle"><input type="checkbox" disabled /> Drinking Water</label>
-                        <label class="layer-toggle"><input type="checkbox" disabled /> Waste Water</label>
-                        <label class="layer-toggle"><input type="checkbox" disabled /> Digital Infrastructure</label>
-                        <label class="layer-toggle"><input type="checkbox" disabled /> Public Administration</label>
-                        <label class="layer-toggle"><input type="checkbox" disabled /> Food</label>
+                        <label class="layer-toggle"><input type="checkbox" checked /> Energy</label>
+                        <label class="layer-toggle"><input type="checkbox" /> Transport</label>
+                        <label class="layer-toggle"><input type="checkbox" /> Banking</label>
+                        <label class="layer-toggle"><input type="checkbox" /> Financial Market Infrastructure</label>
+                        <label class="layer-toggle"><input type="checkbox" /> Health</label>
+                        <label class="layer-toggle"><input type="checkbox" /> Drinking Water</label>
+                        <label class="layer-toggle"><input type="checkbox" /> Waste Water</label>
+                        <label class="layer-toggle"><input type="checkbox" /> Digital Infrastructure</label>
+                        <label class="layer-toggle"><input type="checkbox" /> Public Administration</label>
+                        <label class="layer-toggle"><input type="checkbox" /> Food</label>
                     </div>
                 </div>
             </div>
@@ -170,10 +166,14 @@
                 <div class="ra-col-right">
                     <div class="layer-box ra-box--right">
                         <div class="layer-box__title">User actions</div>
-                        <button class="btn btn-primary btn-sm ra-action" type="button" data-bs-toggle="modal" data-bs-target="#scenarioConfigModal">
-                            Create Graph
-                        </button>
-                        <div class="ra-note">Configure scenario parameters and sectors.</div>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-outline-primary btn-sm ra-action" type="button" id="ra-new">
+                                New
+                            </button>
+                            <button class="btn btn-primary btn-sm ra-action" type="button" id="ra-duplicate">
+                                Duplicate
+                            </button>
+                        </div>
                     </div>
 
                     <div class="layer-box ra-box--right">
@@ -196,56 +196,6 @@
         </aside>
     </div>
 
-    <!-- Modal: Scenario Configuration -->
-    <div class="modal fade" id="scenarioConfigModal" tabindex="-1" aria-labelledby="scenarioConfigModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="scenarioConfigModalLabel">Graph Configuration</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row g-3">
-                        <div class="col-md-4">
-                            <label class="form-label" for="ra-modal-name">Name</label>
-                            <input id="ra-modal-name" class="form-control form-control-sm" type="text" placeholder="name" />
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label" for="ra-modal-latitude">Latitude</label>
-                            <input id="ra-modal-latitude" class="form-control form-control-sm" type="text" placeholder="42.3456" />
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label" for="ra-modal-longitude">Longitude</label>
-                            <input id="ra-modal-longitude" class="form-control form-control-sm" type="text" placeholder="13.1234" />
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label" for="ra-modal-radius">Radius (km)</label>
-                            <input id="ra-modal-radius" class="form-control form-control-sm" type="number" min="0" step="1" placeholder="25" />
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label">Infrastructure sectors</label>
-                            <div class="ra-checkbox-grid ra-checkbox-grid--modal">
-                                <label class="layer-toggle"><input type="checkbox" /> Energy</label>
-                                <label class="layer-toggle"><input type="checkbox" /> Transport</label>
-                                <label class="layer-toggle"><input type="checkbox" /> Banking</label>
-                                <label class="layer-toggle"><input type="checkbox" /> Financial Market Infrastructure</label>
-                                <label class="layer-toggle"><input type="checkbox" /> Health</label>
-                                <label class="layer-toggle"><input type="checkbox" /> Drinking Water</label>
-                                <label class="layer-toggle"><input type="checkbox" /> Waste Water</label>
-                                <label class="layer-toggle"><input type="checkbox" /> Digital Infrastructure</label>
-                                <label class="layer-toggle"><input type="checkbox" /> Public Administration</label>
-                                <label class="layer-toggle"><input type="checkbox" /> Food</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary btn-sm">Save</button>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 
 
