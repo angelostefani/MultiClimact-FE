@@ -3,7 +3,7 @@
         <div class="bottom-bar-search-wrap mx-4">
             <form id="graphForm" class="bottom-bar-search-card p-3" method="GET" onsubmit="fetchGraphData(event)">
                 <input type="hidden" name="user_id" value="system">
-                <div class="bottom-bar-search-title">🔎 Graph Search Filters</div>
+                <div class="bottom-bar-search-title">🔎 Scenario Search Filters</div>
 
                 <div class="row g-3">
                     <div class="col-12 col-md-6">
@@ -15,7 +15,7 @@
                         <input type="date" class="form-control" id="graphEndDate" name="end_date" value="@DateTime.Today.ToString("yyyy-MM-dd")">
                     </div>
                     <div class="col-12 col-md-6">
-                        <label for="graphName" class="form-label">Graph Name</label>
+                        <label for="graphName" class="form-label">Scenario Name</label>
                         <input type="text" class="form-control" id="graphName" name="name" placeholder="Contains text">
                     </div>
                     <div class="col-12 col-md-6">
@@ -38,7 +38,7 @@
                     <tr>
                         <th>Select</th>
                         <th>id_conf</th>
-                        <th>Graph Name</th>
+                        <th>Scenario Name</th>
                         <th>Date</th>
                         <th>Monte Carlo It.</th>
                         <th>Path Length</th>

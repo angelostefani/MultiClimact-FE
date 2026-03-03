@@ -282,7 +282,7 @@ document.addEventListener("DOMContentLoaded", function () {
         centerLatitude: 43.1357,                  // Initial latitude
         zoomValue: 9,                            // Initial zoom level
         layerMatrix: [                            // Array of WMS layers
-            [true, true, wmsBaseUrl, document.getElementById("wmslayer_heatwave_real_view").dataset.value, 'Max Air Temperature',null,null,false],
+            [true, true, wmsBaseUrl, document.getElementById("wmslayer_heatwave_real_view").dataset.value, 'Max Air Temperature',null,null,true],
             [true, true, wmsBaseUrl, document.getElementById("wmslayer_roadway").dataset.value, 'Roadway (crossing)',null,null,false],
             [true, true, wmsBaseUrl, document.getElementById("wmslayer_railway").dataset.value, 'Railway stations',null,null,false],
             [true, true, wmsBaseUrl, document.getElementById("wmslayer_heatwave_roadway_vuln_view").dataset.value, ' Roadway vulnerability (Performance grade)',null,null,false],
