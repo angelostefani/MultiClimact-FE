@@ -283,7 +283,7 @@
     const layout = {
       margin: { l: 50, r: 10, t: 20, b: 40 },
       height,
-      xaxis: { title: 'Time', tickmode: 'array', tickvals: x, ticktext: x },
+      xaxis: { title: 'Time since distruption', tickmode: 'array', tickvals: x, ticktext: x },
       yaxis: {
         title: 'Risk Value',
         range: [0, yAxis.yMax]
