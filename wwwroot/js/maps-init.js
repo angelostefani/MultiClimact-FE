@@ -374,6 +374,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
     mapD16 = initWMSMap(configWMSMapD16);
 
+    configWMSMapD17 = {
+        targetHtmlMapId: 'mapD17',
+        baseMapName: 'OpenStreetMap - EPSG:3857',
+        centerLongitude: 12.5,
+        centerLatitude: 42.5,
+        zoomValue: 6
+    };
+
+    mapD17 = initWMSMap(configWMSMapD17);
+
     configWMSMatrixMapD15 = {
         targetHtmlMapId: 'mapD15',
         baseMapName: 'OpenStreetMap - EPSG:3857',

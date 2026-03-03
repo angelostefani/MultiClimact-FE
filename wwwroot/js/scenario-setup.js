@@ -16,19 +16,18 @@
     }
 
     const sectorCheckboxes = Array.from(panel.querySelectorAll(".ra-checkbox-grid input[type='checkbox']"));
-    const initialValues = readValues();
-    const initialPlaceholders = {
-        latitude: latInput?.getAttribute("placeholder") ?? "",
-        longitude: lonInput?.getAttribute("placeholder") ?? "",
-        radius: radiusInput?.getAttribute("placeholder") ?? ""
-    };
-
     const readValues = () => ({
         latitude: latInput?.value ?? "",
         longitude: lonInput?.value ?? "",
         radius: radiusInput?.value ?? "",
         sectors: sectorCheckboxes.map(cb => cb.checked)
     });
+    const initialValues = readValues();
+    const initialPlaceholders = {
+        latitude: latInput?.getAttribute("placeholder") ?? "",
+        longitude: lonInput?.getAttribute("placeholder") ?? "",
+        radius: radiusInput?.getAttribute("placeholder") ?? ""
+    };
 
     const applyValues = (values) => {
         if (!values) {

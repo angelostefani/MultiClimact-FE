@@ -615,5 +615,148 @@
     </div>
 </div>
 <div class="tab-pane fade" id="panelD17" role="tabpanel" aria-labelledby="tabD17-tab">
-    <div id="mapD17" class="map-container"></div>
+    <div class="rr-grid" id="panelD17-layout">
+        <div class="rr-left">
+            <!-- RUN CONTROLS -->
+            <div class="rr-block rr-block--run">
+                <div class="rr-section-header">RUN CONTROLS</div>
+                <div class="rr-field">
+                    <label class="rr-label" for="rr-run-name">Run name:</label>
+                    <input id="rr-run-name" class="form-control rr-input" type="text" value="My run - Camerino EQ 2016" />
+                </div>
+                <button class="btn btn-primary rr-cta" type="button" id="rr-config-run">
+                    <i class="bi bi-gear-fill me-1"></i>
+                    Configuration Simulation
+                </button>
+            </div>
+
+            <!-- RESULTS BROWSER -->
+            <div class="rr-block rr-block--browser">
+                <div class="rr-section-header">
+                    <span>RESULTS BROWSER</span>
+                    <span class="rr-subtitle">(Search / Filter)</span>
+                </div>
+
+                <div class="rr-search">
+                    <i class="bi bi-search rr-search-icon"></i>
+                    <input class="form-control rr-search-input" type="text" placeholder="path id / node id / run name ..." />
+                    <button class="btn btn-light rr-search-btn" type="button"><i class="bi bi-search"></i></button>
+                </div>
+
+                <div class="rr-filter-grid">
+                    <div class="rr-filter-row">
+                        <span class="rr-filter-bullet">-</span>
+                        <label class="rr-filter-label" for="rr-min-res">Min Resilience:</label>
+                        <input id="rr-min-res" class="form-control form-control-sm rr-number" type="number" value="0" />
+                        <label class="rr-filter-label rr-filter-label--small" for="rr-max-res">Max:</label>
+                        <input id="rr-max-res" class="form-control form-control-sm rr-number" type="number" value="100" />
+                    </div>
+                    <div class="rr-filter-row">
+                        <span class="rr-filter-bullet">-</span>
+                        <label class="rr-filter-label" for="rr-peak-risk">Peak Risk &gt;=</label>
+                        <input id="rr-peak-risk" class="form-control form-control-sm rr-number" type="number" value="0" />
+                    </div>
+                    <div class="rr-filter-row">
+                        <span class="rr-filter-bullet">-</span>
+                        <label class="rr-filter-label" for="rr-contains-node">Contains node:</label>
+                        <div class="rr-input-addon">
+                            <input id="rr-contains-node" class="form-control form-control-sm" type="text" value="11360212181" />
+                            <span class="rr-addon">#</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rr-filter-actions">
+                    <button class="btn btn-primary btn-sm" type="button" id="rr-apply">Apply</button>
+                    <button class="btn btn-outline-secondary btn-sm" type="button" id="rr-clear">Clear</button>
+                </div>
+            </div>
+
+            <!-- CRITICAL CHAINS -->
+            <div class="rr-block rr-block--chains">
+                <div class="rr-section-header">
+                    <span>CRITICAL CHAINS</span>
+                    <span class="rr-subtitle">(Ranked dependency paths)</span>
+                </div>
+
+                <div class="table-responsive rr-table-wrap">
+                    <table class="table table-sm mb-0 rr-table" id="rr-chains-table">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Rank</th>
+                                <th>Path ID</th>
+                                <th>Nodes (compact)</th>
+                                <th>Res.</th>
+                                <th>Peak</th>
+                                <th class="text-end"><i class="bi bi-three-dots-vertical"></i></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-rank="1" data-path="165" data-nodes="113633918035" data-res="82.6" data-peak="12.36" data-points="0.2,0.5,0.35,0.8,0.6">
+                                <td class="text-center">1</td>
+                                <td>165</td>
+                                <td class="rr-nodes-cell">
+                                    <span class="rr-nodes-text">113633918035</span>
+                                    <svg class="rr-sparkline" viewBox="0 0 100 20" preserveAspectRatio="none"></svg>
+                                </td>
+                                <td>82.6</td>
+                                <td>12.36</td>
+                                <td class="text-end"><i class="bi bi-three-dots-vertical"></i></td>
+                            </tr>
+                            <tr data-rank="2" data-path="041" data-nodes="80351091" data-res="79.2" data-peak="10.11" data-points="0.1,0.2,0.25,0.22,0.3">
+                                <td class="text-center">2</td>
+                                <td>041</td>
+                                <td class="rr-nodes-cell">
+                                    <span class="rr-nodes-text">80351091</span>
+                                    <svg class="rr-sparkline" viewBox="0 0 100 20" preserveAspectRatio="none"></svg>
+                                </td>
+                                <td>79.2</td>
+                                <td>10.11</td>
+                                <td class="text-end"><i class="bi bi-three-dots-vertical"></i></td>
+                            </tr>
+                            <tr data-rank="3" data-path="233" data-nodes="-" data-res="77.9" data-peak="9.54" data-points="0.05,0.15,0.12,0.18,0.14">
+                                <td class="text-center">3</td>
+                                <td>233</td>
+                                <td class="rr-nodes-cell">
+                                    <span class="rr-nodes-text">—</span>
+                                    <svg class="rr-sparkline" viewBox="0 0 100 20" preserveAspectRatio="none"></svg>
+                                </td>
+                                <td>77.9</td>
+                                <td>9.54</td>
+                                <td class="text-end"><i class="bi bi-three-dots-vertical"></i></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="rr-table-note">(click row → highlight on map + open details)</div>
+            </div>
+        </div>
+
+        <div class="rr-right">
+            <div class="rr-block rr-block--visual">
+                <div class="rr-block__header rr-block__header--inline">
+                    <div class="rr-block__title">Visual output</div>
+                </div>
+                <div class="rr-map-area">
+                    <div id="mapD17" class="map-container rr-map"></div>
+                </div>
+                <div class="rr-chart-area">
+                    <div class="rr-chart-header">
+                        <div class="rr-chart-title">Chart (Plotly.js)</div>
+                        <div class="rr-chart-meta">X uses fixed time points</div>
+                    </div>
+                    <div id="rr-chart" class="rr-chart"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script id="rr-chart-data" type="application/json">
+        {
+            "x": ["T0","T1","T2","T3","T4"],
+            "series": [
+                { "name":"Exposure", "y":[0.2,0.3,null,0.6,0.7] },
+                { "name":"Vulnerability", "y":[0.1,0.15,0.2,null,0.4] }
+            ]
+        }
+    </script>
 </div>

@@ -1,5 +1,6 @@
 @page
 @using Microsoft.AspNetCore.Http
+@using System.Security.Claims
 @inject IHttpContextAccessor HttpContextAccessor
 @model IndexModel
 @{
@@ -26,14 +27,16 @@ else
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
         <link rel="stylesheet" href="~/lib/bootstrap-icons/font/bootstrap-icons.css" />
         <link rel="stylesheet" href="~/css/dependency-setup.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/runs-results.css" asp-append-version="true" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/lint/lint.min.css" />
+        <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
 
         <!-- Linking necessary scripts for jQuery and OpenLayers functionality -->
         <script src="~/lib/jquery/dist/jquery.min.js"></script>
         <script src="~/lib/openlayers/dist/ol.js"></script>
     </head>
-    <body>
+    <body data-user-id="@(User?.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? User?.FindFirst("sub")?.Value ?? User?.FindFirst("oid")?.Value ?? "demo-user")">
 
         <!-- Space added to create separation between the layout menu and the page content -->
       <!--  <div id="space" style="width: 100%; height: 70px;"></div> -->
@@ -172,6 +175,7 @@ else
         <script src="~/js/chat.js" asp-append-version="true"></script>
         <script src="~/js/dependency-setup.js" asp-append-version="true"></script>
         <script src="~/js/failure-setup.js" asp-append-version="true"></script>
+        <script src="~/js/runs-results.js" asp-append-version="true"></script>
         <script src="~/js/impact-properties.js" asp-append-version="true"></script>
         <script src="~/js/graph-helper.js" asp-append-version="true"></script>
         <script src="~/js/scenario-setup.js" asp-append-version="true"></script>
