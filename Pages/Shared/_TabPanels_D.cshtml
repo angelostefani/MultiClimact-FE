@@ -619,21 +619,27 @@
         <div class="rr-left">
             <!-- RUN CONTROLS -->
             <div class="rr-block rr-block--run">
-                <div class="rr-section-header">RUN CONTROLS</div>
+                <div class="rr-section-header">Run Controls</div>
                 <div class="rr-field">
-                    <label class="rr-label" for="rr-run-name">Run name:</label>
+                    <label class="rr-label" for="rr-run-name">Scenario name:</label>
                     <input id="rr-run-name" class="form-control rr-input" type="text" value="My run - Camerino EQ 2016" />
                 </div>
-                <button class="btn btn-primary rr-cta" type="button" id="rr-config-run">
-                    <i class="bi bi-gear-fill me-1"></i>
-                    Configuration Simulation
-                </button>
+                <div class="d-flex gap-2 flex-wrap">
+                    <button class="btn btn-primary rr-cta" type="button" id="rr-config-run">
+                        <i class="bi bi-gear-fill me-1"></i>
+                        Save Scenario
+                    </button>
+                    <button class="btn btn-success rr-cta" type="button" id="rr-run">
+                        <i class="bi bi-play-fill me-1"></i>
+                        Run
+                    </button>
+                </div>
             </div>
 
             <!-- RESULTS BROWSER -->
             <div class="rr-block rr-block--browser">
                 <div class="rr-section-header">
-                    <span>RESULTS BROWSER</span>
+                    <span>Results Browser</span>
                     <span class="rr-subtitle">(Search / Filter)</span>
                 </div>
 
@@ -675,7 +681,7 @@
             <!-- CRITICAL CHAINS -->
             <div class="rr-block rr-block--chains">
                 <div class="rr-section-header">
-                    <span>CRITICAL CHAINS</span>
+                    <span>Critical Chains</span>
                     <span class="rr-subtitle">(Ranked dependency paths)</span>
                 </div>
 
@@ -742,7 +748,6 @@
                 </div>
                 <div class="rr-chart-area">
                     <div class="rr-chart-header">
-                        <div class="rr-chart-title">Chart (Plotly.js)</div>
                         <div class="rr-chart-meta">X uses fixed time points</div>
                     </div>
                     <div id="rr-chart" class="rr-chart"></div>
