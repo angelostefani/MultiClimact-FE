@@ -166,12 +166,20 @@
                 <div class="ra-col-right">
                     <div class="layer-box ra-box--right">
                         <div class="layer-box__title">User actions</div>
-                        <div class="d-flex gap-2">
+                        <div class="d-flex gap-2" id="ra-default-actions">
                             <button class="btn btn-outline-primary btn-sm ra-action" type="button" id="ra-new">
                                 New
                             </button>
                             <button class="btn btn-primary btn-sm ra-action" type="button" id="ra-duplicate">
                                 Duplicate
+                            </button>
+                        </div>
+                        <div class="d-flex gap-2 d-none" id="ra-edit-actions">
+                            <button class="btn btn-outline-secondary btn-sm ra-action" type="button" id="ra-back">
+                                Back
+                            </button>
+                            <button class="btn btn-success btn-sm ra-action" type="button" id="ra-create-graph">
+                                Create graph
                             </button>
                         </div>
                     </div>
