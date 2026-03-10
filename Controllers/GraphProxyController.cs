@@ -5,6 +5,8 @@ using MultiClimact.Services;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace MultiClimact.Controllers
@@ -83,6 +85,51 @@ namespace MultiClimact.Controllers
                 _logger.LogError("Error while calling graph service: {message}", e.Message);
                 return StatusCode(500, $"Error while calling graph service: {e.Message}");
             }
+        }
+
+        [HttpPost("CreateGraph")]
+        public async Task<IActionResult> CreateGraph(
+            [FromBody] JsonElement configuration,
+            [FromQuery] string? user_id)
+        {
+            var idUser = string.IsNullOrWhiteSpace(user_id) ? "system" : user_id;
+            var servicePath = $"users/{idUser}/graph/default_graph";
+            var payload = configuration.GetRawText();
+            var content = new StringContent(payload, Encoding.UTF8, "application/json");
+
+            _logger.LogInformation("Posting graph configuration to Graph Service URL: {servicePath}", servicePath);
+
+            try
+            {
+                var response = await _httpClient.PostAsync(servicePath, content);
+                var responseContent = await response.Content.ReadAsStringAsync();
+
+                if (response.IsSuccessStatusCode)
+                {
+                    if (string.IsNullOrWhiteSpace(responseContent))
+                    {
+                        return Ok(new { success = true });
+                    }
+
+                    return Content(responseContent, "application/json");
+                }
+
+                _logger.LogError("Error CreateGraph Service: {statusCode}", response.StatusCode);
+                return StatusCode((int)response.StatusCode,
+                    string.IsNullOrWhiteSpace(responseContent) ? "Error creating graph" : responseContent);
+            }
+            catch (HttpRequestException e)
+            {
+                _logger.LogError("Error while calling CreateGraph service: {message}", e.Message);
+                return StatusCode(500, $"Error while calling graph service: {e.Message}");
+            }
+        }
+
+        [HttpPost("LogScenarioSetup")]
+        public IActionResult LogScenarioSetup([FromBody] JsonElement configuration)
+        {
+            _logger.LogInformation("Scenario Setup transient JSON: {payload}", configuration.GetRawText());
+            return Ok(new { success = true });
         }
     }
 }
