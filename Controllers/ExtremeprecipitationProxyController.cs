@@ -29,7 +29,9 @@ namespace MultiClimact.Controllers
             [FromQuery] string user_id,
             [FromQuery] string start_date,
             [FromQuery] string end_date,
-            [FromQuery] bool simulated)
+            [FromQuery] bool simulated,
+            [FromQuery] int? id_run,
+            [FromQuery] int? status_id)
         {
             var query = new Dictionary<string, string?>
             {
@@ -38,6 +40,8 @@ namespace MultiClimact.Controllers
                 ["haztype_id"] = "4",
                 ["simulated"] = simulated.ToString().ToLower()
             };
+            if (id_run.HasValue) query["id_run"] = id_run.Value.ToString();
+            if (status_id.HasValue) query["status_id"] = status_id.Value.ToString();
 
             string serviceUrl = QueryHelpers.AddQueryString("users/system/runs", query);
 

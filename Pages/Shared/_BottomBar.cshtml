@@ -30,6 +30,14 @@
                             <option value="true">Simulated</option>
                         </select>
                     </div>
+                    <div class="col-12 col-md-6">
+                        <label for="idRunFilter" class="form-label">id_run</label>
+                        <input type="number" class="form-control" id="idRunFilter" name="id_run" placeholder="optional">
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label for="statusIdFilter" class="form-label">status_id</label>
+                        <input type="number" class="form-control" id="statusIdFilter" name="status_id" placeholder="optional">
+                    </div>
                     <div class="col-12 bottom-bar-actions">
                         <button type="submit" class="btn btn-primary bottom-bar-search-btn">
                             <i class="bi bi-search"></i>
@@ -50,6 +58,7 @@
                         <th>Occurrence Time</th>
                         <th>Description</th>
                         <th>Hazard</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
                 <tbody id="hazardTableBody">

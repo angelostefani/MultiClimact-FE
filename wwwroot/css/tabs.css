@@ -34,49 +34,7 @@
     transform: translateY(-50%);
 }
 
-.tab-bottom {
-    right: 460px;
-    top: 140px;
-    bottom: auto;
-    left: auto;
-    transform: none;
-    padding: 8px 22px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    min-width: 170px;
-    min-height: 38px;
-    white-space: nowrap;
-}
 
-.tab-bottom-graph {
-    right: 280px;
-    top: 140px;
-    bottom: auto;
-    left: auto;
-}
-
-.tab.bottom-toggle-active {
-    background-color: #1f6feb;
-    border-color: #b9d4ff;
-    box-shadow: 0 0 0 2px rgba(185, 212, 255, 0.35), 0 4px 12px rgba(12, 46, 99, 0.45);
-}
-
-.tab.bottom-toggle-active i,
-.tab.bottom-toggle-active span {
-    color: #ffffff;
-}
-
-@media (max-width: 900px) {
-    .tab-bottom {
-        right: 290px;
-    }
-
-    .tab-bottom-graph {
-        right: 110px;
-    }
-}
 
 /* Allow many tabs to scroll horizontally on narrower desktop windows */
 .nav-tabs {

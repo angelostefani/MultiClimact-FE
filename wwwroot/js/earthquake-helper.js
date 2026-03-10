@@ -198,10 +198,19 @@ function normalizeHazardItem(raw) {
         return parsed.toISOString().replace('T', ' ').substring(0, 19);
     };
 
+    const status = getFirstDefined(
+        raw.status_str,
+        raw.status,
+        raw.statusStr,
+        raw.Status,
+        ''
+    );
+
     return {
         eventDate: formatDate(eventDateRaw),
         description,
-        idRun
+        idRun,
+        status
     };
 }
 
@@ -264,18 +273,22 @@ function populateHazardTable(data, config, hazardKey) {
             hiddenField.className = 'hidden-risk-run-id';
             hiddenField.value = normalized.idRun || '';
 
+            const statusCell = document.createElement('td');
+            statusCell.textContent = normalized.status || 'N/A';
+
             row.appendChild(selectCell);
             row.appendChild(idRunCell);
             row.appendChild(dateCell);
             row.appendChild(descriptionCell);
             row.appendChild(hazardCell);
+            row.appendChild(statusCell);
             row.appendChild(hiddenField);
             tableBody.appendChild(row);
         });
     } else {
         const row = document.createElement('tr');
         const noDataCell = document.createElement('td');
-        noDataCell.setAttribute('colspan', 5);
+        noDataCell.setAttribute('colspan', 6);
         noDataCell.textContent = 'No data available';
         row.appendChild(noDataCell);
         tableBody.appendChild(row);
@@ -295,6 +308,8 @@ async function fetchHazardData(event) {
 
     const formData = new FormData(form);
     formData.delete('hazard_type'); // evita di inviare un parametro non usato dal backend
+    if (!formData.get('id_run')) formData.delete('id_run');
+    if (!formData.get('status_id')) formData.delete('status_id');
     if (config.extraParams) {
         Object.entries(config.extraParams).forEach(([key, value]) => {
             if (!formData.has(key)) {

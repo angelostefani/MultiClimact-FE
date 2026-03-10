@@ -35,3 +35,9 @@
         color: #28a745; /* Colore da selezionata */
         transform: scale(1.2); /* Mantiene l'ingrandimento */
     }
+
+    /* Stato attivo per i toggle Hazard/Scenario nella sidebar */
+    .icon-wrapper.bottom-toggle-active i {
+        color: #1f6feb;
+        transform: scale(1.2);
+    }

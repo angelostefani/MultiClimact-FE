@@ -78,6 +78,14 @@ else
                 <div class="icon-wrapper robot-icon-wrapper">
                     <i class="bi bi-robot"></i>
                 </div>
+                <!-- Hazard Selector icon -->
+                <div id="hazardBottomToggle" class="icon-wrapper hazard-toggle-wrapper" onclick="toggleBottomBar()" title="Hazard Selector">
+                    <i class="bi bi-cloud-lightning-rain"></i>
+                </div>
+                <!-- Scenario Selector icon -->
+                <div id="graphBottomToggle" class="icon-wrapper graph-toggle-wrapper" onclick="toggleGraphBottomBar()" title="Scenario Selector">
+                    <i class="bi bi-graph-up-arrow"></i>
+                </div>
             </div>
         </div>
 
@@ -87,14 +95,6 @@ else
 
         <!-- Sidebar and bottom tabs for toggling different UI sections -->
         @*  <div class="tab tab-left" onclick="toggleSidebarLeft()"><i class="bi bi-arrow-right"></i></div> *@
-        <div id="hazardBottomToggle" class="tab tab-bottom" onclick="toggleBottomBar()">
-            <i class="bi bi-arrow-up"></i>
-            <span>Hazard Selector</span>
-        </div>
-        <div id="graphBottomToggle" class="tab tab-bottom tab-bottom-graph" onclick="toggleGraphBottomBar()">
-            <i class="bi bi-arrow-up"></i>
-            <span>Scenario Selector</span>
-        </div>
 
         <!-- TAB PANELS: Container for different tab views -->
         <div class="tab-content" id="myTabContent">
