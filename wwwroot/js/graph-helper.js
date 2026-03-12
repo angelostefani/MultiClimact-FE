@@ -1,5 +1,6 @@
 let selectedGraphIdConf = null;
 let selectedGraphRowIndex = null;
+let activeScenarioID = '';
 
 function formatGraphDate(value) {
     if (!value) {
@@ -69,6 +70,7 @@ function populateGraphTable(data) {
             row.classList.add("graph-row-selected");
 
             selectedGraphIdConf = normalized.idConf?.toString() ?? "";
+            activeScenarioID = normalized.idConf?.toString() ?? '';
             selectedGraphRowIndex = index;
             localStorage.setItem("lastSelectedGraphIdConf", selectedGraphIdConf);
             localStorage.setItem("lastSelectedGraphRowIndex", selectedGraphRowIndex.toString());
@@ -145,6 +147,7 @@ async function fetchGraphData(event) {
 
         const jsonResponse = await response.json();
         const data = Array.isArray(jsonResponse?.data) ? jsonResponse.data : [];
+        activeScenarioID = '';
         populateGraphTable(data);
         paginateGraphTable();
     } catch (error) {

@@ -10,6 +10,7 @@
 | [services.md](services.md) | Servizi HTTP client esterni, RetryHandler |
 | [deployment.md](deployment.md) | Build, Docker, avvio in produzione |
 | [activeRiskRunID.md](activeRiskRunID.md) | Variabile JS globale per il run di rischio attivo |
+| [activeScenarioID.md](activeScenarioID.md) | Variabile JS globale per lo scenario selezionato |
 
 ## Quick Start
 

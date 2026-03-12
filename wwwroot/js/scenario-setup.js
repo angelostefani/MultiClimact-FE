@@ -202,4 +202,31 @@
     });
 
     setEditMode(false);
+
+    let currentScenarioData = null;
+
+    const d13Tab = document.getElementById("tabD13-tab");
+    if (d13Tab) {
+        d13Tab.addEventListener("shown.bs.tab", async () => {
+            const scenarioId = activeScenarioID || localStorage.getItem("lastSelectedGraphIdConf") || '';
+            if (!scenarioId) {
+                return;
+            }
+            try {
+                const response = await fetch(`/api/GraphProxy/GetGraphs?id_conf=${encodeURIComponent(scenarioId)}`);
+                if (!response.ok) {
+                    return;
+                }
+                const json = await response.json();
+                const data = Array.isArray(json?.data) && json.data.length > 0 ? json.data[0] : null;
+                if (!data) {
+                    return;
+                }
+                currentScenarioData = data;
+                console.log('[scenario-setup] loaded scenario', { scenarioId, currentScenarioData });
+            } catch (error) {
+                console.error('[scenario-setup] error loading scenario:', error);
+            }
+        });
+    }
 })();
