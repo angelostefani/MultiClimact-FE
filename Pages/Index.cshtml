@@ -1,5 +1,6 @@
 @page
 @using Microsoft.AspNetCore.Http
+@using System.Security.Claims
 @inject IHttpContextAccessor HttpContextAccessor
 @model IndexModel
 @{
@@ -25,12 +26,17 @@ else
         <link rel="stylesheet" href="~/lib/openlayers/ol.css" type="text/css" />
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
         <link rel="stylesheet" href="~/lib/bootstrap-icons/font/bootstrap-icons.css" />
+        <link rel="stylesheet" href="~/css/dependency-setup.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/runs-results.css" asp-append-version="true" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/lint/lint.min.css" />
+        <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
 
         <!-- Linking necessary scripts for jQuery and OpenLayers functionality -->
         <script src="~/lib/jquery/dist/jquery.min.js"></script>
         <script src="~/lib/openlayers/dist/ol.js"></script>
     </head>
-    <body>
+    <body data-user-id="@(User?.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? User?.FindFirst("sub")?.Value ?? User?.FindFirst("oid")?.Value ?? "demo-user")">
 
         <!-- Space added to create separation between the layout menu and the page content -->
       <!--  <div id="space" style="width: 100%; height: 70px;"></div> -->
@@ -72,15 +78,23 @@ else
                 <div class="icon-wrapper robot-icon-wrapper">
                     <i class="bi bi-robot"></i>
                 </div>
+                <!-- Hazard Selector icon -->
+                <div id="hazardBottomToggle" class="icon-wrapper hazard-toggle-wrapper" onclick="toggleBottomBar()" title="Hazard Selector">
+                    <i class="bi bi-cloud-lightning-rain"></i>
+                </div>
+                <!-- Scenario Selector icon -->
+                <div id="graphBottomToggle" class="icon-wrapper graph-toggle-wrapper" onclick="toggleGraphBottomBar()" title="Scenario Selector">
+                    <i class="bi bi-graph-up-arrow"></i>
+                </div>
             </div>
         </div>
 
         <!-- Collapsible Bottom Bar -->
         @await Html.PartialAsync("_BottomBar")
+        @await Html.PartialAsync("_BottomBarGraph")
 
         <!-- Sidebar and bottom tabs for toggling different UI sections -->
         @*  <div class="tab tab-left" onclick="toggleSidebarLeft()"><i class="bi bi-arrow-right"></i></div> *@
-        <div class="tab tab-bottom" onclick="toggleBottomBar()"><i class="bi bi-arrow-up"></i></div>
 
         <!-- TAB PANELS: Container for different tab views -->
         <div class="tab-content" id="myTabContent">
@@ -115,13 +129,17 @@ else
         <!-- These elements store server-side values in data-* attributes, which JavaScript can later retrieve -->
 
         <span id="idRunLastEarthquake" data-value="@(ViewData["idRunLastEarthquake"] ?? "undefined")"></span>
+        <span id="idRunLastHeatwave" data-value="@(ViewData["idRunLastHeatwave"] ?? "undefined")"></span>
+        <span id="idRunLastExtremePrecipitation" data-value="@(ViewData["idRunLastExtremePrecipitation"] ?? "undefined")"></span>
 
         @* Dynamic WMS layers data *@
-        @for (int i = 0; i <= 30; i++)
+        @{
+            var wmsLayerKeys = (IEnumerable<string>)(ViewData["wmsLayerKeys"] ?? Array.Empty<string>());
+        }
+        <span id="wmsurl_baseurl" data-value="@(ViewData["wmsurl_baseurl"] ?? "undefined")"></span>
+        @foreach (var layerKey in wmsLayerKeys)
         {
-            string layerIndex = i.ToString("D2"); // Ensures two-digit formatting for numbers below 10
-            <span id="wmsurl_lay@(layerIndex)" data-value="@ViewData[$"wmsurl_lay{layerIndex}"]"></span>
-            <span id="wmslayer_lay@(layerIndex)" data-value="@ViewData[$"wmslayer_lay{layerIndex}"]"></span>
+            <span id="@layerKey" data-value="@ViewData[layerKey]"></span>
         }
 
         <!-- JavaScript Initialization -->
@@ -148,8 +166,19 @@ else
         <script src="~/js/menu-helper.js" asp-append-version="true"></script>
         <!-- External JavaScript file containing logic for map interactions and UI behavior -->
         <script src="~/js/maps-init.js" asp-append-version="true"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/lint/lint.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jsonlint/1.6.0/jsonlint.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/lint/json-lint.min.js"></script>
         <script src="~/js/fixedSidebar-helper.js" asp-append-version="true"></script>
         <script src="~/js/chat.js" asp-append-version="true"></script>
+        <script src="~/js/dependency-setup.js" asp-append-version="true"></script>
+        <script src="~/js/failure-setup.js" asp-append-version="true"></script>
+        <script src="~/js/runs-results.js" asp-append-version="true"></script>
+        <script src="~/js/impact-properties.js" asp-append-version="true"></script>
+        <script src="~/js/graph-helper.js" asp-append-version="true"></script>
+        <script src="~/js/scenario-setup.js" asp-append-version="true"></script>
 
         <script type="text/javascript">
                 /**

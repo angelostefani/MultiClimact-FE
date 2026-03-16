@@ -5,7 +5,6 @@ using Newtonsoft.Json.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Xml;
-using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.Text.Json;
 
@@ -19,7 +18,9 @@ namespace MultiClimact.Controllers
         private readonly HttpClient _httpClient = httpClient;
 
         private readonly ILogger<WmsProxyController> _logger = logger;
-        private string _wmsBaseUrl = configuration["wms:wmsurl_lay00"];
+        private readonly string _wmsBaseUrl = configuration["wms:wmsurl_baseurl"]
+            ?? configuration["wms:wmsurl_earth_real_view"]
+            ?? string.Empty;
 
         public string WmsBaseUrl => _wmsBaseUrl;
 
@@ -32,13 +33,20 @@ namespace MultiClimact.Controllers
             [FromQuery] string y,
             [FromQuery] string width,
             [FromQuery] string height,
-            [FromQuery] string layer)
+            [FromQuery] string layer,
+            [FromQuery] string? cqlFilter)
         {
             if (string.IsNullOrEmpty(bbox) || string.IsNullOrEmpty(x) || string.IsNullOrEmpty(y) ||
                 string.IsNullOrEmpty(width) || string.IsNullOrEmpty(height) || string.IsNullOrEmpty(layer))
             {
                 _logger.LogWarning("Parametri mancanti: bbox, x, y, width, height e layer sono richiesti.");
                 return BadRequest("Parametri mancanti: bbox, x, y, width, height e layer sono richiesti.");
+            }
+
+            if (string.IsNullOrWhiteSpace(_wmsBaseUrl) || !Uri.TryCreate(_wmsBaseUrl, UriKind.Absolute, out _))
+            {
+                _logger.LogError("Configurazione WMS non valida. Valore corrente wms:wmsurl_baseurl='{wmsBaseUrl}'", _wmsBaseUrl);
+                return StatusCode(500, "Configurazione WMS non valida (wms:wmsurl_baseurl).");
             }
 
             //da rivedere (provare ad usare la getFeatureInfo di OpenLayer)
@@ -49,6 +57,11 @@ namespace MultiClimact.Controllers
                              $"service=WMS&REQUEST=GetFeatureInfo&QUERY_LAYERS={layer}&" +
                              $"VERSION=1.1.1&FORMAT=image/png&TRANSPARENT=true&LAYERS={layer}&" +
                              $"INFO_FORMAT=text/html&FEATURE_COUNT=5&X={x}&Y={y}&WIDTH={width}&HEIGHT={height}&CRS=EPSG:3857&BBOX={bbox}";
+
+            if (!string.IsNullOrWhiteSpace(cqlFilter))
+            {
+                wmsUrl += $"&CQL_FILTER={Uri.EscapeDataString(cqlFilter)}";
+            }
             
 
             /** string wmsUrl = $"{_wmsBaseUrl}?" +

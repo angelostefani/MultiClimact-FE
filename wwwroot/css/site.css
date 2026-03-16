@@ -30,3 +30,9 @@
 
 /* ========== EXTREME PRECIPITATION UI ========== */
 @import url('extreme.css');
+
+/* ========== FAILURE SETUP ========== */
+@import url('failure-setup.css');
+
+/* ========== IMPACT PROPERTIES ========== */
+@import url('impact-properties.css');

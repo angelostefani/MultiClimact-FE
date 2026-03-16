@@ -94,7 +94,6 @@
     </div>
 </div>
 
-
 <div class="tab-pane fade" id="panelD6" role="tabpanel" aria-labelledby="tabD6-tab">
     <div id="mapD6" class="map-container"></div>
 </div>
@@ -117,5 +116,660 @@
     <div id="mapD12" class="map-container"></div>
 </div>
 <div class="tab-pane fade" id="panelD13" role="tabpanel" aria-labelledby="tabD13-tab">
-    <div id="mapD13" class="map-container"></div>
+    <div class="map-checkbox-container" id="panelD13-layout">
+        <!-- LEFT PANEL: 1.a -->
+        <aside class="layer-sidebar ra-left-sidebar">
+            <div class="layer-controls-card layer-controls-card--sidebar">
+                <div class="layer-controls-card__header"></div>
+
+                <div class="layer-box ra-box--left">
+                    <div class="layer-box__title">Dependency Graph propertiess</div>
+                    <div class="ra-field">
+                        <label class="ra-label" for="ra-latitude">Latitude</label>
+                        <input id="ra-latitude" class="form-control form-control-sm" type="text" placeholder="42.3456" />
+                    </div>
+                    <div class="ra-field">
+                        <label class="ra-label" for="ra-longitude">Longitude</label>
+                        <input id="ra-longitude" class="form-control form-control-sm" type="text" placeholder="13.1234" />
+                    </div>
+                    <div class="ra-field">
+                        <label class="ra-label" for="ra-radius">Radius (km)</label>
+                        <input id="ra-radius" class="form-control form-control-sm" type="number" min="0" step="1" placeholder="25" />
+                    </div>
+
+                    <div class="ra-divider"></div>
+                    <div class="ra-subtitle">Infrastructure sectors</div>
+                    <div class="ra-checkbox-grid">
+                        <label class="layer-toggle"><input type="checkbox" checked /> Energy</label>
+                        <label class="layer-toggle"><input type="checkbox" /> Transport</label>
+                        <label class="layer-toggle"><input type="checkbox" /> Banking</label>
+                        <label class="layer-toggle"><input type="checkbox" /> Financial Market Infrastructure</label>
+                        <label class="layer-toggle"><input type="checkbox" /> Health</label>
+                        <label class="layer-toggle"><input type="checkbox" /> Drinking Water</label>
+                        <label class="layer-toggle"><input type="checkbox" /> Waste Water</label>
+                        <label class="layer-toggle"><input type="checkbox" /> Digital Infrastructure</label>
+                        <label class="layer-toggle"><input type="checkbox" /> Public Administration</label>
+                        <label class="layer-toggle"><input type="checkbox" /> Food</label>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- CENTER GRAPH AREA -->
+        <div id="mapD13" class="map-container-85"></div>
+
+        <!-- RIGHT PANEL: 1.b + 1.c -->
+        <aside class="layer-sidebar ra-right-sidebar">
+            <div class="layer-controls-card layer-controls-card--sidebar">
+                <div class="layer-controls-card__header"></div>
+
+                <div class="ra-col-right">
+                    <div class="layer-box ra-box--right">
+                        <div class="layer-box__title">User actions</div>
+                        <div class="d-flex gap-2" id="ra-default-actions">
+                            <button class="btn btn-outline-primary btn-sm ra-action" type="button" id="ra-new">
+                                New
+                            </button>
+                            <button class="btn btn-primary btn-sm ra-action" type="button" id="ra-duplicate">
+                                Duplicate
+                            </button>
+                        </div>
+                        <div class="d-flex gap-2 d-none" id="ra-edit-actions">
+                            <button class="btn btn-outline-secondary btn-sm ra-action" type="button" id="ra-back">
+                                Back
+                            </button>
+                            <button class="btn btn-success btn-sm ra-action" type="button" id="ra-create-graph">
+                                Create graph
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="layer-box ra-box--right">
+                        <div class="layer-box__title">Graph Properties</div>
+                        <div class="ra-info-box">
+                            <div class="ra-info-title">Graph size preview</div>
+                            <div class="ra-info-row">Nodes: 124</div>
+                            <div class="ra-info-row">Edges: 356</div>
+                        </div>
+                    </div>
+
+                    <div class="layer-box ra-box--right">
+                        <div class="layer-box__title">Map Layers Preview</div>
+                        <div class="ra-info-box">
+                            <div class="ra-info-row">Layer: graph nodes</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+</div>
+
+
+<div class="tab-pane fade" id="panelD14" role="tabpanel" aria-labelledby="tabD14-tab">
+    <div class="dep-setup-layout" id="panelD14-layout">
+        <nav class="dep-setup-menu" aria-label="Dependency setup subsections">
+            <ul class="nav nav-pills flex-column dep-subtabs" id="depSubtabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="dep-subsec-tab" data-bs-toggle="tab" data-bs-target="#dep-subsec" type="button" role="tab" aria-controls="dep-subsec" aria-selected="true">
+                        Subsector Dependencies
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="dep-poi-tab" data-bs-toggle="tab" data-bs-target="#dep-poi" type="button" role="tab" aria-controls="dep-poi" aria-selected="false">
+                        POI Dependencies
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="dep-default-prob-tab" data-bs-toggle="tab" data-bs-target="#dep-default-prob" type="button" role="tab" aria-controls="dep-default-prob" aria-selected="false">
+                        Default Probabilities
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="dep-subsec-prob-tab" data-bs-toggle="tab" data-bs-target="#dep-subsec-prob" type="button" role="tab" aria-controls="dep-subsec-prob" aria-selected="false">
+                        Subsector Probability Overrides
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="dep-poi-prob-tab" data-bs-toggle="tab" data-bs-target="#dep-poi-prob" type="button" role="tab" aria-controls="dep-poi-prob" aria-selected="false">
+                        POI Probability Overrides
+                    </button>
+                </li>
+            </ul>
+        </nav>
+
+        <section class="dep-setup-editor">
+
+            <div class="tab-content dep-tab-content" id="depSubtabsContent">
+                <div class="tab-pane fade show active" id="dep-subsec" role="tabpanel" aria-labelledby="dep-subsec-tab">
+                    <div class="dep-editor-card">
+                        <div class="dep-editor-header">
+                            <div class="dep-editor-title">Subsector Dependencies Configuration</div>
+                            <button class="btn btn-outline-primary btn-sm dep-load-example" type="button" data-example-target="example-subsec">Load Default data</button>
+                        </div>
+                        <div class="dep-json-editor-container">
+                            <textarea id="subsec_dep" class="form-control form-control-sm dep-json-editor" rows="12" spellcheck="false" data-status-id="status-subsec"></textarea>
+                        </div>
+                        <div class="dep-actions">
+                            <div class="dep-status" id="status-subsec">
+                                <span class="dep-status-dot dep-status-dot--invalid"></span>
+                                <span class="dep-status-text">Syntax Error</span>
+                            </div>
+                            <div class="dep-action-buttons">
+                                <button class="btn btn-outline-secondary btn-sm dep-clear" type="button">Clear</button>
+                                <button class="btn btn-outline-primary btn-sm dep-validate" type="button">Validate</button>
+                                <button class="btn btn-success btn-sm dep-save" type="button">Save</button>
+                            </div>
+                        </div>
+                        <script type="application/json" id="example-subsec">[
+  {"src":["6430","2952","2961"], "targ":"2005"},
+  {"src":["2956","6430"],       "targ":"2006"}
+]</script>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="dep-poi" role="tabpanel" aria-labelledby="dep-poi-tab">
+                    <div class="dep-editor-card">
+                        <div class="dep-editor-header">
+                            <div class="dep-editor-title">POI Dependencies Configuration</div>
+                            <button class="btn btn-outline-primary btn-sm dep-load-example" type="button" data-example-target="example-poi">Load Default data</button>
+                        </div>
+                        <div class="dep-json-editor-container">
+                            <textarea id="poi_dep" class="form-control form-control-sm dep-json-editor" rows="12" spellcheck="false" data-status-id="status-poi"></textarea>
+                        </div>
+                        <div class="dep-actions">
+                            <div class="dep-status" id="status-poi">
+                                <span class="dep-status-dot dep-status-dot--invalid"></span>
+                                <span class="dep-status-text">Syntax Error</span>
+                            </div>
+                            <div class="dep-action-buttons">
+                                <button class="btn btn-outline-secondary btn-sm dep-clear" type="button">Clear</button>
+                                <button class="btn btn-outline-primary btn-sm dep-validate" type="button">Validate</button>
+                                <button class="btn btn-success btn-sm dep-save" type="button">Save</button>
+                            </div>
+                        </div>
+                        <script type="application/json" id="example-poi">[
+  {"src":"efG112ahhYYYYY", "targ":"FAWW112233"},
+  {"src":"1DAJERTTG123",   "targ":"EAQWEER305"}
+]</script>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="dep-default-prob" role="tabpanel" aria-labelledby="dep-default-prob-tab">
+                    <div class="dep-editor-card">
+                        <div class="dep-editor-header">
+                            <div class="dep-editor-title">Default Probabilities Configuration</div>
+                            <button class="btn btn-outline-primary btn-sm dep-load-example" type="button" data-example-target="example-default-prob">Load Default data</button>
+                        </div>
+                        <div class="dep-json-editor-container">
+                            <textarea id="all_dep_prob" class="form-control form-control-sm dep-json-editor" rows="12" spellcheck="false" data-status-id="status-default-prob"></textarea>
+                        </div>
+                        <div class="dep-actions">
+                            <div class="dep-status" id="status-default-prob">
+                                <span class="dep-status-dot dep-status-dot--invalid"></span>
+                                <span class="dep-status-text">Syntax Error</span>
+                            </div>
+                            <div class="dep-action-buttons">
+                                <button class="btn btn-outline-secondary btn-sm dep-clear" type="button">Clear</button>
+                                <button class="btn btn-outline-primary btn-sm dep-validate" type="button">Validate</button>
+                                <button class="btn btn-success btn-sm dep-save" type="button">Save</button>
+                            </div>
+                        </div>
+                        <script type="application/json" id="example-default-prob">{
+  "f_prob":{"ref":"prob","val":[25,45,20,10]},
+  "r_prob":{"ref":"prob","val":[35,40,15,10]}
+}</script>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="dep-subsec-prob" role="tabpanel" aria-labelledby="dep-subsec-prob-tab">
+                    <div class="dep-editor-card">
+                        <div class="dep-editor-header">
+                            <div class="dep-editor-title">Subsector Probability Overrides Configuration</div>
+                            <button class="btn btn-outline-primary btn-sm dep-load-example" type="button" data-example-target="example-subsec-prob">Load Default data</button>
+                        </div>
+                        <div class="dep-json-editor-container">
+                            <textarea id="subsec_dep_prob" class="form-control form-control-sm dep-json-editor" rows="12" spellcheck="false" data-status-id="status-subsec-prob"></textarea>
+                        </div>
+                        <div class="dep-actions">
+                            <div class="dep-status" id="status-subsec-prob">
+                                <span class="dep-status-dot dep-status-dot--invalid"></span>
+                                <span class="dep-status-text">Syntax Error</span>
+                            </div>
+                            <div class="dep-action-buttons">
+                                <button class="btn btn-outline-secondary btn-sm dep-clear" type="button">Clear</button>
+                                <button class="btn btn-outline-primary btn-sm dep-validate" type="button">Validate</button>
+                                <button class="btn btn-success btn-sm dep-save" type="button">Save</button>
+                            </div>
+                        </div>
+                        <script type="application/json" id="example-subsec-prob">[
+  {
+    "src":"1187","targ":"2005",
+    "f_prob":{"ref":"prob","val":[25,45,20,10]},
+    "r_prob":{"ref":"prob","val":[35,40,15,10]}
+  }
+]</script>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="dep-poi-prob" role="tabpanel" aria-labelledby="dep-poi-prob-tab">
+                    <div class="dep-editor-card">
+                        <div class="dep-editor-header">
+                            <div class="dep-editor-title">POI Probability Overrides Configuration</div>
+                            <button class="btn btn-outline-primary btn-sm dep-load-example" type="button" data-example-target="example-poi-prob">Load Default data</button>
+                        </div>
+                        <div class="dep-json-editor-container">
+                            <textarea id="poi_dep_prob" class="form-control form-control-sm dep-json-editor" rows="12" spellcheck="false" data-status-id="status-poi-prob"></textarea>
+                        </div>
+                        <div class="dep-actions">
+                            <div class="dep-status" id="status-poi-prob">
+                                <span class="dep-status-dot dep-status-dot--invalid"></span>
+                                <span class="dep-status-text">Syntax Error</span>
+                            </div>
+                            <div class="dep-action-buttons">
+                                <button class="btn btn-outline-secondary btn-sm dep-clear" type="button">Clear</button>
+                                <button class="btn btn-outline-primary btn-sm dep-validate" type="button">Validate</button>
+                                <button class="btn btn-success btn-sm dep-save" type="button">Save</button>
+                            </div>
+                        </div>
+                        <script type="application/json" id="example-poi-prob">[
+  {
+    "src":"efG112ahhYYYYY","targ":"FAWW112233",
+    "f_prob":{"ref":"prob","val":[20,50,20,10]},
+    "r_prob":{"ref":"prob","val":[40,40,15,5]}
+  }
+]</script>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <aside class="dep-setup-map">
+            <div id="mapD14" class="map-container dep-map"></div>
+        </aside>
+    </div>
+</div>
+
+
+<div class="tab-pane fade" id="panelD15" role="tabpanel" aria-labelledby="tabD15-tab">
+    <div class="fs-layout" id="panelD15-layout">
+        <aside class="fs-column fs-column--left">
+            <div class="fs-card">
+                <div class="fs-card__title">User inputs</div>
+                <div class="fs-field">
+                    <div class="fs-field__header">
+                        <label class="fs-label" for="failure-poi-list">Failed POIs list</label>
+                        <button class="btn btn-primary btn-sm fs-load" type="button">Load from Damage Assessment</button>
+                    </div>
+                    <textarea id="failure-poi-list" class="form-control form-control-sm fs-textarea" placeholder="11360212181; 8035257826; 10914539925" data-default="11360212181; 8035257826; 10914539925">11360212181; 8035257826; 10914539925</textarea>
+                    <div class="fs-hint">Example: "11360212181; 8035257826; 10914539925"</div>
+                </div>
+                <div class="fs-footer">
+                    <div class="fs-actions">
+                        <button class="btn btn-outline-primary btn-sm fs-validate" type="button">Validate</button>
+                        <button class="btn btn-outline-secondary btn-sm fs-clear" type="button">Clear</button>
+                        <button class="btn btn-success btn-sm fs-save" type="button">Save</button>
+                    </div>
+                    <div class="fs-status">Status / feedback</div>
+                </div>
+            </div>
+        </aside>
+
+        <section class="fs-column fs-column--right">
+            <div id="mapD15" class="map-container fs-map fs-map--full"></div>
+        </section>
+    </div>
+</div>
+
+<div class="tab-pane fade" id="panelD16" role="tabpanel" aria-labelledby="tabD16-tab">
+    <div class="impact-layout" id="panelD16-layout">
+        <aside class="impact-column impact-column--left">
+            <div class="impact-card">
+                <div class="impact-card__header">
+                    <div class="impact-title">User inputs (Impact Properties)</div>
+                    <div class="impact-field">
+                        <label class="impact-label" for="impact-type">Impact Type</label>
+                        <select id="impact-type" class="form-select form-select-sm impact-select">
+                            <option selected>Social Impact</option>
+                            <option>Economic Impact</option>
+                            <option>Environmental Impact</option>
+                        </select>
+                    </div>
+                    <ul class="nav nav-tabs impact-subtabs" id="impactSubtabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="impact-distributions-tab" data-bs-toggle="tab" data-bs-target="#impact-distributions" type="button" role="tab" aria-controls="impact-distributions" aria-selected="true">
+                                Distributions
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="impact-sector-tab" data-bs-toggle="tab" data-bs-target="#impact-sector" type="button" role="tab" aria-controls="impact-sector" aria-selected="false">
+                                Sectors
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="impact-subsector-tab" data-bs-toggle="tab" data-bs-target="#impact-subsector" type="button" role="tab" aria-controls="impact-subsector" aria-selected="false">
+                                Subsectors
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="impact-poi-tab" data-bs-toggle="tab" data-bs-target="#impact-poi" type="button" role="tab" aria-controls="impact-poi" aria-selected="false">
+                                Nodes
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="impact-mc-tab" data-bs-toggle="tab" data-bs-target="#impact-mc" type="button" role="tab" aria-controls="impact-mc" aria-selected="false">
+                                Monte Carlo properties
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="tab-content impact-tab-content" id="impactSubtabsContent">
+                    <div class="tab-pane fade show active" id="impact-distributions" role="tabpanel" aria-labelledby="impact-distributions-tab">
+                        <div class="impact-editor-card impact-editor-card--auto">
+                            <div class="impact-editor-title">Distributions</div>
+                            <div class="impact-json-editor-container">
+                                <textarea id="impact-distributions-editor" class="form-control form-control-sm impact-json-editor" rows="12" spellcheck="false" data-status-id="impact-status-distributions">{
+  "dist_imp_max": "Beta(a,b), Poisson(λ), Negative_Binomial(r,p), Binomial(n,p), Lognormal(μ,σ)",
+  "dist_imp_grow": "Categorical [slow, linear, fast]",
+  "dist_imp_time": "Lognormal(μ,σ)"
+}</textarea>
+                            </div>
+                            <div class="impact-actions">
+                                <div class="impact-status" id="impact-status-distributions">
+                                    <span class="impact-status-dot"></span>
+                                    <span class="impact-status-text">Syntax Error</span>
+                                </div>
+                                <div class="impact-buttons">
+                                    <button class="btn btn-outline-primary btn-sm impact-validate" type="button">Validate</button>
+                                    <button class="btn btn-outline-secondary btn-sm impact-clear" type="button">Clear</button>
+                                    <button class="btn btn-success btn-sm impact-save" type="button">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="impact-sector" role="tabpanel" aria-labelledby="impact-sector-tab">
+                        <div class="impact-editor-card impact-editor-card--auto">
+                            <div class="impact-editor-title">Sector Properties</div>
+                            <div class="impact-json-editor-container">
+                                <textarea id="impact-sector-editor" class="form-control form-control-sm impact-json-editor" rows="12" spellcheck="false" data-status-id="impact-status-sector">{
+  "sector_id": "sys2",
+  "sector_name": "Healthcare",
+  "imp_max": { "ref": "Negative_Binomial", "params": { "r": 4, "p": 0.35 } },
+  "imp_time": { "ref": "Lognormal", "params": [3.9, 1.0] }
+}</textarea>
+                            </div>
+                            <div class="impact-actions">
+                                <div class="impact-status" id="impact-status-sector">
+                                    <span class="impact-status-dot"></span>
+                                    <span class="impact-status-text">Syntax Error</span>
+                                </div>
+                                <div class="impact-buttons">
+                                    <button class="btn btn-outline-primary btn-sm impact-validate" type="button">Validate</button>
+                                    <button class="btn btn-outline-secondary btn-sm impact-clear" type="button">Clear</button>
+                                    <button class="btn btn-success btn-sm impact-save" type="button">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="impact-subsector" role="tabpanel" aria-labelledby="impact-subsector-tab">
+                        <div class="impact-editor-card impact-editor-card--auto">
+                            <div class="impact-editor-title">Subsector Properties</div>
+                            <div class="impact-json-editor-container">
+                                <textarea id="impact-subsector-editor" class="form-control form-control-sm impact-json-editor" rows="12" spellcheck="false" data-status-id="impact-status-subsector">{
+  "subsector_id": "6430",
+  "subsector_name": "Substation",
+  "imp_max": {
+    "ref": "Binomial",
+    "params": { "n": 900, "p": 0.15 }
+  },
+  "imp_time": {
+    "ref": "Lognormal",
+    "params": [3.0, 0.7]
+  }
+}</textarea>
+                            </div>
+                            <div class="impact-actions">
+                                <div class="impact-status" id="impact-status-subsector">
+                                    <span class="impact-status-dot"></span>
+                                    <span class="impact-status-text">Syntax Error</span>
+                                </div>
+                                <div class="impact-buttons">
+                                    <button class="btn btn-outline-primary btn-sm impact-validate" type="button">Validate</button>
+                                    <button class="btn btn-outline-secondary btn-sm impact-clear" type="button">Clear</button>
+                                    <button class="btn btn-success btn-sm impact-save" type="button">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="impact-poi" role="tabpanel" aria-labelledby="impact-poi-tab">
+                        <div class="impact-editor-card impact-editor-card--auto">
+                            <div class="impact-editor-title">POI Properties</div>
+                            <div class="impact-json-editor-container">
+                                <textarea id="impact-poi-editor" class="form-control form-control-sm impact-json-editor" rows="12" spellcheck="false" data-status-id="impact-status-poi">{
+  "poi_id": "1101941554",
+  "poi_name": "Student Housing",
+  "imp_max": { "ref": "Beta", "params": { "a": 2, "b": 5 } },
+  "imp_time": { "ref": "Lognormal", "params": [4.2, 0.7] }
+}</textarea>
+                            </div>
+                            <div class="impact-actions">
+                                <div class="impact-status" id="impact-status-poi">
+                                    <span class="impact-status-dot"></span>
+                                    <span class="impact-status-text">Syntax Error</span>
+                                </div>
+                                <div class="impact-buttons">
+                                    <button class="btn btn-outline-primary btn-sm impact-validate" type="button">Validate</button>
+                                    <button class="btn btn-outline-secondary btn-sm impact-clear" type="button">Clear</button>
+                                    <button class="btn btn-success btn-sm impact-save" type="button">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="impact-mc" role="tabpanel" aria-labelledby="impact-mc-tab">
+                        <div class="impact-mc-card impact-editor-card--auto">
+                            <div class="impact-editor-title">Monte Carlo Simulation</div>
+                            <div class="impact-mc-fields">
+                                <div class="impact-field">
+                                    <label class="impact-label" for="impact-mc-iterations">Number of iterations</label>
+                                    <input id="impact-mc-iterations" class="form-control form-control-sm impact-input" type="number" min="1" step="1" value="1000" />
+                                </div>
+                                <div class="impact-field">
+                                    <label class="impact-label" for="impact-mc-max-path">Max path length</label>
+                                    <input id="impact-mc-max-path" class="form-control form-control-sm impact-input" type="number" min="1" step="1" value="50" />
+                                </div>
+                                <div class="impact-field">
+                                    <label class="impact-label" for="impact-mc-max-chains">Max number of chains</label>
+                                    <input id="impact-mc-max-chains" class="form-control form-control-sm impact-input" type="number" min="1" step="1" value="10" />
+                                </div>
+                            </div>
+                            <div class="impact-actions">
+                                <div class="impact-status" id="impact-status-mc">
+                                    <span class="impact-status-dot"></span>
+                                    <span class="impact-status-text">Ready</span>
+                                </div>
+                                <div class="impact-buttons">
+                                    <button class="btn btn-outline-primary btn-sm impact-validate" type="button">Validate</button>
+                                    <button class="btn btn-outline-secondary btn-sm impact-clear" type="button">Clear</button>
+                                    <button class="btn btn-success btn-sm impact-save" type="button">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <section class="impact-column impact-column--right">
+            <div id="mapD16" class="map-container impact-map"></div>
+        </section>
+        <aside class="impact-column impact-column--layers">
+            <div class="layer-controls-card layer-controls-card--sidebar">
+                <div class="layer-controls-card__header">
+                    <div class="layer-box__title">Map Layers</div>
+                </div>
+                <div class="layer-box">
+                    <div class="layer-box__body">
+                        <!-- Placeholder: layer toggles go here -->
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>
+<div class="tab-pane fade" id="panelD17" role="tabpanel" aria-labelledby="tabD17-tab">
+    <div class="rr-grid" id="panelD17-layout">
+        <div class="rr-left">
+            <!-- RUN CONTROLS -->
+            <div class="rr-block rr-block--run">
+                <div class="rr-section-header">Run Controls</div>
+                <div class="rr-field">
+                    <label class="rr-label" for="rr-run-name">Scenario name:</label>
+                    <input id="rr-run-name" class="form-control rr-input" type="text" value="My run - Camerino EQ 2016" />
+                </div>
+                <div class="d-flex gap-2 flex-wrap">
+                    <button class="btn btn-primary rr-cta" type="button" id="rr-config-run">
+                        <i class="bi bi-gear-fill me-1"></i>
+                        Save Scenario
+                    </button>
+                    <button class="btn btn-success rr-cta" type="button" id="rr-run">
+                        <i class="bi bi-play-fill me-1"></i>
+                        Run
+                    </button>
+                </div>
+            </div>
+
+            <!-- RESULTS BROWSER -->
+            <div class="rr-block rr-block--browser">
+                <div class="rr-section-header">
+                    <span>Results Browser</span>
+                    <span class="rr-subtitle">(Search / Filter)</span>
+                </div>
+
+                <div class="rr-search">
+                    <i class="bi bi-search rr-search-icon"></i>
+                    <input class="form-control rr-search-input" type="text" placeholder="path id / node id / run name ..." />
+                    <button class="btn btn-light rr-search-btn" type="button"><i class="bi bi-search"></i></button>
+                </div>
+
+                <div class="rr-filter-grid">
+                    <div class="rr-filter-row">
+                        <span class="rr-filter-bullet">-</span>
+                        <label class="rr-filter-label" for="rr-min-res">Min Resilience:</label>
+                        <input id="rr-min-res" class="form-control form-control-sm rr-number" type="number" value="0" />
+                        <label class="rr-filter-label rr-filter-label--small" for="rr-max-res">Max:</label>
+                        <input id="rr-max-res" class="form-control form-control-sm rr-number" type="number" value="100" />
+                    </div>
+                    <div class="rr-filter-row">
+                        <span class="rr-filter-bullet">-</span>
+                        <label class="rr-filter-label" for="rr-peak-risk">Peak Risk &gt;=</label>
+                        <input id="rr-peak-risk" class="form-control form-control-sm rr-number" type="number" value="0" />
+                    </div>
+                    <div class="rr-filter-row">
+                        <span class="rr-filter-bullet">-</span>
+                        <label class="rr-filter-label" for="rr-contains-node">Contains node:</label>
+                        <div class="rr-input-addon">
+                            <input id="rr-contains-node" class="form-control form-control-sm" type="text" value="11360212181" />
+                            <span class="rr-addon">#</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rr-filter-actions">
+                    <button class="btn btn-primary btn-sm" type="button" id="rr-apply">Apply</button>
+                    <button class="btn btn-outline-secondary btn-sm" type="button" id="rr-clear">Clear</button>
+                </div>
+            </div>
+
+            <!-- CRITICAL CHAINS -->
+            <div class="rr-block rr-block--chains">
+                <div class="rr-section-header">
+                    <span>Critical Chains</span>
+                    <span class="rr-subtitle">(Ranked dependency paths)</span>
+                </div>
+
+                <div class="table-responsive rr-table-wrap">
+                    <table class="table table-sm mb-0 rr-table" id="rr-chains-table">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Rank</th>
+                                <th>Path ID</th>
+                                <th>Nodes (compact)</th>
+                                <th>Resil.</th>
+                                <th>Peak</th>
+                                <th class="text-end"><i class="bi bi-three-dots-vertical"></i></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-rank="1" data-path="165" data-nodes="113633918035" data-res="82.6" data-peak="12.36" data-points="0.2,0.5,0.35,0.8,0.6">
+                                <td class="text-center">1</td>
+                                <td>165</td>
+                                <td class="rr-nodes-cell">
+                                    <span class="rr-nodes-text">113633918035</span>
+                                    <svg class="rr-sparkline" viewBox="0 0 100 20" preserveAspectRatio="none"></svg>
+                                </td>
+                                <td>82.6</td>
+                                <td>12.36</td>
+                                <td class="text-end"><i class="bi bi-three-dots-vertical"></i></td>
+                            </tr>
+                            <tr data-rank="2" data-path="041" data-nodes="80351091" data-res="79.2" data-peak="10.11" data-points="0.1,0.2,0.25,0.22,0.3">
+                                <td class="text-center">2</td>
+                                <td>041</td>
+                                <td class="rr-nodes-cell">
+                                    <span class="rr-nodes-text">80351091</span>
+                                    <svg class="rr-sparkline" viewBox="0 0 100 20" preserveAspectRatio="none"></svg>
+                                </td>
+                                <td>79.2</td>
+                                <td>10.11</td>
+                                <td class="text-end"><i class="bi bi-three-dots-vertical"></i></td>
+                            </tr>
+                            <tr data-rank="3" data-path="233" data-nodes="-" data-res="77.9" data-peak="9.54" data-points="0.05,0.15,0.12,0.18,0.14">
+                                <td class="text-center">3</td>
+                                <td>233</td>
+                                <td class="rr-nodes-cell">
+                                    <span class="rr-nodes-text">—</span>
+                                    <svg class="rr-sparkline" viewBox="0 0 100 20" preserveAspectRatio="none"></svg>
+                                </td>
+                                <td>77.9</td>
+                                <td>9.54</td>
+                                <td class="text-end"><i class="bi bi-three-dots-vertical"></i></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="rr-table-note">(click row → highlight on map + open details)</div>
+            </div>
+        </div>
+
+        <div class="rr-right">
+            <div class="rr-block rr-block--visual">
+                <div class="rr-block__header rr-block__header--inline">
+                    <div class="rr-block__title">Visual output</div>
+                </div>
+                <div class="rr-map-area">
+                    <div id="mapD17" class="map-container rr-map"></div>
+                </div>
+                <div class="rr-chart-area">
+                    <div class="rr-chart-header">
+                        <div class="rr-chart-meta">X uses fixed time points</div>
+                    </div>
+                    <div id="rr-chart" class="rr-chart"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script id="rr-chart-data" type="application/json">
+        {
+            "x": ["T0","T1","T2","T3","T4"],
+            "series": [
+                { "name":"Exposure", "y":[0.2,0.3,null,0.6,0.7] },
+                { "name":"Vulnerability", "y":[0.1,0.15,0.2,null,0.4] }
+            ]
+        }
+    </script>
 </div>

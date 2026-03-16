@@ -1,0 +1,63 @@
+<svg width="1280" height="640" viewBox="0 0 1280 640" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="80" y1="60" x2="1180" y2="580" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0B2239"/>
+      <stop offset="0.5" stop-color="#114C73"/>
+      <stop offset="1" stop-color="#2F8F9D"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="235" y1="142" x2="456" y2="363" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#B8F2E6"/>
+      <stop offset="1" stop-color="#6DD3CE"/>
+    </linearGradient>
+    <filter id="shadow" x="0" y="0" width="1280" height="640" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="24" stdDeviation="32" flood-color="#06111D" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <rect width="1280" height="640" rx="36" fill="url(#bg)"/>
+  <g opacity="0.16">
+    <circle cx="1088" cy="118" r="170" fill="#B8F2E6"/>
+    <circle cx="1192" cy="540" r="244" fill="#6DD3CE"/>
+    <circle cx="160" cy="572" r="188" fill="#0F3656"/>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="72" y="74" width="1136" height="492" rx="28" fill="#0C1B2C" fill-opacity="0.28" stroke="#FFFFFF" stroke-opacity="0.18"/>
+  </g>
+
+  <g>
+    <rect x="128" y="142" width="236" height="236" rx="32" fill="url(#accent)"/>
+    <rect x="170" y="184" width="152" height="152" rx="24" fill="#0B2239"/>
+    <path d="M212 280C212 242.445 242.445 212 280 212V212C317.555 212 348 242.445 348 280V280C348 317.555 317.555 348 280 348V348C242.445 348 212 317.555 212 280V280Z" fill="#6DD3CE"/>
+    <path d="M252 280C252 264.536 264.536 252 280 252V252C295.464 252 308 264.536 308 280V280C308 295.464 295.464 308 280 308V308C264.536 308 252 295.464 252 280V280Z" fill="#0B2239"/>
+  </g>
+
+  <g fill="#F4FBFF">
+    <text x="412" y="210" font-family="Segoe UI, Arial, sans-serif" font-size="34" font-weight="600" letter-spacing="0.14em">
+      MULTICLIMACT PLATFORM
+    </text>
+    <text x="412" y="306" font-family="Segoe UI, Arial, sans-serif" font-size="92" font-weight="700">
+      MultiClimact FE
+    </text>
+    <text x="412" y="372" font-family="Segoe UI, Arial, sans-serif" font-size="31" font-weight="400" fill="#D8EDF7">
+      Web GIS dashboard for climate risk analysis, scenario simulation, and WMS-driven exploration.
+    </text>
+  </g>
+
+  <g>
+    <rect x="412" y="430" width="216" height="58" rx="18" fill="#B8F2E6"/>
+    <text x="456" y="467" font-family="Segoe UI, Arial, sans-serif" font-size="28" font-weight="700" fill="#0B2239">
+      ASP.NET Core
+    </text>
+
+    <rect x="648" y="430" width="150" height="58" rx="18" fill="#E7F7FF" fill-opacity="0.18" stroke="#C7E6F7" stroke-opacity="0.45"/>
+    <text x="692" y="467" font-family="Segoe UI, Arial, sans-serif" font-size="28" font-weight="600" fill="#F4FBFF">
+      .NET 8
+    </text>
+
+    <rect x="818" y="430" width="178" height="58" rx="18" fill="#E7F7FF" fill-opacity="0.18" stroke="#C7E6F7" stroke-opacity="0.45"/>
+    <text x="860" y="467" font-family="Segoe UI, Arial, sans-serif" font-size="28" font-weight="600" fill="#F4FBFF">
+      OpenLayers
+    </text>
+  </g>
+</svg>

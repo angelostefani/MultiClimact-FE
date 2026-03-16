@@ -1,0 +1,53 @@
+<div id="myGraphBottomBar" class="bottom-bar">
+    <div class="bottom-bar-content" style="display:none;">
+        <div class="bottom-bar-search-wrap mx-4">
+            <form id="graphForm" class="bottom-bar-search-card p-3" method="GET" onsubmit="fetchGraphData(event)">
+                <input type="hidden" name="user_id" value="system">
+                <div class="bottom-bar-search-title">🔎 Scenario Search Filters</div>
+
+                <div class="row g-3">
+                    <div class="col-12 col-md-6">
+                        <label for="graphStartDate" class="form-label">Start Date</label>
+                        <input type="date" class="form-control" id="graphStartDate" name="start_date" value="@DateTime.Today.AddMonths(-1).ToString("yyyy-MM-dd")">
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label for="graphEndDate" class="form-label">End Date</label>
+                        <input type="date" class="form-control" id="graphEndDate" name="end_date" value="@DateTime.Today.ToString("yyyy-MM-dd")">
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label for="graphName" class="form-label">Scenario Name</label>
+                        <input type="text" class="form-control" id="graphName" name="name" placeholder="Contains text">
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label for="graphIdConf" class="form-label">id_conf</label>
+                        <input type="number" min="1" class="form-control" id="graphIdConf" name="id_conf" placeholder="Exact id_conf">
+                    </div>
+                    <div class="col-12 bottom-bar-actions">
+                        <button type="submit" class="btn btn-primary bottom-bar-search-btn">
+                            <i class="bi bi-search"></i>
+                            <span>Search</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div id="graphResults" class="mt-4 mx-4">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Select</th>
+                        <th>id_conf</th>
+                        <th>Scenario Name</th>
+                        <th>Date</th>
+                        <th>Monte Carlo It.</th>
+                        <th>Path Length</th>
+                    </tr>
+                </thead>
+                <tbody id="graphTableBody">
+                </tbody>
+            </table>
+            <div id="graphPaginationControls" class="mt-3"></div>
+        </div>
+    </div>
+</div>

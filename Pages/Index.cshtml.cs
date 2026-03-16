@@ -8,6 +8,7 @@ using System;
 using System.Net.Http;
 using System.Text.Json;  // Namespace for JSON deserialization
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -40,6 +41,8 @@ namespace MultiClimact.Pages
         public async Task OnGetAsync()
         {
             await GetLastEarthquakeIdRun();
+            await GetLastHeatwaveIdRun();
+            await GetLastExtremePrecipitationIdRun();
 
             ConfigurationToViewDataMapping();
         }
@@ -110,7 +113,7 @@ namespace MultiClimact.Pages
                         var data = JsonSerializer.Deserialize<LastHeatwaveResponse>(responseBody);
 
                         // Store the retrieved earthquake ID in ViewData
-                        ViewData["idRunLastHeatwave"] = data?.id_run ?? "idRun not available in the response";
+                        ViewData["idRunLastHeatwave"] = data?.id_run?.ToString() ?? "idRun not available in the response";
                     }
                     else
                     {
@@ -127,58 +130,112 @@ namespace MultiClimact.Pages
         }
 
         /// <summary>
+        /// Fetches the latest extreme precipitation ID run from an external REST API.
+        /// The retrieved ID is stored in ViewData["idRunLastExtremePrecipitation"] for use in the Razor view.
+        /// </summary>
+        /// <returns>An asynchronous Task.</returns>
+        private async Task GetLastExtremePrecipitationIdRun()
+        {
+            var baseUrl = $"{Request.Scheme}://{Request.Host}";
+            var serviceUrl = $"{baseUrl}/api/ExtremeprecipitationProxy/GetLastExtremeprecipitation";
+
+            try
+            {
+                var client = _httpClientFactory.CreateClient("Default");
+                var response = await client.GetAsync(serviceUrl);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseBody = await response.Content.ReadAsStringAsync();
+                    var data = JsonSerializer.Deserialize<LastExtremeprecipitationResponse>(responseBody);
+                    ViewData["idRunLastExtremePrecipitation"] = data?.id_run?.ToString() ?? "idRun not available in the response";
+                }
+                else
+                {
+                    ViewData["idRunLastExtremePrecipitation"] = $"Error calling the service: {response.StatusCode}";
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while calling the ExtremeprecipitationProxy service.");
+                ViewData["idRunLastExtremePrecipitation"] = $"Exception: {ex.Message}";
+            }
+        }
+
+        /// <summary>
         /// Maps configuration settings from appsettings.json to ViewData for use in the Razor view.
         /// These settings define WMS (Web Map Service) URLs and layers to dynamically populate the view.
         /// </summary>
         private void ConfigurationToViewDataMapping()
         {
-            // Mapping configuration settings for WMS layers and legends
-            var wmsLayers = new[]
+            var wmsBaseUrl = _configuration["wms:wmsurl_baseurl"];
+            ViewData["wmsurl_baseurl"] = wmsBaseUrl;
+
+            var wmsLayerKeys = new[]
             {
-                new { Key = "wmsurl_lay00", Description = "Real-time earthquakes with risk analysis" },
-                new { Key = "wmsurl_lay01", Description = "POI Buildings in Marche Region" },
-                new { Key = "wmsurl_lay02", Description = "Camerino buildings" },
-                new { Key = "wmsurl_lay03", Description = "Fazzini buildings" },
-                new { Key = "wmsurl_lay04", Description = "Electric substations" },
-                new { Key = "wmsurl_lay05", Description = "Water towers" },
-                new { Key = "wmsurl_lay06", Description = "Water wells" },
-                new { Key = "wmsurl_lay07", Description = "Wastewater plants" },
-                new { Key = "wmsurl_lay08", Description = "Risk paths" },
-                new { Key = "wmsurl_lay09", Description = "Failure scenarios" },
-                new { Key = "wmsurl_lay10", Description = "Shakemap" },
-                new { Key = "wmsurl_lay11", Description = "Temperature above ground" },
-                new { Key = "wmsurl_lay12", Description = "Flood precipitation rate" },
-                new { Key = "wmsurl_lay13", Description = "River Floods risk analisys" },
-                new { Key = "wmsurl_lay14", Description = "POI buildings of Marche region" },
-                new { Key = "wmsurl_lay15", Description = "POI buildings of Camerino" },
-                new { Key = "wmsurl_lay16", Description = "River Floods House View" },
-                new { Key = "wmsurl_lay17", Description = "Extreme Precipitation Hazard index 6 classes" },
-                new { Key = "wmsurl_lay18", Description = "Extreme Precipitation Hazard index 3 classes" },
-                new { Key = "wmsurl_lay19", Description = "Extreme Precipitation POI Vulnerability" },
-                new { Key = "wmsurl_lay20", Description = "Extreme Precipitation POI Risk" },
-                new { Key = "wmsurl_lay21", Description = "Extreme Precipitation POI Risk" },
-                new { Key = "wmsurl_lay22", Description = "Extreme Precipitation Building Risk" },
-                new { Key = "wmsurl_lay23", Description = "Building Simulation Layer" },
-                new { Key = "wmsurl_lay24", Description = "POI Precipitation Simulation View" },
-                new { Key = "wmsurl_lay25", Description = "Heatwave real view" },
-                new { Key = "wmsurl_lay26", Description = "Heatwave roadway view" },
-                new { Key = "wmsurl_lay27", Description = "Heatwave roadway damage view" },
-                new { Key = "wmsurl_lay28", Description = "DPC bulletins hydraulic" },
-                new { Key = "wmsurl_lay29", Description = "DPC bulletins hydrogeological" },
-                new { Key = "wmsurl_lay30", Description = "DPC bulletins thunderstorms" }
+                "wmslayer_earth_real_view",
+                "wmslayer_poibui_damage_view",
+                "wmslayer_earth_building_vuln_view",
+                "wmslayer_fazzini_bui_damage_view",
+                "wmslayer_earth_substation_view",
+                "wmslayer_earth_water_tower_view",
+                "wmslayer_earth_water_well_view",
+                "wmslayer_earth_waste_water_view",
+                "wmslayer_failure_scenario_view",
+                "wmslayer_earth_waste_water_damage_view",
+                "wmslayer_shakemap",
+                "wmslayer_heatwave_tmp_2maboveground_view",
+                "wmslayer_flood_tprate_surface",
+                "wmslayer_riverflood_housenew_view",
+                "wmslayer_poi_prec",
+                "wmslayer_building",
+                "wmslayer_riverflood_housenew_view_alt",
+                "wmslayer_extprec_6_classes_view",
+                "wmslayer_extprec_3_classes_view",
+                "wmslayer_extprec_poi_vuln_view",
+                "wmslayer_extprec_poi_risk_view",
+                "wmslayer_extprec_building_vuln_view",
+                "wmslayer_extprec_building_risk_view",
+                "wmslayer_building_sim",
+                "wmslayer_poi_prec_sim_view",
+                "wmslayer_heatwave_real_view",
+                "wmslayer_roadway",
+                "wmslayer_railway",
+                "wmslayer_heatwave_roadway_vuln_view",
+                "wmslayer_heatwave_roadway_damage_view",
+                "wmslayer_heatwave_roadway_threshold_view",
+                "wmslayer_heatwave_railway_vuln_view",
+                "wmslayer_heatwave_railway_damage_view",
+                "wmslayer_dpc_bulletins_hydraulic_view",
+                "wmslayer_dpc_bulletins_hydrogeological_view",
+                "wmslayer_dpc_bulletins_thunderstorms_view",
+                "wmslayer_earth_building_damage_view",
+                "wmslayer_earth_shakemap_view",
+                "wmslayer_earth_poibui_damage_view",
+                "wmslayer_earth_poibui_vuln_view",
+                "wmslayer_earth_poibui_view",
+                "wmslayer_earth_water_tower_vuln_view",
+                "wmslayer_earth_water_tower_damage_view",
+                "wmslayer_earth_substation_vuln_view",
+                "wmslayer_earth_substation_damage_view",
+                "wmslayer_earth_waste_water_vuln_view",
+                "wmslayer_earth_waste_water_damage_view",
+                "wmslayer_earth_water_well_vuln_view",
+                "wmslayer_earth_water_well_damage_view",
             };
 
-            // Loop through WMS layers and store them in ViewData dynamically
-            foreach (var layer in wmsLayers)
+            var wmsLayerKeyList = new List<string>();
+
+            foreach (var layerKey in wmsLayerKeys)
             {
-                ViewData[layer.Key] = _configuration[$"wms:{layer.Key}"];
-                ViewData[layer.Key.Replace("url", "layer")] = _configuration[$"wms:{layer.Key.Replace("url", "layer")}"];
+                wmsLayerKeyList.Add(layerKey);
+                ViewData[layerKey] = _configuration[$"wms:{layerKey}"];
             }
+
+            ViewData["wmsLayerKeys"] = wmsLayerKeyList;
 
             // Additional commented-out configurations for Points of Interest (POI)
             /*
-            ViewData["wmsurl_map_poi"] = _configuration["wms:wmsurl_map_poi"];
-
             ViewData["wmslayer_map_poibui"] = _configuration["wms:wmslayer_map_poibui"];
             ViewData["wmslegend_map_poibui"] = _configuration["wms:wmslegend_map_poibui"];
 

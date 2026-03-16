@@ -1,7 +1,7 @@
 /*
 * Autore: Angelo Stefani [angelo.stefani@enea.it]
 * Data di creazione: 02/01/2024
-* Ultimo aggiornamento: 16/09/2024
+ * Ultimo aggiornamento: 29/01/2026
 * 
 * Libreria JavaScript per le applicazioni GIS di ENEA.
 * Framework utilizzati:
@@ -41,6 +41,28 @@ Ogni riga di layerMatrix è un array con struttura:
 - [3] wmsLayerName: nome del layer WMS.
 - [4] legendId: id dell’elemento HTML della legenda da mostrare/nascondere.
 - [5] env: stringa opzionale da passare come ENV` al WMS.
+- [6] styles: eventuale valore STYLES da inviare al WMS.
+- [7] applyRiskRunFilter: boolean opzionale; se true aggiunge CQL_FILTER con activeRiskRunID (default: true se non valorizzato).
+
+Esempio di riga in `layerMatrix` con disattivazione del filtro:
+```
+[true, true, 'https://geo.example/wms', 'layer_name', 'legendDivId', 'param1:value1', 'styleA', false]
+//                              indices:   0      1          2                3             4              5              6       7
+```
+
+Esempio di uso singolo layer in `initWMSMap` senza filtro:
+```
+initWMSMap({
+    targetHtmlMapId: 'map',
+    centerLongitude: 12.5,
+    centerLatitude: 41.9,
+    wmsUrl: 'https://geo.example/wms',
+    wmsLayer: 'layer_name',
+    env: 'param1:value1',
+    styles: 'styleA',
+    applyRiskRunFilter: false
+});
+```
 
 Un layer viene renderizzato se e solo se enabled && visible è vero.
 
@@ -77,7 +99,14 @@ function initWMSMap(config) {
     let layersArray = [baseMapLayer];
 
     // Aggiungi il layer WMS se fornito
-    let wmsLayerObj = addLayerToMap(layersArray, config.wmsUrl, config.wmsLayer, config.env);
+    let wmsLayerObj = addLayerToMap(
+        layersArray,
+        config.wmsUrl,
+        config.wmsLayer,
+        config.env,
+        config.styles,
+        config.applyRiskRunFilter
+    );
 
     // Crea la mappa OpenLayers
     let localMap = new ol.Map({
@@ -136,7 +165,8 @@ function initWMSMatrixMap(config) {
                 config.layerMatrix[i][2],
                 config.layerMatrix[i][3],
                 config.layerMatrix[i][5],
-                config.layerMatrix[i][6]
+                config.layerMatrix[i][6],
+                config.layerMatrix[i][7]
             );
         }
     }
@@ -173,10 +203,11 @@ function initWMSMatrixMap(config) {
  * @param {string} wmsLayer - Nome del layer WMS.
  * @param {string} wmsLegend - Nome della legenda.
  * @param {string} [env] - Parametro opzionale per specificare l'ambiente WMS.
+ * @param {boolean} [applyRiskRunFilter=true] - Se true aggiunge CQL_FILTER con activeRiskRunID.
  * 
  * @returns {ol.layer.Tile|null} L'oggetto del layer WMS, o null se non aggiunto.
  */
-function addLayerToMap(layersArray, wmsUrl, wmsLayer, env, styles) {
+function addLayerToMap(layersArray, wmsUrl, wmsLayer, env, styles, applyRiskRunFilter) {
     if (wmsUrl && wmsLayer) {
         // Configura i parametri WMS, aggiungendo 'env' se valorizzato
         let params = { 'LAYERS': wmsLayer, 'TILED': true };
@@ -190,9 +221,13 @@ function addLayerToMap(layersArray, wmsUrl, wmsLayer, env, styles) {
             params.ENV = env;
         }
 
-        // Aggiungi il parametro risk_run_id se definito globalmente
-        if (activeRiskRunID && activeRiskRunID.trim() !== '') {
-            params.risk_run_id = activeRiskRunID;
+        // Aggiungi filtro CQL id_run se definito globalmente e abilitato per il layer
+        const shouldApplyRiskRunFilter = (applyRiskRunFilter === undefined) ? true : !!applyRiskRunFilter;
+        if (shouldApplyRiskRunFilter && activeRiskRunID && activeRiskRunID.trim() !== '') {
+            const runFilter = `id_run=${activeRiskRunID}`;
+            params.CQL_FILTER = params.CQL_FILTER
+                ? `${params.CQL_FILTER} AND ${runFilter}`
+                : runFilter;
         }
 
         // Crea il layer WMS
@@ -216,8 +251,12 @@ function addLayerToMap(layersArray, wmsUrl, wmsLayer, env, styles) {
  * @param {number} layerIndex - L'indice del layer da modificare.
  * @param {Object} map - L'oggetto mappa di OpenLayers.
  */
-function toggleLayer(configWMSMatrixMap, layerIndex, map) {
-    configWMSMatrixMap.layerMatrix[layerIndex][1] = !configWMSMatrixMap.layerMatrix[layerIndex][1];
+function toggleLayer(configWMSMatrixMap, layerIndex, map, desiredState) {
+    if (typeof desiredState === 'boolean') {
+        configWMSMatrixMap.layerMatrix[layerIndex][1] = desiredState;
+    } else {
+        configWMSMatrixMap.layerMatrix[layerIndex][1] = !configWMSMatrixMap.layerMatrix[layerIndex][1];
+    }
     updateMapLayers(configWMSMatrixMap, map);
     if (typeof refreshLegendsIfOpen === 'function') {
         refreshLegendsIfOpen();
@@ -232,14 +271,19 @@ function toggleLayer(configWMSMatrixMap, layerIndex, map) {
  * @param {Object} map - L'oggetto mappa di OpenLayers.
  * @param {number} blockSize - L'ampiezza del blocco di layers.
  */
-function toggleLayerBlock(configWMSMatrixMap, layerBlockIndex, map, blockSize) {
+function toggleLayerBlock(configWMSMatrixMap, layerBlockIndex, map, blockSize, blockStartIndex, desiredState) {
+    const startOffset = Number.isInteger(blockStartIndex) ? blockStartIndex : 0;
+
     // Calcola gli indici di inizio e fine del blocco
-    const startIndex = layerBlockIndex * blockSize;
+    const startIndex = startOffset + (layerBlockIndex * blockSize);
     const endIndex = Math.min(startIndex + blockSize, configWMSMatrixMap.layerMatrix.length);
+    if (startIndex >= configWMSMatrixMap.layerMatrix.length) {
+        return;
+    }
 
     // Determina il nuovo stato del blocco di layers
     const currentBlockState = configWMSMatrixMap.layerMatrix[startIndex][0];
-    const newBlockState = !currentBlockState;
+    const newBlockState = typeof desiredState === 'boolean' ? desiredState : !currentBlockState;
 
     // Applica il nuovo stato a tutti i layers nel blocco
     for (let i = startIndex; i < endIndex; i++) {
@@ -287,11 +331,13 @@ function switchLayer(configWMSMatrixMap, layerIndex, map) {
  * @param {Object} map - L'oggetto mappa di OpenLayers.
  * @param {number} blockSize - L'ampiezza del blocco di layers.
  */
-function switchLayers(configWMSMatrixMap, layersIndex, map, blockSize) {
+function switchLayers(configWMSMatrixMap, layersIndex, map, blockSize, blockStartIndex) {
+    const startOffset = Number.isInteger(blockStartIndex) ? blockStartIndex : 0;
+
     // Itera su tutti i blocchi di layer
-    for (let blockIndex = 0; blockIndex * blockSize < configWMSMatrixMap.layerMatrix.length; blockIndex++) {
+    for (let blockIndex = 0; startOffset + (blockIndex * blockSize) < configWMSMatrixMap.layerMatrix.length; blockIndex++) {
         // Calcola gli indici di inizio e fine del blocco
-        const startIndex = blockIndex * blockSize;
+        const startIndex = startOffset + (blockIndex * blockSize);
         const endIndex = Math.min(startIndex + blockSize, configWMSMatrixMap.layerMatrix.length);
 
         // Attiva solo il layer specificato nel blocco e disattiva tutti gli altri
@@ -321,14 +367,29 @@ function switchLayers(configWMSMatrixMap, layersIndex, map, blockSize) {
  * @param {Object} map - L'oggetto mappa di OpenLayers.
  */
 function updateMapLayers(configWMSMatrixMap, map) {
-    // Rimuovi tutti i layer esistenti dalla mappa
-    map.getLayers().clear();
+    // Mantieni la basemap esistente e rimuovi solo i layer WMS
+    const layers = map.getLayers();
+    const layersToRemove = [];
+    let hasBaseLayer = false;
 
-    // Aggiungi i layer di base
-    let baseLayer = new ol.layer.Tile({
-        source: new ol.source.OSM()
+    layers.forEach(function (layer) {
+        if (layer && typeof layer.get === 'function' && layer.get('name') === 'baseMap') {
+            hasBaseLayer = true;
+        } else {
+            layersToRemove.push(layer);
+        }
     });
-    map.addLayer(baseLayer);
+
+    layersToRemove.forEach(function (layer) {
+        layers.remove(layer);
+    });
+
+    // Fallback difensivo: se manca la basemap, la ripristina
+    if (!hasBaseLayer) {
+        let baseLayer = getBaseMapLayer(configWMSMatrixMap.baseMapName || 'default');
+        baseLayer.set('name', 'baseMap');
+        map.addLayer(baseLayer);
+    }
 
     // Cicla attraverso la layerMatrix e aggiungi i layer visibili
     configWMSMatrixMap.layerMatrix.forEach(function (layerConfig, index) {
@@ -338,8 +399,10 @@ function updateMapLayers(configWMSMatrixMap, map) {
         let wmsUrl = layerConfig[2]; // URL del servizio WMS (GeoServer).
         let wmsLayerName = layerConfig[3]; // Nome del layer WMS
         let legendId = layerConfig[4]; // ID della legenda corrispondente
-        let env = layerConfig[5]; // Parametro env che verrà aggiunto alla richiesta verso geoserver
+        let env = layerConfig[5]; // Parametro env che verrà aggiunto alla richiesta verso geoserver
+
         let styles = layerConfig[6]; // Parametro STYLES WMS
+        let applyRiskRunFilter = layerConfig[7]; // Flag booleano: se true applica CQL_FILTER per activeRiskRunID
 
         // Configura i parametri WMS, aggiungendo 'env' se valorizzato
         let params = { 'LAYERS': wmsLayerName, 'TILED': true };
@@ -351,9 +414,13 @@ function updateMapLayers(configWMSMatrixMap, map) {
             params.ENV = env;
         }
 
-        // Aggiungi il parametro risk_run_id se definito globalmente
-        if (activeRiskRunID && activeRiskRunID.trim() !== '') {
-            params.risk_run_id = activeRiskRunID;
+        // Aggiungi filtro CQL id_run se definito globalmente e abilitato per il layer
+        const shouldApplyRiskRunFilter = (applyRiskRunFilter === undefined) ? true : !!applyRiskRunFilter;
+        if (shouldApplyRiskRunFilter && activeRiskRunID && activeRiskRunID.trim() !== '') {
+            const runFilter = `id_run=${activeRiskRunID}`;
+            params.CQL_FILTER = params.CQL_FILTER
+                ? `${params.CQL_FILTER} AND ${runFilter}`
+                : runFilter;
         }
 
         // Aggiungi il layer WMS se è visibile

@@ -90,6 +90,15 @@ builder.Services.AddHttpClient<ExtremeprecipitationServiceClient>(client =>
 })
     .AddHttpMessageHandler<RetryHandler>();
 
+builder.Services.AddHttpClient<GraphServiceClient>(client =>
+{
+    var baseUrl = builder.Configuration["GraphService:BaseUrl"];
+    if (!string.IsNullOrEmpty(baseUrl))
+        client.BaseAddress = new Uri(baseUrl);
+    client.Timeout = TimeSpan.FromSeconds(30);
+})
+    .AddHttpMessageHandler<RetryHandler>();
+
 // Default named client for internal calls
 builder.Services.AddHttpClient("Default", client =>
 {
@@ -134,8 +143,13 @@ else
     app.UseHsts();
 }
 
-// Redirect HTTP requests to HTTPS
-app.UseHttpsRedirection();
+// Redirect HTTP requests to HTTPS outside local development.
+// In dev this app is often launched on HTTP only, which would otherwise log:
+// "Failed to determine the https port for redirect."
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 // Serve static files (e.g., HTML, CSS, JavaScript)
 app.UseStaticFiles();
 

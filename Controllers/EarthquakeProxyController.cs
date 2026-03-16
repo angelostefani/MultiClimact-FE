@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Net.Http;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.WebUtilities;
 using MultiClimact.Services;
@@ -191,38 +192,43 @@ namespace MultiClimact.Controllers
             [FromQuery] string user_id,
             [FromQuery] string start_date,
             [FromQuery] string end_date,
-            [FromQuery] string min_magnitude,
-            [FromQuery] string max_magnitude,
-            [FromQuery] bool simulated)
+            [FromQuery] bool simulated,
+            [FromQuery] int? id_run,
+            [FromQuery] int? status_id)
         {
             var query = new Dictionary<string, string?>
             {
-                ["simulated"] = simulated.ToString().ToLower(),
-                ["status"] = "completed",
-                ["min_magnitude"] = min_magnitude,
-                ["event_date_min"] = start_date,
-                ["event_date_max"] = end_date,
-                ["run_end_max"] = "2026-12-31"
+                ["start_date"] = start_date,
+                ["end_date"] = end_date,
+                ["haztype_id"] = "1",
+                ["simulated"] = simulated.ToString().ToLower()
             };
+            if (id_run.HasValue) query["id_run"] = id_run.Value.ToString();
+            if (status_id.HasValue) query["status_id"] = status_id.Value.ToString();
 
-            string earthquakeServiceUrl = QueryHelpers.AddQueryString("users/system/earthquakes", query);
+            string serviceUrl = QueryHelpers.AddQueryString("users/system/runs", query);
 
-            _logger.LogInformation("Requesting Earthquake Service URL: {earthquakeServiceUrl}", earthquakeServiceUrl);
+            _logger.LogInformation("Requesting Earthquake Service URL: {serviceUrl}", serviceUrl);
 
             try
             {
-                var response = await _httpClient.GetAsync(earthquakeServiceUrl);
+                var response = await _httpClient.GetAsync(serviceUrl);
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
-                    var jsonResponse = JsonConvert.DeserializeObject<EarthquakeResponse>(content);
-                    return Ok(jsonResponse);
+                    _logger.LogInformation("Earthquake service response: {responseContent}", content);
+                    // Ritorna il payload del servizio così com'è per preservare i nomi dei campi
+                    return Content(content, "application/json");
                 }
-                else
+
+                if (response.StatusCode == HttpStatusCode.NotFound)
                 {
-                    _logger.LogError("Errore Earthquake Service: {statusCode}", response.StatusCode);
-                    return StatusCode((int)response.StatusCode, "Errore nella richiesta al servizio terremoti");
+                    _logger.LogWarning("Earthquake service returned 404 (no runs found) for requested filters.");
+                    return Content("{\"success\":true,\"data\":[]}", "application/json");
                 }
+
+                _logger.LogError("Errore Earthquake Service: {statusCode}", response.StatusCode);
+                return StatusCode((int)response.StatusCode, "Errore nella richiesta al servizio terremoti");
             }
             catch (HttpRequestException e)
             {

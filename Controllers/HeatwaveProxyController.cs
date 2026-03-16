@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.WebUtilities;
@@ -29,28 +30,39 @@ namespace MultiClimact.Controllers
             [FromQuery] string user_id,
             [FromQuery] string start_date,
             [FromQuery] string end_date,
-            [FromQuery] string? min_temperature,
-            [FromQuery] string? max_temperature,
-            [FromQuery] bool simulated)
+            [FromQuery] bool simulated,
+            [FromQuery] int? id_run,
+            [FromQuery] int? status_id)
         {
             var query = new Dictionary<string, string?>
             {
-                ["status_str"] = "completed",
-                ["haztype_id"] = "2"
+                ["start_date"] = start_date,
+                ["end_date"] = end_date,
+                ["haztype_id"] = "2",
+                ["simulated"] = simulated.ToString().ToLower()
             };
+            if (id_run.HasValue) query["id_run"] = id_run.Value.ToString();
+            if (status_id.HasValue) query["status_id"] = status_id.Value.ToString();
 
-            string heatwaveServiceUrl = QueryHelpers.AddQueryString("users/system/heatwaves", query);
+            string serviceUrl = QueryHelpers.AddQueryString("users/system/runs", query);
 
-            _logger.LogInformation("Requesting Heatwave Service URL: {heatwaveServiceUrl}", heatwaveServiceUrl);
+            _logger.LogInformation("Requesting Extremeprecipitation Service URL: {serviceUrl}", serviceUrl);
 
             try
             {
-                var response = await _httpClient.GetAsync(heatwaveServiceUrl);
+                var response = await _httpClient.GetAsync(serviceUrl);
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
-                    var jsonResponse = JsonConvert.DeserializeObject<HeatwaveResponse>(content);
-                    return Ok(jsonResponse);
+                    _logger.LogInformation("Heatwave service response: {responseContent}", content);
+                    // Ritorna il payload del servizio così com'è per preservare i nomi dei campi
+                    return Content(content, "application/json");
+                }
+
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    _logger.LogWarning("Heatwave service returned 404 (no runs found) for requested filters.");
+                    return Content("{\"success\":true,\"data\":[]}", "application/json");
                 }
 
                 _logger.LogError("Errore Heatwave Service: {statusCode}", response.StatusCode);
@@ -68,7 +80,7 @@ namespace MultiClimact.Controllers
         {
             var query = new Dictionary<string, string?>
             {
-                ["status_str"] = "submitted",
+                ["status_str"] = "completed",
                 ["haztype_id"] = "2"
             };
 
@@ -82,8 +94,8 @@ namespace MultiClimact.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
-                    var jsonResponse = JsonConvert.DeserializeObject<LastHeatwaveResponse>(content);
-                    return Ok(jsonResponse);
+                    _logger.LogInformation("Last heatwave service response: {responseContent}", content);
+                    return Content(content, "application/json");
                 }
                 else
                 {

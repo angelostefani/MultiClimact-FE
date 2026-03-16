@@ -40,6 +40,16 @@
                 };
 }
 
+<style>
+    .nav-link-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 38px;
+        font-size: 1.05rem;
+    }
+</style>
+
 <nav class="navbar navbar-expand-sm navbar-dark" style=" background-color: #185ba1; padding-top: 2px; padding-bottom: 2px; padding-left: 2px; padding-right: 2px;">
     <div class="container-fluid" style="padding-left: 2px; padding-right: 2px;">
         <ul class="navbar-nav">
@@ -72,7 +82,7 @@
                     <li><a class="dropdown-item" href="#" onclick="selectTab('tabD1-tab'); updateBreadcrumb('Scenario simulation', 'Earthquake simulations')">Earthquake simulations</a></li>
                     <li><a class="dropdown-item" href="#" onclick="selectTab('tabD5-tab'); updateBreadcrumb('Scenario simulation', 'Extreme Precipitation')">Extreme Precipitation</a></li>
                     <li><a class="dropdown-item" href="#" onclick="selectTab('tabD9-tab'); updateBreadcrumb('Scenario simulation', 'Heat wave Scenarios')">Heat wave Scenarios</a></li>
-                    <li><a class="dropdown-item" href="#" onclick="selectTab('tabD12-tab'); updateBreadcrumb('Scenario simulation', 'Impact Scenarios')">Impact Scenarios</a></li>
+                    <li><a class="dropdown-item" href="#" onclick="selectTab('tabD13-tab'); updateBreadcrumb('Scenario simulation', 'Resilience Assessment')">Resilience Assessment</a></li>
                 </ul>
             </li>
             <li class="nav-item dropdown">
@@ -94,14 +104,20 @@
                 </ul>
             </li>
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" style="font-weight: bold;">Help</a>
+                <a class="nav-link dropdown-toggle nav-link-icon" href="#" role="button" data-bs-toggle="dropdown" title="Help" aria-label="Help">
+                    <i class="bi bi-question-circle-fill"></i>
+                    <span class="visually-hidden">Help</span>
+                </a>
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="#" onclick="selectTab('tabF1-tab'); updateBreadcrumb('User guide', 'User guide')">User guide</a></li>
                     <li><a class="dropdown-item" href="#" onclick="selectTab('tabF1-tab'); updateBreadcrumb('FAQs', 'FAQs')">FAQs</a></li>
                 </ul>
             </li>
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" style="font-weight: bold;">User management</a>
+                <a class="nav-link dropdown-toggle nav-link-icon" href="#" role="button" data-bs-toggle="dropdown" title="User management" aria-label="User management">
+                    <i class="bi bi-people-fill"></i>
+                    <span class="visually-hidden">User management</span>
+                </a>
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="#" onclick="selectTab('tabG1-tab'); updateBreadcrumb('Login', 'Login')">Login</a></li>
                     <li><a class="dropdown-item" href="#" onclick="selectTab('tabG2-tab'); updateBreadcrumb('Access control', 'Access control')">Access control</a></li>

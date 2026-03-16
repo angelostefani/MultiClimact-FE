@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.WebUtilities;
@@ -28,17 +29,21 @@ namespace MultiClimact.Controllers
             [FromQuery] string user_id,
             [FromQuery] string start_date,
             [FromQuery] string end_date,
-            [FromQuery] string min_precipitation,
-            [FromQuery] string max_precipitation,
-            [FromQuery] bool simulated)
+            [FromQuery] bool simulated,
+            [FromQuery] int? id_run,
+            [FromQuery] int? status_id)
         {
             var query = new Dictionary<string, string?>
             {
-                ["status_str"] = "completed",
-                ["haztype_id"] = "4"
+                ["start_date"] = start_date,
+                ["end_date"] = end_date,
+                ["haztype_id"] = "4",
+                ["simulated"] = simulated.ToString().ToLower()
             };
+            if (id_run.HasValue) query["id_run"] = id_run.Value.ToString();
+            if (status_id.HasValue) query["status_id"] = status_id.Value.ToString();
 
-            string serviceUrl = QueryHelpers.AddQueryString("users/system/extremeprecipitations", query);
+            string serviceUrl = QueryHelpers.AddQueryString("users/system/runs", query);
 
             _logger.LogInformation("Requesting Extremeprecipitation Service URL: {serviceUrl}", serviceUrl);
 
@@ -48,8 +53,15 @@ namespace MultiClimact.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
-                    var jsonResponse = JsonConvert.DeserializeObject<ExtremeprecipitationResponse>(content);
-                    return Ok(jsonResponse);
+                    _logger.LogInformation("Extremeprecipitation service response: {responseContent}", content);
+                    // Ritorna il payload del servizio così com'è per preservare i nomi dei campi
+                    return Content(content, "application/json");
+                }
+
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    _logger.LogWarning("Extremeprecipitation service returned 404 (no runs found) for requested filters.");
+                    return Content("{\"success\":true,\"data\":[]}", "application/json");
                 }
 
                 _logger.LogError("Errore Extremeprecipitation Service: {statusCode}", response.StatusCode);
@@ -67,7 +79,7 @@ namespace MultiClimact.Controllers
         {
             var query = new Dictionary<string, string?>
             {
-                ["status_str"] = "submitted",
+                ["status_str"] = "completed",
                 ["haztype_id"] = "4"
             };
 
@@ -81,8 +93,8 @@ namespace MultiClimact.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
-                    var jsonResponse = JsonConvert.DeserializeObject<LastExtremeprecipitationResponse>(content);
-                    return Ok(jsonResponse);
+                    _logger.LogInformation("Last extremeprecipitation service response: {responseContent}", content);
+                    return Content(content, "application/json");
                 }
 
                 _logger.LogError("Errore LastExtremeprecipitation Service: {statusCode}", response.StatusCode);

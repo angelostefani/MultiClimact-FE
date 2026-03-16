@@ -1,0 +1,135 @@
+/* =========================
+   D13 - Resilience Assessment layout
+   Palette and borders aligned with extreme.css
+   ========================= */
+
+/* Layout: large graph area left, compact control panel right */
+#panelD13 #panelD13-layout {
+  display: flex !important;
+  gap: 0 !important;
+  align-items: stretch !important;
+}
+
+#panelD13 #mapD13 {
+  width: 62% !important;
+  flex: 0 0 62% !important;
+  max-width: 62% !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-left: 1px solid #cfcfcf;
+  border-right: 1px solid #cfcfcf;
+}
+
+#panelD13 .ra-left-sidebar,
+#panelD13 .ra-right-sidebar {
+  width: 19% !important;
+  flex: 0 0 19% !important;
+  max-width: 19% !important;
+  display: flex !important;
+  align-items: stretch !important;
+  position: sticky;
+  top: var(--mc-header-h);
+  align-self: flex-start;
+  background: #fff;
+}
+
+#panelD13 .layer-controls-card--sidebar {
+  padding: 14px;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: 100% !important;
+  overflow-y: auto !important;
+}
+
+/* Hide scrollbar for 1.a panel while keeping scroll */
+#panelD13 .ra-left-sidebar .layer-controls-card--sidebar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+#panelD13 .ra-left-sidebar .layer-controls-card--sidebar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Graph placeholder */
+#panelD13 .ra-graph-placeholder {
+  width: min(90%, 980px);
+  height: min(75%, 620px);
+  border: 2px dashed #9bb3d1;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #f7faff 0%, #ffffff 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #1a355b;
+  text-align: center;
+}
+
+#panelD13 .ra-graph-title {
+  font-weight: 700;
+  font-size: 18px;
+}
+
+#panelD13 .ra-graph-subtitle {
+  font-size: 13px;
+  color: #41536d;
+}
+
+#panelD13 .ra-col-right {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+#panelD13 .ra-box--right {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Uniform card styling */
+#panelD13 .layer-box {
+  background: #f6f9ff;
+  border: 1px solid #d6d6d6;
+  border-radius: 12px;
+  padding: 12px;
+  height: 100%;
+}
+
+#panelD13 .layer-box__title {
+  font-weight: 700;
+  font-size: 15px;
+  margin-bottom: 8px;
+}
+
+/* Make the action area breathe */
+#panelD13 .ra-action {
+  width: 100%;
+}
+
+/* Responsive: stack on narrow screens */
+@media (max-width: 1400px) {
+  #panelD13 #panelD13-layout {
+    flex-direction: column !important;
+  }
+
+  #panelD13 #mapD13,
+  #panelD13 .ra-left-sidebar,
+  #panelD13 .ra-right-sidebar {
+    width: 100% !important;
+    flex: 0 0 auto !important;
+    max-width: 100% !important;
+  }
+
+  #panelD13 .ra-left-sidebar,
+  #panelD13 .ra-right-sidebar {
+    position: static;
+    margin-top: 10px;
+  }
+
+  #panelD13 .ra-graph-placeholder {
+    height: 45vh;
+  }
+}

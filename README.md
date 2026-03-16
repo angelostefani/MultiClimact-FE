@@ -1,43 +1,112 @@
-# MultiClimact Front-End
+# MultiClimact FE
 
-ASP.NET Core web interface for the **MULTICLIMACT** project.
+<p align="center">
+  <img src="docs/assets/readme-banner.svg" alt="MultiClimact FE banner" width="100%">
+</p>
 
-## Prerequisites
+<p align="center">
+  Front-end ASP.NET Core per l'esplorazione geospaziale dei rischi climatici, la consultazione di layer WMS e l'avvio di simulazioni per scenari estremi.
+</p>
 
-- [.NET SDK 8.0](https://dotnet.microsoft.com/download) or later
-- Access to a PostgreSQL database instance (optional if using SQLite locally)
+<p align="center">
+  <a href="#overview">Overview</a> •
+  <a href="#stack">Stack</a> •
+  <a href="#quick-start">Quick start</a> •
+  <a href="#configuration">Configuration</a> •
+  <a href="#docker">Docker</a> •
+  <a href="#wms-notes">WMS notes</a>
+</p>
 
-## Building and running
+<p align="center">
+  <img src="https://img.shields.io/badge/.NET-8.0-512BD4?logo=dotnet&logoColor=white" alt=".NET 8">
+  <img src="https://img.shields.io/badge/ASP.NET%20Core-Razor%20Pages-5C2D91?logo=dotnet&logoColor=white" alt="ASP.NET Core Razor Pages">
+  <img src="https://img.shields.io/badge/OpenLayers-Web%20GIS-1F6FEB" alt="OpenLayers">
+  <img src="https://img.shields.io/badge/PostgreSQL-supported-336791?logo=postgresql&logoColor=white" alt="PostgreSQL supported">
+  <img src="https://img.shields.io/badge/SQLite-local%20dev-0F80CC?logo=sqlite&logoColor=white" alt="SQLite local dev">
+</p>
 
-1. Restore and build the solution:
+## Overview
 
-   ```bash
-   dotnet build
-   ```
+MultiClimact FE e' l'interfaccia web del progetto MULTICLIMACT. L'applicazione combina Razor Pages, controller proxy e mappe OpenLayers per:
 
-2. Apply database migrations if required:
+- visualizzare layer WMS e dati territoriali su piu' mappe tematiche;
+- consultare run recenti per terremoti, ondate di calore e precipitazioni estreme;
+- lanciare simulazioni e analizzare risultati lato UI;
+- integrare servizi remoti tramite client HTTP tipizzati e proxy API.
 
-   ```bash
-   dotnet ef database update
-   ```
+## Stack
 
-3. Run the development server:
+| Area | Dettagli |
+| --- | --- |
+| Backend web | ASP.NET Core 8, Razor Pages, MVC Controllers |
+| Data access | EF Core 8, PostgreSQL in produzione, SQLite per sviluppo locale |
+| Geospatial UI | OpenLayers, WMS proxy, layer toggling lato client |
+| External services | Earthquake, Heatwave, Extreme Precipitation, Graph services |
+| API docs | Swagger / OpenAPI |
 
-   ```bash
-   dotnet run
-   ```
+## Project Layout
 
-The application will start on `https://localhost:5001` by default.
+| Path | Scopo |
+| --- | --- |
+| `Pages/` | Razor Pages, partials e pannelli UI della dashboard |
+| `Controllers/` | Proxy e API per WMS, terremoti, heatwave e servizi esterni |
+| `Services/` | Typed `HttpClient` e helper applicativi |
+| `Data/` | `ApplicationDbContext` e bootstrap database |
+| `Models/` | View model e DTO |
+| `Resources/` | Risorse per localizzazione |
+| `wwwroot/` | Asset statici, JavaScript, CSS e immagini |
+| `docs/assets/` | Asset locali usati nella documentazione |
+
+## Quick Start
+
+### Prerequisites
+
+- `.NET SDK 8.0`
+- un database PostgreSQL raggiungibile, oppure SQLite per sviluppo locale
+- endpoint configurati per i servizi esterni usati dall'app
+
+### Run locally
+
+```bash
+dotnet build
+dotnet ef database update
+dotnet watch run
+```
+
+Per sviluppo locale con SQLite, imposta `DatabaseProvider=Sqlite` e una `ConnectionStrings:SqliteConnection` valida. In questo scenario il progetto puo' creare automaticamente lo schema locale senza usare le migration PostgreSQL.
+
+L'app parte tipicamente su `https://localhost:5001` o sulla porta assegnata da ASP.NET Core in ambiente locale.
+
+## Configuration
+
+Le impostazioni principali stanno in `appsettings.json`, con override in `appsettings.Development.json`, variabili d'ambiente o `dotnet user-secrets`.
+
+| Key | Descrizione |
+| --- | --- |
+| `DatabaseProvider` | `Sqlite` per sviluppo locale oppure `PostgreSQL` |
+| `ConnectionStrings:DefaultConnection` | connection string PostgreSQL |
+| `ConnectionStrings:SqliteConnection` | connection string SQLite |
+| `EarthquakeService:BaseUrl` | base URL del servizio terremoti |
+| `HeatwaveService:BaseUrl` | base URL del servizio heatwave |
+| `ExtremeprecipitationService:BaseUrl` | base URL del servizio precipitazioni estreme |
+| `GraphService:BaseUrl` | base URL del servizio grafi |
+| `wms:*` | URL e layer name per i servizi WMS |
+
+Per evitare commit di segreti:
+
+```bash
+dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Host=...;Database=...;Username=...;Password=..."
+```
 
 ## Docker
 
-Build the container image:
+### Build image
 
 ```bash
 docker build -t multiclimact-fe .
 ```
 
-Run the container:
+### Run container
 
 ```bash
 docker run --rm -it -p 8080:8080 --name multiclimact-fe \
@@ -47,83 +116,45 @@ docker run --rm -it -p 8080:8080 --name multiclimact-fe \
   multiclimact-fe
 ```
 
-The app listens on `http://localhost:8080` by default. Provide configuration through environment variables; set `DatabaseProvider=Sqlite` and mount a volume to `/app` if you prefer persisted SQLite data. Adjust `ASPNETCORE_ENVIRONMENT` as needed or mount custom `appsettings` files.
+L'app ascolta su `http://localhost:8080`. Se preferisci SQLite persistente, monta un volume su `/app` o `/data` in base alla configurazione del container.
 
 ### Docker Compose
 
 ```bash
-# build the image and start the container
 docker compose up --build
-
-# stop and remove the container
 docker compose down
 ```
 
-The Compose file mounts a named volume at `/data` so the `multiclimact.db` file survives container restarts. Adjust the environment variables in `docker-compose.yml` if you need different connection strings or ASP.NET Core settings.
+## WMS Notes
 
-## Configuration
+La homepage costruisce le configurazioni mappa leggendo il blocco `wms` da `appsettings.json`, esponendo poi URL e nomi layer alla UI tramite `ViewData`. I file chiave per questa parte sono:
 
-Application settings are defined in `appsettings.json`. Important options are:
+- `Pages/Index.cshtml.cs` per il mapping configurazione -> view
+- `wwwroot/js/maps-init.js` per l'inizializzazione delle mappe
+- `wwwroot/js/openlayer-wms-helper.js` per gestione layer e matrice WMS
+- `Controllers/WmsProxyController.cs` per il proxy `GetFeatureInfo` e le chiamate verso il server WMS
 
-- `DatabaseProvider` – set to `Sqlite` (default for dev) or `PostgreSQL`.
-- `ConnectionStrings:DefaultConnection` – PostgreSQL connection string (used when `DatabaseProvider=PostgreSQL`).
-- `ConnectionStrings:SqliteConnection` – SQLite connection string (used when `DatabaseProvider=Sqlite`).
-- `earthquakeSimulationServiceUrl` – endpoint for submitting earthquake simulations.
-- `earthquakeTodayBaseAddress` and `earthquakeTodayAPIUrl` – base address and path for obtaining earthquake data.
-- `EarthquakeService:BaseUrl` – base URL for the earthquake REST service.
-- `HeatwaveService:BaseUrl` – base URL for the heatwave REST service.
-- `wms` – URLs and layer names for WMS geospatial services.
+Nota pratica: usa URL WMS base senza query string gia' appendata. I parametri `service`, `request` e simili vengono composti dall'applicazione.
 
-Environment specific files such as `appsettings.Development.json` can override these settings.
+## Adding a New WMS Layer
+
+1. Aggiungi in `appsettings.json` le nuove chiavi `wmsurl_<nome>` e `wmslayer_<nome>`.
+2. Estendi il mapping in `Pages/Index.cshtml.cs`.
+3. Aggiorna `wwwroot/js/maps-init.js` o la relativa `layerMatrix`.
+4. Collega i controlli UI in `Pages/Shared/_TabPanels_C.cshtml` o nel pannello interessato.
+5. Se il layer richiede un server diverso, aggiorna anche `Controllers/WmsProxyController.cs`.
 
 ## Connectivity Checklist
 
-- Database: verify the connection string points to a reachable PostgreSQL instance. Quick check: `dotnet ef database update` should succeed.
-- Earthquake/Heatwave services: confirm the base URLs respond. Example: `curl -I http://<earthquake-base>/users/system/last_id_run` should return `200`.
-- WMS endpoint: use the bare service endpoint (no query). Example check: `curl -I "http://<geoserver>/geoserver/multic/wms?service=WMS&request=GetCapabilities"`.
-- App start: run `dotnet run` and open the homepage; check map layers toggle and GetFeatureInfo.
+- `dotnet build` deve completarsi senza errori
+- `dotnet ef database update` deve raggiungere il database corretto
+- i servizi Earthquake / Heatwave / Extreme Precipitation devono rispondere sulla base URL configurata
+- il WMS deve restituire correttamente `GetCapabilities`
+- avviando `dotnet run` la homepage deve caricare mappa, layer toggle e richieste `GetFeatureInfo`
 
-Note: In `appsettings.json`, prefer `wms:wmsurl_lay00` without query parameters (e.g., `http://<geoserver>/geoserver/multic/wms`). The app appends required `service`, `request`, etc.
+## Development Notes
 
-## Environment Overrides
-
-- For local tweaks without committing secrets, create a local override from the example:
-
-  - Copy `appsettings.Local.json.example` to `appsettings.Development.json` (or use environment variables/user-secrets).
-  - Set `DatabaseProvider`, `ConnectionStrings:DefaultConnection` or `ConnectionStrings:SqliteConnection`, `EarthquakeService:BaseUrl`, `HeatwaveService:BaseUrl`, and `wms:wmsurl_lay00`.
-
-## Database Providers
-
-- Development (default): `DatabaseProvider=Sqlite` uses a local `multiclimact.db` file and auto-creates schema with `EnsureCreated()`.
-- Production (example): set `DatabaseProvider=PostgreSQL` and provide `ConnectionStrings:DefaultConnection`; apply EF Core migrations targeting PostgreSQL.
-
-Note: Existing migrations in `Migrations/` are tailored for PostgreSQL. For SQLite local development we avoid migrations and rely on `EnsureCreated()`. If you need migrations for SQLite as well, consider a separate migrations assembly per provider.
-
-## Panoramica dell'applicazione e gestione delle mappe WMS
-
-L'interfaccia web è sviluppata in ASP.NET Core con pagine Razor. All'avvio vengono configurati i servizi per localizzazione, database PostgreSQL, autenticazione e client HTTP tipizzati per i servizi di terremoti e ondate di calore.
-
-La pagina principale (`Index.cshtml`) ospita la mappa e inserisce dinamicamente, in elementi HTML nascosti, gli URL e i layer WMS recuperati dal file di configurazione. Il modello della pagina (`Index.cshtml.cs`) legge i valori dal blocco `wms` di `appsettings.json` e li espone in `ViewData` per l'uso lato client.
-
-Il file `maps-init.js` crea gli oggetti di configurazione per ciascuna mappa specificando base map, centro, zoom e matrice dei layer WMS; le funzioni di inizializzazione e gestione dei layer sono definite in `openlayer-wms-helper.js`, mentre `openlayer-helper.js` gestisce le richieste `GetFeatureInfo` tramite il controller `WmsProxyController`.
-
-Il pannello `_TabPanels_C.cshtml` contiene i controlli (checkbox e radio) che richiamano le funzioni JavaScript per attivare o disattivare i layer e selezionare le simulazioni.
-
-### Aggiungere una nuova mappa o layer WMS
-
-1. **Configurazione**  
-   - Aggiungere in `appsettings.json` i nuovi campi `wmsurl_layXX` e `wmslayer_layXX`.  
-   - Inserire la nuova coppia nell'array `wmsLayers` di `ConfigurationToViewDataMapping`.
-
-2. **View e inizializzazione JS**  
-   - Se l'indice supera `12`, aumentare il limite del ciclo `for` in `Index.cshtml` che genera gli elementi `<span>`.  
-   - In `maps-init.js`, aggiungere il nuovo layer alla `layerMatrix` o creare un nuovo oggetto di configurazione e chiamare `initWMSMatrixMap`.  
-   - Aggiornare `_TabPanels_C.cshtml` per fornire i controlli UI relativi.
-
-3. **Gestione del proxy (opzionale)**  
-   - Se il layer usa un server WMS differente, estendere `WmsProxyController` per accettare l'URL come parametro o configurare il nuovo server come base.
-
-4. **Interazione utente**  
-   - Le funzioni `toggleLayer`, `switchLayer` e `switchLayers` usano i dati della `layerMatrix` per gestire la visibilità; assicurarsi che i controlli UI richiamino le funzioni con gli indici corretti.
-
-
+- Mantieni la logica UI dentro `*.cshtml.cs` e i controller piu' sottili possibile.
+- Tratta come obbligatorie le warning di nullability.
+- Prima di pubblicare modifiche, esegui `dotnet format` quando possibile.
+- Se aggiungi test, usa xUnit in `MultiClimact.Tests/`.

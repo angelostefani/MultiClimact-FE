@@ -3,17 +3,21 @@
 /* Common styles for tabs */
 .tab {
     position: fixed;
-    background-color: #cfc3c3;
+    background-color: #4f5d75;
     color: white;
-    font-size: 12px;
+    font-size: 14px;
+    font-weight: 600;
     cursor: pointer;
     z-index: 1001;
     text-align: center;
-    transition: background-color 0.3s;
+    border: 1px solid #ffffff;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.3s, transform 0.2s;
 }
 
     .tab:hover {
-        background-color: #575757;
+        background-color: #2f3b52;
     }
 
 /* Specific tab placements */
@@ -30,12 +34,7 @@
     transform: translateY(-50%);
 }
 
-.tab-bottom {
-    left: 50%;
-    bottom: 30px;
-    transform: translateX(-50%);
-    padding: 2px 20px;
-}
+
 
 /* Allow many tabs to scroll horizontally on narrower desktop windows */
 .nav-tabs {
@@ -45,6 +44,48 @@
 }
 .nav-tabs .nav-link {
     white-space: nowrap;
+}
+
+/* Main navigation tabs: improve hierarchy and active-state visibility */
+#myTab.nav-tabs {
+    border-bottom: 1px solid #c9d3e0;
+    gap: 8px;
+    padding-bottom: 2px;
+}
+
+#myTab .nav-item {
+    margin-bottom: 0;
+}
+
+#myTab .nav-link {
+    border: 0;
+    border-radius: 10px 10px 0 0;
+    padding: 10px 16px;
+    color: #2f3f56;
+    font-weight: 600;
+    background-color: transparent;
+    border-bottom: 4px solid transparent;
+    transition: background-color 0.2s ease, color 0.2s ease, border-bottom-color 0.2s ease;
+}
+
+#myTab .nav-link:hover {
+    background-color: #eaf1ff;
+    color: #17335f;
+}
+
+#myTab .nav-link.active,
+#myTab .nav-item.show .nav-link {
+    color: #0f2e5a;
+    background-color: #e4edff;
+    border-bottom-color: #2f6fec;
+}
+
+/* Ensure only the active tab panel is visible */
+#myTabContent > .tab-pane {
+    display: none !important;
+}
+#myTabContent > .tab-pane.show.active {
+    display: block !important;
 }
 
 
