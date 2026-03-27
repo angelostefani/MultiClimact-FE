@@ -148,7 +148,7 @@
   };
 
   const buildGraphUrl = (userId) =>
-    `http://192.168.154.23:8000/users/${encodeURIComponent(userId)}/graph/default_graph`;
+    `/api/GraphProxy/GetDefaultScenario?user_id=${encodeURIComponent(userId)}`;
 
   const fetchGraphPayload = async () => {
     try {

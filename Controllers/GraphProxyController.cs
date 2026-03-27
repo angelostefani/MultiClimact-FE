@@ -55,7 +55,7 @@ namespace MultiClimact.Controllers
                 query["id_conf"] = id_conf.Value.ToString();
             }
 
-            var servicePath = $"users/{idUser}/graphs";
+            var servicePath = $"users/{idUser}/scenarios";
             var serviceUrl = query.Count > 0
                 ? QueryHelpers.AddQueryString(servicePath, query)
                 : servicePath;
@@ -93,7 +93,7 @@ namespace MultiClimact.Controllers
             [FromQuery] string? user_id)
         {
             var idUser = string.IsNullOrWhiteSpace(user_id) ? "system" : user_id;
-            var servicePath = $"users/{idUser}/graph/default_graph";
+            var servicePath = $"users/{idUser}/scenario/submit";
             var payload = configuration.GetRawText();
             var content = new StringContent(payload, Encoding.UTF8, "application/json");
 
@@ -122,6 +122,39 @@ namespace MultiClimact.Controllers
             {
                 _logger.LogError("Error while calling CreateGraph service: {message}", e.Message);
                 return StatusCode(500, $"Error while calling graph service: {e.Message}");
+            }
+        }
+
+        [HttpGet("GetDefaultScenario")]
+        public async Task<IActionResult> GetDefaultScenario([FromQuery] string? user_id)
+        {
+            var idUser = string.IsNullOrWhiteSpace(user_id) ? "system" : user_id;
+            var servicePath = $"users/{idUser}/scenario/default";
+
+            _logger.LogInformation("Requesting Default Scenario Service URL: {servicePath}", servicePath);
+
+            try
+            {
+                var response = await _httpClient.GetAsync(servicePath);
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    return Content(content, "application/json");
+                }
+
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    _logger.LogWarning("Default scenario not found for user {idUser}.", idUser);
+                    return NotFound();
+                }
+
+                _logger.LogError("Error GetDefaultScenario Service: {statusCode}", response.StatusCode);
+                return StatusCode((int)response.StatusCode, "Error requesting default scenario service");
+            }
+            catch (HttpRequestException e)
+            {
+                _logger.LogError("Error while calling default scenario service: {message}", e.Message);
+                return StatusCode(500, $"Error while calling default scenario service: {e.Message}");
             }
         }
 
