@@ -30,10 +30,13 @@ namespace MultiClimact.Controllers
             [FromQuery] string? start_time,
             [FromQuery] string? end_time,
             [FromQuery] string? name,
-            [FromQuery] int? id_conf)
+            [FromQuery] int? id_conf,
+            [FromQuery] int? status_id)
         {
             var idUser = string.IsNullOrWhiteSpace(user_id) ? "system" : user_id;
             var query = new Dictionary<string, string?>();
+
+            query["user_id"] = idUser;
 
             if (!string.IsNullOrWhiteSpace(start_time))
             {
@@ -55,7 +58,12 @@ namespace MultiClimact.Controllers
                 query["id_conf"] = id_conf.Value.ToString();
             }
 
-            var servicePath = $"users/{idUser}/scenarios";
+            if (status_id.HasValue && status_id.Value > 0)
+            {
+                query["status_id"] = status_id.Value.ToString();
+            }
+
+            var servicePath = "scenarios";
             var serviceUrl = query.Count > 0
                 ? QueryHelpers.AddQueryString(servicePath, query)
                 : servicePath;

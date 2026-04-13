@@ -119,6 +119,7 @@ async function fetchGraphData(event) {
     const endDate = formData.get("end_date")?.toString() || "";
     const graphName = formData.get("name")?.toString().trim() || "";
     const idConfRaw = formData.get("id_conf")?.toString().trim() || "";
+    const statusIdRaw = formData.get("status_id")?.toString().trim() || "";
 
     const params = new URLSearchParams();
     params.append("user_id", userId);
@@ -136,6 +137,9 @@ async function fetchGraphData(event) {
     }
     if (idConfRaw) {
         params.append("id_conf", idConfRaw);
+    }
+    if (statusIdRaw) {
+        params.append("status_id", statusIdRaw);
     }
 
     try {

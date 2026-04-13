@@ -121,7 +121,7 @@ L'app ascolta su `http://localhost:8080`. Se preferisci SQLite persistente, mont
 ### Docker Compose
 
 ```bash
-docker compose up --build
+docker compose up --build -d
 docker compose down
 ```
 
