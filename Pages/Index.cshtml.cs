@@ -43,6 +43,7 @@ namespace MultiClimact.Pages
             await GetLastEarthquakeIdRun();
             await GetLastHeatwaveIdRun();
             await GetLastExtremePrecipitationIdRun();
+            await GetDefaultScenarioIdConf();
 
             ConfigurationToViewDataMapping();
         }
@@ -159,6 +160,34 @@ namespace MultiClimact.Pages
             {
                 _logger.LogError(ex, "An error occurred while calling the ExtremeprecipitationProxy service.");
                 ViewData["idRunLastExtremePrecipitation"] = $"Exception: {ex.Message}";
+            }
+        }
+
+        private async Task GetDefaultScenarioIdConf()
+        {
+            var baseUrl = $"{Request.Scheme}://{Request.Host}";
+            var serviceUrl = $"{baseUrl}/api/GraphProxy/GetDefaultScenario?user_id=system";
+
+            try
+            {
+                var client = _httpClientFactory.CreateClient("Default");
+                var response = await client.GetAsync(serviceUrl);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseBody = await response.Content.ReadAsStringAsync();
+                    var data = JsonSerializer.Deserialize<DefaultScenarioResponse>(responseBody);
+                    ViewData["defaultScenarioIdConf"] = data?.id_conf?.ToString() ?? "";
+                }
+                else
+                {
+                    ViewData["defaultScenarioIdConf"] = "";
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while calling GetDefaultScenario.");
+                ViewData["defaultScenarioIdConf"] = "";
             }
         }
 

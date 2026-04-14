@@ -311,3 +311,12 @@ function paginateGraphTable() {
         paginationControls.innerHTML = "";
     }
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+    const defaultId = document.getElementById("defaultScenarioIdConf")?.dataset?.value ?? "";
+    if (defaultId && defaultId !== "undefined") {
+        activeScenarioID = defaultId;
+        selectedGraphIdConf = defaultId;
+        localStorage.setItem("lastSelectedGraphIdConf", defaultId);
+    }
+});
