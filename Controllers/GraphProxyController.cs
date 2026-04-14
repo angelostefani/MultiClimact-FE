@@ -5,6 +5,7 @@ using MultiClimact.Services;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -17,7 +18,8 @@ namespace MultiClimact.Controllers
     {
         private readonly HttpClient _httpClient;
         private readonly ILogger<GraphProxyController> _logger;
-
+        
+        
         public GraphProxyController(GraphServiceClient client, ILogger<GraphProxyController> logger)
         {
             _httpClient = client.HttpClient;
@@ -33,7 +35,10 @@ namespace MultiClimact.Controllers
             [FromQuery] int? id_conf,
             [FromQuery] int? status_id)
         {
-            var idUser = string.IsNullOrWhiteSpace(user_id) ? "system" : user_id;
+             //User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier) ?? User.FindFirstValue("sub") ?? User.FindFirstValue("oid");
+            // Se user_id non è fornito, usa "system" come default per le richieste al servizio
+           //System a delle conf di default, mentre l'utente corrente all'inizio non ne ha ATTENZIONARE QUESTA COSA.
+            var idUser =  User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier) ?? User.FindFirstValue("sub") ?? User.FindFirstValue("oid");
             var query = new Dictionary<string, string?>();
 
             query["user_id"] = idUser;
@@ -76,6 +81,8 @@ namespace MultiClimact.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
+                    _logger.LogInformation("Graph service response: {responseContent}", content);
+                    // Ritorna il payload del servizio così com'è per preservare i nomi dei campi
                     return Content(content, "application/json");
                 }
 
