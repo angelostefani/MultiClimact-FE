@@ -182,6 +182,7 @@ namespace MultiClimact.Pages
                 "wmslayer_earth_water_well_view",
                 "wmslayer_earth_waste_water_view",
                 "wmslayer_failure_scenario_view",
+                "wmslayer_multic_scenario_view",
                 "wmslayer_earth_waste_water_damage_view",
                 "wmslayer_shakemap",
                 "wmslayer_heatwave_tmp_2maboveground_view",

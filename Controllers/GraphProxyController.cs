@@ -38,7 +38,8 @@ namespace MultiClimact.Controllers
              //User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier) ?? User.FindFirstValue("sub") ?? User.FindFirstValue("oid");
             // Se user_id non è fornito, usa "system" come default per le richieste al servizio
            //System a delle conf di default, mentre l'utente corrente all'inizio non ne ha ATTENZIONARE QUESTA COSA.
-            var idUser =  User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier) ?? User.FindFirstValue("sub") ?? User.FindFirstValue("oid");
+           //string.IsNullOrWhiteSpace(user_id) ? "system" : user_id; con questa riga è cablato a system.
+            var idUser = User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier) ?? User.FindFirstValue("sub") ?? User.FindFirstValue("oid");
             var query = new Dictionary<string, string?>();
 
             query["user_id"] = idUser;
@@ -170,6 +171,50 @@ namespace MultiClimact.Controllers
             {
                 _logger.LogError("Error while calling default scenario service: {message}", e.Message);
                 return StatusCode(500, $"Error while calling default scenario service: {e.Message}");
+            }
+        }
+
+
+        /* questo metodo chiama il servizio per ottenere uno scenario specifico il WS18 nello specifico usata nel tab Scenario Setup */
+        [HttpGet("GetScenarioById")]
+        public async Task<IActionResult> GetScenarioById([FromQuery] int? id_conf, [FromQuery] string? user_id)
+        {
+            if (!id_conf.HasValue || id_conf.Value <= 0)
+            {
+                return BadRequest("A valid id_conf is required.");
+            }
+            
+            //
+            var idUser = User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier) ?? User.FindFirstValue("sub") ?? User.FindFirstValue("oid");
+            var servicePath = $"users/{idUser}/scenario/{id_conf.Value}";
+
+            _logger.LogInformation("Requesting Scenario by Id Service URL: {servicePath}", servicePath);
+
+            try
+            {
+                var response = await _httpClient.GetAsync(servicePath);
+                var content = await response.Content.ReadAsStringAsync();
+
+                if (response.IsSuccessStatusCode)
+                {
+                    _logger.LogInformation("(RISPOSTA WS 18)Scenario by Id service response: {responseContent}", content);
+                    return Content(content, "application/json");
+                }
+
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    _logger.LogWarning("Scenario {idConf} not found for user {idUser}.", id_conf.Value, idUser);
+                    return Content("{\"success\":false,\"data\":null}", "application/json");
+                }
+
+                _logger.LogError("Error GetScenarioById Service: {statusCode}", response.StatusCode);
+                return StatusCode((int)response.StatusCode,
+                    string.IsNullOrWhiteSpace(content) ? "Error requesting scenario by id service" : content);
+            }
+            catch (HttpRequestException e)
+            {
+                _logger.LogError("Error while calling scenario by id service: {message}", e.Message);
+                return StatusCode(500, $"Error while calling scenario by id service: {e.Message}");
             }
         }
 

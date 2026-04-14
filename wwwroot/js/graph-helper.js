@@ -1,6 +1,7 @@
 let selectedGraphIdConf = null;
 let selectedGraphRowIndex = null;
 let activeScenarioID = '';
+let selectedGraphStatusId = null;
 
 function formatGraphDate(value) {
     if (!value) {
@@ -72,9 +73,24 @@ function populateGraphTable(data) {
 
             selectedGraphIdConf = normalized.idConf?.toString() ?? "";
             activeScenarioID = normalized.idConf?.toString() ?? '';
+            selectedGraphStatusId = normalized.statusId?.toString() ?? "";
             selectedGraphRowIndex = index;
             localStorage.setItem("lastSelectedGraphIdConf", selectedGraphIdConf);
+            localStorage.setItem("lastSelectedGraphStatusId", selectedGraphStatusId);
             localStorage.setItem("lastSelectedGraphRowIndex", selectedGraphRowIndex.toString());
+
+            console.log("[graph-helper] scenario selected", {
+                idConf: selectedGraphIdConf,
+                statusId: selectedGraphStatusId,
+                rowIndex: selectedGraphRowIndex
+            });
+
+            window.dispatchEvent(new CustomEvent("graph-scenario-selected", {
+                detail: {
+                    idConf: selectedGraphIdConf,
+                    statusId: selectedGraphStatusId
+                }
+            }));
         });
 
         const selectCell = document.createElement("td");
@@ -157,6 +173,8 @@ async function fetchGraphData(event) {
         const jsonResponse = await response.json();
         const data = Array.isArray(jsonResponse?.data) ? jsonResponse.data : [];
         activeScenarioID = '';
+        selectedGraphStatusId = null;
+        localStorage.removeItem("lastSelectedGraphStatusId");
         populateGraphTable(data);
         paginateGraphTable();
     } catch (error) {

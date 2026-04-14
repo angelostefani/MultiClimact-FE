@@ -34,6 +34,7 @@
     const sectorLabels = Array.from(panel.querySelectorAll(".ra-checkbox-grid label"));
     let transientScenarioConfig = null;
     let currentScenarioData = null;
+    const resilienceScenarioEventName = "resilience-scenario-loaded";
 
     const statusBox = document.createElement("div");
     statusBox.className = "alert alert-info d-none mt-2";
@@ -48,6 +49,95 @@
     const hideStatus = () => {
         statusBox.className = "alert alert-info d-none mt-2";
         statusBox.textContent = "";
+    };
+
+    const getSelectedScenarioId = () =>
+        activeScenarioID || localStorage.getItem("lastSelectedGraphIdConf") || "";
+
+    const getSelectedScenarioStatusId = () =>
+        (typeof selectedGraphStatusId !== "undefined" && selectedGraphStatusId !== null && `${selectedGraphStatusId}`.trim() !== ""
+            ? selectedGraphStatusId
+            : localStorage.getItem("lastSelectedGraphStatusId")) || "";
+
+    const fetchScenarioStatusId = async (scenarioId) => {
+        const normalizedScenarioId = scenarioId?.toString().trim() ?? "";
+        if (!normalizedScenarioId) {
+            return "";
+        }
+
+        try {
+            const response = await fetch(`/api/GraphProxy/GetGraphs?id_conf=${encodeURIComponent(normalizedScenarioId)}`);
+            if (!response.ok) {
+                console.warn("[scenario-setup] unable to resolve scenario status from GetGraphs", {
+                    scenarioId: normalizedScenarioId,
+                    status: response.status
+                });
+                return "";
+            }
+
+            const json = await response.json();
+            const graphItem = Array.isArray(json?.data) && json.data.length > 0 ? json.data[0] : null;
+            const resolvedStatusId = firstDefinedValue(
+                graphItem?.status_id,
+                graphItem?.statusId
+            );
+
+            if (resolvedStatusId !== undefined && resolvedStatusId !== null && `${resolvedStatusId}`.trim() !== "") {
+                if (typeof selectedGraphStatusId !== "undefined") {
+                    selectedGraphStatusId = resolvedStatusId.toString();
+                }
+                localStorage.setItem("lastSelectedGraphStatusId", resolvedStatusId.toString());
+                return resolvedStatusId.toString();
+            }
+        } catch (error) {
+            console.warn("[scenario-setup] error while resolving scenario status", {
+                scenarioId: normalizedScenarioId,
+                error
+            });
+        }
+
+        return "";
+    };
+
+    const fetchScenarioStatusContext = async (scenarioId) => {
+        const normalizedScenarioId = scenarioId?.toString().trim() ?? "";
+        if (!normalizedScenarioId) {
+            return "";
+        }
+
+        const resolvedStatusId = await fetchScenarioStatusId(normalizedScenarioId);
+        return resolvedStatusId?.toString().trim() ?? "";
+    };
+
+    const setEditorValueById = (elementId, value) => {
+        const textarea = document.getElementById(elementId);
+        if (!textarea) {
+            return;
+        }
+
+        const normalizedValue = typeof value === "string"
+            ? value
+            : JSON.stringify(value ?? "", null, 2);
+
+        if (textarea._cmEditor) {
+            textarea._cmEditor.setValue(normalizedValue);
+            return;
+        }
+
+        textarea.value = normalizedValue;
+        textarea.dispatchEvent(new Event("input", { bubbles: true }));
+        textarea.dispatchEvent(new Event("change", { bubbles: true }));
+    };
+
+    const setInputValueById = (elementId, value) => {
+        const input = document.getElementById(elementId);
+        if (!input) {
+            return;
+        }
+
+        input.value = value?.toString() ?? "";
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+        input.dispatchEvent(new Event("change", { bubbles: true }));
     };
 
     const firstDefinedValue = (...values) =>
@@ -86,6 +176,134 @@
             scenario?.scenario_setup
         ) ?? {};
 
+    const hasResilienceAssessmentPayload = (scenario) =>
+        Boolean(
+            scenario &&
+            typeof scenario === "object" &&
+            (
+                Array.isArray(scenario?.subsector_dep) ||
+                Array.isArray(scenario?.poi_dep) ||
+                Array.isArray(scenario?.default_prob) ||
+                Array.isArray(scenario?.subsector_dep_prob) ||
+                Array.isArray(scenario?.poi_dep_prob) ||
+                Array.isArray(scenario?.failure) ||
+                Array.isArray(scenario?.social_impact_distrib) ||
+                Array.isArray(scenario?.sector_impact_distrib) ||
+                Array.isArray(scenario?.subsector_impact_distrib) ||
+                Array.isArray(scenario?.poi_impact_distrib) ||
+                scenario?.iter !== undefined ||
+                scenario?.max_path !== undefined ||
+                scenario?.max_chains !== undefined
+            )
+        );
+
+    const getDefaultDependencyProbabilities = (scenario) => {
+        if (scenario?.all_dep_prob) {
+            return scenario.all_dep_prob;
+        }
+
+        if (!Array.isArray(scenario?.default_prob)) {
+            return null;
+        }
+
+        const editableEntry = scenario.default_prob.find((entry) =>
+            entry &&
+            typeof entry === "object" &&
+            entry.all_dep_prob
+        );
+
+        return editableEntry?.all_dep_prob ?? null;
+    };
+
+    const getFailurePoiListValue = (scenario) => {
+        if (!Array.isArray(scenario?.failure)) {
+            return "";
+        }
+
+        const ids = scenario.failure
+            .filter((entry) => typeof entry === "string" || typeof entry === "number")
+            .map((entry) => entry.toString().trim())
+            .filter(Boolean);
+
+        return ids.length > 0 ? `${ids.join("; ")};` : "";
+    };
+
+    const publishLoadedScenario = (scenarioId, scenario) => {
+        window.resilienceScenarioState = {
+            scenarioId: scenarioId?.toString() ?? "",
+            scenario
+        };
+
+        window.dispatchEvent(new CustomEvent(resilienceScenarioEventName, {
+            detail: window.resilienceScenarioState
+        }));
+    };
+
+    const syncScenarioSetupMapLayer = async (scenario, preferredStatusId) => {
+        const scenarioId = firstDefinedValue(
+            findScenarioValue(scenario, ["id_conf", "idConf", "id"]),
+            getSelectedScenarioId()
+        );
+        let statusId = firstDefinedValue(
+            preferredStatusId,
+            findScenarioValue(scenario, ["status_id", "statusId"]),
+            getSelectedScenarioStatusId()
+        );
+
+        if ((statusId === undefined || statusId === null || `${statusId}`.trim() === "") && scenarioId) {
+            statusId = await fetchScenarioStatusId(scenarioId);
+        }
+
+        console.log("[scenario-setup] syncScenarioSetupMapLayer", {
+            scenarioId,
+            statusId,
+            scenarioStatusId: findScenarioValue(scenario, ["status_id", "statusId"]),
+            selectedScenarioId: getSelectedScenarioId(),
+            selectedScenarioStatusId: getSelectedScenarioStatusId()
+        });
+
+        if (typeof window.updateScenarioSetupMapLayerVisibility === "function") {
+            window.updateScenarioSetupMapLayerVisibility(statusId, scenarioId);
+        }
+    };
+
+    const applyScenarioToAssessmentTabs = (scenario) => {
+        setEditorValueById("subsec_dep", scenario?.subsector_dep ?? []);
+        setEditorValueById("poi_dep", scenario?.poi_dep ?? []);
+        setEditorValueById("all_dep_prob", getDefaultDependencyProbabilities(scenario) ?? {});
+        setEditorValueById("subsec_dep_prob", scenario?.subsector_dep_prob ?? []);
+        setEditorValueById("poi_dep_prob", scenario?.poi_dep_prob ?? []);
+
+        const failureList = getFailurePoiListValue(scenario);
+        setInputValueById("failure-poi-list", failureList);
+
+        const failureTextarea = document.getElementById("failure-poi-list");
+        if (failureTextarea) {
+            failureTextarea.dataset.default = failureList;
+        }
+
+        setEditorValueById("impact-distributions-editor", scenario?.social_impact_distrib ?? []);
+        setEditorValueById("impact-sector-editor", scenario?.sector_impact_distrib ?? []);
+        setEditorValueById("impact-subsector-editor", scenario?.subsector_impact_distrib ?? []);
+        setEditorValueById("impact-poi-editor", scenario?.poi_impact_distrib ?? []);
+
+        setInputValueById("impact-mc-iterations", firstDefinedValue(scenario?.iter, 0));
+        setInputValueById("impact-mc-max-path", firstDefinedValue(scenario?.max_path, 0));
+        setInputValueById("impact-mc-max-chains", firstDefinedValue(scenario?.max_chains, 0));
+    };
+
+    const extractScenarioFromResponse = (json) => {
+        if (Array.isArray(json?.data)) {
+            return json.data.length > 0 ? json.data[0] : null;
+        }
+
+        if (json?.data && typeof json.data === "object") {
+            return json.data;
+        }
+
+        return null;
+    };
+
     const applyScenarioToInputs = (scenario) => {
         const dependencyGraphNodes = extractDependencyGraphNodes(scenario);
 
@@ -103,7 +321,7 @@
         );
         const radius = firstDefinedValue(
             findScenarioValue(dependencyGraphNodes, ["radiusKm", "radius_km", "radius"]),
-            findScenarioValue(scenario, ["radiusKm", "radius_km", "radius"])
+            findScenarioValue(scenario, ["radiusKm", "radius_km", "radius", "rad"])
         );
 
         if (nameInput) {
@@ -145,6 +363,14 @@
             sectorCheckboxes.forEach((checkbox, index) => {
                 const label = sectorLabels[index]?.textContent ?? "";
                 checkbox.checked = sectorNames.includes(normalizeSectorName(label));
+            });
+            return;
+        }
+
+        const sectorsMask = findScenarioValue(scenario, ["sectors_str", "sectorsMask", "sectorMask"]);
+        if (typeof sectorsMask === "string" && sectorsMask.length > 0) {
+            sectorCheckboxes.forEach((checkbox, index) => {
+                checkbox.checked = sectorsMask.charAt(index) === "1";
             });
         }
     };
@@ -334,8 +560,8 @@
 
     setEditMode(false);
 
-    const loadSelectedScenario = async () => {
-        const scenarioId = activeScenarioID || localStorage.getItem("lastSelectedGraphIdConf") || "";
+    const loadSelectedScenario = async ({ endpoint, populateAssessmentTabs = false } = {}) => {
+        const scenarioId = getSelectedScenarioId();
         if (!scenarioId) {
             currentScenarioData = null;
             hideStatus();
@@ -346,7 +572,7 @@
         loadScenarioBtn.disabled = true;
         try {
             hideStatus();
-            const response = await fetch(`/api/GraphProxy/GetGraphs?id_conf=${encodeURIComponent(scenarioId)}`);
+            const response = await fetch(`${endpoint}?id_conf=${encodeURIComponent(scenarioId)}`);
             if (!response.ok) {
                 currentScenarioData = null;
                 showStatus("Unable to load the selected scenario.", "danger");
@@ -354,7 +580,7 @@
             }
 
             const json = await response.json();
-            const scenario = Array.isArray(json?.data) && json.data.length > 0 ? json.data[0] : null;
+            const scenario = extractScenarioFromResponse(json);
             if (!scenario) {
                 currentScenarioData = null;
                 showStatus("No data found for the selected scenario.", "warning");
@@ -363,7 +589,23 @@
 
             currentScenarioData = scenario;
             applyScenarioToInputs(scenario);
-            showStatus(`Scenario ${scenarioId} loaded.`, "success");
+            if (populateAssessmentTabs) {
+                const resolvedStatusId = await fetchScenarioStatusContext(scenarioId);
+                await syncScenarioSetupMapLayer(scenario, resolvedStatusId);
+            }
+
+            if (populateAssessmentTabs) {
+                if (hasResilienceAssessmentPayload(scenario)) {
+                    applyScenarioToAssessmentTabs(scenario);
+                    publishLoadedScenario(scenarioId, scenario);
+                    showStatus(`Scenario ${scenarioId} loaded across Resilience Assessment tabs.`, "success");
+                } else {
+                    showStatus(`Scenario ${scenarioId} loaded in Scenario Setup, but the response did not include the full resilience configuration.`, "warning");
+                }
+            } else {
+                showStatus(`Scenario ${scenarioId} loaded in Scenario Setup.`, "success");
+            }
+
             console.log("[scenario-setup] loaded scenario", { scenarioId, currentScenarioData });
         } catch (error) {
             currentScenarioData = null;
@@ -375,13 +617,24 @@
     };
 
     loadScenarioBtn.addEventListener("click", () => {
-        void loadSelectedScenario();
+        const scenarioEndpoint =
+            loadScenarioBtn.dataset.scenarioEndpoint ||
+            panel.dataset.scenarioEndpoint ||
+            "/api/GraphProxy/GetGraphs";
+
+        void loadSelectedScenario({
+            endpoint: scenarioEndpoint,
+            populateAssessmentTabs: true
+        });
     });
 
     const d13Tab = document.getElementById("tabD13-tab");
     if (d13Tab) {
         d13Tab.addEventListener("shown.bs.tab", () => {
-            void loadSelectedScenario();
+            void loadSelectedScenario({
+                endpoint: "/api/GraphProxy/GetGraphs",
+                populateAssessmentTabs: false
+            });
         });
     }
 })();

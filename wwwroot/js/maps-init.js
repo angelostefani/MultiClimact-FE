@@ -344,15 +344,69 @@ document.addEventListener("DOMContentLoaded", function () {
 
     mapD5 = initWMSMatrixMap(configWMSMatrixMapD5);   
 
-    configWMSMapD13 = {
+    configWMSMatrixMapD13 = {
         targetHtmlMapId: 'mapD13',
         baseMapName: 'OpenStreetMap - EPSG:3857',
         centerLongitude: 12.5,
         centerLatitude: 42.5,
-        zoomValue: 6
+        zoomValue: 6,
+        layerMatrix: [
+            [true, false, wmsBaseUrl, document.getElementById("wmslayer_multic_scenario_view").dataset.value, 'Scenario view', null, null, false, null]
+        ]
     };
 
-    mapD13 = initWMSMap(configWMSMapD13);
+    mapD13 = initWMSMatrixMap(configWMSMatrixMapD13);
+
+    const refreshScenarioSetupMapSize = () => {
+        if (!mapD13 || typeof mapD13.updateSize !== "function") {
+            return;
+        }
+
+        mapD13.updateSize();
+    };
+
+    window.updateScenarioSetupMapLayerVisibility = function (statusId, scenarioId) {
+        if (!configWMSMatrixMapD13 || !mapD13) {
+            console.log("[maps-init][D13] map config not ready", {
+                hasConfig: Boolean(configWMSMatrixMapD13),
+                hasMap: Boolean(mapD13),
+                statusId,
+                scenarioId
+            });
+            return;
+        }
+
+        const normalizedStatusId = (statusId ?? "").toString().trim();
+        const normalizedScenarioId = (scenarioId ?? "").toString().trim();
+        const shouldShowScenarioLayer = normalizedStatusId === "4" || normalizedStatusId === "5";
+        configWMSMatrixMapD13.layerMatrix[0][8] = shouldShowScenarioLayer && normalizedScenarioId
+            ? `id_conf=${normalizedScenarioId}`
+            : null;
+
+        console.log("[maps-init][D13] updateScenarioSetupMapLayerVisibility", {
+            statusId: normalizedStatusId,
+            scenarioId: normalizedScenarioId,
+            shouldShowScenarioLayer,
+            cqlFilter: configWMSMatrixMapD13.layerMatrix[0][8],
+            layerEnabled: configWMSMatrixMapD13.layerMatrix[0][0],
+            layerVisibleBeforeToggle: configWMSMatrixMapD13.layerMatrix[0][1]
+        });
+
+        toggleLayer(configWMSMatrixMapD13, 0, mapD13, shouldShowScenarioLayer);
+        refreshScenarioSetupMapSize();
+
+        if (shouldShowScenarioLayer) {
+            setTimeout(refreshScenarioSetupMapSize, 150);
+        }
+    };
+
+    const d13Tab = document.getElementById("tabD13-tab");
+    if (d13Tab) {
+        d13Tab.addEventListener("shown.bs.tab", () => {
+            refreshScenarioSetupMapSize();
+            setTimeout(refreshScenarioSetupMapSize, 150);
+        });
+    }
 
     configWMSMapD14 = {
         targetHtmlMapId: 'mapD14',

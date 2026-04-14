@@ -43,6 +43,7 @@ Ogni riga di layerMatrix è un array con struttura:
 - [5] env: stringa opzionale da passare come ENV` al WMS.
 - [6] styles: eventuale valore STYLES da inviare al WMS.
 - [7] applyRiskRunFilter: boolean opzionale; se true aggiunge CQL_FILTER con activeRiskRunID (default: true se non valorizzato).
+- [8] customCqlFilter: stringa opzionale da applicare come CQL_FILTER dedicato al layer.
 
 Esempio di riga in `layerMatrix` con disattivazione del filtro:
 ```
@@ -209,26 +210,7 @@ function initWMSMatrixMap(config) {
  */
 function addLayerToMap(layersArray, wmsUrl, wmsLayer, env, styles, applyRiskRunFilter) {
     if (wmsUrl && wmsLayer) {
-        // Configura i parametri WMS, aggiungendo 'env' se valorizzato
-        let params = { 'LAYERS': wmsLayer, 'TILED': true };
-        if (styles) {
-            params.STYLES = styles;
-        }
-        if (styles) {
-            params.STYLES = styles;
-        }
-        if (env) {
-            params.ENV = env;
-        }
-
-        // Aggiungi filtro CQL id_run se definito globalmente e abilitato per il layer
-        const shouldApplyRiskRunFilter = (applyRiskRunFilter === undefined) ? true : !!applyRiskRunFilter;
-        if (shouldApplyRiskRunFilter && activeRiskRunID && activeRiskRunID.trim() !== '') {
-            const runFilter = `id_run=${activeRiskRunID}`;
-            params.CQL_FILTER = params.CQL_FILTER
-                ? `${params.CQL_FILTER} AND ${runFilter}`
-                : runFilter;
-        }
+        let params = buildLayerParams(wmsLayer, env, styles, applyRiskRunFilter, null);
 
         // Crea il layer WMS
         let wmsLayerObj = new ol.layer.Tile({
@@ -242,6 +224,30 @@ function addLayerToMap(layersArray, wmsUrl, wmsLayer, env, styles, applyRiskRunF
         return wmsLayerObj;
     }
     return null;
+}
+
+function buildLayerParams(wmsLayerName, env, styles, applyRiskRunFilter, customCqlFilter) {
+    let params = { 'LAYERS': wmsLayerName, 'TILED': true };
+
+    if (styles) {
+        params.STYLES = styles;
+    }
+    if (env) {
+        params.ENV = env;
+    }
+    if (customCqlFilter && String(customCqlFilter).trim() !== '') {
+        params.CQL_FILTER = String(customCqlFilter).trim();
+    }
+
+    const shouldApplyRiskRunFilter = (applyRiskRunFilter === undefined) ? true : !!applyRiskRunFilter;
+    if (shouldApplyRiskRunFilter && activeRiskRunID && activeRiskRunID.trim() !== '') {
+        const runFilter = `id_run=${activeRiskRunID}`;
+        params.CQL_FILTER = params.CQL_FILTER
+            ? `${params.CQL_FILTER} AND ${runFilter}`
+            : runFilter;
+    }
+
+    return params;
 }
 
 /**
@@ -403,25 +409,9 @@ function updateMapLayers(configWMSMatrixMap, map) {
 
         let styles = layerConfig[6]; // Parametro STYLES WMS
         let applyRiskRunFilter = layerConfig[7]; // Flag booleano: se true applica CQL_FILTER per activeRiskRunID
+        let customCqlFilter = layerConfig[8]; // Filtro CQL specifico del layer
 
-        // Configura i parametri WMS, aggiungendo 'env' se valorizzato
-        let params = { 'LAYERS': wmsLayerName, 'TILED': true };
-
-        if (styles) {
-            params.STYLES = styles;
-        }
-        if (env) {
-            params.ENV = env;
-        }
-
-        // Aggiungi filtro CQL id_run se definito globalmente e abilitato per il layer
-        const shouldApplyRiskRunFilter = (applyRiskRunFilter === undefined) ? true : !!applyRiskRunFilter;
-        if (shouldApplyRiskRunFilter && activeRiskRunID && activeRiskRunID.trim() !== '') {
-            const runFilter = `id_run=${activeRiskRunID}`;
-            params.CQL_FILTER = params.CQL_FILTER
-                ? `${params.CQL_FILTER} AND ${runFilter}`
-                : runFilter;
-        }
+        let params = buildLayerParams(wmsLayerName, env, styles, applyRiskRunFilter, customCqlFilter);
 
         // Aggiungi il layer WMS se è visibile
         if (isVisible) {
