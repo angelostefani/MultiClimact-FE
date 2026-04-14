@@ -28,7 +28,8 @@ function normalizeGraphItem(raw) {
         name: raw?.imp_name ?? raw?.name ?? "N/A",
         date: formatGraphDate(raw?.imp_date ?? raw?.date),
         monteCarloIterations: raw?.imp_mcarlo_it ?? "N/A",
-        pathLength: raw?.imp_path_length ?? "N/A"
+        pathLength: raw?.imp_path_length ?? "N/A",
+        statusId: raw?.status_id ?? raw?.statusId ?? "N/A"
     };
 }
 
@@ -43,7 +44,7 @@ function populateGraphTable(data) {
     if (!Array.isArray(data) || data.length === 0) {
         const row = document.createElement("tr");
         const noDataCell = document.createElement("td");
-        noDataCell.setAttribute("colspan", 6);
+        noDataCell.setAttribute("colspan", 7);
         noDataCell.textContent = "No data available";
         row.appendChild(noDataCell);
         tableBody.appendChild(row);
@@ -95,12 +96,16 @@ function populateGraphTable(data) {
         const pathLengthCell = document.createElement("td");
         pathLengthCell.textContent = normalized.pathLength?.toString() || "N/A";
 
+        const statusIdCell = document.createElement("td");
+        statusIdCell.textContent = normalized.statusId?.toString() || "N/A";
+
         row.appendChild(selectCell);
         row.appendChild(idConfCell);
         row.appendChild(nameCell);
         row.appendChild(dateCell);
         row.appendChild(mcarloCell);
         row.appendChild(pathLengthCell);
+        row.appendChild(statusIdCell);
         tableBody.appendChild(row);
     });
 }
