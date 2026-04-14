@@ -8,6 +8,7 @@
     const latInput = document.getElementById("ra-latitude");
     const lonInput = document.getElementById("ra-longitude");
     const radiusInput = document.getElementById("ra-radius");
+    const loadScenarioBtn = document.getElementById("ra-load-scenario");
     const newBtn = document.getElementById("ra-new");
     const duplicateBtn = document.getElementById("ra-duplicate");
     const backBtn = document.getElementById("ra-back");
@@ -18,6 +19,7 @@
     const inputs = [nameInput, latInput, lonInput, radiusInput].filter(Boolean);
     if (
         inputs.length === 0 ||
+        !loadScenarioBtn ||
         !newBtn ||
         !duplicateBtn ||
         !backBtn ||
@@ -332,40 +334,54 @@
 
     setEditMode(false);
 
-    const d13Tab = document.getElementById("tabD13-tab");
-    if (d13Tab) {
-        d13Tab.addEventListener("shown.bs.tab", async () => {
-            const scenarioId = activeScenarioID || localStorage.getItem("lastSelectedGraphIdConf") || '';
-            if (!scenarioId) {
+    const loadSelectedScenario = async () => {
+        const scenarioId = activeScenarioID || localStorage.getItem("lastSelectedGraphIdConf") || "";
+        if (!scenarioId) {
+            currentScenarioData = null;
+            hideStatus();
+            showStatus("Select a scenario from the bottom bar before opening Scenario Setup.", "warning");
+            return;
+        }
+
+        loadScenarioBtn.disabled = true;
+        try {
+            hideStatus();
+            const response = await fetch(`/api/GraphProxy/GetGraphs?id_conf=${encodeURIComponent(scenarioId)}`);
+            if (!response.ok) {
                 currentScenarioData = null;
-                hideStatus();
-                showStatus("Select a scenario from the bottom bar before opening Scenario Setup.", "warning");
+                showStatus("Unable to load the selected scenario.", "danger");
                 return;
             }
-            try {
-                hideStatus();
-                const response = await fetch(`/api/GraphProxy/GetGraphs?id_conf=${encodeURIComponent(scenarioId)}`);
-                if (!response.ok) {
-                    currentScenarioData = null;
-                    showStatus("Unable to load the selected scenario.", "danger");
-                    return;
-                }
-                const json = await response.json();
-                const scenario = Array.isArray(json?.data) && json.data.length > 0 ? json.data[0] : null;
-                if (!scenario) {
-                    currentScenarioData = null;
-                    showStatus("No data found for the selected scenario.", "warning");
-                    return;
-                }
-                currentScenarioData = scenario;
-                applyScenarioToInputs(scenario);
-                showStatus(`Scenario ${scenarioId} loaded.`, "success");
-                console.log('[scenario-setup] loaded scenario', { scenarioId, currentScenarioData });
-            } catch (error) {
+
+            const json = await response.json();
+            const scenario = Array.isArray(json?.data) && json.data.length > 0 ? json.data[0] : null;
+            if (!scenario) {
                 currentScenarioData = null;
-                showStatus("An unexpected error occurred while loading the scenario.", "danger");
-                console.error('[scenario-setup] error loading scenario:', error);
+                showStatus("No data found for the selected scenario.", "warning");
+                return;
             }
+
+            currentScenarioData = scenario;
+            applyScenarioToInputs(scenario);
+            showStatus(`Scenario ${scenarioId} loaded.`, "success");
+            console.log("[scenario-setup] loaded scenario", { scenarioId, currentScenarioData });
+        } catch (error) {
+            currentScenarioData = null;
+            showStatus("An unexpected error occurred while loading the scenario.", "danger");
+            console.error("[scenario-setup] error loading scenario:", error);
+        } finally {
+            loadScenarioBtn.disabled = false;
+        }
+    };
+
+    loadScenarioBtn.addEventListener("click", () => {
+        void loadSelectedScenario();
+    });
+
+    const d13Tab = document.getElementById("tabD13-tab");
+    if (d13Tab) {
+        d13Tab.addEventListener("shown.bs.tab", () => {
+            void loadSelectedScenario();
         });
     }
 })();
