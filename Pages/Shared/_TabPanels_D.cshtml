@@ -124,7 +124,7 @@
 
                 <div class="layer-box ra-box--left">
                     <div class="layer-box__title">Dependency Graph Properties</div>
-                    <div class="ra-field">
+                    <div class="ra-field" id="ra-name-field">
                         <label class="ra-label" for="ra-name">Name</label>
                         <input id="ra-name" class="form-control form-control-sm" type="text" placeholder="Scenario name" />
                     </div>
@@ -179,15 +179,12 @@
                             <button class="btn btn-outline-primary btn-sm ra-action" type="button" id="ra-new">
                                 New
                             </button>
-                            <button class="btn btn-primary btn-sm ra-action" type="button" id="ra-duplicate">
-                                Init Scenario
-                            </button>
                         </div>
                         <div class="d-flex gap-2 d-none" id="ra-edit-actions">
-                            <button class="btn btn-outline-secondary btn-sm ra-action" type="button" id="ra-back">
-                                Back
+                            <button class="btn btn-outline-secondary btn-sm ra-action" type="button" id="ra-cancel">
+                                Cancel
                             </button>
-                            <button class="btn btn-success btn-sm ra-action" type="button" id="ra-create-graph">
+                            <button class="btn btn-success btn-sm ra-action" type="button" id="ra-create-graph" disabled>
                                 Create graph
                             </button>
                         </div>

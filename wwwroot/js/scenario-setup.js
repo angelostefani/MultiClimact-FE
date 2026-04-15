@@ -10,8 +10,7 @@
     const radiusInput = document.getElementById("ra-radius");
     const loadScenarioBtn = document.getElementById("ra-load-scenario");
     const newBtn = document.getElementById("ra-new");
-    const duplicateBtn = document.getElementById("ra-duplicate");
-    const backBtn = document.getElementById("ra-back");
+    const cancelBtn = document.getElementById("ra-cancel");
     const createGraphBtn = document.getElementById("ra-create-graph");
     const defaultActions = document.getElementById("ra-default-actions");
     const editActions = document.getElementById("ra-edit-actions");
@@ -21,8 +20,7 @@
         inputs.length === 0 ||
         !loadScenarioBtn ||
         !newBtn ||
-        !duplicateBtn ||
-        !backBtn ||
+        !cancelBtn ||
         !createGraphBtn ||
         !defaultActions ||
         !editActions
@@ -34,7 +32,13 @@
     const sectorLabels = Array.from(panel.querySelectorAll(".ra-checkbox-grid label"));
     let transientScenarioConfig = null;
     let currentScenarioData = null;
+    let draftBaselineValues = null;
     const resilienceScenarioEventName = "resilience-scenario-loaded";
+    const scenarioStatuses = {
+        draft: "DRAFT",
+        submitted: "SUBMITTED",
+        dispatching: "DISPATCHING"
+    };
 
     const statusBox = document.createElement("div");
     statusBox.className = "alert alert-info d-none mt-2";
@@ -138,6 +142,19 @@
         input.value = value?.toString() ?? "";
         input.dispatchEvent(new Event("input", { bubbles: true }));
         input.dispatchEvent(new Event("change", { bubbles: true }));
+    };
+
+    const getEditorValueById = (elementId) => {
+        const textarea = document.getElementById(elementId);
+        if (!textarea) {
+            return "";
+        }
+
+        if (textarea._cmEditor) {
+            return textarea._cmEditor.getValue();
+        }
+
+        return textarea.value ?? "";
     };
 
     const firstDefinedValue = (...values) =>
@@ -417,10 +434,163 @@
         panel.dataset.scenarioEditMode = enabled ? "on" : "off";
         defaultActions.classList.toggle("d-none", enabled);
         editActions.classList.toggle("d-none", !enabled);
+        createGraphBtn.disabled = !enabled;
+    };
+
+    const setScenarioStatus = (status) => {
+        panel.dataset.scenarioStatus = status ?? "";
+    };
+
+    const restoreDraftBaselineValues = () => {
+        if (!draftBaselineValues) {
+            return;
+        }
+
+        applyValues(draftBaselineValues);
+    };
+
+    const validateScenarioDraft = () => {
+        const validationErrors = [];
+        const name = nameInput?.value?.trim() ?? "";
+        const latitude = latInput?.value?.trim() ?? "";
+        const longitude = lonInput?.value?.trim() ?? "";
+        const radius = radiusInput?.value?.trim() ?? "";
+        const hasSelectedSector = sectorCheckboxes.some((checkbox) => checkbox.checked);
+
+        if (!name) {
+            validationErrors.push("Scenario name is required.");
+        }
+
+        if (!latitude) {
+            validationErrors.push("Latitude is required.");
+        }
+
+        if (!longitude) {
+            validationErrors.push("Longitude is required.");
+        }
+
+        if (!radius) {
+            validationErrors.push("Radius is required.");
+        }
+
+        if (!hasSelectedSector) {
+            validationErrors.push("Select at least one infrastructure sector.");
+        }
+
+        return validationErrors;
+    };
+
+    const deepClone = (value) => {
+        if (value === undefined || value === null) {
+            return value;
+        }
+
+        return JSON.parse(JSON.stringify(value));
+    };
+
+    const parseJsonEditorValue = (elementId, fallbackValue) => {
+        const rawValue = getEditorValueById(elementId)?.trim();
+        if (!rawValue) {
+            return deepClone(fallbackValue);
+        }
+
+        try {
+            return JSON.parse(rawValue);
+        } catch (error) {
+            console.warn(`[scenario-setup] invalid JSON in ${elementId}`, error);
+            return deepClone(fallbackValue);
+        }
+    };
+
+    const buildSectorsMask = () =>
+        sectorCheckboxes
+            .map((checkbox) => (checkbox.checked ? "1" : "0"))
+            .join("");
+
+    const buildSelectedSectorNames = () =>
+        sectorCheckboxes
+            .map((checkbox, index) => ({
+                checked: checkbox.checked,
+                label: sectorLabels[index]?.textContent?.trim() ?? ""
+            }))
+            .filter((entry) => entry.checked && entry.label)
+            .map((entry) => entry.label);
+
+    const buildScenarioSubmitPayload = () => {
+        const baseScenario = currentScenarioData ? deepClone(currentScenarioData) : {};
+        const dependencyGraphNodes = deepClone(extractDependencyGraphNodes(baseScenario));
+
+        const name = nameInput?.value?.trim() ?? "";
+        const latitude = latInput?.value?.trim() ?? "";
+        const longitude = lonInput?.value?.trim() ?? "";
+        const radius = radiusInput?.value?.trim() ?? "";
+        const sectors = buildSelectedSectorNames();
+        const sectorsMask = buildSectorsMask();
+
+        const subsectorDependencies = parseJsonEditorValue("subsec_dep", baseScenario?.subsector_dep ?? []);
+        const poiDependencies = parseJsonEditorValue("poi_dep", baseScenario?.poi_dep ?? []);
+        const allDependencyProbabilities = parseJsonEditorValue("all_dep_prob", getDefaultDependencyProbabilities(baseScenario) ?? {});
+        const subsectorProbabilityOverrides = parseJsonEditorValue("subsec_dep_prob", baseScenario?.subsector_dep_prob ?? []);
+        const poiProbabilityOverrides = parseJsonEditorValue("poi_dep_prob", baseScenario?.poi_dep_prob ?? []);
+        const socialImpactDistributions = parseJsonEditorValue("impact-distributions-editor", baseScenario?.social_impact_distrib ?? []);
+        const sectorImpactDistributions = parseJsonEditorValue("impact-sector-editor", baseScenario?.sector_impact_distrib ?? []);
+        const subsectorImpactDistributions = parseJsonEditorValue("impact-subsector-editor", baseScenario?.subsector_impact_distrib ?? []);
+        const poiImpactDistributions = parseJsonEditorValue("impact-poi-editor", baseScenario?.poi_impact_distrib ?? []);
+
+        const iterations = document.getElementById("impact-mc-iterations")?.value?.trim() ?? "";
+        const maxPath = document.getElementById("impact-mc-max-path")?.value?.trim() ?? "";
+        const maxChains = document.getElementById("impact-mc-max-chains")?.value?.trim() ?? "";
+
+        dependencyGraphNodes.name = name;
+        dependencyGraphNodes.scenarioName = name;
+        dependencyGraphNodes.latitude = latitude;
+        dependencyGraphNodes.lat = latitude;
+        dependencyGraphNodes.longitude = longitude;
+        dependencyGraphNodes.lon = longitude;
+        dependencyGraphNodes.radiusKm = radius;
+        dependencyGraphNodes.radius_km = radius;
+        dependencyGraphNodes.radius = radius;
+        dependencyGraphNodes.sectors = sectors;
+        dependencyGraphNodes.selectedSectors = sectors;
+
+        return {
+            ...baseScenario,
+            status: scenarioStatuses.draft,
+            imp_name: name,
+            name,
+            scenarioName: name,
+            latitude,
+            lat: latitude,
+            longitude,
+            lon: longitude,
+            long: longitude,
+            radiusKm: radius,
+            radius_km: radius,
+            radius: radius,
+            rad: radius,
+            sectors_str: sectorsMask,
+            sectors,
+            dependencyGraphNodes,
+            dependency_graph_nodes: dependencyGraphNodes,
+            subsector_dep: subsectorDependencies,
+            poi_dep: poiDependencies,
+            all_dep_prob: allDependencyProbabilities,
+            default_prob: Array.isArray(baseScenario?.default_prob) ? baseScenario.default_prob : [{ all_dep_prob: allDependencyProbabilities }],
+            subsector_dep_prob: subsectorProbabilityOverrides,
+            poi_dep_prob: poiProbabilityOverrides,
+            social_impact_distrib: socialImpactDistributions,
+            sector_impact_distrib: sectorImpactDistributions,
+            subsector_impact_distrib: subsectorImpactDistributions,
+            poi_impact_distrib: poiImpactDistributions,
+            iter: iterations ? Number(iterations) : (baseScenario?.iter ?? 0),
+            max_path: maxPath ? Number(maxPath) : (baseScenario?.max_path ?? 0),
+            max_chains: maxChains ? Number(maxChains) : (baseScenario?.max_chains ?? 0)
+        };
     };
 
     const readTransientConfig = (mode) => ({
         mode,
+        status: scenarioStatuses.draft,
         dependencyGraphNodes: {
             name: nameInput?.value?.trim() ?? "",
             latitude: latInput?.value?.trim() ?? "",
@@ -446,6 +616,7 @@
         transientScenarioConfig = readTransientConfig(mode);
         setEditMode(true);
         panel.dataset.scenarioMode = mode;
+        setScenarioStatus(scenarioStatuses.draft);
         void logTransientConfig();
     };
 
@@ -453,9 +624,11 @@
         transientScenarioConfig = null;
         setEditMode(false);
         panel.dataset.scenarioMode = "";
+        draftBaselineValues = null;
     };
 
     newBtn.addEventListener("click", () => {
+        draftBaselineValues = readValues();
         inputs.forEach(input => {
             input.value = "";
         });
@@ -478,32 +651,27 @@
         enterEditMode("new");
     });
 
-    duplicateBtn.addEventListener("click", () => {
-        applyValues(initialValues);
+    cancelBtn.addEventListener("click", () => {
+        restoreDraftBaselineValues();
         if (nameInput) {
             nameInput.setAttribute("placeholder", initialPlaceholders.name);
-            nameInput.value = initialPlaceholders.name;
         }
         if (latInput) {
             latInput.setAttribute("placeholder", initialPlaceholders.latitude);
-            latInput.value = initialPlaceholders.latitude;
         }
         if (lonInput) {
             lonInput.setAttribute("placeholder", initialPlaceholders.longitude);
-            lonInput.value = initialPlaceholders.longitude;
         }
         if (radiusInput) {
             radiusInput.setAttribute("placeholder", initialPlaceholders.radius);
-            radiusInput.value = initialPlaceholders.radius;
         }
-        sectorCheckboxes.forEach(cb => {
-            cb.disabled = false;
-        });
-        enterEditMode("duplicate");
-    });
-
-    backBtn.addEventListener("click", () => {
         leaveEditMode();
+        setScenarioStatus(firstDefinedValue(
+            findScenarioValue(currentScenarioData, ["status", "scenario_status"]),
+            findScenarioValue(currentScenarioData, ["status_id", "statusId"]),
+            ""
+        ));
+        hideStatus();
     });
 
     createGraphBtn.addEventListener("click", async () => {
@@ -512,6 +680,14 @@
         }
 
         syncTransientConfig();
+        const validationErrors = validateScenarioDraft();
+        if (validationErrors.length > 0) {
+            window.alert(validationErrors.join("\n"));
+            showStatus("Fill in all required fields before creating the graph.", "warning");
+            return;
+        }
+
+        const submitPayload = buildScenarioSubmitPayload();
         createGraphBtn.disabled = true;
         try {
             const response = await fetch("/api/GraphProxy/CreateGraph", {
@@ -519,14 +695,23 @@
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify(transientScenarioConfig)
+                body: JSON.stringify(submitPayload)
             });
 
             if (!response.ok) {
                 const errorText = await response.text();
                 throw new Error(errorText || `HTTP ${response.status}`);
             }
+
+            transientScenarioConfig = submitPayload;
+            transientScenarioConfig.status = scenarioStatuses.submitted;
+            setScenarioStatus(scenarioStatuses.submitted);
+            showStatus("Scenario submitted successfully. Status set to SUBMITTED.", "success");
+            leaveEditMode();
         } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : "Unable to submit the scenario.";
+            showStatus(errorMessage, "danger");
+            window.alert(errorMessage);
             console.error("Error while creating graph:", error);
         } finally {
             createGraphBtn.disabled = false;
@@ -559,6 +744,7 @@
     });
 
     setEditMode(false);
+    setScenarioStatus("");
 
     const loadSelectedScenario = async ({ endpoint, populateAssessmentTabs = false } = {}) => {
         const scenarioId = getSelectedScenarioId();
@@ -589,6 +775,11 @@
 
             currentScenarioData = scenario;
             applyScenarioToInputs(scenario);
+            setScenarioStatus(firstDefinedValue(
+                findScenarioValue(scenario, ["status", "scenario_status"]),
+                findScenarioValue(scenario, ["status_id", "statusId"]),
+                ""
+            ));
             if (populateAssessmentTabs) {
                 const resolvedStatusId = await fetchScenarioStatusContext(scenarioId);
                 await syncScenarioSetupMapLayer(scenario, resolvedStatusId);

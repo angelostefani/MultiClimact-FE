@@ -108,7 +108,14 @@ namespace MultiClimact.Controllers
             [FromBody] JsonElement configuration,
             [FromQuery] string? user_id)
         {
-            var idUser = string.IsNullOrWhiteSpace(user_id) ? "system" : user_id;
+            var authenticatedUserId =
+                User.FindFirstValue(ClaimTypes.NameIdentifier) ??
+                User.FindFirstValue("sub") ??
+                User.FindFirstValue("oid");
+
+            var idUser = !string.IsNullOrWhiteSpace(authenticatedUserId)
+                ? authenticatedUserId
+                : (string.IsNullOrWhiteSpace(user_id) ? "system" : user_id);
             var servicePath = $"users/{idUser}/scenario/submit";
             var payload = configuration.GetRawText();
             var content = new StringContent(payload, Encoding.UTF8, "application/json");
