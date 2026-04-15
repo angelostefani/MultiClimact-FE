@@ -822,10 +822,7 @@
     const d13Tab = document.getElementById("tabD13-tab");
     if (d13Tab) {
         d13Tab.addEventListener("shown.bs.tab", () => {
-            void loadSelectedScenario({
-                endpoint: "/api/GraphProxy/GetGraphs",
-                populateAssessmentTabs: false
-            });
+            hideStatus();
         });
     }
 })();
