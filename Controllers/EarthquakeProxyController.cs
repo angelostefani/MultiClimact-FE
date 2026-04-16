@@ -212,7 +212,7 @@ namespace MultiClimact.Controllers
 
             try
             {
-                var response = await _httpClient.GetAsync(serviceUrl);
+                var response = await _httpClient.GetAsync(serviceUrl, HttpContext.RequestAborted);
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
@@ -235,6 +235,11 @@ namespace MultiClimact.Controllers
                 _logger.LogError("Errore nella chiamata al servizio terremoti: {message}", e.Message);
                 return StatusCode(500, $"Errore nella chiamata al servizio terremoti: {e.Message}");
             }
+            catch (OperationCanceledException e) when (!HttpContext.RequestAborted.IsCancellationRequested)
+            {
+                _logger.LogError(e, "Timeout nella chiamata al servizio terremoti.");
+                return StatusCode(StatusCodes.Status504GatewayTimeout, "Timeout nella richiesta al servizio terremoti");
+            }
         }
 
         [HttpGet("GetLastEarthquake")]
@@ -252,7 +257,7 @@ namespace MultiClimact.Controllers
 
             try
             {
-                var response = await _httpClient.GetAsync(lastEarthquakeServiceUrl);
+                var response = await _httpClient.GetAsync(lastEarthquakeServiceUrl, HttpContext.RequestAborted);
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
@@ -269,6 +274,11 @@ namespace MultiClimact.Controllers
             {
                 _logger.LogError("Errore nella chiamata al servizio terremoti: {message}", e.Message);
                 return StatusCode(500, $"Errore nella chiamata al servizio terremoti: {e.Message}");
+            }
+            catch (OperationCanceledException e) when (!HttpContext.RequestAborted.IsCancellationRequested)
+            {
+                _logger.LogError(e, "Timeout nella chiamata al servizio terremoti.");
+                return StatusCode(StatusCodes.Status504GatewayTimeout, "Timeout nella richiesta al servizio terremoti");
             }
         }
 

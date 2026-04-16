@@ -16,6 +16,9 @@ using Newtonsoft.Json;
 
 // Create a new builder for the web application
 var builder = WebApplication.CreateBuilder(args);
+var upstreamTimeoutSeconds = builder.Configuration.GetValue<int?>("ExternalServices:TimeoutSeconds") ?? 8;
+var upstreamConnectTimeoutSeconds = builder.Configuration.GetValue<int?>("ExternalServices:ConnectTimeoutSeconds") ?? 2;
+var internalProxyTimeoutSeconds = builder.Configuration.GetValue<int?>("InternalProxy:TimeoutSeconds") ?? 10;
 
 // Add services to the container
 
@@ -68,8 +71,12 @@ builder.Services.AddHttpClient<EarthquakeServiceClient>(client =>
     var baseUrl = builder.Configuration["EarthquakeService:BaseUrl"];
     if (!string.IsNullOrEmpty(baseUrl))
         client.BaseAddress = new Uri(baseUrl);
-    client.Timeout = TimeSpan.FromSeconds(30);
+    client.Timeout = TimeSpan.FromSeconds(upstreamTimeoutSeconds);
 })
+    .ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
+    {
+        ConnectTimeout = TimeSpan.FromSeconds(upstreamConnectTimeoutSeconds)
+    })
     .AddHttpMessageHandler<RetryHandler>();
 
 builder.Services.AddHttpClient<HeatwaveServiceClient>(client =>
@@ -77,8 +84,12 @@ builder.Services.AddHttpClient<HeatwaveServiceClient>(client =>
     var baseUrl = builder.Configuration["HeatwaveService:BaseUrl"];
     if (!string.IsNullOrEmpty(baseUrl))
         client.BaseAddress = new Uri(baseUrl);
-    client.Timeout = TimeSpan.FromSeconds(30);
+    client.Timeout = TimeSpan.FromSeconds(upstreamTimeoutSeconds);
 })
+    .ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
+    {
+        ConnectTimeout = TimeSpan.FromSeconds(upstreamConnectTimeoutSeconds)
+    })
     .AddHttpMessageHandler<RetryHandler>();
 
 builder.Services.AddHttpClient<ExtremeprecipitationServiceClient>(client =>
@@ -86,8 +97,12 @@ builder.Services.AddHttpClient<ExtremeprecipitationServiceClient>(client =>
     var baseUrl = builder.Configuration["ExtremeprecipitationService:BaseUrl"];
     if (!string.IsNullOrEmpty(baseUrl))
         client.BaseAddress = new Uri(baseUrl);
-    client.Timeout = TimeSpan.FromSeconds(30);
+    client.Timeout = TimeSpan.FromSeconds(upstreamTimeoutSeconds);
 })
+    .ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
+    {
+        ConnectTimeout = TimeSpan.FromSeconds(upstreamConnectTimeoutSeconds)
+    })
     .AddHttpMessageHandler<RetryHandler>();
 
 builder.Services.AddHttpClient<GraphServiceClient>(client =>
@@ -95,16 +110,19 @@ builder.Services.AddHttpClient<GraphServiceClient>(client =>
     var baseUrl = builder.Configuration["GraphService:BaseUrl"];
     if (!string.IsNullOrEmpty(baseUrl))
         client.BaseAddress = new Uri(baseUrl);
-    client.Timeout = TimeSpan.FromSeconds(30);
+    client.Timeout = TimeSpan.FromSeconds(upstreamTimeoutSeconds);
 })
+    .ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
+    {
+        ConnectTimeout = TimeSpan.FromSeconds(upstreamConnectTimeoutSeconds)
+    })
     .AddHttpMessageHandler<RetryHandler>();
 
 // Default named client for internal calls
 builder.Services.AddHttpClient("Default", client =>
 {
-    client.Timeout = TimeSpan.FromSeconds(30);
-})
-    .AddHttpMessageHandler<RetryHandler>();
+    client.Timeout = TimeSpan.FromSeconds(internalProxyTimeoutSeconds);
+});
 
 // Add distributed memory cache for session state
 builder.Services.AddDistributedMemoryCache();

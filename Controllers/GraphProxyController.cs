@@ -78,7 +78,7 @@ namespace MultiClimact.Controllers
 
             try
             {
-                var response = await _httpClient.GetAsync(serviceUrl);
+                var response = await _httpClient.GetAsync(serviceUrl, HttpContext.RequestAborted);
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
@@ -100,6 +100,11 @@ namespace MultiClimact.Controllers
             {
                 _logger.LogError("Error while calling graph service: {message}", e.Message);
                 return StatusCode(500, $"Error while calling graph service: {e.Message}");
+            }
+            catch (OperationCanceledException e) when (!HttpContext.RequestAborted.IsCancellationRequested)
+            {
+                _logger.LogError(e, "Timeout while calling graph service.");
+                return StatusCode(StatusCodes.Status504GatewayTimeout, "Timeout while calling graph service");
             }
         }
 
@@ -124,7 +129,7 @@ namespace MultiClimact.Controllers
 
             try
             {
-                var response = await _httpClient.PostAsync(servicePath, content);
+                var response = await _httpClient.PostAsync(servicePath, content, HttpContext.RequestAborted);
                 var responseContent = await response.Content.ReadAsStringAsync();
 
                 if (response.IsSuccessStatusCode)
@@ -146,6 +151,11 @@ namespace MultiClimact.Controllers
                 _logger.LogError("Error while calling CreateGraph service: {message}", e.Message);
                 return StatusCode(500, $"Error while calling graph service: {e.Message}");
             }
+            catch (OperationCanceledException e) when (!HttpContext.RequestAborted.IsCancellationRequested)
+            {
+                _logger.LogError(e, "Timeout while calling CreateGraph service.");
+                return StatusCode(StatusCodes.Status504GatewayTimeout, "Timeout while calling graph service");
+            }
         }
 
         [HttpGet("GetDefaultScenario")]
@@ -158,7 +168,7 @@ namespace MultiClimact.Controllers
 
             try
             {
-                var response = await _httpClient.GetAsync(servicePath);
+                var response = await _httpClient.GetAsync(servicePath, HttpContext.RequestAborted);
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
@@ -178,6 +188,11 @@ namespace MultiClimact.Controllers
             {
                 _logger.LogError("Error while calling default scenario service: {message}", e.Message);
                 return StatusCode(500, $"Error while calling default scenario service: {e.Message}");
+            }
+            catch (OperationCanceledException e) when (!HttpContext.RequestAborted.IsCancellationRequested)
+            {
+                _logger.LogError(e, "Timeout while calling default scenario service.");
+                return StatusCode(StatusCodes.Status504GatewayTimeout, "Timeout while calling default scenario service");
             }
         }
 
@@ -199,7 +214,7 @@ namespace MultiClimact.Controllers
 
             try
             {
-                var response = await _httpClient.GetAsync(servicePath);
+                var response = await _httpClient.GetAsync(servicePath, HttpContext.RequestAborted);
                 var content = await response.Content.ReadAsStringAsync();
 
                 if (response.IsSuccessStatusCode)
@@ -222,6 +237,11 @@ namespace MultiClimact.Controllers
             {
                 _logger.LogError("Error while calling scenario by id service: {message}", e.Message);
                 return StatusCode(500, $"Error while calling scenario by id service: {e.Message}");
+            }
+            catch (OperationCanceledException e) when (!HttpContext.RequestAborted.IsCancellationRequested)
+            {
+                _logger.LogError(e, "Timeout while calling scenario by id service.");
+                return StatusCode(StatusCodes.Status504GatewayTimeout, "Timeout while calling scenario by id service");
             }
         }
 

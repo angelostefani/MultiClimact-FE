@@ -40,10 +40,11 @@ namespace MultiClimact.Pages
         /// <returns>A Task representing the asynchronous operation.</returns>
         public async Task OnGetAsync()
         {
-            await GetLastEarthquakeIdRun();
-            await GetLastHeatwaveIdRun();
-            await GetLastExtremePrecipitationIdRun();
-            await GetDefaultScenarioIdConf();
+            await Task.WhenAll(
+                GetLastEarthquakeIdRun(),
+                GetLastHeatwaveIdRun(),
+                GetLastExtremePrecipitationIdRun(),
+                GetDefaultScenarioIdConf());
 
             ConfigurationToViewDataMapping();
         }
@@ -62,24 +63,24 @@ namespace MultiClimact.Pages
             try
             {
                 var client = _httpClientFactory.CreateClient("Default");
-                    var response = await client.GetAsync(serviceUrl);
+                var response = await client.GetAsync(serviceUrl, HttpContext.RequestAborted);
 
-                    if (response.IsSuccessStatusCode)
-                    {
-                        // Read the response content as a JSON string
-                        var responseBody = await response.Content.ReadAsStringAsync();
+                if (response.IsSuccessStatusCode)
+                {
+                    // Read the response content as a JSON string
+                    var responseBody = await response.Content.ReadAsStringAsync();
 
-                        // Deserialize the JSON response into a .NET object
-                        var data = JsonSerializer.Deserialize<LastEarthquakeResponse>(responseBody);
+                    // Deserialize the JSON response into a .NET object
+                    var data = JsonSerializer.Deserialize<LastEarthquakeResponse>(responseBody);
 
-                        // Store the retrieved earthquake ID in ViewData
-                        ViewData["idRunLastEarthquake"] = data?.id_run ?? "idRun not available in the response";
-                    }
-                    else
-                    {
-                        // Handle unsuccessful API response
-                        ViewData["idRunLastEarthquake"] = $"Error calling the service: {response.StatusCode}";
-                    }
+                    // Store the retrieved earthquake ID in ViewData
+                    ViewData["idRunLastEarthquake"] = data?.id_run ?? "idRun not available in the response";
+                }
+                else
+                {
+                    // Handle unsuccessful API response
+                    ViewData["idRunLastEarthquake"] = $"Error calling the service: {response.StatusCode}";
+                }
             }
             catch (Exception ex)
             {
@@ -103,24 +104,24 @@ namespace MultiClimact.Pages
             try
             {
                 var client = _httpClientFactory.CreateClient("Default");
-                    var response = await client.GetAsync(serviceUrl);
+                var response = await client.GetAsync(serviceUrl, HttpContext.RequestAborted);
 
-                    if (response.IsSuccessStatusCode)
-                    {
-                        // Read the response content as a JSON string
-                        var responseBody = await response.Content.ReadAsStringAsync();
+                if (response.IsSuccessStatusCode)
+                {
+                    // Read the response content as a JSON string
+                    var responseBody = await response.Content.ReadAsStringAsync();
 
-                        // Deserialize the JSON response into a .NET object
-                        var data = JsonSerializer.Deserialize<LastHeatwaveResponse>(responseBody);
+                    // Deserialize the JSON response into a .NET object
+                    var data = JsonSerializer.Deserialize<LastHeatwaveResponse>(responseBody);
 
-                        // Store the retrieved earthquake ID in ViewData
-                        ViewData["idRunLastHeatwave"] = data?.id_run?.ToString() ?? "idRun not available in the response";
-                    }
-                    else
-                    {
-                        // Handle unsuccessful API response
-                        ViewData["idRunLastHeatwave"] = $"Error calling the service: {response.StatusCode}";
-                    }
+                    // Store the retrieved earthquake ID in ViewData
+                    ViewData["idRunLastHeatwave"] = data?.id_run?.ToString() ?? "idRun not available in the response";
+                }
+                else
+                {
+                    // Handle unsuccessful API response
+                    ViewData["idRunLastHeatwave"] = $"Error calling the service: {response.StatusCode}";
+                }
             }
             catch (Exception ex)
             {
@@ -143,7 +144,7 @@ namespace MultiClimact.Pages
             try
             {
                 var client = _httpClientFactory.CreateClient("Default");
-                var response = await client.GetAsync(serviceUrl);
+                var response = await client.GetAsync(serviceUrl, HttpContext.RequestAborted);
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -171,7 +172,7 @@ namespace MultiClimact.Pages
             try
             {
                 var client = _httpClientFactory.CreateClient("Default");
-                var response = await client.GetAsync(serviceUrl);
+                var response = await client.GetAsync(serviceUrl, HttpContext.RequestAborted);
 
                 if (response.IsSuccessStatusCode)
                 {

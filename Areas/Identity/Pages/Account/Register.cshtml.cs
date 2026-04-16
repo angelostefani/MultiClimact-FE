@@ -131,7 +131,7 @@ namespace MultiClimact.Areas.Identity.Pages.Account
                         username = user.UserName,
                         name = user.Email
                     };
-                    var response = await this.httpClient.PostAsJsonAsync($"http://192.168.154.23:8000/users", data);
+                    var response = await this.httpClient.PostAsJsonAsync($"http://192.168.155.112:8000/users", data);
                     var responseContent = await response.Content.ReadAsStringAsync();
                     _logger.LogInformation($"La risposta del backend per la creazione dell'utente è: {responseContent}");
                     var userId = await _userManager.GetUserIdAsync(user);

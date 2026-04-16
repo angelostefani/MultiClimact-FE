@@ -50,7 +50,7 @@ namespace MultiClimact.Controllers
 
             try
             {
-                var response = await _httpClient.GetAsync(serviceUrl);
+                var response = await _httpClient.GetAsync(serviceUrl, HttpContext.RequestAborted);
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
@@ -73,6 +73,11 @@ namespace MultiClimact.Controllers
                 _logger.LogError("Errore nella chiamata al servizio heatwave: {message}", e.Message);
                 return StatusCode(500, $"Errore nella chiamata al servizio heatwave: {e.Message}");
             }
+            catch (OperationCanceledException e) when (!HttpContext.RequestAborted.IsCancellationRequested)
+            {
+                _logger.LogError(e, "Timeout nella chiamata al servizio heatwave.");
+                return StatusCode(StatusCodes.Status504GatewayTimeout, "Timeout nella richiesta al servizio heatwave");
+            }
         }
 
         [HttpGet("GetLastHeatwave")]
@@ -90,7 +95,7 @@ namespace MultiClimact.Controllers
 
             try
             {
-                var response = await _httpClient.GetAsync(lastHeatwaveServiceUrl);
+                var response = await _httpClient.GetAsync(lastHeatwaveServiceUrl, HttpContext.RequestAborted);
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
@@ -107,6 +112,11 @@ namespace MultiClimact.Controllers
             {
                 _logger.LogError("Errore nella chiamata al servizio heatwaves: {message}", e.Message);
                 return StatusCode(500, $"Errore nella chiamata al servizio heatwaves: {e.Message}");
+            }
+            catch (OperationCanceledException e) when (!HttpContext.RequestAborted.IsCancellationRequested)
+            {
+                _logger.LogError(e, "Timeout nella chiamata al servizio heatwaves.");
+                return StatusCode(StatusCodes.Status504GatewayTimeout, "Timeout nella richiesta al servizio heatwaves");
             }
         }
 
