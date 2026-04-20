@@ -2,6 +2,14 @@ let selectedGraphIdConf = null;
 let selectedGraphRowIndex = null;
 let activeScenarioID = '';
 let selectedGraphStatusId = null;
+const graphStatusOptions = [
+    { id: 1, label: "submitted" },
+    { id: 2, label: "dispatching" },
+    { id: 3, label: "processing" },
+    { id: 4, label: "initialized" },
+    { id: 5, label: "ready" },
+    { id: 6, label: "failed" }
+];
 
 function formatGraphDate(value) {
     if (!value) {
@@ -21,6 +29,30 @@ function htmlDateToWs13Date(htmlDate) {
         return "";
     }
     return htmlDate.replaceAll("-", ":");
+}
+
+function initializeGraphStatusDropdown() {
+    const statusSelect = document.getElementById("graphStatusId");
+    if (!statusSelect) {
+        return;
+    }
+
+    const currentValue = statusSelect.value;
+    statusSelect.innerHTML = "";
+
+    const defaultOption = document.createElement("option");
+    defaultOption.value = "";
+    defaultOption.textContent = "All statuses";
+    statusSelect.appendChild(defaultOption);
+
+    graphStatusOptions.forEach(status => {
+        const option = document.createElement("option");
+        option.value = status.id.toString();
+        option.textContent = status.label;
+        statusSelect.appendChild(option);
+    });
+
+    statusSelect.value = currentValue;
 }
 
 function normalizeGraphItem(raw) {
@@ -309,6 +341,8 @@ function paginateGraphTable() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+    initializeGraphStatusDropdown();
+
     const defaultId = document.getElementById("defaultScenarioIdConf")?.dataset?.value ?? "";
     if (defaultId && defaultId !== "undefined") {
         activeScenarioID = defaultId;
