@@ -245,6 +245,14 @@
         return ids.length > 0 ? `${ids.join("; ")};` : "";
     };
 
+    const getFailureSetupValue = (scenario) => {
+        if (Array.isArray(scenario?.failure) && scenario.failure.length > 0) {
+            return JSON.stringify(scenario.failure, null, 2);
+        }
+
+        return getFailurePoiListValue(scenario);
+    };
+
     const publishLoadedScenario = (scenarioId, scenario) => {
         window.resilienceScenarioState = {
             scenarioId: scenarioId?.toString() ?? "",
@@ -291,12 +299,12 @@
         setEditorValueById("subsec_dep_prob", scenario?.subsector_dep_prob ?? []);
         setEditorValueById("poi_dep_prob", scenario?.poi_dep_prob ?? []);
 
-        const failureList = getFailurePoiListValue(scenario);
-        setInputValueById("failure-poi-list", failureList);
+        const failureSetupValue = getFailureSetupValue(scenario);
+        setInputValueById("failure-poi-list", failureSetupValue);
 
         const failureTextarea = document.getElementById("failure-poi-list");
         if (failureTextarea) {
-            failureTextarea.dataset.default = failureList;
+            failureTextarea.dataset.default = failureSetupValue;
         }
 
         setEditorValueById("impact-distributions-editor", scenario?.social_impact_distrib ?? []);
@@ -325,6 +333,8 @@
         const dependencyGraphNodes = extractDependencyGraphNodes(scenario);
 
         const latitude = firstDefinedValue(
+            findScenarioValue(dependencyGraphNodes, ["imp_lat"]),
+            findScenarioValue(scenario, ["imp_lat"]),
             findScenarioValue(dependencyGraphNodes, ["latitude", "lat"]),
             findScenarioValue(scenario, ["latitude", "lat"])
         );
@@ -333,10 +343,14 @@
             findScenarioValue(scenario, ["imp_name", "name", "scenarioName"])
         );
         const longitude = firstDefinedValue(
+            findScenarioValue(dependencyGraphNodes, ["imp_lon"]),
+            findScenarioValue(scenario, ["imp_lon"]),
             findScenarioValue(dependencyGraphNodes, ["longitude", "lon", "long"]),
             findScenarioValue(scenario, ["longitude", "lon", "long"])
         );
         const radius = firstDefinedValue(
+            findScenarioValue(dependencyGraphNodes, ["imp_radius"]),
+            findScenarioValue(scenario, ["imp_radius"]),
             findScenarioValue(dependencyGraphNodes, ["radiusKm", "radius_km", "radius"]),
             findScenarioValue(scenario, ["radiusKm", "radius_km", "radius", "rad"])
         );
@@ -384,7 +398,7 @@
             return;
         }
 
-        const sectorsMask = findScenarioValue(scenario, ["sectors_str", "sectorsMask", "sectorMask"]);
+        const sectorsMask = findScenarioValue(scenario, ["imp_sector_str", "sectors_str", "sectorsMask", "sectorMask"]);
         if (typeof sectorsMask === "string" && sectorsMask.length > 0) {
             sectorCheckboxes.forEach((checkbox, index) => {
                 checkbox.checked = sectorsMask.charAt(index) === "1";
@@ -516,75 +530,77 @@
             .filter((entry) => entry.checked && entry.label)
             .map((entry) => entry.label);
 
+    const parseNullableNumber = (...values) => {
+        for (const value of values) {
+            if (value === undefined || value === null) {
+                continue;
+            }
+
+            const normalizedValue = value.toString().trim();
+            if (!normalizedValue) {
+                continue;
+            }
+
+            const parsedValue = Number(normalizedValue.replace(",", "."));
+            if (Number.isFinite(parsedValue)) {
+                return parsedValue;
+            }
+        }
+
+        return null;
+    };
+
     const buildScenarioSubmitPayload = () => {
         const baseScenario = currentScenarioData ? deepClone(currentScenarioData) : {};
-        const dependencyGraphNodes = deepClone(extractDependencyGraphNodes(baseScenario));
-
         const name = nameInput?.value?.trim() ?? "";
         const latitude = latInput?.value?.trim() ?? "";
         const longitude = lonInput?.value?.trim() ?? "";
         const radius = radiusInput?.value?.trim() ?? "";
-        const sectors = buildSelectedSectorNames();
         const sectorsMask = buildSectorsMask();
-
-        const subsectorDependencies = parseJsonEditorValue("subsec_dep", baseScenario?.subsector_dep ?? []);
-        const poiDependencies = parseJsonEditorValue("poi_dep", baseScenario?.poi_dep ?? []);
-        const allDependencyProbabilities = parseJsonEditorValue("all_dep_prob", getDefaultDependencyProbabilities(baseScenario) ?? {});
-        const subsectorProbabilityOverrides = parseJsonEditorValue("subsec_dep_prob", baseScenario?.subsector_dep_prob ?? []);
-        const poiProbabilityOverrides = parseJsonEditorValue("poi_dep_prob", baseScenario?.poi_dep_prob ?? []);
-        const socialImpactDistributions = parseJsonEditorValue("impact-distributions-editor", baseScenario?.social_impact_distrib ?? []);
-        const sectorImpactDistributions = parseJsonEditorValue("impact-sector-editor", baseScenario?.sector_impact_distrib ?? []);
-        const subsectorImpactDistributions = parseJsonEditorValue("impact-subsector-editor", baseScenario?.subsector_impact_distrib ?? []);
-        const poiImpactDistributions = parseJsonEditorValue("impact-poi-editor", baseScenario?.poi_impact_distrib ?? []);
-
-        const iterations = document.getElementById("impact-mc-iterations")?.value?.trim() ?? "";
-        const maxPath = document.getElementById("impact-mc-max-path")?.value?.trim() ?? "";
-        const maxChains = document.getElementById("impact-mc-max-chains")?.value?.trim() ?? "";
-
-        dependencyGraphNodes.name = name;
-        dependencyGraphNodes.scenarioName = name;
-        dependencyGraphNodes.latitude = latitude;
-        dependencyGraphNodes.lat = latitude;
-        dependencyGraphNodes.longitude = longitude;
-        dependencyGraphNodes.lon = longitude;
-        dependencyGraphNodes.radiusKm = radius;
-        dependencyGraphNodes.radius_km = radius;
-        dependencyGraphNodes.radius = radius;
-        dependencyGraphNodes.sectors = sectors;
-        dependencyGraphNodes.selectedSectors = sectors;
+        const submitLatitude = parseNullableNumber(
+            latitude,
+            baseScenario?.lat,
+            baseScenario?.imp_lat,
+            baseScenario?.latitude,
+            baseScenario?.dependencyGraphNodes?.lat,
+            baseScenario?.dependencyGraphNodes?.latitude,
+            baseScenario?.dependency_graph_nodes?.lat,
+            baseScenario?.dependency_graph_nodes?.latitude
+        );
+        const submitLongitude = parseNullableNumber(
+            longitude,
+            baseScenario?.lon,
+            baseScenario?.long,
+            baseScenario?.imp_lon,
+            baseScenario?.longitude,
+            baseScenario?.dependencyGraphNodes?.lon,
+            baseScenario?.dependencyGraphNodes?.longitude,
+            baseScenario?.dependency_graph_nodes?.lon,
+            baseScenario?.dependency_graph_nodes?.longitude
+        );
+        const submitRadius = parseNullableNumber(
+            radius,
+            baseScenario?.rad,
+            baseScenario?.imp_radius,
+            baseScenario?.radiusKm,
+            baseScenario?.radius_km,
+            baseScenario?.radius,
+            baseScenario?.dependencyGraphNodes?.radius,
+            baseScenario?.dependencyGraphNodes?.radiusKm,
+            baseScenario?.dependency_graph_nodes?.radius,
+            baseScenario?.dependency_graph_nodes?.radiusKm
+        );
+        const submitSubsectors = Array.isArray(baseScenario?.subsectors)
+            ? deepClone(baseScenario.subsectors)
+            : (Array.isArray(baseScenario?.imp_subsectors) ? deepClone(baseScenario.imp_subsectors) : []);
 
         return {
-            ...baseScenario,
-            status: scenarioStatuses.draft,
             imp_name: name,
-            name,
-            scenarioName: name,
-            latitude,
-            lat: latitude,
-            longitude,
-            lon: longitude,
-            long: longitude,
-            radiusKm: radius,
-            radius_km: radius,
-            radius: radius,
-            rad: radius,
+            lat: submitLatitude,
+            lon: submitLongitude,
+            rad: submitRadius,
             sectors_str: sectorsMask,
-            sectors,
-            dependencyGraphNodes,
-            dependency_graph_nodes: dependencyGraphNodes,
-            subsector_dep: subsectorDependencies,
-            poi_dep: poiDependencies,
-            all_dep_prob: allDependencyProbabilities,
-            default_prob: Array.isArray(baseScenario?.default_prob) ? baseScenario.default_prob : [{ all_dep_prob: allDependencyProbabilities }],
-            subsector_dep_prob: subsectorProbabilityOverrides,
-            poi_dep_prob: poiProbabilityOverrides,
-            social_impact_distrib: socialImpactDistributions,
-            sector_impact_distrib: sectorImpactDistributions,
-            subsector_impact_distrib: subsectorImpactDistributions,
-            poi_impact_distrib: poiImpactDistributions,
-            iter: iterations ? Number(iterations) : (baseScenario?.iter ?? 0),
-            max_path: maxPath ? Number(maxPath) : (baseScenario?.max_path ?? 0),
-            max_chains: maxChains ? Number(maxChains) : (baseScenario?.max_chains ?? 0)
+            subsectors: submitSubsectors
         };
     };
 

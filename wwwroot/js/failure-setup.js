@@ -12,6 +12,20 @@
     statusEl.style.color = isValid ? '#15803d' : '#b91c1c';
   };
 
+  const isValidFailureJson = (value) => {
+    const raw = (value || '').trim();
+    if (raw.length === 0) {
+      return false;
+    }
+
+    try {
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) || (parsed && typeof parsed === 'object');
+    } catch {
+      return false;
+    }
+  };
+
   const isValidList = (value) => {
     const raw = (value || '').trim();
     if (raw.length === 0) {
@@ -47,8 +61,14 @@
   const validateButton = document.querySelector('#panelD15 .fs-validate');
   if (validateButton) {
     validateButton.addEventListener('click', () => {
-      const isValid = isValidList(textarea.value);
-      setStatus(isValid ? 'Valid list (each item ends with ;)': 'Invalid format: each item must end with ;', isValid);
+      const rawValue = textarea.value;
+      if (isValidFailureJson(rawValue)) {
+        setStatus('Valid failure JSON block.', true);
+        return;
+      }
+
+      const isValid = isValidList(rawValue);
+      setStatus(isValid ? 'Valid list (each item ends with ;)' : 'Invalid format: provide valid failure JSON or a semicolon-separated POI list.', isValid);
     });
   }
 
