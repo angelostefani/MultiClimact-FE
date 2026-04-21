@@ -269,6 +269,7 @@ namespace MultiClimact.Controllers
             var content = new StringContent(payload, Encoding.UTF8, "application/json");
 
             _logger.LogInformation("Posting scenario save to Graph Service URL: {servicePath}", servicePath);
+            _logger.LogInformation("WS19 SaveScenario request payload for scenario {idConf}: {payload}", id_conf.Value, payload);
 
             try
             {
@@ -277,12 +278,17 @@ namespace MultiClimact.Controllers
 
                 if (response.IsSuccessStatusCode)
                 {
+                    _logger.LogInformation("WS19 SaveScenario response for scenario {idConf}: {responseContent}",
+                        id_conf.Value,
+                        string.IsNullOrWhiteSpace(responseContent) ? "{\"success\":true}" : responseContent);
                     return Content(
                         string.IsNullOrWhiteSpace(responseContent) ? "{\"success\":true}" : responseContent,
                         "application/json");
                 }
 
-                _logger.LogError("Error SaveScenario Service: {statusCode}", response.StatusCode);
+                _logger.LogError("Error SaveScenario Service: {statusCode}, response: {responseContent}",
+                    response.StatusCode,
+                    responseContent);
                 return StatusCode((int)response.StatusCode,
                     string.IsNullOrWhiteSpace(responseContent) ? "Error saving scenario" : responseContent);
             }
