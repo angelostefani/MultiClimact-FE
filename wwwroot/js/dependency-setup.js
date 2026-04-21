@@ -1,4 +1,88 @@
 document.addEventListener("DOMContentLoaded", function () {
+    const getEditorRawValue = (elementId) => {
+        const textarea = document.getElementById(elementId);
+        if (!textarea) {
+            return "";
+        }
+
+        if (textarea._cmEditor) {
+            return textarea._cmEditor.getValue() ?? "";
+        }
+
+        return textarea.value ?? "";
+    };
+
+    const deepClone = (value) => {
+        if (value === undefined || value === null) {
+            return value;
+        }
+
+        return JSON.parse(JSON.stringify(value));
+    };
+
+    const parseJsonField = (elementId, fallbackValue) => {
+        const rawValue = getEditorRawValue(elementId).trim();
+        if (!rawValue) {
+            return deepClone(fallbackValue);
+        }
+
+        try {
+            return JSON.parse(rawValue);
+        } catch {
+            return deepClone(fallbackValue);
+        }
+    };
+
+    const parseIntegerField = (elementId, fallbackValue = 0) => {
+        const rawValue = document.getElementById(elementId)?.value?.toString().trim() ?? "";
+        const parsedValue = Number.parseInt(rawValue, 10);
+        return Number.isFinite(parsedValue) ? parsedValue : fallbackValue;
+    };
+
+    const parseFailureField = (rawValue) => {
+        const normalizedRawValue = (rawValue ?? "").trim();
+        if (!normalizedRawValue) {
+            return [];
+        }
+
+        try {
+            const parsedValue = JSON.parse(normalizedRawValue);
+            if (Array.isArray(parsedValue)) {
+                return parsedValue;
+            }
+
+            if (parsedValue && typeof parsedValue === "object" && Array.isArray(parsedValue.failure)) {
+                return parsedValue.failure;
+            }
+        } catch {
+            const tokens = normalizedRawValue
+                .split(";")
+                .map((token) => token.trim())
+                .filter(Boolean);
+
+            if (tokens.length > 0) {
+                return tokens;
+            }
+        }
+
+        return [];
+    };
+
+    window.buildResilienceScenarioSavePayload = () => ({
+        social_impact_distrib: parseJsonField("impact-distributions-editor", []),
+        subsector_dep: parseJsonField("subsec_dep", []),
+        poi_dep: parseJsonField("poi_dep", []),
+        subsector_dep_prob: parseJsonField("subsec_dep_prob", []),
+        poi_dep_prob: parseJsonField("poi_dep_prob", []),
+        failure: parseFailureField(document.getElementById("failure-poi-list")?.value ?? ""),
+        sector_impact_distrib: parseJsonField("impact-sector-editor", []),
+        subsector_impact_distrib: parseJsonField("impact-subsector-editor", []),
+        poi_impact_distrib: parseJsonField("impact-poi-editor", []),
+        iter: parseIntegerField("impact-mc-iterations", 0),
+        max_path: parseIntegerField("impact-mc-max-path", 0),
+        max_chains: parseIntegerField("impact-mc-max-chains", 0)
+    });
+
     const getMapInstance = () => (typeof window !== "undefined" ? window.mapD14 : undefined);
 
     const resizeMapInstance = (mapInstance) => {

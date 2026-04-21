@@ -129,7 +129,7 @@ namespace MultiClimact.Controllers
 
             try
             {
-                var response = await _httpClient.PostAsync(servicePath, content, HttpContext.RequestAborted);
+                var response = await _httpClient.PutAsync(servicePath, content, HttpContext.RequestAborted);
                 var responseContent = await response.Content.ReadAsStringAsync();
 
                 if (response.IsSuccessStatusCode)
@@ -242,6 +242,59 @@ namespace MultiClimact.Controllers
             {
                 _logger.LogError(e, "Timeout while calling scenario by id service.");
                 return StatusCode(StatusCodes.Status504GatewayTimeout, "Timeout while calling scenario by id service");
+            }
+        }
+
+        /* questo metodo chiama il servizio WS19 per salvare lo scenario corrente */
+        [HttpPut("SaveScenario")]
+        public async Task<IActionResult> SaveScenario([FromQuery] int? id_conf, [FromBody] JsonElement configuration)
+        {
+            if (!id_conf.HasValue || id_conf.Value <= 0)
+            {
+                return BadRequest("A valid id_conf is required.");
+            }
+
+            var idUser =
+                User.FindFirstValue(ClaimTypes.NameIdentifier) ??
+                User.FindFirstValue("sub") ??
+                User.FindFirstValue("oid");
+
+            if (string.IsNullOrWhiteSpace(idUser))
+            {
+                return BadRequest("Authenticated user id not available.");
+            }
+
+            var servicePath = $"users/{idUser}/scenario/{id_conf.Value}/save";
+            var payload = configuration.GetRawText();
+            var content = new StringContent(payload, Encoding.UTF8, "application/json");
+
+            _logger.LogInformation("Posting scenario save to Graph Service URL: {servicePath}", servicePath);
+
+            try
+            {
+                var response = await _httpClient.PutAsync(servicePath, content, HttpContext.RequestAborted);
+                var responseContent = await response.Content.ReadAsStringAsync();
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return Content(
+                        string.IsNullOrWhiteSpace(responseContent) ? "{\"success\":true}" : responseContent,
+                        "application/json");
+                }
+
+                _logger.LogError("Error SaveScenario Service: {statusCode}", response.StatusCode);
+                return StatusCode((int)response.StatusCode,
+                    string.IsNullOrWhiteSpace(responseContent) ? "Error saving scenario" : responseContent);
+            }
+            catch (HttpRequestException e)
+            {
+                _logger.LogError("Error while calling SaveScenario service: {message}", e.Message);
+                return StatusCode(500, $"Error while calling save scenario service: {e.Message}");
+            }
+            catch (OperationCanceledException e) when (!HttpContext.RequestAborted.IsCancellationRequested)
+            {
+                _logger.LogError(e, "Timeout while calling SaveScenario service.");
+                return StatusCode(StatusCodes.Status504GatewayTimeout, "Timeout while calling save scenario service");
             }
         }
 
