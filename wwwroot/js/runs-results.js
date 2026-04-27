@@ -58,15 +58,53 @@
 
   const runBtn = panel.querySelector('#rr-config-run');
   const executeRunBtn = panel.querySelector('#rr-run');
-  const runName = panel.querySelector('#rr-run-name');
-  runBtn?.addEventListener('click', () => {
-    console.log('Run simulation', { name: runName?.value ?? '' });
+  const resolveSelectedScenarioId = () =>
+    (typeof activeScenarioID !== 'undefined' && activeScenarioID !== null && `${activeScenarioID}`.trim() !== ''
+      ? activeScenarioID.toString()
+      : (localStorage.getItem('lastSelectedGraphIdConf') || '').trim());
+
+  runBtn?.addEventListener('click', async () => {
+    const scenarioId = resolveSelectedScenarioId();
+    if (!scenarioId) {
+      window.alert('Select a scenario before saving.');
+      return;
+    }
+
+    if (typeof window.buildResilienceScenarioSavePayload !== 'function') {
+      window.alert('Scenario payload builder is not available.');
+      return;
+    }
+
+    const payload = window.buildResilienceScenarioSavePayload();
     runBtn.disabled = true;
-    setTimeout(() => { runBtn.disabled = false; }, 500);
+
+    try {
+      const response = await fetch(`/api/GraphProxy/SaveScenario?id_conf=${encodeURIComponent(scenarioId)}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || `HTTP ${response.status}`);
+      }
+
+      const json = await response.json();
+      console.log('Scenario saved', { scenarioId, response: json, payload });
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unable to save the scenario.';
+      console.error('Error while saving scenario', { scenarioId, error, payload });
+      window.alert(errorMessage);
+    } finally {
+      runBtn.disabled = false;
+    }
   });
 
   executeRunBtn?.addEventListener('click', () => {
-    console.log('Execute run', { scenarioName: runName?.value ?? '' });
+    console.log('Execute run', { scenarioId: resolveSelectedScenarioId() });
     executeRunBtn.disabled = true;
     setTimeout(() => { executeRunBtn.disabled = false; }, 500);
   });
