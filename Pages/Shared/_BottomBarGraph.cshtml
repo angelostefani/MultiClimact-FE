@@ -28,6 +28,16 @@
                             <option value="">All statuses</option>
                         </select>
                     </div>
+                    <div class="col-12 col-md-6">
+                        <label for="graphIdResrun" class="form-label">id_resrun</label>
+                        <input type="number" min="1" class="form-control" id="graphIdResrun" name="id_resrun" placeholder="Exact id_resrun">
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label for="graphStatusResId" class="form-label">Resilience Status</label>
+                        <select class="form-select" id="graphStatusResId" name="status_res_id">
+                            <option value="">All resilience statuses</option>
+                        </select>
+                    </div>
                     <div class="col-12 bottom-bar-actions">
                         <button type="submit" class="btn btn-primary bottom-bar-search-btn">
                             <i class="bi bi-search"></i>
@@ -48,6 +58,8 @@
                         <th>Date</th>
                         <th>Monte Carlo It.</th>
                         <th>Status</th>
+                        <th>id_resrun</th>
+                        <th>Resilience Status</th>
                     </tr>
                 </thead>
                 <tbody id="graphTableBody">

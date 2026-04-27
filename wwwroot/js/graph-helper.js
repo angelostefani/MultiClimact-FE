@@ -32,37 +32,76 @@ function htmlDateToWs13Date(htmlDate) {
 }
 
 function initializeGraphStatusDropdown() {
-    const statusSelect = document.getElementById("graphStatusId");
-    if (!statusSelect) {
-        return;
+    const statusSelects = [
+        {
+            element: document.getElementById("graphStatusId"),
+            defaultText: "All statuses"
+        },
+        {
+            element: document.getElementById("graphStatusResId"),
+            defaultText: "All resilience statuses"
+        }
+    ];
+
+    statusSelects.forEach(({ element, defaultText }) => {
+        if (!element) {
+            return;
+        }
+
+        const currentValue = element.value;
+        element.innerHTML = "";
+
+        const defaultOption = document.createElement("option");
+        defaultOption.value = "";
+        defaultOption.textContent = defaultText;
+        element.appendChild(defaultOption);
+
+        graphStatusOptions.forEach(status => {
+            const option = document.createElement("option");
+            option.value = status.id.toString();
+            option.textContent = status.label;
+            element.appendChild(option);
+        });
+
+        element.value = currentValue;
+    });
+}
+
+function getGraphStatusLabel(statusId, statusStr) {
+    if (statusStr !== undefined && statusStr !== null && statusStr !== "") {
+        return statusStr;
     }
 
-    const currentValue = statusSelect.value;
-    statusSelect.innerHTML = "";
+    const normalizedStatusId = statusId?.toString() ?? "";
+    if (!normalizedStatusId) {
+        return "N/A";
+    }
 
-    const defaultOption = document.createElement("option");
-    defaultOption.value = "";
-    defaultOption.textContent = "All statuses";
-    statusSelect.appendChild(defaultOption);
+    return graphStatusOptions.find(status => status.id.toString() === normalizedStatusId)?.label ?? normalizedStatusId;
+}
 
-    graphStatusOptions.forEach(status => {
-        const option = document.createElement("option");
-        option.value = status.id.toString();
-        option.textContent = status.label;
-        statusSelect.appendChild(option);
-    });
+function getDisplayValue(value) {
+    if (value === undefined || value === null || value === "") {
+        return "N/A";
+    }
 
-    statusSelect.value = currentValue;
+    return value;
 }
 
 function normalizeGraphItem(raw) {
+    const statusId = raw?.status_id ?? raw?.statusId ?? "";
+    const statusResId = raw?.status_res_id ?? raw?.statusResId ?? "";
+
     return {
         idConf: raw?.id_conf ?? raw?.idConf ?? raw?.id ?? "",
         name: raw?.imp_name ?? raw?.name ?? "N/A",
         date: formatGraphDate(raw?.imp_date ?? raw?.date),
-        monteCarloIterations: raw?.imp_mcarlo_it ?? "N/A",
-        statusId: raw?.status_id ?? raw?.statusId ?? "N/A",
-        statusStr: raw?.status_str ?? raw?.statusStr ?? "N/A"
+        monteCarloIterations: getDisplayValue(raw?.imp_mcarlo_it),
+        statusId,
+        statusStr: getGraphStatusLabel(statusId, raw?.status_str ?? raw?.statusStr),
+        idResrun: getDisplayValue(raw?.id_resrun ?? raw?.idResrun),
+        statusResId,
+        statusResStr: getGraphStatusLabel(statusResId, raw?.status_res_str ?? raw?.statusResStr)
     };
 }
 
@@ -77,7 +116,7 @@ function populateGraphTable(data) {
     if (!Array.isArray(data) || data.length === 0) {
         const row = document.createElement("tr");
         const noDataCell = document.createElement("td");
-        noDataCell.setAttribute("colspan", 6);
+        noDataCell.setAttribute("colspan", 8);
         noDataCell.textContent = "No data available";
         row.appendChild(noDataCell);
         tableBody.appendChild(row);
@@ -144,12 +183,20 @@ function populateGraphTable(data) {
         const statusCell = document.createElement("td");
         statusCell.textContent = normalized.statusStr?.toString() || "N/A";
 
+        const idResrunCell = document.createElement("td");
+        idResrunCell.textContent = normalized.idResrun?.toString() || "N/A";
+
+        const statusResCell = document.createElement("td");
+        statusResCell.textContent = normalized.statusResStr?.toString() || "N/A";
+
         row.appendChild(selectCell);
         row.appendChild(idConfCell);
         row.appendChild(nameCell);
         row.appendChild(dateCell);
         row.appendChild(mcarloCell);
         row.appendChild(statusCell);
+        row.appendChild(idResrunCell);
+        row.appendChild(statusResCell);
         tableBody.appendChild(row);
     });
 }
@@ -169,6 +216,8 @@ async function fetchGraphData(event) {
     const graphName = formData.get("name")?.toString().trim() || "";
     const idConfRaw = formData.get("id_conf")?.toString().trim() || "";
     const statusIdRaw = formData.get("status_id")?.toString().trim() || "";
+    const idResrunRaw = formData.get("id_resrun")?.toString().trim() || "";
+    const statusResIdRaw = formData.get("status_res_id")?.toString().trim() || "";
 
     const params = new URLSearchParams();
     params.append("user_id", userId);
@@ -189,6 +238,12 @@ async function fetchGraphData(event) {
     }
     if (statusIdRaw) {
         params.append("status_id", statusIdRaw);
+    }
+    if (idResrunRaw) {
+        params.append("id_resrun", idResrunRaw);
+    }
+    if (statusResIdRaw) {
+        params.append("status_res_id", statusResIdRaw);
     }
 
     try {
