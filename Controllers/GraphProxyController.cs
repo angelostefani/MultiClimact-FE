@@ -26,6 +26,7 @@ namespace MultiClimact.Controllers
             _logger = logger;
         }
 
+         /* chiama al WS13 */
         [HttpGet("GetGraphs")]
         public async Task<IActionResult> GetGraphs(
             [FromQuery] string? user_id,
@@ -108,6 +109,7 @@ namespace MultiClimact.Controllers
             }
         }
 
+        /* WS16 */
         [HttpPost("CreateGraph")]
         public async Task<IActionResult> CreateGraph(
             [FromBody] JsonElement configuration,
@@ -158,6 +160,8 @@ namespace MultiClimact.Controllers
             }
         }
 
+
+        /* WS14 (per il grafico di default in runs e results)*/
         [HttpGet("GetDefaultScenario")]
         public async Task<IActionResult> GetDefaultScenario([FromQuery] string? user_id)
         {
@@ -301,6 +305,73 @@ namespace MultiClimact.Controllers
             {
                 _logger.LogError(e, "Timeout while calling SaveScenario service.");
                 return StatusCode(StatusCodes.Status504GatewayTimeout, "Timeout while calling save scenario service");
+            }
+        }
+
+        /* questo metodo chiama il WS20 e si attiva quando clicco Run nel tab Run & Results */
+        [HttpPost("RunResilience")]
+        public async Task<IActionResult> RunResilience([FromQuery] int? id_conf)
+        {
+            if (!id_conf.HasValue || id_conf.Value <= 0)
+            {
+                return BadRequest("A valid id_conf is required.");
+            }
+
+            var idUser =
+                User.FindFirstValue(ClaimTypes.NameIdentifier) ??
+                User.FindFirstValue("sub") ??
+                User.FindFirstValue("oid");
+
+            if (string.IsNullOrWhiteSpace(idUser))
+            {
+                return BadRequest("Authenticated user id not available.");
+            }
+
+            var servicePath = $"users/{idUser}/resilience/{id_conf.Value}/submit";
+
+            _logger.LogInformation("Posting resilience run submission to Graph Service URL: {servicePath}", servicePath);
+
+            try
+            {
+                using var request = new HttpRequestMessage(HttpMethod.Post, servicePath);
+                var response = await _httpClient.SendAsync(request, HttpContext.RequestAborted);
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var mediaType = response.Content.Headers.ContentType?.MediaType ?? "application/json";
+
+                if (response.IsSuccessStatusCode)
+                {
+                    _logger.LogInformation("WS20 RunResilience response for scenario {idConf}: {responseContent}",
+                        id_conf.Value,
+                        string.IsNullOrWhiteSpace(responseContent) ? "{\"success\":true}" : responseContent);
+                    return Content(
+                        string.IsNullOrWhiteSpace(responseContent) ? "{\"success\":true}" : responseContent,
+                        mediaType);
+                }
+
+                _logger.LogError("Error RunResilience Service: {statusCode}, response: {responseContent}",
+                    response.StatusCode,
+                    responseContent);
+                if (string.IsNullOrWhiteSpace(responseContent))
+                {
+                    return StatusCode((int)response.StatusCode);
+                }
+
+                return new ContentResult
+                {
+                    StatusCode = (int)response.StatusCode,
+                    Content = responseContent,
+                    ContentType = mediaType
+                };
+            }
+            catch (HttpRequestException e)
+            {
+                _logger.LogError("Error while calling RunResilience service: {message}", e.Message);
+                return StatusCode(500, $"Error while calling resilience run service: {e.Message}");
+            }
+            catch (OperationCanceledException e) when (!HttpContext.RequestAborted.IsCancellationRequested)
+            {
+                _logger.LogError(e, "Timeout while calling RunResilience service.");
+                return StatusCode(StatusCodes.Status504GatewayTimeout, "Timeout while calling resilience run service");
             }
         }
 

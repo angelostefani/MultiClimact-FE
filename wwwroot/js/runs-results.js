@@ -62,6 +62,36 @@
     (typeof activeScenarioID !== 'undefined' && activeScenarioID !== null && `${activeScenarioID}`.trim() !== ''
       ? activeScenarioID.toString()
       : (localStorage.getItem('lastSelectedGraphIdConf') || '').trim());
+  const extractSavedScenarioId = (responseJson) => {
+    if (!responseJson) {
+      return '';
+    }
+
+    if (responseJson.id_conf !== undefined && responseJson.id_conf !== null && `${responseJson.id_conf}`.trim() !== '') {
+      return responseJson.id_conf.toString();
+    }
+
+    if (Array.isArray(responseJson.data) && responseJson.data.length > 0) {
+      const firstValidEntry = responseJson.data.find((item) =>
+        item &&
+        item.id_conf !== undefined &&
+        item.id_conf !== null &&
+        `${item.id_conf}`.trim() !== '');
+
+      if (firstValidEntry) {
+        return firstValidEntry.id_conf.toString();
+      }
+    }
+
+    if (responseJson.data && !Array.isArray(responseJson.data) &&
+      responseJson.data.id_conf !== undefined &&
+      responseJson.data.id_conf !== null &&
+      `${responseJson.data.id_conf}`.trim() !== '') {
+      return responseJson.data.id_conf.toString();
+    }
+
+    return '';
+  };
 
   runBtn?.addEventListener('click', async () => {
     const scenarioId = resolveSelectedScenarioId();
@@ -93,6 +123,13 @@
       }
 
       const json = await response.json();
+      const savedScenarioId = extractSavedScenarioId(json);
+
+      if (savedScenarioId) {
+        activeScenarioID = savedScenarioId;
+        localStorage.setItem('lastSelectedGraphIdConf', savedScenarioId);
+      }
+
       console.log('Scenario saved', { scenarioId, response: json, payload });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unable to save the scenario.';
@@ -103,10 +140,38 @@
     }
   });
 
-  executeRunBtn?.addEventListener('click', () => {
-    console.log('Execute run', { scenarioId: resolveSelectedScenarioId() });
+  // WS20: si attiva quando clicco Run nel tab Run & Results.
+  executeRunBtn?.addEventListener('click', async () => {
+    const scenarioId = resolveSelectedScenarioId();
+    if (!scenarioId) {
+      window.alert('Select a scenario before running.');
+      return;
+    }
+
     executeRunBtn.disabled = true;
-    setTimeout(() => { executeRunBtn.disabled = false; }, 500);
+
+    try {
+      const response = await fetch(`/api/GraphProxy/RunResilience?id_conf=${encodeURIComponent(scenarioId)}`, {
+        method: 'POST'
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || `HTTP ${response.status} ${response.statusText}`);
+      }
+
+      const responseText = await response.text();
+      console.log('Resilience run submitted', {
+        scenarioId,
+        response: responseText
+      });
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unable to submit the resilience run.';
+      console.error('Error while submitting resilience run', { scenarioId, error });
+      window.alert(errorMessage);
+    } finally {
+      executeRunBtn.disabled = false;
+    }
   });
 
   const applyBtn = panel.querySelector('#rr-apply');
