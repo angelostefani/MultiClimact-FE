@@ -10,6 +10,15 @@ const graphStatusOptions = [
     { id: 5, label: "ready" },
     { id: 6, label: "failed" }
 ];
+const graphResilienceStatusOptions = [
+    { id: 1, label: "submitted" },
+    { id: 2, label: "scheduled" },
+    { id: 3, label: "dispatching" },
+    { id: 4, label: "processing" },
+    { id: 5, label: "completed" },
+    { id: 6, label: "failed" },
+    { id: 7, label: "cancelled" }
+];
 
 function formatGraphDate(value) {
     if (!value) {
@@ -35,15 +44,17 @@ function initializeGraphStatusDropdown() {
     const statusSelects = [
         {
             element: document.getElementById("graphStatusId"),
-            defaultText: "All statuses"
+            defaultText: "All statuses",
+            options: graphStatusOptions
         },
         {
             element: document.getElementById("graphStatusResId"),
-            defaultText: "All resilience statuses"
+            defaultText: "All resilience statuses",
+            options: graphResilienceStatusOptions
         }
     ];
 
-    statusSelects.forEach(({ element, defaultText }) => {
+    statusSelects.forEach(({ element, defaultText, options }) => {
         if (!element) {
             return;
         }
@@ -56,7 +67,7 @@ function initializeGraphStatusDropdown() {
         defaultOption.textContent = defaultText;
         element.appendChild(defaultOption);
 
-        graphStatusOptions.forEach(status => {
+        options.forEach(status => {
             const option = document.createElement("option");
             option.value = status.id.toString();
             option.textContent = status.label;
@@ -80,6 +91,19 @@ function getGraphStatusLabel(statusId, statusStr) {
     return graphStatusOptions.find(status => status.id.toString() === normalizedStatusId)?.label ?? normalizedStatusId;
 }
 
+function getGraphResilienceStatusLabel(statusId, statusStr) {
+    if (statusStr !== undefined && statusStr !== null && statusStr !== "") {
+        return statusStr;
+    }
+
+    const normalizedStatusId = statusId?.toString() ?? "";
+    if (!normalizedStatusId) {
+        return "N/A";
+    }
+
+    return graphResilienceStatusOptions.find(status => status.id.toString() === normalizedStatusId)?.label ?? normalizedStatusId;
+}
+
 function getDisplayValue(value) {
     if (value === undefined || value === null || value === "") {
         return "N/A";
@@ -101,7 +125,7 @@ function normalizeGraphItem(raw) {
         statusStr: getGraphStatusLabel(statusId, raw?.status_str ?? raw?.statusStr),
         idResrun: getDisplayValue(raw?.id_resrun ?? raw?.idResrun),
         statusResId,
-        statusResStr: getGraphStatusLabel(statusResId, raw?.status_res_str ?? raw?.statusResStr)
+        statusResStr: getGraphResilienceStatusLabel(statusResId, raw?.status_res_str ?? raw?.statusResStr)
     };
 }
 
