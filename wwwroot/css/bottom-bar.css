@@ -119,6 +119,22 @@
     border: 1px solid transparent;
 }
 
+.hazard-status-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.2;
+    border: 1px solid transparent;
+}
+
+.hazard-status-badge-completed {
+    background-color: #e5f7ea;
+    color: #176534;
+    border-color: #bfe8c8;
+}
+
 .hazard-badge-earthquake {
     background-color: #fbe7e9;
     color: #9b1c1c;
