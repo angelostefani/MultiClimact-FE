@@ -274,7 +274,15 @@ function populateHazardTable(data, config, hazardKey) {
             hiddenField.value = normalized.idRun || '';
 
             const statusCell = document.createElement('td');
-            statusCell.textContent = normalized.status || 'N/A';
+            const statusValue = normalized.status || 'N/A';
+            if (statusValue.toString().trim().toLowerCase() === 'completed') {
+                const statusBadge = document.createElement('span');
+                statusBadge.className = 'hazard-status-badge hazard-status-badge-completed';
+                statusBadge.textContent = statusValue;
+                statusCell.appendChild(statusBadge);
+            } else {
+                statusCell.textContent = statusValue;
+            }
 
             row.appendChild(selectCell);
             row.appendChild(idRunCell);

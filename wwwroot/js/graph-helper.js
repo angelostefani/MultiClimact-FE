@@ -112,6 +112,18 @@ function getDisplayValue(value) {
     return value;
 }
 
+function appendGraphStatusValue(cell, value) {
+    const statusValue = value?.toString() || "N/A";
+    if (statusValue.trim().toLowerCase() === "completed") {
+        const statusBadge = document.createElement("span");
+        statusBadge.className = "hazard-status-badge hazard-status-badge-completed";
+        statusBadge.textContent = statusValue;
+        cell.appendChild(statusBadge);
+    } else {
+        cell.textContent = statusValue;
+    }
+}
+
 function normalizeGraphItem(raw) {
     const statusId = raw?.status_id ?? raw?.statusId ?? "";
     const statusResId = raw?.status_res_id ?? raw?.statusResId ?? "";
@@ -205,13 +217,13 @@ function populateGraphTable(data) {
         mcarloCell.textContent = normalized.monteCarloIterations?.toString() || "N/A";
 
         const statusCell = document.createElement("td");
-        statusCell.textContent = normalized.statusStr?.toString() || "N/A";
+        appendGraphStatusValue(statusCell, normalized.statusStr);
 
         const idResrunCell = document.createElement("td");
         idResrunCell.textContent = normalized.idResrun?.toString() || "N/A";
 
         const statusResCell = document.createElement("td");
-        statusResCell.textContent = normalized.statusResStr?.toString() || "N/A";
+        appendGraphStatusValue(statusResCell, normalized.statusResStr);
 
         row.appendChild(selectCell);
         row.appendChild(idConfCell);
