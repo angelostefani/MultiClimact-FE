@@ -23,9 +23,19 @@
                         <input type="number" min="1" class="form-control" id="graphIdConf" name="id_conf" placeholder="Exact id_conf">
                     </div>
                     <div class="col-12 col-md-6">
-                        <label for="graphStatusId" class="form-label">Status</label>
+                        <label for="graphStatusId" class="form-label">Scenario Status</label>
                         <select class="form-select" id="graphStatusId" name="status_id">
                             <option value="">All statuses</option>
+                        </select>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label for="graphIdResrun" class="form-label">id_resrun</label>
+                        <input type="number" min="1" class="form-control" id="graphIdResrun" name="id_resrun" placeholder="Exact id_resrun">
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label for="graphStatusResId" class="form-label">Resilience Status</label>
+                        <select class="form-select" id="graphStatusResId" name="status_res_id">
+                            <option value="">All resilience statuses</option>
                         </select>
                     </div>
                     <div class="col-12 bottom-bar-actions">
@@ -47,7 +57,9 @@
                         <th>Scenario Name</th>
                         <th>Date</th>
                         <th>Monte Carlo It.</th>
-                        <th>Status</th>
+                        <th>Scenario Status</th>
+                        <th>id_resrun</th>
+                        <th>Resilience Status</th>
                     </tr>
                 </thead>
                 <tbody id="graphTableBody">

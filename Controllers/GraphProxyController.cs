@@ -34,7 +34,9 @@ namespace MultiClimact.Controllers
             [FromQuery] string? end_time,
             [FromQuery] string? name,
             [FromQuery] int? id_conf,
-            [FromQuery] int? status_id)
+            [FromQuery] int? status_id,
+            [FromQuery] int? id_resrun,
+            [FromQuery] int? status_res_id)
         {
              //User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier) ?? User.FindFirstValue("sub") ?? User.FindFirstValue("oid");
             // Se user_id non è fornito, usa "system" come default per le richieste al servizio
@@ -68,6 +70,16 @@ namespace MultiClimact.Controllers
             if (status_id.HasValue && status_id.Value > 0)
             {
                 query["status_id"] = status_id.Value.ToString();
+            }
+
+            if (id_resrun.HasValue && id_resrun.Value > 0)
+            {
+                query["id_resrun"] = id_resrun.Value.ToString();
+            }
+
+            if (status_res_id.HasValue && status_res_id.Value > 0)
+            {
+                query["status_res_id"] = status_res_id.Value.ToString();
             }
 
             var servicePath = "scenarios";

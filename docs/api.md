@@ -81,8 +81,11 @@ Recupera i grafici configurati.
 | `end_time` | string | No | Data fine |
 | `name` | string | No | Nome grafico |
 | `id_conf` | int | No | ID configurazione (> 0) |
+| `status_id` | int | No | Stato scenario (1-6) |
+| `id_resrun` | int | No | ID run resilience |
+| `status_res_id` | int | No | Stato run resilience (1-7: submitted, scheduled, dispatching, processing, completed, failed, cancelled) |
 
-**URL upstream:** `GET {GraphService:BaseUrl}/users/{user_id}/graphs?...`
+**URL upstream:** `GET {GraphService:BaseUrl}/scenarios?...`
 
 **Risposte:**
 - `200 OK` — JSON con lista grafici
