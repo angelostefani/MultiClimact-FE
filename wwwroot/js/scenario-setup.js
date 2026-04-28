@@ -550,6 +550,37 @@
         return null;
     };
 
+    const extractScenarioIdFromResponse = (responseJson) => {
+        if (!responseJson) {
+            return "";
+        }
+
+        const rootId = firstDefinedValue(responseJson.id_conf, responseJson.idConf);
+        if (rootId !== undefined && rootId !== null && `${rootId}`.trim() !== "") {
+            return rootId.toString();
+        }
+
+        if (Array.isArray(responseJson.data) && responseJson.data.length > 0) {
+            const firstValidEntry = responseJson.data.find((item) => {
+                const itemId = firstDefinedValue(item?.id_conf, item?.idConf, item?.id);
+                return itemId !== undefined && itemId !== null && `${itemId}`.trim() !== "";
+            });
+
+            if (firstValidEntry) {
+                return firstDefinedValue(firstValidEntry.id_conf, firstValidEntry.idConf, firstValidEntry.id).toString();
+            }
+        }
+
+        if (responseJson.data && typeof responseJson.data === "object") {
+            const dataId = firstDefinedValue(responseJson.data.id_conf, responseJson.data.idConf, responseJson.data.id);
+            if (dataId !== undefined && dataId !== null && `${dataId}`.trim() !== "") {
+                return dataId.toString();
+            }
+        }
+
+        return "";
+    };
+
     const buildScenarioSubmitPayload = () => {
         const baseScenario = currentScenarioData ? deepClone(currentScenarioData) : {};
         const name = nameInput?.value?.trim() ?? "";
@@ -717,6 +748,15 @@
             if (!response.ok) {
                 const errorText = await response.text();
                 throw new Error(errorText || `HTTP ${response.status}`);
+            }
+
+            const json = await response.json();
+            const createdScenarioId = extractScenarioIdFromResponse(json);
+
+            if (createdScenarioId) {
+                activeScenarioID = createdScenarioId;
+                selectedGraphIdConf = createdScenarioId;
+                localStorage.setItem("lastSelectedGraphIdConf", createdScenarioId);
             }
 
             transientScenarioConfig = submitPayload;

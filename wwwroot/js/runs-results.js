@@ -62,6 +62,33 @@
     (typeof activeScenarioID !== 'undefined' && activeScenarioID !== null && `${activeScenarioID}`.trim() !== ''
       ? activeScenarioID.toString()
       : (localStorage.getItem('lastSelectedGraphIdConf') || '').trim());
+  const resolveSelectedScenarioStatusId = () =>
+    (typeof selectedGraphStatusId !== 'undefined' && selectedGraphStatusId !== null && `${selectedGraphStatusId}`.trim() !== ''
+      ? selectedGraphStatusId.toString()
+      : (localStorage.getItem('lastSelectedGraphStatusId') || '').trim());
+  const SCENARIO_STATUS_INITIALIZED = '4';
+  const SCENARIO_STATUS_READY = '5';
+  const refreshRunActionsState = () => {
+    const scenarioId = resolveSelectedScenarioId();
+    const statusId = resolveSelectedScenarioStatusId();
+    const canSaveScenario = statusId === SCENARIO_STATUS_INITIALIZED || statusId === SCENARIO_STATUS_READY;
+    const canRunScenario = statusId === SCENARIO_STATUS_READY;
+
+    console.log('[runs-results] active scenario status', {
+      scenarioId,
+      statusId,
+      canSaveScenario,
+      canRunScenario
+    });
+
+    if (runBtn) {
+      runBtn.disabled = !canSaveScenario;
+    }
+
+    if (executeRunBtn) {
+      executeRunBtn.disabled = !canRunScenario;
+    }
+  };
   const extractSavedScenarioId = (responseJson) => {
     if (!responseJson) {
       return '';
@@ -92,6 +119,10 @@
 
     return '';
   };
+
+  window.addEventListener('graph-scenario-selected', refreshRunActionsState);
+  window.addEventListener('storage', refreshRunActionsState);
+  refreshRunActionsState();
 
   runBtn?.addEventListener('click', async () => {
     const scenarioId = resolveSelectedScenarioId();
@@ -130,13 +161,14 @@
         localStorage.setItem('lastSelectedGraphIdConf', savedScenarioId);
       }
 
+      refreshRunActionsState();
       console.log('Scenario saved', { scenarioId, response: json, payload });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unable to save the scenario.';
       console.error('Error while saving scenario', { scenarioId, error, payload });
       window.alert(errorMessage);
     } finally {
-      runBtn.disabled = false;
+      refreshRunActionsState();
     }
   });
 
@@ -170,7 +202,7 @@
       console.error('Error while submitting resilience run', { scenarioId, error });
       window.alert(errorMessage);
     } finally {
-      executeRunBtn.disabled = false;
+      refreshRunActionsState();
     }
   });
 

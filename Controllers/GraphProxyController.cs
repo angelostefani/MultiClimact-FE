@@ -143,7 +143,7 @@ namespace MultiClimact.Controllers
 
             try
             {
-                var response = await _httpClient.PutAsync(servicePath, content, HttpContext.RequestAborted);
+                var response = await _httpClient.PostAsync(servicePath, content, HttpContext.RequestAborted);
                 var responseContent = await response.Content.ReadAsStringAsync();
 
                 if (response.IsSuccessStatusCode)
