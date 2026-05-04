@@ -19,7 +19,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
-using NuGet.Protocol;
+using MultiClimact.Services;
 
 namespace MultiClimact.Areas.Identity.Pages.Account
 {
@@ -32,13 +32,14 @@ namespace MultiClimact.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
 
-        private readonly HttpClient httpClient;
+        private readonly UserServiceClient _userServiceClient;
         public RegisterModel(
             UserManager<IdentityUser> userManager,
             IUserStore<IdentityUser> userStore,
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender, HttpClient httpClient)
+            IEmailSender emailSender,
+            UserServiceClient userServiceClient)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -46,7 +47,7 @@ namespace MultiClimact.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
-            this.httpClient = httpClient;
+            _userServiceClient = userServiceClient;
         }
 
         /// <summary>
@@ -131,9 +132,50 @@ namespace MultiClimact.Areas.Identity.Pages.Account
                         username = user.UserName,
                         name = user.Email
                     };
-                    var response = await this.httpClient.PostAsJsonAsync($"http://192.168.155.112:8000/users", data);
-                    var responseContent = await response.Content.ReadAsStringAsync();
-                    _logger.LogInformation($"La risposta del backend per la creazione dell'utente è: {responseContent}");
+
+                    try
+                    {
+                        _logger.LogInformation("Calling WS11 user creation at {BaseAddress}/users with payload {@Payload}",
+                            _userServiceClient.HttpClient.BaseAddress,
+                            data);
+
+                        var response = await _userServiceClient.HttpClient.PostAsJsonAsync("users", data, HttpContext.RequestAborted);
+                        var responseContent = await response.Content.ReadAsStringAsync();
+
+                        if (!response.IsSuccessStatusCode)
+                        {
+                            _logger.LogError("WS11 user creation failed. Status: {StatusCode}. Response: {ResponseContent}",
+                                response.StatusCode,
+                                responseContent);
+                            await RollbackIdentityUserAsync(user);
+                            ModelState.AddModelError(string.Empty, BuildBackendRegistrationError(response, responseContent));
+                            return Page();
+                        }
+
+                        _logger.LogInformation("Risposta WS11 per la creazione dell'utente: {ResponseContent}", responseContent);
+                    }
+                    catch (HttpRequestException ex)
+                    {
+                        _logger.LogError(ex, "Errore durante la chiamata WS11 per la creazione dell'utente.");
+                        await RollbackIdentityUserAsync(user);
+                        ModelState.AddModelError(string.Empty, "Registrazione non completata: backend non raggiungibile.");
+                        return Page();
+                    }
+                    catch (InvalidOperationException ex)
+                    {
+                        _logger.LogError(ex, "Configurazione non valida per la chiamata WS11.");
+                        await RollbackIdentityUserAsync(user);
+                        ModelState.AddModelError(string.Empty, "Registrazione non completata: configurazione backend mancante.");
+                        return Page();
+                    }
+                    catch (OperationCanceledException ex) when (!HttpContext.RequestAborted.IsCancellationRequested)
+                    {
+                        _logger.LogError(ex, "Timeout durante la chiamata WS11 per la creazione dell'utente.");
+                        await RollbackIdentityUserAsync(user);
+                        ModelState.AddModelError(string.Empty, "Registrazione non completata: timeout del backend.");
+                        return Page();
+                    }
+
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
@@ -178,6 +220,29 @@ namespace MultiClimact.Areas.Identity.Pages.Account
                     $"Ensure that '{nameof(IdentityUser)}' is not an abstract class and has a parameterless constructor, or alternatively " +
                     $"override the register page in /Areas/Identity/Pages/Account/Register.cshtml");
             }
+        }
+
+        private async Task RollbackIdentityUserAsync(IdentityUser user)
+        {
+            var deleteResult = await _userManager.DeleteAsync(user);
+            if (!deleteResult.Succeeded)
+            {
+                _logger.LogError("Unable to rollback Identity user {UserId}: {Errors}",
+                    user.Id,
+                    string.Join("; ", deleteResult.Errors.Select(error => error.Description)));
+            }
+        }
+
+        private static string BuildBackendRegistrationError(HttpResponseMessage response, string responseContent)
+        {
+            var errorMessage = $"Registrazione non completata: WS11 ha risposto con HTTP {(int)response.StatusCode} ({response.StatusCode}).";
+
+            if (!string.IsNullOrWhiteSpace(responseContent))
+            {
+                errorMessage += $" Dettaglio backend: {responseContent}";
+            }
+
+            return errorMessage;
         }
 
         private IUserEmailStore<IdentityUser> GetEmailStore()

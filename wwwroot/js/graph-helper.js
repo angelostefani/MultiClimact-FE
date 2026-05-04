@@ -112,6 +112,20 @@ function getDisplayValue(value) {
     return value;
 }
 
+function getCurrentSelectedGraphId() {
+    return (
+        selectedGraphIdConf ??
+        activeScenarioID ??
+        localStorage.getItem("lastSelectedGraphIdConf") ??
+        ""
+    ).toString();
+}
+
+function isSelectedGraphId(idConf) {
+    const selectedId = getCurrentSelectedGraphId();
+    return selectedId !== "" && selectedId === (idConf ?? "").toString();
+}
+
 function appendGraphStatusValue(cell, value) {
     const statusValue = value?.toString() || "N/A";
     if (statusValue.trim().toLowerCase() === "completed") {
@@ -152,7 +166,7 @@ function populateGraphTable(data) {
     if (!Array.isArray(data) || data.length === 0) {
         const row = document.createElement("tr");
         const noDataCell = document.createElement("td");
-        noDataCell.setAttribute("colspan", 8);
+        noDataCell.setAttribute("colspan", 9);
         noDataCell.textContent = "No data available";
         row.appendChild(noDataCell);
         tableBody.appendChild(row);
@@ -198,6 +212,8 @@ function populateGraphTable(data) {
                     statusId: selectedGraphStatusId
                 }
             }));
+
+            updateGraphDeleteButtons();
         });
 
         const selectCell = document.createElement("td");
@@ -225,6 +241,29 @@ function populateGraphTable(data) {
         const statusResCell = document.createElement("td");
         appendGraphStatusValue(statusResCell, normalized.statusResStr);
 
+        const deleteCell = document.createElement("td");
+        deleteCell.className = "graph-delete-cell";
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.type = "button";
+        deleteBtn.className = "btn btn-outline-danger graph-delete-btn";
+        deleteBtn.dataset.idConf = normalized.idConf?.toString() ?? "";
+        deleteBtn.title = "Delete scenario";
+        deleteBtn.setAttribute("aria-label", `Delete scenario ${normalized.idConf}`);
+
+        const deleteIcon = document.createElement("i");
+        deleteIcon.className = "bi bi-trash";
+        deleteIcon.setAttribute("aria-hidden", "true");
+        deleteBtn.appendChild(deleteIcon);
+
+        deleteBtn.addEventListener("click", async (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            await deleteGraphScenario(normalized.idConf, deleteBtn);
+        });
+
+        deleteCell.appendChild(deleteBtn);
+
         row.appendChild(selectCell);
         row.appendChild(idConfCell);
         row.appendChild(nameCell);
@@ -233,16 +272,17 @@ function populateGraphTable(data) {
         row.appendChild(statusCell);
         row.appendChild(idResrunCell);
         row.appendChild(statusResCell);
+        row.appendChild(deleteCell);
         tableBody.appendChild(row);
     });
+
+    updateGraphDeleteButtons();
 }
 
-async function fetchGraphData(event) {
-    event.preventDefault();
-
+function getGraphSearchParamsFromForm() {
     const form = document.getElementById("graphForm");
     if (!form) {
-        return;
+        return null;
     }
 
     const formData = new FormData(form);
@@ -282,6 +322,15 @@ async function fetchGraphData(event) {
         params.append("status_res_id", statusResIdRaw);
     }
 
+    return params;
+}
+
+async function loadGraphDataFromForm() {
+    const params = getGraphSearchParamsFromForm();
+    if (!params) {
+        return;
+    }
+
     try {
         const response = await fetch(`/api/GraphProxy/GetGraphs?${params.toString()}`);
         if (!response.ok) {
@@ -298,6 +347,87 @@ async function fetchGraphData(event) {
         paginateGraphTable();
     } catch (error) {
         console.error("Error during graph data fetch:", error);
+    }
+}
+
+async function fetchGraphData(event) {
+    event?.preventDefault();
+    await loadGraphDataFromForm();
+}
+
+function updateGraphDeleteButtons() {
+    document.querySelectorAll(".graph-delete-btn").forEach(button => {
+        const idConf = button.dataset.idConf ?? "";
+        const disabled = isSelectedGraphId(idConf);
+        button.disabled = disabled;
+        button.classList.toggle("d-none", disabled);
+        button.classList.toggle("graph-delete-btn-disabled", disabled);
+        button.title = disabled
+            ? "The currently selected scenario cannot be deleted"
+            : "Delete scenario";
+        button.setAttribute("aria-hidden", disabled ? "true" : "false");
+    });
+}
+
+async function deleteGraphScenario(idConf, button) {
+    const normalizedIdConf = idConf?.toString().trim() ?? "";
+    if (!normalizedIdConf) {
+        window.alert("A valid id_conf is required.");
+        return;
+    }
+
+    if (isSelectedGraphId(normalizedIdConf)) {
+        window.alert("The currently selected scenario cannot be deleted.");
+        updateGraphDeleteButtons();
+        return;
+    }
+
+    const confirmed = window.confirm(`Delete scenario config ${normalizedIdConf}?`);
+    if (!confirmed) {
+        return;
+    }
+
+    const originalDisabled = button?.disabled ?? false;
+    if (button) {
+        button.disabled = true;
+        button.classList.add("graph-delete-btn-busy");
+    }
+
+    try {
+        const response = await fetch(`/api/GraphProxy/DeleteScenario?id_conf=${encodeURIComponent(normalizedIdConf)}`, {
+            method: "DELETE"
+        });
+        const responseText = await response.text();
+        let responseJson = null;
+
+        if (responseText) {
+            try {
+                responseJson = JSON.parse(responseText);
+            } catch {
+                responseJson = null;
+            }
+        }
+
+        if (!response.ok || responseJson?.success === false) {
+            const serviceMessage =
+                responseJson?.data?.message ??
+                responseJson?.message ??
+                responseText ??
+                `HTTP ${response.status}`;
+            throw new Error(serviceMessage);
+        }
+
+        await loadGraphDataFromForm();
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Unable to delete the selected scenario.";
+        window.alert(errorMessage);
+        console.error("Error while deleting scenario:", error);
+    } finally {
+        if (button) {
+            button.disabled = originalDisabled;
+            button.classList.remove("graph-delete-btn-busy");
+        }
+        updateGraphDeleteButtons();
     }
 }
 
@@ -337,6 +467,7 @@ function paginateGraphTable() {
             if (cell) {
                 cell.textContent = "✔";
                 rowByIndex.classList.add("graph-row-selected");
+                updateGraphDeleteButtons();
                 return;
             }
         }
@@ -352,6 +483,8 @@ function paginateGraphTable() {
                 }
             }
         }
+
+        updateGraphDeleteButtons();
     }
 
     function createPaginationControls() {

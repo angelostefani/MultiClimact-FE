@@ -320,6 +320,63 @@ namespace MultiClimact.Controllers
             }
         }
 
+        /* questo metodo chiama il WS23 per cancellare una configurazione scenario */
+        [HttpDelete("DeleteScenario")]
+        public async Task<IActionResult> DeleteScenario([FromQuery] int? id_conf)
+        {
+            if (!id_conf.HasValue || id_conf.Value <= 0)
+            {
+                return BadRequest("A valid id_conf is required.");
+            }
+
+            var servicePath = $"scenario/{id_conf.Value}";
+
+            _logger.LogInformation("Deleting scenario config through Graph Service URL: {servicePath}", servicePath);
+
+            try
+            {
+                var response = await _httpClient.DeleteAsync(servicePath, HttpContext.RequestAborted);
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var mediaType = response.Content.Headers.ContentType?.MediaType ?? "application/json";
+
+                if (response.IsSuccessStatusCode)
+                {
+                    _logger.LogInformation("WS23 DeleteScenario response for scenario {idConf}: {responseContent}",
+                        id_conf.Value,
+                        string.IsNullOrWhiteSpace(responseContent) ? "{\"success\":true}" : responseContent);
+                    return Content(
+                        string.IsNullOrWhiteSpace(responseContent) ? "{\"success\":true}" : responseContent,
+                        mediaType);
+                }
+
+                _logger.LogError("Error DeleteScenario Service: {statusCode}, response: {responseContent}",
+                    response.StatusCode,
+                    responseContent);
+
+                if (string.IsNullOrWhiteSpace(responseContent))
+                {
+                    return StatusCode((int)response.StatusCode, "Error deleting scenario");
+                }
+
+                return new ContentResult
+                {
+                    StatusCode = (int)response.StatusCode,
+                    Content = responseContent,
+                    ContentType = mediaType
+                };
+            }
+            catch (HttpRequestException e)
+            {
+                _logger.LogError("Error while calling DeleteScenario service: {message}", e.Message);
+                return StatusCode(500, $"Error while calling delete scenario service: {e.Message}");
+            }
+            catch (OperationCanceledException e) when (!HttpContext.RequestAborted.IsCancellationRequested)
+            {
+                _logger.LogError(e, "Timeout while calling DeleteScenario service.");
+                return StatusCode(StatusCodes.Status504GatewayTimeout, "Timeout while calling delete scenario service");
+            }
+        }
+
         /* questo metodo chiama il WS20 e si attiva quando clicco Run nel tab Run & Results */
         [HttpPost("RunResilience")]
         public async Task<IActionResult> RunResilience([FromQuery] int? id_conf)

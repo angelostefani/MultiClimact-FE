@@ -118,6 +118,21 @@ builder.Services.AddHttpClient<GraphServiceClient>(client =>
     })
     .AddHttpMessageHandler<RetryHandler>();
 
+builder.Services.AddHttpClient<UserServiceClient>(client =>
+{
+    var baseUrl = builder.Configuration["UserService:BaseUrl"]
+        ?? builder.Configuration["GraphService:BaseUrl"]
+        ?? builder.Configuration["EarthquakeService:BaseUrl"];
+    if (!string.IsNullOrEmpty(baseUrl))
+        client.BaseAddress = new Uri(baseUrl);
+    client.Timeout = TimeSpan.FromSeconds(upstreamTimeoutSeconds);
+})
+    .ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
+    {
+        ConnectTimeout = TimeSpan.FromSeconds(upstreamConnectTimeoutSeconds)
+    })
+    .AddHttpMessageHandler<RetryHandler>();
+
 // Default named client for internal calls
 builder.Services.AddHttpClient("Default", client =>
 {

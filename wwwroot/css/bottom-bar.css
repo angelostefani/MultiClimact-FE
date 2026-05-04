@@ -109,6 +109,31 @@
     color: #1e3a8a;
 }
 
+#graphTableBody .graph-delete-cell {
+    width: 72px;
+    text-align: center;
+}
+
+.graph-delete-btn {
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.graph-delete-btn:disabled,
+.graph-delete-btn-disabled {
+    opacity: 0.38;
+    cursor: not-allowed !important;
+}
+
+.graph-delete-btn-busy {
+    opacity: 0.65;
+}
+
 .hazard-badge {
     display: inline-block;
     padding: 4px 10px;
