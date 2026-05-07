@@ -444,6 +444,58 @@ namespace MultiClimact.Controllers
             }
         }
 
+        /* questo metodo chiama il WS22 e recupera il result della resilience run per uno scenario specifico */
+        [HttpGet("GetResilienceResult")]
+        public async Task<IActionResult> GetResilienceResult([FromQuery] int? id_conf)
+        {
+            if (!id_conf.HasValue || id_conf.Value <= 0)
+            {
+                return BadRequest("A valid id_conf is required.");
+            }
+
+            var servicePath = $"resilience/{id_conf.Value}/result";
+
+            _logger.LogInformation("Requesting resilience result from Graph Service URL: {servicePath}", servicePath);
+
+            try
+            {
+                var response = await _httpClient.GetAsync(servicePath, HttpContext.RequestAborted);
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var mediaType = response.Content.Headers.ContentType?.MediaType ?? "application/json";
+
+                if (response.IsSuccessStatusCode)
+                {
+                    _logger.LogInformation("Resilience result response for scenario {idConf}: {responseContent}",
+                        id_conf.Value,
+                        responseContent);
+                    return Content(responseContent, mediaType);
+                }
+
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    _logger.LogWarning("Resilience result not found for scenario {idConf}.", id_conf.Value);
+                    return Content("{\"success\":false,\"data\":null}", "application/json");
+                }
+
+                _logger.LogError("Error GetResilienceResult Service: {statusCode}, response: {responseContent}",
+                    response.StatusCode,
+                    responseContent);
+
+                return StatusCode((int)response.StatusCode,
+                    string.IsNullOrWhiteSpace(responseContent) ? "Error requesting resilience result service" : responseContent);
+            }
+            catch (HttpRequestException e)
+            {
+                _logger.LogError("Error while calling resilience result service: {message}", e.Message);
+                return StatusCode(500, $"Error while calling resilience result service: {e.Message}");
+            }
+            catch (OperationCanceledException e) when (!HttpContext.RequestAborted.IsCancellationRequested)
+            {
+                _logger.LogError(e, "Timeout while calling resilience result service.");
+                return StatusCode(StatusCodes.Status504GatewayTimeout, "Timeout while calling resilience result service");
+            }
+        }
+
         [HttpPost("LogScenarioSetup")]
         public IActionResult LogScenarioSetup([FromBody] JsonElement configuration)
         {
@@ -451,4 +503,5 @@ namespace MultiClimact.Controllers
             return Ok(new { success = true });
         }
     }
+
 }

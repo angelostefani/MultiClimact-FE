@@ -4,8 +4,13 @@
     return;
   }
 
+  const resilienceResultEventName = 'resilience-result-loaded';
+  let currentResilienceResultPayload = null;
+  let currentSelectedPathIds = new Set();
+
   const table = panel.querySelector('#rr-chains-table');
-  const rows = Array.from(table?.querySelectorAll('tbody tr') ?? []);
+  const tableBody = table?.querySelector('tbody') ?? null;
+  let rows = Array.from(tableBody?.querySelectorAll('tr') ?? []);
 
   const drawSparkline = (svg, points) => {
     if (!svg || points.length === 0) return;
@@ -29,32 +34,114 @@
     svg.appendChild(polyline);
   };
 
-  rows.forEach((row) => {
+  const hydrateRowSparkline = (row) => {
     const svg = row.querySelector('.rr-sparkline');
     const points = (row.dataset.points || '')
       .split(',')
       .map((n) => parseFloat(n))
       .filter((n) => !Number.isNaN(n));
     drawSparkline(svg, points);
-  });
+  };
 
-  const selectRow = (row) => {
-    rows.forEach((r) => r.classList.remove('is-selected'));
-    row.classList.add('is-selected');
-    // Hook for map highlight / detail panel
-    console.log('Row selected → highlight on map + open details', {
-      rank: row.dataset.rank,
-      path: row.dataset.path,
+  rows.forEach((row) => hydrateRowSparkline(row));
+
+  const resolveCurrentResrunId = () => {
+    const resultPayload = extractResultPayload(currentResilienceResultPayload);
+    const candidateResrunIds = [
+      resultPayload?.resrun_id,
+      resultPayload?.resrunId,
+      resultPayload?.id_resrun,
+      resultPayload?.idResrun,
+      typeof selectedGraphResrunId !== 'undefined' ? selectedGraphResrunId : '',
+      localStorage.getItem('lastSelectedGraphResrunId') || ''
+    ];
+
+    const resolvedResrunId = candidateResrunIds
+      .map((value) => (value ?? '').toString().trim())
+      .find((value) => value !== '' && value.toLowerCase() !== 'n/a') || '';
+
+    console.log('[runs-results] resolved resrun id', {
+      resolvedResrunId,
+      candidateResrunIds,
+      resultPayload
+    });
+
+    return resolvedResrunId;
+  };
+
+  const syncSelectedRowsUi = () => {
+    rows.forEach((row) => {
+      const pathId = (row.dataset.path || '').trim();
+      row.classList.toggle('is-selected', currentSelectedPathIds.has(pathId));
     });
   };
 
-  if (rows.length) {
-    selectRow(rows[0]);
-  }
+  const updateRunsResultsMapSelection = () => {
+    if (typeof window.updateRunsResultsMapLayer !== 'function') {
+      return;
+    }
 
-  rows.forEach((row) => {
-    row.addEventListener('click', () => selectRow(row));
-  });
+    const resrunId = resolveCurrentResrunId();
+    const selectedPathIds = Array.from(currentSelectedPathIds);
+
+    console.log('[runs-results] updating map selection', {
+      resrunId,
+      selectedPathIds
+    });
+
+    window.updateRunsResultsMapLayer(resrunId, selectedPathIds);
+  };
+
+  const getChartPayloadForSelection = () => {
+    const resultPayload = extractResultPayload(currentResilienceResultPayload);
+    if (!resultPayload || !Array.isArray(resultPayload.paths)) {
+      return resultPayload || mockGraphPayload;
+    }
+
+    const selectedPathIds = Array.from(currentSelectedPathIds);
+    if (selectedPathIds.length === 0) {
+      return resultPayload;
+    }
+
+    const filteredPaths = resultPayload.paths.filter((path) => {
+      const pathId = (path?.path_id ?? path?.pathId ?? '').toString().trim();
+      return pathId !== '' && currentSelectedPathIds.has(pathId);
+    });
+
+    return {
+      ...resultPayload,
+      paths: filteredPaths
+    };
+  };
+
+  const toggleRowSelection = (row) => {
+    const pathId = (row.dataset.path || '').trim();
+    if (!pathId) {
+      return;
+    }
+
+    if (currentSelectedPathIds.has(pathId)) {
+      currentSelectedPathIds.delete(pathId);
+    } else {
+      currentSelectedPathIds.add(pathId);
+    }
+
+    syncSelectedRowsUi();
+    updateRunsResultsMapSelection();
+    renderChart(getChartPayloadForSelection());
+
+    console.log('[runs-results] rows selected', {
+      selectedPathIds: Array.from(currentSelectedPathIds)
+    });
+  };
+
+  const bindRowSelection = () => {
+    rows.forEach((row) => {
+      row.addEventListener('click', () => toggleRowSelection(row));
+    });
+  };
+
+  bindRowSelection();
 
   const runBtn = panel.querySelector('#rr-config-run');
   const executeRunBtn = panel.querySelector('#rr-run');
@@ -302,6 +389,85 @@
     }
   };
 
+  const extractResultPayload = (payload) => {
+    if (!payload) {
+      return null;
+    }
+
+    if (payload.data && typeof payload.data === 'object' && !Array.isArray(payload.data)) {
+      return payload.data;
+    }
+
+    return payload;
+  };
+
+  const formatNodesCompact = (nodes) => {
+    if (!Array.isArray(nodes) || nodes.length === 0) {
+      return '—';
+    }
+
+    return nodes.join(' → ');
+  };
+
+  const renderChainsTable = (payload) => {
+    if (!tableBody) {
+      return;
+    }
+
+    const resultPayload = extractResultPayload(payload);
+    const paths = Array.isArray(resultPayload?.paths) ? resultPayload.paths : [];
+
+    console.log('[runs-results] rendering chains table', {
+      resultPayload,
+      pathsCount: paths.length
+    });
+
+    if (paths.length === 0) {
+      tableBody.innerHTML = `
+        <tr>
+          <td class="text-center" colspan="6">No result data available</td>
+        </tr>`;
+      rows = Array.from(tableBody.querySelectorAll('tr'));
+      currentSelectedPathIds = new Set();
+      updateRunsResultsMapSelection();
+      return;
+    }
+
+    tableBody.innerHTML = paths.map((path, index) => {
+      const points = Array.isArray(path?.risk_values)
+        ? path.risk_values.map((value) => `${value ?? ''}`).join(',')
+        : '';
+      const rank = index + 1;
+      const pathId = path?.path_id ?? path?.pathId ?? rank;
+      const nodesCompact = formatNodesCompact(path?.path_nodes);
+      const resilience = path?.resilience ?? 'N/A';
+      const peakRisk = path?.peak_risk ?? path?.peakRisk ?? 'N/A';
+
+      return `
+        <tr data-rank="${rank}" data-path="${pathId}" data-nodes="${nodesCompact}" data-res="${resilience}" data-peak="${peakRisk}" data-points="${points}">
+          <td class="text-center">${rank}</td>
+          <td>${pathId}</td>
+          <td class="rr-nodes-cell">
+            <span class="rr-nodes-text">${nodesCompact}</span>
+            <svg class="rr-sparkline" viewBox="0 0 100 20" preserveAspectRatio="none"></svg>
+          </td>
+          <td>${resilience}</td>
+          <td>${peakRisk}</td>
+          <td class="text-end"><i class="bi bi-three-dots-vertical"></i></td>
+        </tr>`;
+    }).join('');
+
+    rows = Array.from(tableBody.querySelectorAll('tr'));
+    rows.forEach((row) => hydrateRowSparkline(row));
+    bindRowSelection();
+    currentSelectedPathIds = rows.length > 0
+      ? new Set([(rows[0].dataset.path || '').trim()].filter(Boolean))
+      : new Set();
+    syncSelectedRowsUi();
+    updateRunsResultsMapSelection();
+    renderChart(getChartPayloadForSelection());
+  };
+
   const normalizePayloadToChart = (payload) => {
     if (!payload) return { x: [], series: [] };
 
@@ -436,5 +602,23 @@
     }
   };
 
-  fetchGraphPayload().then(renderChart);
+  const applyResilienceResultPayload = (payload) => {
+    currentResilienceResultPayload = payload;
+    const resultPayload = extractResultPayload(payload);
+    console.log('[runs-results] applying resilience result payload', {
+      payload,
+      resultPayload
+    });
+    renderChainsTable(resultPayload);
+  };
+
+  window.addEventListener(resilienceResultEventName, (event) => {
+    applyResilienceResultPayload(event.detail?.result ?? null);
+  });
+
+  if (window.resilienceResultState?.result) {
+    applyResilienceResultPayload(window.resilienceResultState.result);
+  } else {
+    fetchGraphPayload().then(renderChart);
+  }
 })();

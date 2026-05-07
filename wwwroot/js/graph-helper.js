@@ -2,6 +2,7 @@ let selectedGraphIdConf = null;
 let selectedGraphRowIndex = null;
 let activeScenarioID = '';
 let selectedGraphStatusId = null;
+let selectedGraphResrunId = null;
 const graphStatusOptions = [
     { id: 1, label: "submitted" },
     { id: 2, label: "dispatching" },
@@ -141,6 +142,7 @@ function appendGraphStatusValue(cell, value) {
 function normalizeGraphItem(raw) {
     const statusId = raw?.status_id ?? raw?.statusId ?? "";
     const statusResId = raw?.status_res_id ?? raw?.statusResId ?? "";
+    const rawIdResrun = raw?.id_resrun ?? raw?.idResrun ?? "";
 
     return {
         idConf: raw?.id_conf ?? raw?.idConf ?? raw?.id ?? "",
@@ -149,7 +151,8 @@ function normalizeGraphItem(raw) {
         monteCarloIterations: getDisplayValue(raw?.imp_mcarlo_it),
         statusId,
         statusStr: getGraphStatusLabel(statusId, raw?.status_str ?? raw?.statusStr),
-        idResrun: getDisplayValue(raw?.id_resrun ?? raw?.idResrun),
+        idResrun: getDisplayValue(rawIdResrun),
+        rawIdResrun,
         statusResId,
         statusResStr: getGraphResilienceStatusLabel(statusResId, raw?.status_res_str ?? raw?.statusResStr)
     };
@@ -195,21 +198,25 @@ function populateGraphTable(data) {
             selectedGraphIdConf = normalized.idConf?.toString() ?? "";
             activeScenarioID = normalized.idConf?.toString() ?? '';
             selectedGraphStatusId = normalized.statusId?.toString() ?? "";
+            selectedGraphResrunId = normalized.rawIdResrun?.toString() ?? "";
             selectedGraphRowIndex = index;
             localStorage.setItem("lastSelectedGraphIdConf", selectedGraphIdConf);
             localStorage.setItem("lastSelectedGraphStatusId", selectedGraphStatusId);
+            localStorage.setItem("lastSelectedGraphResrunId", selectedGraphResrunId);
             localStorage.setItem("lastSelectedGraphRowIndex", selectedGraphRowIndex.toString());
 
             console.log("[graph-helper] scenario selected", {
                 idConf: selectedGraphIdConf,
                 statusId: selectedGraphStatusId,
+                idResrun: selectedGraphResrunId,
                 rowIndex: selectedGraphRowIndex
             });
 
             window.dispatchEvent(new CustomEvent("graph-scenario-selected", {
                 detail: {
                     idConf: selectedGraphIdConf,
-                    statusId: selectedGraphStatusId
+                    statusId: selectedGraphStatusId,
+                    idResrun: selectedGraphResrunId
                 }
             }));
 
