@@ -14,6 +14,7 @@ using MultiClimact.Data;
 using MultiClimact.Services;
 using Newtonsoft.Json;
 
+
 // Create a new builder for the web application
 var builder = WebApplication.CreateBuilder(args);
 var upstreamTimeoutSeconds = builder.Configuration.GetValue<int?>("ExternalServices:TimeoutSeconds") ?? 8;
