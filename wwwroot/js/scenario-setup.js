@@ -4,6 +4,25 @@
         return;
     }
 
+    const {
+        firstDefinedValue,
+        resolveScenarioStatusId,
+        resolveScenarioResilienceStatus,
+        findScenarioValue,
+        extractDependencyGraphNodes,
+        hasResilienceAssessmentPayload,
+        getDefaultDependencyProbabilities,
+        getFailureSetupValue,
+        extractScenarioFromResponse,
+        fetchScenarioGraphMetadata,
+        fetchResilienceResult
+    } = window.scenarioSetupUtils ?? {};
+
+    if (!firstDefinedValue || !resolveScenarioStatusId || !resolveScenarioResilienceStatus) {
+        console.error("[scenario-setup] required utilities are not available.");
+        return;
+    }
+
     const nameInput = document.getElementById("ra-name");
     const latInput = document.getElementById("ra-latitude");
     const lonInput = document.getElementById("ra-longitude");
@@ -64,33 +83,6 @@
             ? selectedGraphStatusId
             : localStorage.getItem("lastSelectedGraphStatusId")) || "";
 
-    const fetchScenarioGraphMetadata = async (scenarioId) => {
-        const normalizedScenarioId = scenarioId?.toString().trim() ?? "";
-        if (!normalizedScenarioId) {
-            return null;
-        }
-
-        try {
-            const response = await fetch(`/api/GraphProxy/GetGraphs?id_conf=${encodeURIComponent(normalizedScenarioId)}`);
-            if (!response.ok) {
-                console.warn("[scenario-setup] unable to resolve scenario metadata from GetGraphs", {
-                    scenarioId: normalizedScenarioId,
-                    status: response.status
-                });
-                return null;
-            }
-
-            const json = await response.json();
-            return Array.isArray(json?.data) && json.data.length > 0 ? json.data[0] : null;
-        } catch (error) {
-            console.warn("[scenario-setup] error while resolving scenario metadata", {
-                scenarioId: normalizedScenarioId,
-                error
-            });
-            return null;
-        }
-    };
-
     const fetchScenarioStatusId = async (scenarioId) => {
         const normalizedScenarioId = scenarioId?.toString().trim() ?? "";
         if (!normalizedScenarioId) {
@@ -100,6 +92,8 @@
         try {
             const graphItem = await fetchScenarioGraphMetadata(normalizedScenarioId);
             const resolvedStatusId = firstDefinedValue(
+                graphItem?.config_status,
+                graphItem?.configStatus,
                 graphItem?.status_id,
                 graphItem?.statusId
             );
@@ -121,24 +115,16 @@
         return "";
     };
 
-    const RESILIENCE_STATUS_RESULT_AVAILABLE = "4";
+    const SCENARIO_STATUS_READY = "5";
+    const RESILIENCE_STATUS_RESULT_AVAILABLE = "5";
 
     const shouldFetchResilienceResult = (scenario, graphMetadata) => {
-        const resilienceStatusId = firstDefinedValue(
-            graphMetadata?.status_res_id,
-            graphMetadata?.statusResId,
-            scenario?.status_res_id,
-            scenario?.statusResId
-        )?.toString().trim();
+        // Runs & Results can be populated only when both the scenario and resilience run are complete.
+        const scenarioStatusId = resolveScenarioStatusId(scenario, graphMetadata);
+        const resilienceStatus = resolveScenarioResilienceStatus(scenario, graphMetadata);
 
-        const resilienceStatus = firstDefinedValue(
-            graphMetadata?.status_res_str,
-            graphMetadata?.statusResStr,
-            scenario?.status_res_str,
-            scenario?.statusResStr
-        )?.toString().trim().toLowerCase();
-
-        return resilienceStatusId === RESILIENCE_STATUS_RESULT_AVAILABLE || resilienceStatus === "completed";
+        return scenarioStatusId === SCENARIO_STATUS_READY &&
+            (resilienceStatus.id === RESILIENCE_STATUS_RESULT_AVAILABLE || resilienceStatus.label === "completed");
     };
 
     const fetchScenarioStatusContext = async (scenarioId) => {
@@ -195,101 +181,12 @@
         return textarea.value ?? "";
     };
 
-    const firstDefinedValue = (...values) =>
-        values.find((value) => value !== undefined && value !== null && `${value}`.trim() !== "");
-
     const normalizeSectorName = (value) =>
         (value ?? "")
             .toString()
             .trim()
             .toLowerCase()
             .replace(/[\s_-]+/g, " ");
-
-    const findScenarioValue = (source, candidateKeys) => {
-        if (!source || typeof source !== "object") {
-            return undefined;
-        }
-
-        for (const key of candidateKeys) {
-            if (Object.prototype.hasOwnProperty.call(source, key)) {
-                const value = source[key];
-                if (value !== undefined && value !== null && `${value}`.trim() !== "") {
-                    return value;
-                }
-            }
-        }
-
-        return undefined;
-    };
-
-    const extractDependencyGraphNodes = (scenario) =>
-        firstDefinedValue(
-            scenario?.dependencyGraphNodes,
-            scenario?.dependency_graph_nodes,
-            scenario?.dependency_graph,
-            scenario?.graph,
-            scenario?.scenario_setup
-        ) ?? {};
-
-    const hasResilienceAssessmentPayload = (scenario) =>
-        Boolean(
-            scenario &&
-            typeof scenario === "object" &&
-            (
-                Array.isArray(scenario?.subsector_dep) ||
-                Array.isArray(scenario?.poi_dep) ||
-                Array.isArray(scenario?.default_prob) ||
-                Array.isArray(scenario?.subsector_dep_prob) ||
-                Array.isArray(scenario?.poi_dep_prob) ||
-                Array.isArray(scenario?.failure) ||
-                Array.isArray(scenario?.social_impact_distrib) ||
-                Array.isArray(scenario?.sector_impact_distrib) ||
-                Array.isArray(scenario?.subsector_impact_distrib) ||
-                Array.isArray(scenario?.poi_impact_distrib) ||
-                scenario?.iter !== undefined ||
-                scenario?.max_path !== undefined ||
-                scenario?.max_chains !== undefined
-            )
-        );
-
-    const getDefaultDependencyProbabilities = (scenario) => {
-        if (scenario?.all_dep_prob) {
-            return scenario.all_dep_prob;
-        }
-
-        if (!Array.isArray(scenario?.default_prob)) {
-            return null;
-        }
-
-        const editableEntry = scenario.default_prob.find((entry) =>
-            entry &&
-            typeof entry === "object" &&
-            entry.all_dep_prob
-        );
-
-        return editableEntry?.all_dep_prob ?? null;
-    };
-
-    const getFailurePoiListValue = (scenario) => {
-        if (!Array.isArray(scenario?.failure)) {
-            return "";
-        }
-
-        const ids = scenario.failure
-            .filter((entry) => typeof entry === "string" || typeof entry === "number")
-            .map((entry) => entry.toString().trim())
-            .filter(Boolean);
-
-        return ids.length > 0 ? `${ids.join("; ")};` : "";
-    };
-
-    const getFailureSetupValue = (scenario) => {
-        if (Array.isArray(scenario?.failure) && scenario.failure.length > 0) {
-            return JSON.stringify(scenario.failure, null, 2);
-        }
-
-        return getFailurePoiListValue(scenario);
-    };
 
     const publishLoadedScenario = (scenarioId, scenario) => {
         window.resilienceScenarioState = {
@@ -320,7 +217,7 @@
         );
         let statusId = firstDefinedValue(
             preferredStatusId,
-            findScenarioValue(scenario, ["status_id", "statusId"]),
+            findScenarioValue(scenario, ["config_status", "configStatus", "status_id", "statusId"]),
             getSelectedScenarioStatusId()
         );
 
@@ -331,7 +228,7 @@
         console.log("[scenario-setup] syncScenarioSetupMapLayer", {
             scenarioId,
             statusId,
-            scenarioStatusId: findScenarioValue(scenario, ["status_id", "statusId"]),
+            scenarioStatusId: findScenarioValue(scenario, ["config_status", "configStatus", "status_id", "statusId"]),
             selectedScenarioId: getSelectedScenarioId(),
             selectedScenarioStatusId: getSelectedScenarioStatusId()
         });
@@ -364,33 +261,6 @@
         setInputValueById("impact-mc-iterations", firstDefinedValue(scenario?.iter, 0));
         setInputValueById("impact-mc-max-path", firstDefinedValue(scenario?.max_path, 0));
         setInputValueById("impact-mc-max-chains", firstDefinedValue(scenario?.max_chains, 0));
-    };
-
-    const extractScenarioFromResponse = (json) => {
-        if (Array.isArray(json?.data)) {
-            return json.data.length > 0 ? json.data[0] : null;
-        }
-
-        if (json?.data && typeof json.data === "object") {
-            return json.data;
-        }
-
-        if (json && typeof json === "object" && !Array.isArray(json)) {
-            return json;
-        }
-
-        return null;
-    };
-
-    const fetchResilienceResult = async (scenarioId) => {
-        const response = await fetch(`/api/GraphProxy/GetResilienceResult?id_conf=${encodeURIComponent(scenarioId)}`);
-        if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(errorText || `HTTP ${response.status}`);
-        }
-
-        const json = await response.json();
-        return extractScenarioFromResponse(json);
     };
 
     const applyScenarioToInputs = (scenario) => {
@@ -779,7 +649,7 @@
         leaveEditMode();
         setScenarioStatus(firstDefinedValue(
             findScenarioValue(currentScenarioData, ["status", "scenario_status"]),
-            findScenarioValue(currentScenarioData, ["status_id", "statusId"]),
+            findScenarioValue(currentScenarioData, ["config_status", "configStatus", "status_id", "statusId"]),
             ""
         ));
         hideStatus();
@@ -910,7 +780,7 @@
             applyScenarioToInputs(scenario);
             setScenarioStatus(firstDefinedValue(
                 findScenarioValue(scenario, ["status", "scenario_status"]),
-                findScenarioValue(scenario, ["status_id", "statusId"]),
+                findScenarioValue(scenario, ["config_status", "configStatus", "status_id", "statusId"]),
                 ""
             ));
             if (populateAssessmentTabs) {
@@ -942,23 +812,13 @@
                     });
                 }
             } else {
+                const resilienceStatus = resolveScenarioResilienceStatus(scenario, graphMetadata);
                 publishResilienceResult(scenarioId, null);
                 console.log("[scenario-setup] skipped resilience result load", {
                     scenarioId,
-                    statusResId: firstDefinedValue(
-                        graphMetadata?.status_res_id,
-                        graphMetadata?.statusResId,
-                        scenario?.status_res_id,
-                        scenario?.statusResId,
-                        ""
-                    ),
-                    statusResStr: firstDefinedValue(
-                        graphMetadata?.status_res_str,
-                        graphMetadata?.statusResStr,
-                        scenario?.status_res_str,
-                        scenario?.statusResStr,
-                        ""
-                    ),
+                    statusId: resolveScenarioStatusId(scenario, graphMetadata),
+                    statusResId: resilienceStatus.id,
+                    statusResStr: resilienceStatus.label,
                     resolvedResrunId
                 });
             }
