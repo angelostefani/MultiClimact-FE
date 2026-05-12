@@ -14,6 +14,35 @@
     padding: 0 20px;
 }
 
+.bottom-bar-close-btn {
+    display: none;
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #c9d3e0;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #243449;
+    line-height: 1;
+    z-index: 2;
+}
+
+.bottom-bar.open .bottom-bar-close-btn {
+    display: inline-flex;
+}
+
+.bottom-bar-close-btn:hover,
+.bottom-bar-close-btn:focus {
+    border-color: #2f6fec;
+    color: #0d6efd;
+    background: #f7f9fc;
+}
+
     /* Expanded bottom bar */
     .bottom-bar.open {
         height: 75%; /* Takes up most of the viewport when open */
@@ -23,7 +52,7 @@
 .bottom-bar-content {
     display: block;
     font-size: 16px;
-    padding-top: 20px;
+    padding-top: 46px;
 }
 
 .bottom-bar-search-card {
