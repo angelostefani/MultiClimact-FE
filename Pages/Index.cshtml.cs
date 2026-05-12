@@ -253,6 +253,7 @@ namespace MultiClimact.Pages
                 "wmslayer_earth_waste_water_damage_view",
                 "wmslayer_earth_water_well_vuln_view",
                 "wmslayer_earth_water_well_damage_view",
+                "wmslayer_resilience_poi_view",
             };
 
             var wmsLayerKeyList = new List<string>();

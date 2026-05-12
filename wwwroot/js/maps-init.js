@@ -428,15 +428,77 @@ document.addEventListener("DOMContentLoaded", function () {
 
     mapD16 = initWMSMap(configWMSMapD16);
 
-    configWMSMapD17 = {
+    configWMSMatrixMapD17 = {
         targetHtmlMapId: 'mapD17',
         baseMapName: 'OpenStreetMap - EPSG:3857',
         centerLongitude: 12.5,
         centerLatitude: 42.5,
-        zoomValue: 6
+        zoomValue: 6,
+        layerMatrix: [
+            [true, false, wmsBaseUrl, document.getElementById("wmslayer_resilience_poi_view").dataset.value, 'Resilience result POIs', null, null, false, null]
+        ]
     };
 
-    mapD17 = initWMSMap(configWMSMapD17);
+    mapD17 = initWMSMatrixMap(configWMSMatrixMapD17);
+
+    const refreshRunsResultsMapSize = () => {
+        if (!mapD17 || typeof mapD17.updateSize !== 'function') {
+            return;
+        }
+
+        mapD17.updateSize();
+        if (typeof mapD17.renderSync === 'function') {
+            mapD17.renderSync();
+        }
+    };
+
+    window.updateRunsResultsMapLayer = function (resrunId, pathIds) {
+        if (!configWMSMatrixMapD17 || !mapD17) {
+            return;
+        }
+
+        const normalizedResrunId = (resrunId ?? '').toString().trim();
+        const normalizedPathIds = Array.isArray(pathIds)
+            ? pathIds
+                .map((pathId) => (pathId ?? '').toString().trim())
+                .filter(Boolean)
+            : [];
+
+        const shouldShowLayer = Boolean(normalizedResrunId) && normalizedPathIds.length > 0;
+        configWMSMatrixMapD17.layerMatrix[0][8] = shouldShowLayer
+            ? `resrun_id=${normalizedResrunId} AND path_id IN (${normalizedPathIds.join(',')})`
+            : null;
+
+        console.log('[maps-init][D17] updateRunsResultsMapLayer', {
+            resrunId: normalizedResrunId,
+            pathIds: normalizedPathIds,
+            shouldShowLayer,
+            cqlFilter: configWMSMatrixMapD17.layerMatrix[0][8]
+        });
+
+        toggleLayer(configWMSMatrixMapD17, 0, mapD17, shouldShowLayer);
+        refreshRunsResultsMapSize();
+
+        if (shouldShowLayer) {
+            setTimeout(refreshRunsResultsMapSize, 150);
+            setTimeout(() => {
+                updateMapLayers(configWMSMatrixMapD17, mapD17);
+                refreshRunsResultsMapSize();
+            }, 300);
+        }
+    };
+
+    const d17Tab = document.getElementById("tabD17-tab");
+    if (d17Tab) {
+        d17Tab.addEventListener("shown.bs.tab", () => {
+            if (configWMSMatrixMapD17 && mapD17) {
+                updateMapLayers(configWMSMatrixMapD17, mapD17);
+            }
+            refreshRunsResultsMapSize();
+            setTimeout(refreshRunsResultsMapSize, 150);
+            setTimeout(refreshRunsResultsMapSize, 300);
+        });
+    }
 
     configWMSMatrixMapD15 = {
         targetHtmlMapId: 'mapD15',

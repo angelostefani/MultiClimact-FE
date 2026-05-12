@@ -19,6 +19,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const getActivePane = () => layout.querySelector(".impact-tab-content .tab-pane.active");
 
+    const refreshActiveJsonEditor = () => {
+        const activePane = getActivePane();
+        if (!activePane) {
+            return;
+        }
+
+        const textarea = activePane.querySelector(".impact-json-editor");
+        if (textarea && textarea._cmEditor) {
+            textarea._cmEditor.refresh();
+        }
+    };
+
     const refreshEditorSizing = () => {
         const activePane = getActivePane();
         if (!activePane) {
@@ -35,20 +47,24 @@ document.addEventListener("DOMContentLoaded", function () {
         const actions = card.querySelector(".impact-actions");
         const container = card.querySelector(".impact-json-editor-container");
         const textarea = card.querySelector(".impact-json-editor");
+        if (textarea && textarea._cmEditor) {
+            textarea._cmEditor.refresh();
+        }
         if (!container) {
             return;
         }
 
-        const titleH = title ? title.getBoundingClientRect().height : 0;
-        const actionsH = actions ? actions.getBoundingClientRect().height : 0;
-        const available = Math.max(160, Math.floor(card.clientHeight - titleH - actionsH));
+        if (!card.classList.contains("impact-editor-card--auto")) {
+            const titleH = title ? title.getBoundingClientRect().height : 0;
+            const actionsH = actions ? actions.getBoundingClientRect().height : 0;
+            const available = Math.max(160, Math.floor(card.clientHeight - titleH - actionsH));
 
-        container.style.height = `${available}px`;
-        container.style.maxHeight = `${available}px`;
+            container.style.height = `${available}px`;
+            container.style.maxHeight = `${available}px`;
 
-        if (textarea && textarea._cmEditor) {
-            textarea._cmEditor.setSize(null, `${available}px`);
-            textarea._cmEditor.refresh();
+            if (textarea && textarea._cmEditor) {
+                textarea._cmEditor.setSize(null, `${available}px`);
+            }
         }
     };
 
@@ -87,6 +103,7 @@ document.addEventListener("DOMContentLoaded", function () {
         subTabs.addEventListener("shown.bs.tab", () => {
             scheduleMapResize();
             refreshEditorSizing();
+            refreshActiveJsonEditor();
             pinScrollToLayout();
         });
     }
@@ -97,6 +114,7 @@ document.addEventListener("DOMContentLoaded", function () {
             scheduleMapResize();
             scheduleMapResize(500);
             refreshEditorSizing();
+            refreshActiveJsonEditor();
             pinScrollToLayout();
         });
     }
@@ -247,4 +265,5 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     });
+
 });
