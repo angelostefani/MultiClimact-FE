@@ -194,7 +194,17 @@ else
             $(document).ready(() => {
                 initTabs(); // Initialize tab navigation
                 tabManager(); // Manage tab selection
+                const navigationParams = new URLSearchParams(window.location.search);
+                const requestedTab = navigationParams.get('tab');
+                const requestedSection = navigationParams.get('section');
+                const requestedSubSection = navigationParams.get('subSection');
+                if (requestedTab) {
+                    activeTab = requestedTab;
+                }
                 selectTab(activeTab);
+                if (requestedSection && requestedSubSection) {
+                    updateBreadcrumb(requestedSection, requestedSubSection);
+                }
 
                 // Gestione del menu a tendina
                 setupDropdownMenuHandler('.dropdown-item', '.dropdown-menu');

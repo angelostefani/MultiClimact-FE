@@ -1,0 +1,215 @@
+.new-config-page,
+.new-config-page * {
+  box-sizing: border-box;
+}
+
+body.new-configuration-body {
+  overflow-y: auto !important;
+}
+
+.new-config-page {
+  max-width: 1440px;
+  height: auto;
+  min-height: 700px;
+  display: flex;
+  flex-direction: column;
+}
+
+.new-config-card {
+  border-radius: 1rem;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.new-config-toolbar {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.new-config-field {
+  min-width: 240px;
+  max-width: 340px;
+  flex: 1 1 280px;
+}
+
+.new-config-field--wide {
+  max-width: 520px;
+  flex: 1 1 360px;
+}
+
+.new-config-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  align-self: end;
+}
+
+.new-config-status {
+  border-radius: 0.85rem;
+  margin-bottom: 1.25rem;
+}
+
+.new-config-card .card-body {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.new-config-editor-shell {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  min-height: 0;
+  flex: 1 1 auto;
+  height: 640px;
+  max-height: 640px;
+  border: 1px solid #e1e5ec;
+  border-radius: 1rem;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.new-config-editor-header,
+.new-config-editor-footer {
+  background: #ffffff;
+  position: relative;
+  z-index: 1;
+}
+
+.new-config-editor-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 14px;
+  border-bottom: 1px solid #eee;
+}
+
+.new-config-editor-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.new-config-editor-wrap {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+  height: 100%;
+}
+
+.new-config-editor {
+  min-height: 0;
+  height: 100%;
+  resize: none;
+  border: 0;
+  border-radius: 0;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.new-config-editor-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  border-top: 1px solid #eee;
+}
+
+.new-config-json-status {
+  flex: 0 0 auto;
+}
+
+.new-config-editor-shell .form-text {
+  text-align: right;
+}
+
+.new-config-editor-shell .CodeMirror {
+  height: 100% !important;
+  min-height: 0;
+  max-height: 100%;
+  border: 0 !important;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 13px;
+}
+
+.new-config-editor-shell .CodeMirror-scroll {
+  min-height: 0 !important;
+  max-height: 100% !important;
+  overflow: auto !important;
+}
+
+.new-config-page .dep-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 12px;
+  color: #4b5563;
+}
+
+.new-config-page .dep-status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+}
+
+.new-config-page .dep-status-dot--valid {
+  background: #22c55e;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+}
+
+.new-config-page .dep-status-text--valid {
+  color: #15803d;
+}
+
+.new-config-page .dep-status-text--invalid {
+  color: #b91c1c;
+}
+
+@media (max-width: 991.98px) {
+  body.new-configuration-body {
+    overflow: auto !important;
+  }
+
+  .new-config-page {
+    height: auto;
+    min-height: 0;
+  }
+
+  .new-config-card {
+    overflow: visible;
+  }
+
+  .new-config-editor-shell {
+    min-height: 520px;
+    height: 520px;
+    max-height: 520px;
+  }
+}
+
+@media (max-width: 768px) {
+  .new-config-actions {
+    width: 100%;
+    align-self: stretch;
+  }
+
+  .new-config-editor-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .new-config-editor-shell .form-text {
+    text-align: left;
+  }
+}

@@ -319,7 +319,6 @@
 #panelD17 .rr-table-wrap {
   flex: 1 1 auto;
   min-height: 180px;
-  max-height: 260px;
   overflow: auto;
 }
 
