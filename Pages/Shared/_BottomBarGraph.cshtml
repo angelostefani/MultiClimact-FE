@@ -1,4 +1,11 @@
 <div id="myGraphBottomBar" class="bottom-bar">
+    <button type="button"
+            class="bottom-bar-close-btn"
+            onclick="closeBottomBarById('myGraphBottomBar', 'graphBottomToggle')"
+            aria-label="Close bottom bar"
+            title="Close">
+        <i class="bi bi-x-lg" aria-hidden="true"></i>
+    </button>
     <div class="bottom-bar-content" style="display:none;">
         <div class="bottom-bar-search-wrap mx-4">
             <form id="graphForm" class="bottom-bar-search-card p-3" method="GET" onsubmit="fetchGraphData(event)">

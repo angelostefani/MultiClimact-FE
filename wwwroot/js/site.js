@@ -34,41 +34,45 @@ function toggleGraphBottomBar() {
     toggleBottomBarById("myGraphBottomBar", "myBottomBar", "graphBottomToggle", "hazardBottomToggle");
 }
 
+function closeBottomBarById(barId, toggleId) {
+    const bar = document.getElementById(barId);
+    const toggle = document.getElementById(toggleId);
+    if (!bar) {
+        return;
+    }
+
+    const content = bar.querySelector(".bottom-bar-content");
+    bar.style.height = "0";
+    bar.classList.remove("open");
+
+    if (content) {
+        content.style.display = "none";
+    }
+    if (toggle) {
+        toggle.classList.remove("bottom-toggle-active");
+    }
+}
+
 function toggleBottomBarById(targetBarId, otherBarId, targetToggleId, otherToggleId) {
     const targetBar = document.getElementById(targetBarId);
     const otherBar = document.getElementById(otherBarId);
     const targetToggle = document.getElementById(targetToggleId);
-    const otherToggle = document.getElementById(otherToggleId);
     if (!targetBar) {
         return;
     }
 
     const targetContent = targetBar.querySelector(".bottom-bar-content");
-    const otherContent = otherBar ? otherBar.querySelector(".bottom-bar-content") : null;
-    const targetIsOpen = targetBar.style.height === "75%";
+    const targetIsOpen = targetBar.classList.contains("open") || targetBar.style.height === "75%";
 
-    if (otherBar) {
-        otherBar.style.height = "0";
-    }
-    if (otherContent) {
-        otherContent.style.display = "none";
-    }
-    if (otherToggle) {
-        otherToggle.classList.remove("bottom-toggle-active");
-    }
+    closeBottomBarById(otherBarId, otherToggleId);
 
     if (targetIsOpen) {
-        targetBar.style.height = "0";
-        if (targetContent) {
-            targetContent.style.display = "none";
-        }
-        if (targetToggle) {
-            targetToggle.classList.remove("bottom-toggle-active");
-        }
+        closeBottomBarById(targetBarId, targetToggleId);
         return;
     }
 
     targetBar.style.height = "75%";
+    targetBar.classList.add("open");
     if (targetContent) {
         targetContent.style.display = "block";
     }
