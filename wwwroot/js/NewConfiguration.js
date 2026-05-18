@@ -1,7 +1,7 @@
 (() => {
   const hazardLabels = {
     1: 'Earthquake',
-    3: 'Heat wave',
+    2: 'Heat wave',
     4: 'Extreme precipitation',
   };
 

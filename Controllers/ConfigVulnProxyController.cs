@@ -42,7 +42,22 @@ namespace MultiClimact.Controllers
             var baseUrl = this.configuration["ConfigVulnService:BaseUrl"];
             var url = $"{baseUrl}/users/{Uri.EscapeDataString(user_id)}/configurations";
             logger.LogInformation("Requesting ConfigVulnService at {url}", url);
-            var response = await http.GetAsync(url, HttpContext.RequestAborted);
+            HttpResponseMessage response;
+            try
+            {
+                response = await http.GetAsync(url, HttpContext.RequestAborted);
+            }
+            catch (OperationCanceledException) when (!HttpContext.RequestAborted.IsCancellationRequested)
+            {
+                logger.LogWarning("ConfigVulnService WS9 timed out at {url}", url);
+                return StatusCode(StatusCodes.Status504GatewayTimeout, "WS9 upstream service timed out.");
+            }
+            catch (HttpRequestException ex)
+            {
+                logger.LogWarning(ex, "ConfigVulnService WS9 request failed at {url}", url);
+                return StatusCode(StatusCodes.Status502BadGateway, "WS9 upstream service is unavailable.");
+            }
+
             var content = await response.Content.ReadAsStringAsync();
             if (!response.IsSuccessStatusCode)
             {
@@ -90,7 +105,7 @@ namespace MultiClimact.Controllers
 
             if (!IsSupportedHaztype(haztypeId))
             {
-                return BadRequest("Unsupported haztype_id. Allowed values: 1, 3, 4.");
+                return BadRequest("Unsupported haztype_id. Allowed values: 1, 2, 4.");
             }
 
             var baseUrl = configuration["ConfigVulnService:BaseUrl"];
@@ -132,7 +147,7 @@ namespace MultiClimact.Controllers
             var haztypeId = haztypeElement.GetInt32();
             if (!IsSupportedHaztype(haztypeId))
             {
-                return BadRequest("Unsupported haztype_id. Allowed values: 1, 3, 4.");
+                return BadRequest("Unsupported haztype_id. Allowed values: 1, 2, 4.");
             }
 
             var baseUrl = configuration["ConfigVulnService:BaseUrl"];
@@ -169,7 +184,7 @@ namespace MultiClimact.Controllers
 
         private static bool IsSupportedHaztype(int haztypeId)
         {
-            return haztypeId == 1 || haztypeId == 3 || haztypeId == 4;
+            return haztypeId == 1 || haztypeId == 2 || haztypeId == 4;
         }
     }
 
