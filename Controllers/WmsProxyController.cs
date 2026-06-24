@@ -15,9 +15,9 @@ namespace MultiClimact.Controllers
     public class WmsProxyController(HttpClient httpClient, ILogger<WmsProxyController> logger, IConfiguration configuration) : ControllerBase
     {
 
-        private readonly HttpClient _httpClient = httpClient;
+        private readonly HttpClient _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 
-        private readonly ILogger<WmsProxyController> _logger = logger;
+        private readonly ILogger<WmsProxyController> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         private readonly string _wmsBaseUrl = configuration["wms:wmsurl_baseurl"]
             ?? configuration["wms:wmsurl_earth_real_view"]
             ?? string.Empty;
@@ -77,16 +77,11 @@ namespace MultiClimact.Controllers
 
             try
             {
-                if (_httpClient is null)
-                {
-                    _logger.LogWarning("httpClient è null!");
-                }
                 var response = await _httpClient.GetAsync(wmsUrl);
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
                     _logger.LogInformation("Risposta del server: {content}", content);
-                    return Ok(content);
                     // Rileva risposte XML/HTML e applica parsing robusto
                     if (IsXml(content))
                     {
@@ -103,9 +98,9 @@ namespace MultiClimact.Controllers
                         _logger.LogInformation("rootLocal e': {rootLocal}", rootLocal);
                         var jsonResult = BuildGenericFeatureInfoJson(xmlDoc, layer);
                       //  string jsonResulta = "{\"layer\":\"multic:riverflood_rb_view\",\"properties\":{\"id\":\"9397\",\"coordinates\": \"12.414,43.663\"}}";
-                        string jsonResultB = jsonResult.ToString();
-                        if (jsonResultB is not null)
+                        if (jsonResult is not null)
                         {
+                            string jsonResultB = jsonResult.ToString();
                             _logger.LogInformation("Risposta JSON: {jsonResult}", jsonResultB);
                             return Ok(jsonResultB);
                         }
